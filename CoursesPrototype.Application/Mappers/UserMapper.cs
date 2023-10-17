@@ -1,4 +1,5 @@
-﻿using CoursesPrototype.Application.Helpers;
+﻿using CoursesPrototype.Shared.Exceptions;
+using CoursesPrototype.Application.Helpers;
 using CoursesPrototype.Core.Entities;
 using CoursesPrototype.Shared.ToClientData.DataTransferObjects;
 
@@ -10,7 +11,7 @@ namespace CoursesPrototype.Application.Mappers
         {
             if (userDto.Id == null || !ValidateHelper.ValidateToEmptyStrings(userDto.Nickname, userDto.Name, userDto.Lastname))
             {
-                throw new ArgumentNullException("", "Не все поля пользователя были заполнены");
+                throw new ForClientSideBaseException("Не все поля пользователя были заполнены");
             }
 
             return new User()

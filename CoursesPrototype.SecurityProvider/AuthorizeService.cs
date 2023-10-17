@@ -1,11 +1,23 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace CoursesPrototype.Application.Security
+namespace CoursesPrototype.SecurityProvider
 {
-    public static class SHA256Encryption
+    public class AuthorizeService
     {
-        public static string ComputeSha256Hash(string rawData)
+        public string GenerateSalt(int size)
+        {
+            byte[] saltBytes = new byte[size];
+
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(saltBytes);
+            }
+
+            return Convert.ToBase64String(saltBytes);
+        }
+
+        private string ComputeSha256Hash(string rawData)
         {
             // Create a SHA256   
             using (SHA256 sha256Hash = SHA256.Create())
@@ -22,5 +34,7 @@ namespace CoursesPrototype.Application.Security
                 return builder.ToString();
             }
         }
+
+        public string GenerateHash(string password, string salt) => ComputeSha256Hash(password + salt);
     }
 }
