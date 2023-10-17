@@ -5,15 +5,15 @@ VisualStudioVersion = 17.7.34018.315
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoursesPrototype.Core", "CoursesPrototype.Core\CoursesPrototype.Core.csproj", "{FDA316B6-2AD4-44CF-B2D7-7F6B177197C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoursesPrototype.Application", "CoursesPrototype.Application\CoursesPrototype.Application.csproj", "{DB9B827B-D4E3-4FCC-B6C2-37AA68CC772C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoursesPrototype.Application", "CoursesPrototype.Application\CoursesPrototype.Application.csproj", "{DB9B827B-D4E3-4FCC-B6C2-37AA68CC772C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoursesPrototype.FrontendTemplate", "CoursesPrototype.FrontendTemplate\CoursesPrototype.FrontendTemplate.csproj", "{8FAD2AB2-6A79-4F1B-BCB2-384029555F21}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoursesPrototype.FrontendTemplate", "CoursesPrototype.FrontendTemplate\CoursesPrototype.FrontendTemplate.csproj", "{8FAD2AB2-6A79-4F1B-BCB2-384029555F21}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoursesPrototype.Adapter", "CoursesPrototype.Adapter\CoursesPrototype.Adapter.csproj", "{EA5D4E47-539B-4E32-86E9-0DC9F8E3F697}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoursesPrototype.Adapter", "CoursesPrototype.Adapter\CoursesPrototype.Adapter.csproj", "{EA5D4E47-539B-4E32-86E9-0DC9F8E3F697}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoursesPrototype.Shared", "CoursesPrototype.Shared\CoursesPrototype.Shared.csproj", "{A2EFD032-52BD-4E42-BE8F-B68BF77527C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoursesPrototype.Shared", "CoursesPrototype.Shared\CoursesPrototype.Shared.csproj", "{A2EFD032-52BD-4E42-BE8F-B68BF77527C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoursePrototype.WebApi", "CoursePrototype.WebApi\CoursePrototype.WebApi.csproj", "{04003328-87A2-4019-80D6-0EE24B1DAF09}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoursesPrototype.WebApi", "CoursesPrototype.WebApi\CoursesPrototype.WebApi.csproj", "{BF241C57-C117-4147-9BC4-C28F1E9F67F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +41,10 @@ Global
 		{A2EFD032-52BD-4E42-BE8F-B68BF77527C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2EFD032-52BD-4E42-BE8F-B68BF77527C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2EFD032-52BD-4E42-BE8F-B68BF77527C4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{04003328-87A2-4019-80D6-0EE24B1DAF09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{04003328-87A2-4019-80D6-0EE24B1DAF09}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{04003328-87A2-4019-80D6-0EE24B1DAF09}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{04003328-87A2-4019-80D6-0EE24B1DAF09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF241C57-C117-4147-9BC4-C28F1E9F67F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF241C57-C117-4147-9BC4-C28F1E9F67F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF241C57-C117-4147-9BC4-C28F1E9F67F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF241C57-C117-4147-9BC4-C28F1E9F67F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

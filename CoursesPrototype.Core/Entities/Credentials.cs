@@ -2,9 +2,11 @@
 {
     public class Credentials
     {
-        public int UserId { get; set; }
+        public int Id { get; set; }
 
-        public string Nickname { get; set; } = null!;
+        public int UserId { get; set; }
+        public User User { get; set; } = null!;
+
         public string HashedPassword { get; set; } = null!;
         public string Salt { get; init; } = null!;
     }

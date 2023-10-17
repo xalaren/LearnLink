@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interactors\" />
+    <ProjectReference Include="..\CoursesPrototype.Core\CoursesPrototype.Core.csproj" />
+    <ProjectReference Include="..\CoursesPrototype.Shared\CoursesPrototype.Shared.csproj" />
   </ItemGroup>
 
 </Project>
