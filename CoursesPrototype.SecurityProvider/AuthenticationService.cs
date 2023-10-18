@@ -16,7 +16,7 @@ namespace CoursesPrototype.SecurityProvider
 
         public string? Authenticate(string nickname, string inputPassword, string storedPassword)
         {
-            if (!string.Equals(inputPassword, storedPassword, StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(inputPassword, storedPassword, StringComparison.InvariantCulture))
             {
                 return null;
             }

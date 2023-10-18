@@ -5,10 +5,11 @@ using CoursesPrototype.Application.Interactors;
 using CoursesPrototype.Application.Repository;
 using CoursesPrototype.Application.Security;
 using CoursesPrototype.Application.Transaction;
-using CoursesPrototype.Core.Entities;
 using CoursesPrototype.SecurityProvider;
+using CoursesPrototype.WebApi.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -21,8 +22,6 @@ namespace CoursePrototype.WebApi
             var builder = WebApplication.CreateBuilder(args);
 
             var configuration = builder.Configuration;
-            var sqliteConnection = configuration.GetConnectionString("SqliteConnection");
-            var sqlServerConnection = configuration.GetConnectionString("SqlServerConnection");
 
             // Add services to the container.
 
@@ -33,18 +32,16 @@ namespace CoursePrototype.WebApi
 
             builder.Services.AddSingleton<IEncryptionService, EncryptionService>();
             builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
-            builder.Services.AddSingleton<AuthenticationOptions>(provider => GetAuthenticationOptions(configuration));
+            builder.Services.AddSingleton(provider => AuthenticationConfig.GetAuthenticationOptions(configuration));
 
-
-            //builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(sqliteConnection));
-            builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(sqlServerConnection));
+            builder.Services.AddDbContext<AppDbContext>(options => options.GetMySqlOptions(configuration));
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
 
             /* Setup authentication start */
 
-            var authOptions = GetAuthenticationOptions(configuration);
+            var authOptions = AuthenticationConfig.GetAuthenticationOptions(configuration);
 
             builder.Services.AddAuthorization();
             builder.Services
@@ -121,11 +118,6 @@ namespace CoursePrototype.WebApi
             app.MapControllers();
 
             app.Run();
-        }
-
-        public static AuthenticationOptions GetAuthenticationOptions(IConfiguration config)
-        {
-            return config.GetSection("AuthenticationOptions").Get<AuthenticationOptions>()!;
         }
     }
 }

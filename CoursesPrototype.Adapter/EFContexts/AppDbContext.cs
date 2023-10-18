@@ -9,10 +9,7 @@ namespace CoursesPrototype.Adapter.EFContexts
         public DbSet<User> Users { get; set; }
         public DbSet<Credentials> Credentials { get; set; }
 
-        public AppDbContext(DbContextOptions options) : base(options)
-        {
-            Database.EnsureCreated();
-        }
+        public AppDbContext(DbContextOptions options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
