@@ -1,7 +1,6 @@
 ﻿using CoursesPrototype.Application.Helpers;
 using CoursesPrototype.Application.Mappers;
 using CoursesPrototype.Application.Repository;
-using CoursesPrototype.Application.Repository.BasicRepositories;
 using CoursesPrototype.Application.Security;
 using CoursesPrototype.Application.Transaction;
 using CoursesPrototype.Core.Entities;
@@ -37,11 +36,7 @@ namespace CoursesPrototype.Application.Interactors
         {
             if(userDto == null)
             {
-                return new Response()
-                {
-                    Success = false,
-                    Message = "Пользователь не был передан",
-                };
+                throw new ArgumentNullException("", "UserDto was null");
             }
 
             try
@@ -87,12 +82,13 @@ namespace CoursesPrototype.Application.Interactors
                     Message = exception.Message,
                 };
             }
-            catch(Exception)
+            catch(Exception exception)
             {
                 return new Response()
                 {
                     Success = false,
                     Message = "Регистрация не удалась. Внутренняя ошибка",
+                    InnerErrorMessages = new string[] { exception.Message },
                 };
             }
         }
@@ -168,7 +164,7 @@ namespace CoursesPrototype.Application.Interactors
                     return new()
                     {
                         Success = false,
-                        Message = "Пользователь не найден",
+                        Message = "Неверное имя пользователя",
                     };
                 }
 
@@ -192,7 +188,7 @@ namespace CoursesPrototype.Application.Interactors
                     return new()
                     {
                         Success = false,
-                        Message = "Неверные логин или пароль",
+                        Message = "Неверный пароль",
                     };
                 }
 
@@ -211,12 +207,13 @@ namespace CoursesPrototype.Application.Interactors
                     Message = exception.Message,
                 };
             }
-            catch (Exception)
+            catch (Exception exception)
             {
                 return new()
                 {
                     Success = false,
                     Message = "Аутентификация не удалась. Внутренняя ошибка",
+                    InnerErrorMessages = new string[] { exception.Message },
                 };
             }
         }

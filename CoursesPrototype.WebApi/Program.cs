@@ -3,8 +3,10 @@ using CoursesPrototype.Adapter.EFRepositories;
 using CoursesPrototype.Adapter.EFTransaction;
 using CoursesPrototype.Application.Interactors;
 using CoursesPrototype.Application.Repository;
+using CoursesPrototype.Application.Repository.BasicRepositories;
 using CoursesPrototype.Application.Security;
 using CoursesPrototype.Application.Transaction;
+using CoursesPrototype.Core.Entities;
 using CoursesPrototype.SecurityProvider;
 using CoursesPrototype.WebApi.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -26,8 +28,12 @@ namespace CoursePrototype.WebApi
             // Add services to the container.
 
             builder.Services.AddScoped<UserInteractor>();
+            builder.Services.AddScoped<CourseInteractor>();
+
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<ICredentialsRepository, CredentialsRepository>();
+            builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+            builder.Services.AddScoped<IAsyncRepository<UserCreatedCourse>, AsyncRepository<UserCreatedCourse>>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             builder.Services.AddSingleton<IEncryptionService, EncryptionService>();

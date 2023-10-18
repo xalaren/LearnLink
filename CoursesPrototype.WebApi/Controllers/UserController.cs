@@ -24,18 +24,17 @@ namespace CoursePrototype.WebApi.Controllers
             return await userInteractor.RegisterAsync(userDto, password);
         }
 
-        [Authorize]
-        [HttpGet("get-all")]
-        public async Task<Response<UserDto[]>> GetAllAsync()
-        {
-            return await userInteractor.GetUsersAsync();
-        }
-
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<Response<string>> Login(string nickname, string password)
         {
             return await userInteractor.AuthenticateAsync(nickname, password);
+        }
+
+        [HttpGet("get-all")]
+        public async Task<Response<UserDto[]>> GetAllAsync()
+        {
+            return await userInteractor.GetUsersAsync();
         }
     }
 }

@@ -16,5 +16,10 @@ namespace CoursesPrototype.Adapter.EFTransaction
         {
             context.SaveChanges();
         }
+
+        public ValueTask DisposeAsync()
+        {
+            return context.DisposeAsync();
+        }
     }
 }
