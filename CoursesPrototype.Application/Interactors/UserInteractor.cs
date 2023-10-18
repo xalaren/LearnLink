@@ -18,6 +18,8 @@ namespace CoursesPrototype.Application.Interactors
         private readonly IEncryptionService encryptionService;
         private readonly IAuthenticationService authenticationService;
 
+        private const int SALT_LENGTH = 6;
+
         public UserInteractor(
             IUserRepository userRepository,
             ICredentialsRepository credentialsRepository,
@@ -55,7 +57,7 @@ namespace CoursesPrototype.Application.Interactors
                 await userRepository.Create(user);
                 unitOfWork.Commit();
 
-                string salt = encryptionService.GetRandomString(6);
+                string salt = encryptionService.GetRandomString(SALT_LENGTH);
                 string hashedPassword = encryptionService.GetHash(password, salt);
 
                 var userCredentials = new Credentials()
@@ -213,6 +215,232 @@ namespace CoursesPrototype.Application.Interactors
                 {
                     Success = false,
                     Message = "Аутентификация не удалась. Внутренняя ошибка",
+                    InnerErrorMessages = new string[] { exception.Message },
+                };
+            }
+        }
+
+        public async Task<Response> RemoveUserAsync(string nickname, int userId)
+        {
+            try
+            {
+                if (!ValidateHelper.ValidateToEmptyStrings(nickname))
+                {
+                    return new()
+                    {
+                        Success = false,
+                        Message = "Пользователь не найден",
+                    };
+                }
+
+                var user = await userRepository.GetByNickname(nickname);
+
+                if (user == null)
+                {
+                    return new()
+                    {
+                        Success = false,
+                        Message = "Пользователь не найден",
+                    };
+                }
+
+                if(user.Id != userId)
+                {
+                    return new()
+                    {
+                        Success = false,
+                        Message = "Удаление отклонено",
+                    };
+                }
+
+                await userRepository.Remove(userId);
+
+                unitOfWork.Commit();
+
+                return new()
+                {
+                    Success = true,
+                    Message = "Учетная запись удалена успешно",
+                };
+            }
+            catch (ForClientSideBaseException exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = "Удаление не удалось. Внутренняя ошибка",
+                    InnerErrorMessages = new string[] { exception.Message },
+                };
+            }
+        }
+
+        public async Task<Response> UpdateUserAsync(string nickname, UserDto userDto)
+        {
+            try
+            {
+                if (!ValidateHelper.ValidateToEmptyStrings(nickname))
+                {
+                    return new()
+                    {
+                        Success = false,
+                        Message = "Пользователь не найден",
+                    };
+                }
+
+                var user = await userRepository.GetByNickname(nickname);
+
+                if (user == null)
+                {
+                    return new()
+                    {
+                        Success = false,
+                        Message = "Пользователь не найден",
+                    };
+                }
+
+                if (user.Id != userDto.Id)
+                {
+                    return new()
+                    {
+                        Success = false,
+                        Message = "Изменение пользователя отклонено",
+                    };
+                }
+
+                var updatedEntity = user.Assign(userDto);
+
+                userRepository.Update(user.Assign(userDto));
+
+                unitOfWork.Commit();
+
+                return new()
+                {
+                    Success = true,
+                    Message = "Пользователь успешно изменен",
+                };
+            }
+            catch (ForClientSideBaseException exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = "Изменение не удалось. Внутренняя ошибка",
+                    InnerErrorMessages = new string[] { exception.Message },
+                };
+            }
+        }
+
+        public async Task<Response> UpdateUserPasswordAsync(string nickname, int userId, string oldPassword, string newPassword)
+        {
+            try
+            {
+                if (!ValidateHelper.ValidateToEmptyStrings(nickname))
+                {
+                    return new()
+                    {
+                        Success = false,
+                        Message = "Пользователь не найден",
+                    };
+                }
+
+                var user = await userRepository.GetByNickname(nickname);
+
+                if (user == null)
+                {
+                    return new()
+                    {
+                        Success = false,
+                        Message = "Пользователь не найден",
+                    };
+                }
+
+                if (user.Id != userId)
+                {
+                    return new()
+                    {
+                        Success = false,
+                        Message = "Изменение пароля пользователя отклонено",
+                    };
+                }
+
+                if (!ValidateHelper.ValidateToEmptyStrings(oldPassword, newPassword))
+                {
+                    return new()
+                    {
+                        Success = false,
+                        Message = "Пароли не были заполнены",
+                    };
+                }
+
+                var userCredentials = await credentialsRepository.GetCredentialsByUserId(user.Id);
+
+                if (userCredentials == null)
+                {
+                    return new()
+                    {
+                        Success = false,
+                        Message = "Данные для входа не найдены",
+                    };
+                }
+
+                var hashedPassword = encryptionService.GetHash(oldPassword, userCredentials.Salt);
+                var authenticationResult = authenticationService.Authenticate(nickname, hashedPassword, userCredentials.HashedPassword);
+
+                if (authenticationResult == null)
+                {
+                    return new()
+                    {
+                        Success = false,
+                        Message = "Неверный пароль",
+                    };
+                }
+
+                var newSalt = encryptionService.GetRandomString(SALT_LENGTH);
+                var newHash = encryptionService.GetHash(newPassword, newSalt);
+
+                userCredentials.Salt = newSalt;
+                userCredentials.HashedPassword = newHash;
+
+                credentialsRepository.Update(userCredentials);
+
+                unitOfWork.Commit();
+
+                return new()
+                {
+                    Success = true,
+                    Message = "Пароль успешно изменен",
+                };
+            }
+            catch (ForClientSideBaseException exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = "Изменение не удалось. Внутренняя ошибка",
                     InnerErrorMessages = new string[] { exception.Message },
                 };
             }

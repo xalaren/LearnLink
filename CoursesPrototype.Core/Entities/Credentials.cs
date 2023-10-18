@@ -8,6 +8,6 @@
         public User User { get; set; } = null!;
 
         public string HashedPassword { get; set; } = null!;
-        public string Salt { get; init; } = null!;
+        public string Salt { get; set; } = null!;
     }
 }

@@ -34,14 +34,19 @@ namespace CoursesPrototype.Adapter.EFRepositories
             return await context.Users.FirstOrDefaultAsync(user => user.Nickname == nickname);
         }
 
-        public Task Remove(int entityId)
+        public async Task Remove(int entityId)
         {
-            throw new NotImplementedException();
+            var user = await Get(entityId);
+            
+            if(user != null)
+            {
+                context.Remove(user);
+            }
         }
 
         public void Update(User entity)
         {
-            throw new NotImplementedException();
+            context.Users.Update(entity);
         }
     }
 }

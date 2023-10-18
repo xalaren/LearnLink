@@ -2,6 +2,7 @@
 using CoursesPrototype.Application.Helpers;
 using CoursesPrototype.Core.Entities;
 using CoursesPrototype.Shared.ToClientData.DataTransferObjects;
+using System.Reflection.Metadata;
 
 namespace CoursesPrototype.Application.Mappers
 {
@@ -32,6 +33,15 @@ namespace CoursesPrototype.Application.Mappers
                 Lastname = userEntity.Lastname,
                 Name = userEntity.Name,
             };
+        }
+
+        public static User Assign(this User user, UserDto userDto)
+        {
+            user.Nickname = userDto.Nickname;
+            user.Name = userDto.Name;
+            user.Lastname = userDto.Lastname;
+
+            return user;
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using CoursesPrototype.Application.Interactors;
+using CoursesPrototype.Core.Entities;
+using CoursesPrototype.Shared.Exceptions;
 using CoursesPrototype.Shared.ToClientData.DataTransferObjects;
 using CoursesPrototype.Shared.ToClientData.Responses;
 using Microsoft.AspNetCore.Authorization;
@@ -31,10 +33,91 @@ namespace CoursePrototype.WebApi.Controllers
             return await userInteractor.AuthenticateAsync(nickname, password);
         }
 
-        [HttpGet("get-all")]
-        public async Task<Response<UserDto[]>> GetAllAsync()
+        [Authorize]
+        [HttpPost("update-user")]
+        public async Task<Response> UpdateUserAsync(UserDto userDto)
         {
-            return await userInteractor.GetUsersAsync();
+            try
+            {
+                string userNickname = GetAuthorizedUserNickname();
+
+                return await userInteractor.UpdateUserAsync(userNickname, userDto);
+            }
+            catch (ForClientSideBaseException exception)
+            {
+                return new Response()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                };
+            }
+        }
+
+        [Authorize]
+        [HttpPost("update-pass")]
+        public async Task<Response> UpdatePasswordAsync(int userId, string oldPassword, string newPassword)
+        {
+            try
+            {
+                string userNickname = GetAuthorizedUserNickname();
+
+                return await userInteractor.UpdateUserPasswordAsync(userNickname, userId, oldPassword, newPassword);
+            }
+            catch (ForClientSideBaseException exception)
+            {
+                return new Response()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                };
+            }
+        }
+
+        [Authorize]
+        [HttpDelete("remove")]
+        public async Task<Response> RemoveAccountAsync(int userId)
+        {
+            try
+            {
+                string userNickname = GetAuthorizedUserNickname();
+
+                return await userInteractor.RemoveUserAsync(userNickname, userId);
+            }
+            catch(ForClientSideBaseException exception)
+            {
+                return new Response()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                };
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpGet("auth-check")]
+        public bool CheckAuthentication()
+        {
+            try
+            {
+                string userNickname = GetAuthorizedUserNickname();
+
+                return true;
+            }
+            catch (ForClientSideBaseException)
+            {
+                return false;
+            }
+        }
+
+
+        private string GetAuthorizedUserNickname()
+        {
+            if(User.Identity == null || string.IsNullOrWhiteSpace(User.Identity.Name))
+            {
+                throw new ForClientSideBaseException("Авторизованный пользователь не найден");
+            }
+
+            return User.Identity.Name;
         }
     }
 }
