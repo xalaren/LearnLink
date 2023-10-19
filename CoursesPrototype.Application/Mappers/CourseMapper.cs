@@ -26,5 +26,14 @@ namespace CoursesPrototype.Application.Mappers
                     IsPublic: courseEntity.IsPublic
                 );
         }
+
+        public static Course Assign(this Course course, CourseDto courseDto)
+        {
+            course.Title = courseDto.Title;
+            course.Description = courseDto.Description;
+            course.IsPublic = courseDto.IsPublic;
+
+            return course;
+        }
     }
 }

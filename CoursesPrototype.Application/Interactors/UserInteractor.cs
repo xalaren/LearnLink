@@ -220,7 +220,7 @@ namespace CoursesPrototype.Application.Interactors
             {
                 var user = await userRepository.GetAsync(userId);
 
-                await userRepository.Remove(userId);
+                await userRepository.RemoveAsync(userId);
 
                 unitOfWork.Commit();
 

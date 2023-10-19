@@ -1,6 +1,8 @@
 ﻿using CoursesPrototype.Adapter.EFContexts;
 using CoursesPrototype.Application.Repository;
 using CoursesPrototype.Core.Entities;
+using CoursesPrototype.Core.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoursesPrototype.Adapter.EFRepositories
 {
@@ -18,19 +20,31 @@ namespace CoursesPrototype.Adapter.EFRepositories
             await context.Courses.AddAsync(entity);
         }
 
-        public Task<Course?> GetAsync(int entityId)
+        public async Task<Course?> GetAsync(int entityId)
         {
-            throw new NotImplementedException();
+            return await context.Courses.FindAsync(entityId);
         }
 
-        public Task Remove(int entityId)
+        public async Task<Course[]> GetPublicAsync()
         {
-            throw new NotImplementedException();
+            return await context.Courses.Where(course => course.IsPublic).ToArrayAsync();
+        }
+
+        public async Task RemoveAsync(int entityId)
+        {
+            var entity = await GetAsync(entityId);
+
+            if(entity == null)
+            {
+                throw new NotFoundException("Курс не найден");
+            }
+
+            context.Courses.Remove(entity);
         }
 
         public void Update(Course entity)
         {
-            throw new NotImplementedException();
+            context.Courses.Update(entity);
         }
     }
 }

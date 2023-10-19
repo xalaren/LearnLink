@@ -34,7 +34,7 @@ namespace CoursesPrototype.Adapter.EFRepositories
             return await context.Users.FirstOrDefaultAsync(user => user.Nickname == nickname);
         }
 
-        public async Task Remove(int entityId)
+        public async Task RemoveAsync(int entityId)
         {
             var user = await GetAsync(entityId);
             

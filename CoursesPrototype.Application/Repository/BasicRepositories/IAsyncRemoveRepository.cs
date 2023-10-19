@@ -2,6 +2,6 @@
 {
     public interface IAsyncRemoveRepository
     {
-        Task Remove(int entityId);
+        Task RemoveAsync(int entityId);
     }
 }

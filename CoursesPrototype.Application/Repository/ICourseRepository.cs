@@ -5,5 +5,6 @@ namespace CoursesPrototype.Application.Repository
 {
     public interface ICourseRepository : IAsyncRepository<Course>
     {
+        Task<Course[]> GetPublicAsync();
     }
 }
