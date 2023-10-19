@@ -19,7 +19,7 @@ namespace CoursesPrototype.Adapter.EFRepositories
             await context.Users.AddAsync(entity);
         }
 
-        public async Task<User?> Get(int entityId)
+        public async Task<User?> GetAsync(int entityId)
         {
             return await context.Users.FindAsync(entityId);
         }
@@ -29,14 +29,14 @@ namespace CoursesPrototype.Adapter.EFRepositories
             return await context.Users.ToArrayAsync();
         }
 
-        public async Task<User?> GetByNickname(string nickname)
+        public async Task<User?> GetByNicknameAsync(string nickname)
         {
             return await context.Users.FirstOrDefaultAsync(user => user.Nickname == nickname);
         }
 
         public async Task Remove(int entityId)
         {
-            var user = await Get(entityId);
+            var user = await GetAsync(entityId);
             
             if(user != null)
             {

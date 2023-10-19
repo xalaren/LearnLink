@@ -1,8 +1,6 @@
 ﻿using CoursesPrototype.Application.Interactors;
-using CoursesPrototype.Core.Entities;
-using CoursesPrototype.Shared.Exceptions;
-using CoursesPrototype.Shared.ToClientData.DataTransferObjects;
-using CoursesPrototype.Shared.ToClientData.Responses;
+using CoursesPrototype.Shared.DataTransferObjects;
+using CoursesPrototype.Shared.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,10 +11,12 @@ namespace CoursePrototype.WebApi.Controllers
     public class UserController : Controller
     {
         private readonly UserInteractor userInteractor;
+        private readonly UserVerifierService userVerifierService;
 
-        public UserController(UserInteractor userInteractor)
+        public UserController(UserInteractor userInteractor, UserVerifierService verifierService)
         {
             this.userInteractor = userInteractor;
+            this.userVerifierService = verifierService;
         }
 
         [AllowAnonymous]
@@ -37,87 +37,33 @@ namespace CoursePrototype.WebApi.Controllers
         [HttpPost("update-user")]
         public async Task<Response> UpdateUserAsync(UserDto userDto)
         {
-            try
-            {
-                string userNickname = GetAuthorizedUserNickname();
+            var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userDto.Id);
 
-                return await userInteractor.UpdateUserAsync(userNickname, userDto);
-            }
-            catch (ForClientSideBaseException exception)
-            {
-                return new Response()
-                {
-                    Success = false,
-                    Message = exception.Message,
-                };
-            }
+            if (!verifyResponse.Success) return verifyResponse;
+
+            return await userInteractor.UpdateUserAsync(userDto);
         }
 
         [Authorize]
         [HttpPost("update-pass")]
         public async Task<Response> UpdatePasswordAsync(int userId, string oldPassword, string newPassword)
         {
-            try
-            {
-                string userNickname = GetAuthorizedUserNickname();
+            var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
 
-                return await userInteractor.UpdateUserPasswordAsync(userNickname, userId, oldPassword, newPassword);
-            }
-            catch (ForClientSideBaseException exception)
-            {
-                return new Response()
-                {
-                    Success = false,
-                    Message = exception.Message,
-                };
-            }
+            if (!verifyResponse.Success) return verifyResponse;
+
+            return await userInteractor.UpdateUserPasswordAsync(userId, oldPassword, newPassword);
         }
 
         [Authorize]
         [HttpDelete("remove")]
         public async Task<Response> RemoveAccountAsync(int userId)
         {
-            try
-            {
-                string userNickname = GetAuthorizedUserNickname();
+            var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
 
-                return await userInteractor.RemoveUserAsync(userNickname, userId);
-            }
-            catch(ForClientSideBaseException exception)
-            {
-                return new Response()
-                {
-                    Success = false,
-                    Message = exception.Message,
-                };
-            }
-        }
+            if (!verifyResponse.Success) return verifyResponse;
 
-        [AllowAnonymous]
-        [HttpGet("auth-check")]
-        public bool CheckAuthentication()
-        {
-            try
-            {
-                string userNickname = GetAuthorizedUserNickname();
-
-                return true;
-            }
-            catch (ForClientSideBaseException)
-            {
-                return false;
-            }
-        }
-
-
-        private string GetAuthorizedUserNickname()
-        {
-            if(User.Identity == null || string.IsNullOrWhiteSpace(User.Identity.Name))
-            {
-                throw new ForClientSideBaseException("Авторизованный пользователь не найден");
-            }
-
-            return User.Identity.Name;
+            return await userInteractor.RemoveUserAsync(userId);
         }
     }
 }

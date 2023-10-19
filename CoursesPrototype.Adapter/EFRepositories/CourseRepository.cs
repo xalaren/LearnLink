@@ -18,7 +18,7 @@ namespace CoursesPrototype.Adapter.EFRepositories
             await context.Courses.AddAsync(entity);
         }
 
-        public Task<Course?> Get(int entityId)
+        public Task<Course?> GetAsync(int entityId)
         {
             throw new NotImplementedException();
         }

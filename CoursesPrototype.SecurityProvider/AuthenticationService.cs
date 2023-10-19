@@ -21,8 +21,8 @@ namespace CoursesPrototype.SecurityProvider
                 return null;
             }
 
-            return GetToken(nickname);
-        }
+                return GetToken(nickname);
+            }
 
         public string GetToken(string nickname)
         {
@@ -47,7 +47,7 @@ namespace CoursesPrototype.SecurityProvider
         {
             var claims = new List<Claim>()
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, nickname),
+                new Claim(ClaimsIdentity.DefaultNameClaimType, nickname)
             };
 
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(

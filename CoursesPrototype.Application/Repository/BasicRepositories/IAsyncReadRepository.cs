@@ -2,6 +2,6 @@
 {
     public interface IAsyncReadRepository<T> where T : class
     {
-        Task<T?> Get(int entityId);
+        Task<T?> GetAsync(int entityId);
     }
 }

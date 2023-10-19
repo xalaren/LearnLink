@@ -19,7 +19,7 @@ namespace CoursesPrototype.Adapter.EFRepositories
             await context.AddAsync(entity);
         }
 
-        public async Task<Credentials?> Get(int entityId)
+        public async Task<Credentials?> GetAsync(int entityId)
         {
             return await context.Credentials.FindAsync(entityId);
         }

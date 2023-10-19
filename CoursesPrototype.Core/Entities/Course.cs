@@ -1,12 +1,33 @@
-﻿namespace CoursesPrototype.Core.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CoursesPrototype.Core.Entities
 {
     public class Course
     {
-        public int Id { get; set; }
+        private string title = string.Empty;
 
-        public string Title { get; set; } = null!;
+        public int Id { get; set; }
+        public bool IsPublic { get; set; } = false;
         public string? Description { get; set; }
 
-        public bool IsPublic { get; set; }
+        public string Title
+        {
+            get => title;
+            set
+            {
+                if (!string.IsNullOrWhiteSpace(title) && string.IsNullOrWhiteSpace(value))
+                {
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ValidationException("Заголовок не был заполнен");
+                }
+
+                title = value;
+            }
+        }
+
     }
 }

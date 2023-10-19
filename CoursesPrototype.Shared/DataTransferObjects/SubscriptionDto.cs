@@ -1,4 +1,4 @@
-﻿namespace CoursesPrototype.Shared.ToClientData.DataTransferObjects
+﻿namespace CoursesPrototype.Shared.DataTransferObjects
 {
     public class SubscriptionDto
     {

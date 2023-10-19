@@ -1,8 +1,5 @@
-﻿using CoursesPrototype.Shared.Exceptions;
-using CoursesPrototype.Application.Helpers;
-using CoursesPrototype.Core.Entities;
-using CoursesPrototype.Shared.ToClientData.DataTransferObjects;
-using System.Reflection.Metadata;
+﻿using CoursesPrototype.Core.Entities;
+using CoursesPrototype.Shared.DataTransferObjects;
 
 namespace CoursesPrototype.Application.Mappers
 {
@@ -10,11 +7,6 @@ namespace CoursesPrototype.Application.Mappers
     {
         public static User ToEntity(this UserDto userDto)
         {
-            if (!ValidateHelper.ValidateToEmptyStrings(userDto.Nickname, userDto.Name, userDto.Lastname))
-            {
-                throw new ForClientSideBaseException("Не все поля пользователя были заполнены");
-            }
-
             return new User()
             {
                 Id = userDto.Id,
@@ -26,13 +18,13 @@ namespace CoursesPrototype.Application.Mappers
 
         public static UserDto ToDto(this User userEntity)
         {
-            return new UserDto()
-            {
-                Id = userEntity.Id,
-                Nickname = userEntity.Nickname,
-                Lastname = userEntity.Lastname,
-                Name = userEntity.Name,
-            };
+            return new UserDto
+                (
+                    Id: userEntity.Id,
+                    Nickname: userEntity.Nickname,
+                    Lastname: userEntity.Lastname,
+                    Name: userEntity.Name
+                );
         }
 
         public static User Assign(this User user, UserDto userDto)

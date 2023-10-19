@@ -8,10 +8,9 @@ using CoursesPrototype.Application.Security;
 using CoursesPrototype.Application.Transaction;
 using CoursesPrototype.Core.Entities;
 using CoursesPrototype.SecurityProvider;
+using CoursesPrototype.WebApi.Controllers;
 using CoursesPrototype.WebApi.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -29,20 +28,23 @@ namespace CoursePrototype.WebApi
 
             builder.Services.AddScoped<UserInteractor>();
             builder.Services.AddScoped<CourseInteractor>();
+            builder.Services.AddScoped<UserVerifierService>();
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<ICredentialsRepository, CredentialsRepository>();
             builder.Services.AddScoped<ICourseRepository, CourseRepository>();
-            builder.Services.AddScoped<IAsyncRepository<UserCreatedCourse>, AsyncRepository<UserCreatedCourse>>();
+            builder.Services.AddScoped<IUserCreatedCoursesRepository, UserCreatedCoursesRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             builder.Services.AddSingleton<IEncryptionService, EncryptionService>();
             builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
             builder.Services.AddSingleton(provider => AuthenticationConfig.GetAuthenticationOptions(configuration));
 
+
             builder.Services.AddDbContext<AppDbContext>(options => options.GetMySqlOptions(configuration));
 
             builder.Services.AddControllers();
+
             builder.Services.AddEndpointsApiExplorer();
 
             /* Setup authentication start */

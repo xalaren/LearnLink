@@ -1,5 +1,5 @@
 ﻿using CoursesPrototype.Core.Entities;
-using CoursesPrototype.Shared.ToClientData.DataTransferObjects;
+using CoursesPrototype.Shared.DataTransferObjects;
 
 namespace CoursesPrototype.Application.Mappers
 {
@@ -18,13 +18,13 @@ namespace CoursesPrototype.Application.Mappers
 
         public static CourseDto ToDto(this Course courseEntity)
         {
-            return new CourseDto()
-            {
-                Id = courseEntity.Id,
-                Title = courseEntity.Title,
-                Description = courseEntity.Description,
-                IsPublic = courseEntity.IsPublic,
-            };
+            return new CourseDto
+                (
+                    Id: courseEntity.Id,
+                    Title: courseEntity.Title,
+                    Description: courseEntity.Description,
+                    IsPublic: courseEntity.IsPublic
+                );
         }
     }
 }

@@ -17,14 +17,14 @@ namespace CoursesPrototype.Adapter.EFRepositories
             await context.AddAsync(entity);
         }
 
-        public async Task<T?> Get(int entityId)
+        public async Task<T?> GetAsync(int entityId)
         {
             return await context.FindAsync<T>(entityId);
         }
 
         public async Task Remove(int entityId)
         {
-            var entity = await Get(entityId);
+            var entity = await GetAsync(entityId);
 
             if (entity == null)
             {

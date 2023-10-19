@@ -1,5 +1,5 @@
 ﻿using CoursesPrototype.Core.Entities;
-using CoursesPrototype.Shared.ToClientData.DataTransferObjects;
+using CoursesPrototype.Shared.DataTransferObjects;
 
 namespace CoursesPrototype.Application.Mappers
 {

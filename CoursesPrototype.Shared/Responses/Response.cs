@@ -1,4 +1,4 @@
-﻿namespace CoursesPrototype.Shared.ToClientData.Responses
+﻿namespace CoursesPrototype.Shared.Responses
 {
     public class Response
     {

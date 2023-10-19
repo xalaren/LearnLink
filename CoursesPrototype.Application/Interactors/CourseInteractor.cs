@@ -1,11 +1,10 @@
 ﻿using CoursesPrototype.Application.Mappers;
 using CoursesPrototype.Application.Repository;
-using CoursesPrototype.Application.Repository.BasicRepositories;
 using CoursesPrototype.Application.Transaction;
 using CoursesPrototype.Core.Entities;
-using CoursesPrototype.Shared.Exceptions;
-using CoursesPrototype.Shared.ToClientData.DataTransferObjects;
-using CoursesPrototype.Shared.ToClientData.Responses;
+using CoursesPrototype.Core.Exceptions;
+using CoursesPrototype.Shared.DataTransferObjects;
+using CoursesPrototype.Shared.Responses;
 
 namespace CoursesPrototype.Application.Interactors
 {
@@ -13,10 +12,10 @@ namespace CoursesPrototype.Application.Interactors
     {
         private readonly ICourseRepository courseRepository;
         private readonly IUserRepository userRepository;
-        private readonly IAsyncRepository<UserCreatedCourse> userCreatedCourseRepository;
+        private readonly IUserCreatedCoursesRepository userCreatedCourseRepository;
         private readonly IUnitOfWork unitOfWork;
 
-        public CourseInteractor(ICourseRepository courseRepository, IUserRepository userRepository, IUnitOfWork unitOfWork, IAsyncRepository<UserCreatedCourse> userCreatedCourseRepository)
+        public CourseInteractor(ICourseRepository courseRepository, IUserRepository userRepository, IUnitOfWork unitOfWork, IUserCreatedCoursesRepository userCreatedCourseRepository)
         {
             this.courseRepository = courseRepository;
             this.userRepository = userRepository;
@@ -24,20 +23,59 @@ namespace CoursesPrototype.Application.Interactors
             this.userCreatedCourseRepository = userCreatedCourseRepository;
         }
 
+        public async Task<Response<CourseDto[]>> GetUserCreatedCoursesAsync(int userId)
+        {
+            try
+            {
+                var user = await userRepository.GetAsync(userId);
+
+                if(user == null)
+                {
+                    throw new NotFoundException("Пользователь не найден");
+                }
+
+                var courses = await userCreatedCourseRepository.GetUserCreatedCoursesAsync(userId);
+
+                return new()
+                {
+                    Success = true,
+                    Message = "Курсы пользователя успешно получены",
+                    Value = courses.Select(course => course.ToDto()).ToArray(),
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = "Не удалось получить курсы",
+                    InnerErrorMessages = new string[] { exception.Message },
+                };
+            }
+        }
+
         public async Task<Response> CreateCourseAsync(int userId, CourseDto courseDto)
         {
             try
             {
-                if(courseDto == null)
+                if (courseDto == null)
                 {
                     throw new ArgumentNullException("CourseDto was null");
                 }
 
-                var user = await userRepository.Get(userId);
+                var user = await userRepository.GetAsync(userId);
 
-                if(user == null)
+                if (user == null)
                 {
-                    throw new ArgumentNullException("User not found");
+                    throw new NotFoundException("Пользователь не найден");
                 }
 
                 var course = courseDto.ToEntity();
@@ -58,7 +96,7 @@ namespace CoursesPrototype.Application.Interactors
                     Message = "Курс успешно создан",
                 };
             }
-            catch(ForClientSideBaseException exception) 
+            catch (CustomException exception)
             {
                 return new Response()
                 {
@@ -66,12 +104,12 @@ namespace CoursesPrototype.Application.Interactors
                     Message = exception.Message,
                 };
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 return new Response()
                 {
                     Success = false,
-                    Message = "Не удалось создать курс. Внутренняя ошибка",
+                    Message = "Не удалось создать курс",
                     InnerErrorMessages = new string[] { exception.Message },
                 };
             }

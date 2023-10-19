@@ -4,9 +4,9 @@ using CoursesPrototype.Application.Repository;
 using CoursesPrototype.Application.Security;
 using CoursesPrototype.Application.Transaction;
 using CoursesPrototype.Core.Entities;
-using CoursesPrototype.Shared.Exceptions;
-using CoursesPrototype.Shared.ToClientData.DataTransferObjects;
-using CoursesPrototype.Shared.ToClientData.Responses;
+using CoursesPrototype.Core.Exceptions;
+using CoursesPrototype.Shared.DataTransferObjects;
+using CoursesPrototype.Shared.Responses;
 
 namespace CoursesPrototype.Application.Interactors
 {
@@ -45,11 +45,7 @@ namespace CoursesPrototype.Application.Interactors
             {
                 if(!ValidateHelper.ValidateToEmptyStrings(password))
                 {
-                    return new Response()
-                    {
-                        Success = false,
-                        Message = "Пароль не был заполнен",
-                    };
+                    throw new ValidationException("Пароль не был заполнен");
                 }
 
                 var user = userDto.ToEntity();
@@ -76,7 +72,7 @@ namespace CoursesPrototype.Application.Interactors
                     Message = "Пользователь успешно зарегистрирован",
                 };
             }
-            catch(ForClientSideBaseException exception)
+            catch(CustomException exception)
             {
                 return new Response()
                 {
@@ -105,12 +101,21 @@ namespace CoursesPrototype.Application.Interactors
                     Value = (await userRepository.GetAll()).Select(user => user.ToDto()).ToArray(),
                 };
             }
-            catch (Exception exception)
+            catch (CustomException exception)
             {
                 return new()
                 {
                     Success = false,
                     Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = "Не удалось получить данные",
+                    InnerErrorMessages = new string[] { exception.Message },
                 };
             }
         }
@@ -119,15 +124,11 @@ namespace CoursesPrototype.Application.Interactors
         {
             try
             {
-                var user = await userRepository.Get(userId);
+                var user = await userRepository.GetAsync(userId);
 
                 if (user == null)
                 {
-                    return new()
-                    {
-                        Success = false,
-                        Message = "Пользователь не найден",
-                    };
+                    throw new NotFoundException("Пользователь не найден");
                 }
 
                 return new()
@@ -136,12 +137,21 @@ namespace CoursesPrototype.Application.Interactors
                     Value = user.ToDto(),
                 };
             }
-            catch (Exception exception)
+            catch (CustomException exception)
             {
                 return new()
                 {
                     Success = false,
                     Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = "Не удалось получить данные",
+                    InnerErrorMessages = new string[] { exception.Message },
                 };
             }
         }
@@ -152,33 +162,21 @@ namespace CoursesPrototype.Application.Interactors
             {
                 if (!ValidateHelper.ValidateToEmptyStrings(nickname, password))
                 {
-                    return new()
-                    {
-                        Success = false,
-                        Message = "Не все поля были заполнены",
-                    };
+                    throw new ValidationException("Не все поля были заполнены");
                 }
 
-                var user = await userRepository.GetByNickname(nickname);
+                var user = await userRepository.GetByNicknameAsync(nickname);
 
                 if(user == null)
                 {
-                    return new()
-                    {
-                        Success = false,
-                        Message = "Неверное имя пользователя",
-                    };
+                    throw new NotFoundException("Неверное имя пользователя");
                 }
 
                 var userCredentials = await credentialsRepository.GetCredentialsByUserId(user.Id);
 
                 if (userCredentials == null)
                 {
-                    return new()
-                    {
-                        Success = false,
-                        Message = "Данные для входа не найдены",
-                    };
+                    throw new NotFoundException("Данные для входа не найдены");
                 }
 
                 var hashedPassword = encryptionService.GetHash(password, userCredentials.Salt);
@@ -187,11 +185,7 @@ namespace CoursesPrototype.Application.Interactors
 
                 if(authenticationResult == null)
                 {
-                    return new()
-                    {
-                        Success = false,
-                        Message = "Неверный пароль",
-                    };
+                    throw new ValidationException("Неверный пароль");
                 }
 
                 return new()
@@ -201,7 +195,7 @@ namespace CoursesPrototype.Application.Interactors
                     Value = authenticationResult,
                 };
             }
-            catch (ForClientSideBaseException exception)
+            catch (CustomException exception)
             {
                 return new()
                 {
@@ -220,38 +214,11 @@ namespace CoursesPrototype.Application.Interactors
             }
         }
 
-        public async Task<Response> RemoveUserAsync(string nickname, int userId)
+        public async Task<Response> RemoveUserAsync(int userId)
         {
             try
             {
-                if (!ValidateHelper.ValidateToEmptyStrings(nickname))
-                {
-                    return new()
-                    {
-                        Success = false,
-                        Message = "Пользователь не найден",
-                    };
-                }
-
-                var user = await userRepository.GetByNickname(nickname);
-
-                if (user == null)
-                {
-                    return new()
-                    {
-                        Success = false,
-                        Message = "Пользователь не найден",
-                    };
-                }
-
-                if(user.Id != userId)
-                {
-                    return new()
-                    {
-                        Success = false,
-                        Message = "Удаление отклонено",
-                    };
-                }
+                var user = await userRepository.GetAsync(userId);
 
                 await userRepository.Remove(userId);
 
@@ -263,7 +230,7 @@ namespace CoursesPrototype.Application.Interactors
                     Message = "Учетная запись удалена успешно",
                 };
             }
-            catch (ForClientSideBaseException exception)
+            catch (CustomException exception)
             {
                 return new()
                 {
@@ -276,43 +243,26 @@ namespace CoursesPrototype.Application.Interactors
                 return new()
                 {
                     Success = false,
-                    Message = "Удаление не удалось. Внутренняя ошибка",
+                    Message = "Удаление не удалось",
                     InnerErrorMessages = new string[] { exception.Message },
                 };
             }
         }
 
-        public async Task<Response> UpdateUserAsync(string nickname, UserDto userDto)
+        public async Task<Response> UpdateUserAsync(UserDto userDto)
         {
             try
             {
-                if (!ValidateHelper.ValidateToEmptyStrings(nickname))
-                {
-                    return new()
-                    {
-                        Success = false,
-                        Message = "Пользователь не найден",
-                    };
-                }
-
-                var user = await userRepository.GetByNickname(nickname);
+                var user = await userRepository.GetAsync(userDto.Id);
 
                 if (user == null)
                 {
-                    return new()
-                    {
-                        Success = false,
-                        Message = "Пользователь не найден",
-                    };
+                    throw new NotFoundException("Пользователь не найден");
                 }
 
                 if (user.Id != userDto.Id)
                 {
-                    return new()
-                    {
-                        Success = false,
-                        Message = "Изменение пользователя отклонено",
-                    };
+                    throw new AccessLevelException("Изменение пользователя отклонено");
                 }
 
                 var updatedEntity = user.Assign(userDto);
@@ -327,7 +277,7 @@ namespace CoursesPrototype.Application.Interactors
                     Message = "Пользователь успешно изменен",
                 };
             }
-            catch (ForClientSideBaseException exception)
+            catch (CustomException exception)
             {
                 return new()
                 {
@@ -340,75 +290,41 @@ namespace CoursesPrototype.Application.Interactors
                 return new()
                 {
                     Success = false,
-                    Message = "Изменение не удалось. Внутренняя ошибка",
+                    Message = "Изменение не удалось",
                     InnerErrorMessages = new string[] { exception.Message },
                 };
             }
         }
 
-        public async Task<Response> UpdateUserPasswordAsync(string nickname, int userId, string oldPassword, string newPassword)
+        public async Task<Response> UpdateUserPasswordAsync(int userId, string oldPassword, string newPassword)
         {
             try
             {
-                if (!ValidateHelper.ValidateToEmptyStrings(nickname))
-                {
-                    return new()
-                    {
-                        Success = false,
-                        Message = "Пользователь не найден",
-                    };
-                }
-
-                var user = await userRepository.GetByNickname(nickname);
-
-                if (user == null)
-                {
-                    return new()
-                    {
-                        Success = false,
-                        Message = "Пользователь не найден",
-                    };
-                }
-
-                if (user.Id != userId)
-                {
-                    return new()
-                    {
-                        Success = false,
-                        Message = "Изменение пароля пользователя отклонено",
-                    };
-                }
+                var user = await userRepository.GetAsync(userId);
 
                 if (!ValidateHelper.ValidateToEmptyStrings(oldPassword, newPassword))
                 {
-                    return new()
-                    {
-                        Success = false,
-                        Message = "Пароли не были заполнены",
-                    };
+                    throw new ValidationException("Пароли не были заполнены");
+                }
+
+                if(user == null)
+                {
+                    throw new NotFoundException("Пользователь не найден");
                 }
 
                 var userCredentials = await credentialsRepository.GetCredentialsByUserId(user.Id);
 
                 if (userCredentials == null)
                 {
-                    return new()
-                    {
-                        Success = false,
-                        Message = "Данные для входа не найдены",
-                    };
+                    throw new NotFoundException("Данные для входа не найдены");
                 }
 
                 var hashedPassword = encryptionService.GetHash(oldPassword, userCredentials.Salt);
-                var authenticationResult = authenticationService.Authenticate(nickname, hashedPassword, userCredentials.HashedPassword);
+                var authenticationResult = authenticationService.Authenticate(user.Nickname, hashedPassword, userCredentials.HashedPassword);
 
                 if (authenticationResult == null)
                 {
-                    return new()
-                    {
-                        Success = false,
-                        Message = "Неверный пароль",
-                    };
+                    throw new ValidationException("Неверный пароль");
                 }
 
                 var newSalt = encryptionService.GetRandomString(SALT_LENGTH);
@@ -427,7 +343,7 @@ namespace CoursesPrototype.Application.Interactors
                     Message = "Пароль успешно изменен",
                 };
             }
-            catch (ForClientSideBaseException exception)
+            catch (CustomException exception)
             {
                 return new()
                 {
@@ -440,7 +356,7 @@ namespace CoursesPrototype.Application.Interactors
                 return new()
                 {
                     Success = false,
-                    Message = "Изменение не удалось. Внутренняя ошибка",
+                    Message = "Изменение не удалось",
                     InnerErrorMessages = new string[] { exception.Message },
                 };
             }
