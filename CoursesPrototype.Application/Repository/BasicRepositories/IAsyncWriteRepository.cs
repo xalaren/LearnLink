@@ -2,6 +2,6 @@
 {
     public interface IAsyncWriteRepository<T> where T : class
     {
-        Task Create(T entity);
+        Task CreateAsync(T entity);
     }
 }

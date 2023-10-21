@@ -50,7 +50,7 @@ namespace CoursesPrototype.Application.Interactors
 
                 var user = userDto.ToEntity();
 
-                await userRepository.Create(user);
+                await userRepository.CreateAsync(user);
                 unitOfWork.Commit();
 
                 string salt = encryptionService.GetRandomString(SALT_LENGTH);
@@ -62,7 +62,7 @@ namespace CoursesPrototype.Application.Interactors
                     HashedPassword = hashedPassword,
                     Salt = salt,
                 };
-                await credentialsRepository.Create(userCredentials);
+                await credentialsRepository.CreateAsync(userCredentials);
 
                 unitOfWork.Commit();
 

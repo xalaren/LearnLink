@@ -1,5 +1,4 @@
 ﻿using CoursesPrototype.Application.Interactors;
-using CoursesPrototype.Core.Entities;
 using CoursesPrototype.Shared.DataTransferObjects;
 using CoursesPrototype.Shared.Responses;
 using Microsoft.AspNetCore.Authorization;
@@ -20,6 +19,20 @@ namespace CoursesPrototype.WebApi.Controllers
             this.userVerifierService = userVerifierService;
         }
 
+        //[Authorize]
+        [HttpGet("get")]
+        public async Task<Response<CourseDto?>> GetCourseAsync(int courseId)
+        {
+            return await courseInteractor.GetCourseAsync(courseId);
+        }
+
+        //TODO: make private
+        [HttpGet("get-all")]
+        public async Task<Response<CourseDto[]>> GetAllCoursesAsync()
+        {
+            return await courseInteractor.GetAllAsync();
+        }
+
         [Authorize]
         [HttpGet("get-user-courses")]
         public async Task<Response<CourseDto[]>> GetUserCreatedCoursesAsync(int userId)
@@ -35,7 +48,7 @@ namespace CoursesPrototype.WebApi.Controllers
                 };
             }
 
-            return await courseInteractor.GetUserCreatedCoursesAsync(userId);
+            return await courseInteractor.GetCoursesCreatedByUserAsync(userId);
         }
 
         [AllowAnonymous]
@@ -45,13 +58,24 @@ namespace CoursesPrototype.WebApi.Controllers
             return await courseInteractor.GetPublicCoursesAsync();
         }
 
-        [Authorize]
+        //[Authorize]
+        [HttpGet("get-subscribed")]
+        public async Task<Response<CourseDto[]>> GetSubscribedCoursesAsync(int userId)
+        {
+            //var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
+
+            //if (!verifyResponse.Success) return verifyResponse;
+
+            return await courseInteractor.GetSubscribedCoursesAsync(userId);
+        }
+
+        //[Authorize]
         [HttpPost("create")]
         public async Task<Response> CreateCourseAsync(int userId, CourseDto courseDto)
         {
-            var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
+            //var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
 
-            if (!verifyResponse.Success) return verifyResponse;
+            //if (!verifyResponse.Success) return verifyResponse;
 
             return await courseInteractor.CreateCourseAsync(userId, courseDto);
         }

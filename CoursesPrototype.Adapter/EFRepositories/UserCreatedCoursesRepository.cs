@@ -1,6 +1,7 @@
 ﻿using CoursesPrototype.Adapter.EFContexts;
 using CoursesPrototype.Application.Repository;
 using CoursesPrototype.Core.Entities;
+using CoursesPrototype.Core.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoursesPrototype.Adapter.EFRepositories
@@ -14,16 +15,24 @@ namespace CoursesPrototype.Adapter.EFRepositories
             this.context = context;
         }
 
-        public async Task Create(UserCreatedCourse entity)
+        public async Task CreateAsync(UserCreatedCourse entity)
         {
             await context.UserCreatedCourses.AddAsync(entity);
         }
 
-        public async Task<Course[]> GetUserCreatedCoursesAsync(int userId)
+        public async Task<UserCreatedCourse[]> GetUserCreatedCoursesAsync(int userId)
         {
-            var userCourses = context.UserCreatedCourses.Where(userCourse => userCourse.UserId == userId);
+            return await context.UserCreatedCourses.Where(userCourse => userCourse.UserId == userId).ToArrayAsync();
+        }
 
-            return await context.Courses.Where(course => userCourses.Any(e => e.CourseId == course.Id)).ToArrayAsync();
+        public async ValueTask DisposeAsync()
+        {
+            await context.DisposeAsync();
+        }
+
+        public async Task<UserCreatedCourse?> GetUserCreatedCourse(int userId, int courseId)
+        {
+            return await context.UserCreatedCourses.FirstOrDefaultAsync(u => u.UserId == userId && u.CourseId == courseId);
         }
     }
 }

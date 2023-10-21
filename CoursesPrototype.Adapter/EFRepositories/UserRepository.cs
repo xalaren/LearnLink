@@ -14,7 +14,7 @@ namespace CoursesPrototype.Adapter.EFRepositories
             this.context = context;
         }
 
-        public async Task Create(User entity)
+        public async Task CreateAsync(User entity)
         {
             await context.Users.AddAsync(entity);
         }
@@ -47,6 +47,11 @@ namespace CoursesPrototype.Adapter.EFRepositories
         public void Update(User entity)
         {
             context.Users.Update(entity);
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            await context.DisposeAsync();
         }
     }
 }

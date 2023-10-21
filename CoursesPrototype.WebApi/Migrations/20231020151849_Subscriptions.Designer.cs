@@ -3,6 +3,7 @@ using System;
 using CoursesPrototype.Adapter.EFContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoursesPrototype.WebApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231020151849_Subscriptions")]
+    partial class Subscriptions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,21 +45,6 @@ namespace CoursesPrototype.WebApi.Migrations
                     b.ToTable("Courses");
                 });
 
-            modelBuilder.Entity("CoursesPrototype.Core.Entities.CourseModule", b =>
-                {
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ModuleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CourseId", "ModuleId");
-
-                    b.HasIndex("ModuleId");
-
-                    b.ToTable("CourseModules");
-                });
-
             modelBuilder.Entity("CoursesPrototype.Core.Entities.Credentials", b =>
                 {
                     b.Property<int>("Id")
@@ -79,29 +67,6 @@ namespace CoursesPrototype.WebApi.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Credentials");
-                });
-
-            modelBuilder.Entity("CoursesPrototype.Core.Entities.Module", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Content")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("varchar(500)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Modules");
                 });
 
             modelBuilder.Entity("CoursesPrototype.Core.Entities.Subscription", b =>
@@ -170,25 +135,6 @@ namespace CoursesPrototype.WebApi.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("UserCreatedCourses");
-                });
-
-            modelBuilder.Entity("CoursesPrototype.Core.Entities.CourseModule", b =>
-                {
-                    b.HasOne("CoursesPrototype.Core.Entities.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CoursesPrototype.Core.Entities.Module", "Module")
-                        .WithMany()
-                        .HasForeignKey("ModuleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-
-                    b.Navigation("Module");
                 });
 
             modelBuilder.Entity("CoursesPrototype.Core.Entities.Credentials", b =>

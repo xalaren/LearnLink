@@ -13,6 +13,9 @@ namespace CoursesPrototype.Adapter.EFContexts
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<UserCreatedCourse> UserCreatedCourses { get; set; }
 
+        public DbSet<Module> Modules { get; set; }
+        public DbSet<CourseModule> CourseModules { get; set; }
+
         public AppDbContext(DbContextOptions options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -21,6 +24,9 @@ namespace CoursesPrototype.Adapter.EFContexts
             modelBuilder.ApplyConfiguration(new CredentialsEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new CoursesEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new UserCreatedCoursesEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new SubscriptionsEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new ModulesEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new CourseModulesEntityTypeConfiguration());
         }
     }
 }

@@ -28,12 +28,17 @@ namespace CoursePrototype.WebApi
 
             builder.Services.AddScoped<UserInteractor>();
             builder.Services.AddScoped<CourseInteractor>();
+            builder.Services.AddScoped<SubscriptionInteractor>();
+            builder.Services.AddScoped<ModuleInteractor>();
             builder.Services.AddScoped<UserVerifierService>();
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<ICredentialsRepository, CredentialsRepository>();
-            builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+            builder.Services.AddScoped<ICourseRepository, CoursesRepository>();
             builder.Services.AddScoped<IUserCreatedCoursesRepository, UserCreatedCoursesRepository>();
+            builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
+            builder.Services.AddScoped<IModulesRepository, ModulesRepository>();
+            builder.Services.AddScoped<ICourseModuleRepository, CourseModuleRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             builder.Services.AddSingleton<IEncryptionService, EncryptionService>();
@@ -74,7 +79,6 @@ namespace CoursePrototype.WebApi
 
             /* Setup authentication end */
 
-            builder.Services.AddAuthorization();
             builder.Services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "CoursesPrototype", Version = "v1" });

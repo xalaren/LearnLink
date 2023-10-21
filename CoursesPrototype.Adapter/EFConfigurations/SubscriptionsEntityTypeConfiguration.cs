@@ -8,7 +8,7 @@ namespace CoursesPrototype.Adapter.EFConfigurations
     {
         public void Configure(EntityTypeBuilder<Subscription> builder)
         {
-            throw new NotImplementedException();
+            //builder.HasKey(subscription => new { subscription.UserId, subscription.CourseId });
         }
     }
 }

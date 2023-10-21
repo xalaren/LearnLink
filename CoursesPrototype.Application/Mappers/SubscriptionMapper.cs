@@ -11,7 +11,6 @@ namespace CoursesPrototype.Application.Mappers
             {
                 Id = subscriptionDto.Id,
                 StartDate = subscriptionDto.StartDate,
-                EndDate = subscriptionDto.EndDate,
                 CourseId = subscriptionDto.CourseId,
                 UserId = subscriptionDto.UserId,
             };
@@ -19,14 +18,13 @@ namespace CoursesPrototype.Application.Mappers
 
         public static SubscriptionDto ToDto(this Subscription subscriptionEntity)
         {
-            return new SubscriptionDto()
-            {
-                Id = subscriptionEntity.Id,
-                StartDate = subscriptionEntity.StartDate,
-                EndDate = subscriptionEntity.EndDate,
-                CourseId = subscriptionEntity.CourseId,
-                UserId = subscriptionEntity.UserId,
-            };
+            return new SubscriptionDto
+            (
+                Id: subscriptionEntity.Id,
+                StartDate: subscriptionEntity.StartDate,
+                CourseId: subscriptionEntity.CourseId,
+                UserId: subscriptionEntity.UserId
+            );
         }
     }
 }

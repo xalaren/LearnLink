@@ -1,4 +1,5 @@
-﻿using CoursesPrototype.Application.Mappers;
+﻿using System.Reflection;
+using CoursesPrototype.Application.Mappers;
 using CoursesPrototype.Application.Repository;
 using CoursesPrototype.Application.Transaction;
 using CoursesPrototype.Core.Entities;
@@ -13,17 +14,89 @@ namespace CoursesPrototype.Application.Interactors
         private readonly ICourseRepository courseRepository;
         private readonly IUserRepository userRepository;
         private readonly IUserCreatedCoursesRepository userCreatedCourseRepository;
+        private readonly ISubscriptionRepository subscriptionRepository;
         private readonly IUnitOfWork unitOfWork;
 
-        public CourseInteractor(ICourseRepository courseRepository, IUserRepository userRepository, IUnitOfWork unitOfWork, IUserCreatedCoursesRepository userCreatedCourseRepository)
+        public CourseInteractor(ICourseRepository courseRepository, IUserRepository userRepository, IUnitOfWork unitOfWork, IUserCreatedCoursesRepository userCreatedCourseRepository, ISubscriptionRepository subscriptionRepository)
         {
             this.courseRepository = courseRepository;
             this.userRepository = userRepository;
             this.unitOfWork = unitOfWork;
             this.userCreatedCourseRepository = userCreatedCourseRepository;
+            this.subscriptionRepository = subscriptionRepository;
         }
 
-        public async Task<Response<CourseDto[]>> GetUserCreatedCoursesAsync(int userId)
+        public async Task<Response<CourseDto?>> GetCourseAsync(int courseId)
+        {
+            try
+            {
+                var course = await courseRepository.GetAsync(courseId);
+
+                if (course == null)
+                {
+                    throw new NotFoundException("Курс не найден");
+                }
+
+                return new()
+                {
+                    Success = true,
+                    Message = "Курс успешно получен",
+                    Value = course.ToDto(),
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = "Не удалось получить курс",
+                    InnerErrorMessages = new string[] { exception.Message }
+                };
+            }
+        }
+
+        public async Task<Response<CourseDto[]>> GetAllAsync()
+        {
+            try
+            {
+
+                var courses = await courseRepository.GetCourses();
+
+                return new()
+                {
+                    Success = true,
+                    Message = "Курсы успешно получены",
+                    Value = courses.Select(course => course.ToDto()).ToArray(),
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = "Не удалось получить курсы",
+                    InnerErrorMessages = new string[] { exception.Message },
+                };
+            }
+        }
+
+        public async Task<Response<CourseDto[]>> GetCoursesCreatedByUserAsync(int userId)
         {
             try
             {
@@ -34,7 +107,50 @@ namespace CoursesPrototype.Application.Interactors
                     throw new NotFoundException("Пользователь не найден");
                 }
 
-                var courses = await userCreatedCourseRepository.GetUserCreatedCoursesAsync(userId);
+                var userCreatedCourses = await userCreatedCourseRepository.GetUserCreatedCoursesAsync(userId);
+
+                var courses = await courseRepository.GetByUserCreatedCoursesAsync(userCreatedCourses);
+
+                return new()
+                {
+                    Success = true,
+                    Message = "Курсы пользователя успешно получены",
+                    Value = courses.Select(course => course.ToDto()).ToArray(),
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = "Не удалось получить курсы",
+                    InnerErrorMessages = new string[] { exception.Message },
+                };
+            }
+        }
+
+        public async Task<Response<CourseDto[]>> GetSubscribedCoursesAsync(int userId)
+        {
+            try
+            {
+                var user = await userRepository.GetAsync(userId);
+
+                if (user == null)
+                {
+                    throw new NotFoundException("Пользователь не найден");
+                }
+
+                var subscriptions = await subscriptionRepository.GetUserSubscriptions(userId);
+
+                var courses = await courseRepository.GetSubscribedCourses(subscriptions);
 
                 return new()
                 {
@@ -86,7 +202,7 @@ namespace CoursesPrototype.Application.Interactors
                     Course = course,
                 };
 
-                await userCreatedCourseRepository.Create(userCreatedCourse);
+                await userCreatedCourseRepository.CreateAsync(userCreatedCourse);
 
                 unitOfWork.Commit();
 
@@ -151,6 +267,11 @@ namespace CoursesPrototype.Application.Interactors
         {
             try
             {
+                if (courseDto == null)
+                {
+                    throw new ArgumentNullException(nameof(courseDto), "CourseDto was null");
+                }
+                
                 var course = await courseRepository.GetAsync(courseDto.Id);
 
                 if(course == null)

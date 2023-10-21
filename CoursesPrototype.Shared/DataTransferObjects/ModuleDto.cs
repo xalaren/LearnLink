@@ -1,6 +1,10 @@
 ﻿namespace CoursesPrototype.Shared.DataTransferObjects
 {
-    public class ModuleDto
-    {
-    }
+    public record ModuleDto
+        (
+            int Id,
+            string Title,
+            string? Description,
+            string? Content
+        );
 }

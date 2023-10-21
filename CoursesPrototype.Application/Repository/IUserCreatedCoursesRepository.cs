@@ -3,8 +3,9 @@ using CoursesPrototype.Core.Entities;
 
 namespace CoursesPrototype.Application.Repository
 {
-    public interface IUserCreatedCoursesRepository : IAsyncWriteRepository<UserCreatedCourse>
+    public interface IUserCreatedCoursesRepository : IAsyncWriteRepository<UserCreatedCourse>, IAsyncDisposable
     {
-        Task<Course[]> GetUserCreatedCoursesAsync(int userId);
+        Task<UserCreatedCourse[]> GetUserCreatedCoursesAsync(int userId);
+        Task<UserCreatedCourse?> GetUserCreatedCourse(int userId, int courseId);
     }
 }

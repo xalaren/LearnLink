@@ -14,7 +14,7 @@ namespace CoursesPrototype.Adapter.EFRepositories
             this.context = context;
         }
 
-        public async Task Create(Credentials entity)
+        public async Task CreateAsync(Credentials entity)
         {
             await context.AddAsync(entity);
         }
@@ -32,6 +32,11 @@ namespace CoursesPrototype.Adapter.EFRepositories
         public void Update(Credentials entity)
         {
             context.Credentials.Update(entity);
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            await context.DisposeAsync();
         }
     }
 }
