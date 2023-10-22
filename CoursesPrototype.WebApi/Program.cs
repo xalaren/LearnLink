@@ -24,6 +24,16 @@ namespace CoursePrototype.WebApi
 
             var configuration = builder.Configuration;
 
+            builder.WebHost.UseUrls(ServerConfig.Url(configuration));
+
+            builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
+                policyBuilder =>
+                {
+                    policyBuilder.WithOrigins("https://localhost:5175")
+                           .AllowAnyHeader()
+                           .AllowAnyMethod();
+                }));
+
             // Add services to the container.
 
             builder.Services.AddScoped<UserInteractor>();
@@ -121,6 +131,7 @@ namespace CoursePrototype.WebApi
 
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseCors("CorsPolicy");
 
             app.UseDefaultFiles();
             app.UseStaticFiles();

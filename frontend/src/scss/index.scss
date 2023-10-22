@@ -1,0 +1,103 @@
+@import "reset.scss";
+@import "fontimports.scss";
+@import "independent.scss";
+
+$bg-color: #f2f2f2;
+
+body {
+  background-color: $bg-color;
+  font-family: 'Golos Text', sans-serif;
+}
+
+.header {
+  width: 100%;
+  height: 120px;
+  background: $gradient;
+  color: $white;
+
+  >*{
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .header__nav {
+    *:not(:last-child) {
+      margin-right: 40px;
+    }
+  }
+}
+
+.loader {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+
+  &::after {
+    content: "";
+    width: 75px;
+    height: 75px;
+    border: 5px solid $light-gray;
+    border-top-color: $violet;
+    border-radius: 50%;
+    position: absolute;
+    animation: loading 1s linear infinite;
+  }
+  
+  @keyframes loading {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+
+  }
+}
+
+
+.main {
+  background-color: $white;
+  width: 100%;
+}
+
+.main__title {
+  margin-top: 70px;
+  margin-bottom: 70px;
+}
+
+.course-container {
+    padding: 20px;
+
+    *:not(:last-child) {
+      margin-bottom: 40px;
+    }
+}
+
+.course-item {
+  box-sizing: border-box;
+  padding: 0 20px;
+  min-height: 60px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: $white;
+  border: solid 2px $light-gray;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: .3s ease-in-out all;
+
+  .course-item__title {
+    transition: inherit;
+  }
+
+  &:hover {
+    border: solid 2px $violet;
+    background-color: $violet-tp;
+    .course-item__title {
+      color: $violet;
+    }
+  }
+}
