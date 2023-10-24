@@ -1,6 +1,7 @@
-import {useEffect, useState} from "react";
-import {Course} from "../models/Course.ts";
-import {GetPublicCoursesAsync} from "../queries/CourseQueries.ts";
+import { useEffect, useState } from "react";
+import { Course } from "../models/Course.ts";
+import { GetPublicCoursesAsync } from "../queries/CourseQueries.ts";
+import { AxiosError } from "axios";
 
 export function usePublicCourses() {
     const [courses, setCourses] = useState<Course[]>([]);
@@ -11,14 +12,13 @@ export function usePublicCourses() {
             setError('');
             setLoading(true);
 
-
             const courses = await GetPublicCoursesAsync();
             setCourses(courses);
 
             setLoading(false);
         }
         catch (e: unknown) {
-            const error = e as Error;
+            const error = e as AxiosError;
             setLoading(false);
             setError(error.message);
         }

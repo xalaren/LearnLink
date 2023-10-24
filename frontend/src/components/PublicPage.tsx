@@ -1,28 +1,75 @@
-import {CourseItem} from "./CourseItem.tsx";
-import {usePublicCourses} from "../hooks/PublicCoursesHook.ts";
-import {Loader} from "./Loader.tsx";
+import { CourseItem } from "./CourseItem.tsx";
+import { Loader } from "./Loader.tsx";
+import { Course } from "../models/Course.ts";
+import { GetPublicCoursesAsync } from "../queries/CourseQueries.ts";
+import { useEffect, useState } from "react";
+import { AxiosError } from "axios";
+import { ErrorModal } from "./ErrorModal.tsx";
 
 export function PublicPage() {
-    const {loading, error, courses} = usePublicCourses();
+    const [courses, setCourses] = useState<Course[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+    const [isModalActive, setIsModalActive] = useState(false);
+
+    useEffect(() => {
+        fetchCourses();
+    }, []);
+
+    async function fetchCourses() {
+        try {
+            setError('');
+
+            const courses = await GetPublicCoursesAsync();
+            console.log(courses);
+
+            setCourses(courses);
+
+            setLoading(false);
+        }
+        catch (e: unknown) {
+            const error = e as AxiosError;
+            setError(error.message);
+            openModal();
+        }
+    }
+
+    const openModal = () => {
+        setIsModalActive(true);
+    };
+
+    const closeModal = () => {
+        setIsModalActive(false);
+    };
+
+    function ViewContent() {
+        if (loading) return <Loader />
+
+        if (error) {
+            return (
+                <ErrorModal
+                    error={error}
+                    active={isModalActive}
+                    onClose={closeModal} />
+            );
+        }
+
+        if (courses.length == 0) return <p>Нет доступных курсов</p>;
+
+
+        return courses.map(course => <CourseItem course={course} key={course.id} />);
+    }
 
     return (
         <main className="main container">
             <div className="inner-container">
                 <h2 className="main__title">Общедоступные курсы: </h2>
+
                 <section className="course-container">
-                    {loading && <Loader/>}
-
-                    {!loading && courses.map(course => <CourseItem course={course} key={course.id}/>) }
-
-                    {courses.length == 0 && !loading &&
-                        <p>Нет доступных курсов</p>
-                    }
-
-                    {/*For error modal view*/}
+                    <ViewContent />
                 </section>
 
             </div>
-
         </main>
     )
 }

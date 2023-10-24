@@ -1,4 +1,5 @@
 ﻿using CoursesPrototype.Application.Interactors;
+using CoursesPrototype.Core.Entities;
 using CoursesPrototype.Shared.DataTransferObjects;
 using CoursesPrototype.Shared.Responses;
 using Microsoft.AspNetCore.Authorization;
@@ -17,6 +18,13 @@ namespace CoursePrototype.WebApi.Controllers
         {
             this.userInteractor = userInteractor;
             this.userVerifierService = verifierService;
+        }
+
+        [Authorize]
+        [HttpGet("get")]
+        public async Task<Response<UserDto>> GetUserByNicknameAsync(string nickname)
+        {
+            return await userInteractor.GetUserByNicknameAsync(nickname);
         }
 
         [AllowAnonymous]

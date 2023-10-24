@@ -21,8 +21,8 @@ namespace CoursesPrototype.SecurityProvider
                 return null;
             }
 
-                return GetToken(nickname);
-            }
+            return GetToken(nickname);
+        }
 
         public string GetToken(string nickname)
         {

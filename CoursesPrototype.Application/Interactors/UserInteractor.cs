@@ -85,7 +85,7 @@ namespace CoursesPrototype.Application.Interactors
                 return new Response()
                 {
                     Success = false,
-                    Message = "Регистрация не удалась. Внутренняя ошибка",
+                    Message = "Не удалось зарегистрироваться",
                     InnerErrorMessages = new string[] { exception.Message },
                 };
             }
@@ -125,6 +125,42 @@ namespace CoursesPrototype.Application.Interactors
             try
             {
                 var user = await userRepository.GetAsync(userId);
+
+                if (user == null)
+                {
+                    throw new NotFoundException("Пользователь не найден");
+                }
+
+                return new()
+                {
+                    Success = true,
+                    Value = user.ToDto(),
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = "Не удалось получить данные",
+                    InnerErrorMessages = new string[] { exception.Message },
+                };
+            }
+        }
+
+        public async Task<Response<UserDto>> GetUserByNicknameAsync(string nickname)
+        {
+            try
+            {
+                var user = await userRepository.GetByNicknameAsync(nickname);
 
                 if (user == null)
                 {

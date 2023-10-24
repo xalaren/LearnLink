@@ -1,103 +1,392 @@
 @import "reset.scss";
 @import "fontimports.scss";
-@import "independent.scss";
 
+$h1-fz: 42px;
+$h2-fz: 30px;
+$h3-fz: 26px;
+$reg-fz: 20px;
+
+$white: #FFFFFF;
+$white-tp: rgba(255, 255, 255, 0.3);
+$violet: #807DFF;
+$violet-tp: rgba($violet, .1);
+$orange: #FFAD7E;
+$red: #FF2F3B;
+$light-red: #ff999e;
+$dark-gray: #555555;
+$gray-1: #595959;
+$gray-2: #B8B8B8;
+$gray-3: #EBEBEB;
+$light-gray: #f1f1f1;
 $bg-color: #f2f2f2;
 
+$gradient: linear-gradient(90deg, #A269FF 0.05%, #FFAD7E 100%);
+
+
 body {
-  background-color: $bg-color;
-  font-family: 'Golos Text', sans-serif;
+    background-color: $bg-color;
+    font-family: 'Golos Text', sans-serif;
+}
+
+h1 {
+    font-size: $h1-fz;
+    font-weight: 700;
+}
+
+h2 {
+    font-size: $h2-fz;
+    font-weight: 600;
+    color: $gray-1;
+}
+
+h3 {
+    font-size: $h3-fz;
+    font-weight: 500;
+    color: $gray-1;
+}
+
+p {
+    font-size: $reg-fz;
+    font-weight: 400;
+    color: $gray-1;
+}
+
+.white-tp-button {
+    min-height: 50px;
+    min-width: 120px;
+    box-sizing: border-box;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: $reg-fz;
+    font-weight: 500;
+    background-color: $white-tp;
+    color: $white;
+
+    cursor: pointer;
+    transition: .3s ease-in-out all;
+
+    &:hover {
+        background-color: $white;
+        color: $violet;
+    }
+}
+
+.white-link {
+    font-size: $reg-fz;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 5px;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.container {
+    max-width: 1160px;
+    margin: 0 auto;
+    box-sizing: content-box;
+    padding: 0 20px;
+}
+
+.wrapper {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    height: 100vh;
+}
+
+.inner-container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+
+.base-input {
+    min-width: 200px;
+    height: 50px;
+    padding: 10px;
+    outline: none;
+    font-size: $reg-fz;
+    border: solid 2px $gray-2;
+    border-radius: 5px;
+
+    color: $dark-gray;
+
+    &::placeholder {
+        color: $gray-2;
+    }
+}
+
+.violet-input {
+    @extend .base-input;
+
+    &:focus {
+        border: solid 2px $violet;
+        color: $violet;
+
+        &::placeholder {
+            color: $violet;
+        }
+    }
+}
+
+.red-input {
+    $ml: 3px;
+
+    @extend .base-input;
+    border: solid 2px $red;
+    color: $red;
+
+    &::placeholder {
+        color: $light-red;
+    }
+
+    animation: shake .2s;
+
+    @keyframes shake {
+        0% {
+            transform: translateX($ml);
+        }
+
+        25% {
+            transform: translateX($ml * (-1));
+        }
+
+        50% {
+            transform: translateX($ml);
+        }
+
+        100% {
+            transform: translateX($ml * (-1));
+        }
+    }
+
+}
+
+.regular-red {
+    font-size: $reg-fz;
+    color: $red;
+}
+
+.required {
+    &::before {
+        content: "* ";
+        font-size: inherit;
+        color: $red;
+    }
+}
+
+.button-base {
+    box-sizing: border-box;
+    padding: 10px;
+    height: 50px;
+    border-radius: 5px;
+    font-size: $reg-fz;
+    font-weight: 500;
+    color: $dark-gray;
+    border: none;
+    outline: none;
+    cursor: pointer;
+
+}
+
+.button-orange {
+    @extend .button-base;
+    border: solid 2px $orange;
+    background-color: $white;
+    color: $orange;
+    transition: .3s ease-in-out;
+
+    &:hover {
+        border-color: transparent;
+        background-color: $orange;
+        color: $white;
+    }
 }
 
 .header {
-  width: 100%;
-  height: 120px;
-  background: $gradient;
-  color: $white;
+    width: 100%;
+    height: 120px;
+    background: $gradient;
+    color: $white;
 
-  >*{
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .header__nav {
-    *:not(:last-child) {
-      margin-right: 40px;
+    >* {
+        height: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
-  }
+
+    .header__title {
+        cursor: pointer;
+    }
+
+    .header__nav {
+        *:not(:last-child) {
+            margin-right: 40px;
+        }
+    }
 }
 
 .loader {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 100%;
 
-  &::after {
-    content: "";
-    width: 75px;
-    height: 75px;
-    border: 5px solid $light-gray;
-    border-top-color: $violet;
-    border-radius: 50%;
-    position: absolute;
-    animation: loading 1s linear infinite;
-  }
-  
-  @keyframes loading {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
+    &::after {
+        content: "";
+        width: 75px;
+        height: 75px;
+        border: 5px solid $light-gray;
+        border-top-color: $violet;
+        border-radius: 50%;
+        position: absolute;
+        animation: loading 1s linear infinite;
     }
 
-  }
+    @keyframes loading {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+
+    }
 }
 
 
 .main {
-  background-color: $white;
-  width: 100%;
+    background-color: $white;
+    width: 100%;
 }
 
 .main__title {
-  margin-top: 70px;
-  margin-bottom: 70px;
+    margin-top: 70px;
+    margin-bottom: 70px;
+}
+
+.modal {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    overflow: auto;
+    display: flex;
+    justify-content: center;
+}
+
+.modal__container {
+    min-width: 400px;
+    min-height: 200px;
+    background: $white;
+    border-radius: 10px;
+    position: relative;
+    margin: auto auto;
+    padding: 40px;
+}
+
+
+.modal__close-button {
+    height: 60px;
+    width: 60px;
+    font-family: "Golos Text", sans-serif;
+    font-size: 60px;
+    background-color: $gray-3;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0 10px 0 10px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: $dark-gray;
+    border: none;
+    cursor: pointer;
+    transition: all ease-in-out .3s;
+
+    &:hover {
+        background-color: $red;
+        color: $white;
+    }
+}
+
+.modal__title {
+    color: $gray-1;
+    margin-bottom: 40px;
+}
+
+.modal__content {
+    color: $gray-1;
+    font-size: $reg-fz;
 }
 
 .course-container {
     padding: 20px;
 
     *:not(:last-child) {
-      margin-bottom: 40px;
+        margin-bottom: 40px;
     }
 }
 
 .course-item {
-  box-sizing: border-box;
-  padding: 0 20px;
-  min-height: 60px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  background-color: $white;
-  border: solid 2px $light-gray;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: .3s ease-in-out all;
+    box-sizing: border-box;
+    padding: 0 20px;
+    min-height: 60px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: $white;
+    border: solid 2px $light-gray;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: .3s ease-in-out all;
 
-  .course-item__title {
-    transition: inherit;
-  }
-
-  &:hover {
-    border: solid 2px $violet;
-    background-color: $violet-tp;
     .course-item__title {
-      color: $violet;
+        transition: inherit;
     }
-  }
+
+    &:hover {
+        border: solid 2px $violet;
+        background-color: $violet-tp;
+
+        .course-item__title {
+            color: $violet;
+        }
+    }
+}
+
+.login-form {
+    max-width: fit-content;
+
+    >*:not(:last-child) {
+        margin-bottom: 70px;
+    }
+}
+
+.form__inputs {
+    >*:not(:last-child) {
+        margin-bottom: 20px;
+    }
+}
+
+.login-input {
+    >*:first-child {
+        margin-bottom: 20px;
+    }
+}
+
+.form__nav {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+
 }
