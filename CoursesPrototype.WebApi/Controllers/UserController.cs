@@ -18,12 +18,15 @@ namespace CoursePrototype.WebApi.Controllers
         {
             this.userInteractor = userInteractor;
             this.userVerifierService = verifierService;
+            
         }
 
         [Authorize]
         [HttpGet("get")]
-        public async Task<Response<UserDto>> GetUserByNicknameAsync(string nickname)
+        public async Task<Response<UserDto>> GetUserAsync()
         {
+            var nickname = User.Identity?.Name;
+
             return await userInteractor.GetUserByNicknameAsync(nickname);
         }
 

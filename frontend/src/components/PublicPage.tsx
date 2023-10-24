@@ -21,13 +21,14 @@ export function PublicPage() {
             setError('');
 
             const courses = await GetPublicCoursesAsync();
-            console.log(courses);
 
-            setCourses(courses);
+            if(courses) setCourses(courses);
 
             setLoading(false);
         }
         catch (e: unknown) {
+            setLoading(false);
+
             const error = e as AxiosError;
             setError(error.message);
             openModal();
@@ -47,10 +48,13 @@ export function PublicPage() {
 
         if (error) {
             return (
-                <ErrorModal
-                    error={error}
-                    active={isModalActive}
-                    onClose={closeModal} />
+                <>
+                    <Loader />
+                    <ErrorModal
+                        error={error}
+                        active={isModalActive}
+                        onClose={closeModal} />
+                </>
             );
         }
 

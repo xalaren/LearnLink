@@ -156,11 +156,16 @@ namespace CoursesPrototype.Application.Interactors
             }
         }
 
-        public async Task<Response<UserDto>> GetUserByNicknameAsync(string nickname)
+        public async Task<Response<UserDto>> GetUserByNicknameAsync(string? nickname)
         {
             try
             {
-                var user = await userRepository.GetByNicknameAsync(nickname);
+                if(!ValidateHelper.ValidateToEmptyStrings(nickname))
+                {
+                    throw new ValidationException("Имя пользователя не указано, либо пользователь не найден");
+                }
+
+                var user = await userRepository.GetByNicknameAsync(nickname!);
 
                 if (user == null)
                 {

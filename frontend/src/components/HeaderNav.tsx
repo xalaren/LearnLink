@@ -1,11 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { useLogout } from "../hooks/LogoutHook";
-import { useGlobalAuthorizationState } from "../hooks/GlobalStateHook";
-
+import {useEffect} from "react";
+import {useAuthorization} from "../hooks/GlobalStateHook.ts";
 export function HeaderNav() {
     const navigate = useNavigate();
     const logout = useLogout();
-    const { isAuthorized } = useGlobalAuthorizationState();
+    const {isAuthorized} = useAuthorization();
+
+    useEffect(() => {
+    }, [isAuthorized])
 
     return (
         <>
@@ -13,7 +16,7 @@ export function HeaderNav() {
                 isAuthorized &&
                 <nav className="header__nav">
                     <a className="white-link">Мои курсы</a>
-                    <a className="white-link">Личный кабинет</a>
+                    <a className="white-link" onClick={() => navigate('/profile')}>Профиль</a>
                     <a className="white-link" onClick={logout}>Выйти</a>
                 </nav>
             }

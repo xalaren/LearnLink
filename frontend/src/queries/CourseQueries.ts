@@ -1,21 +1,20 @@
 import { Course } from "../models/Course.ts";
-import axios, { AxiosError } from "axios";
+import axios, {AxiosError} from "axios";
+import {handleInternalError} from "./InternalErrorHandler.ts";
 
 const url = '/api/Courses/'
-export async function GetPublicCoursesAsync() {
+export async function GetPublicCoursesAsync(): Promise<Course[] | undefined> {
+    let response: ValueResponse<Course[]>;
     try {
-        const response = (await axios.get<ValueResponse<Course[]>>(url + "get-public")).data;
+        response = (await axios.get<ValueResponse<Course[]>>(url + "get-public")).data;
+
         if (!response.success) {
-            throw new Error(response.message);
+            throw new AxiosError(response.message);
         }
 
         return response.value;
-    } catch (err) {
-        const error = err as AxiosError;
-        if (error.response?.status === 500) {
-            throw new AxiosError('Сервер недоступен');
-        }
-
-        throw new AxiosError(error.message);
+    }
+    catch(e: unknown) {
+        handleInternalError(e);
     }
 }

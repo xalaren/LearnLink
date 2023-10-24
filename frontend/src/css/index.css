@@ -223,6 +223,18 @@ p {
   color: #595959;
 }
 
+.medium-big {
+  font-size: 40px;
+  font-weight: 500;
+  color: #595959;
+}
+
+.medium-little {
+  font-size: 20px;
+  color: #807DFF;
+  font-weight: 500;
+}
+
 .white-tp-button {
   min-height: 50px;
   min-width: 120px;
@@ -281,18 +293,12 @@ p {
   border-radius: 5px;
   color: #555555;
 }
-.base-input::-moz-placeholder, .red-input::-moz-placeholder, .violet-input::-moz-placeholder {
-  color: #B8B8B8;
-}
 .base-input::placeholder, .red-input::placeholder, .violet-input::placeholder {
   color: #B8B8B8;
 }
 
 .violet-input:focus {
   border: solid 2px #807DFF;
-  color: #807DFF;
-}
-.violet-input:focus::-moz-placeholder {
   color: #807DFF;
 }
 .violet-input:focus::placeholder {
@@ -303,9 +309,6 @@ p {
   border: solid 2px #FF2F3B;
   color: #FF2F3B;
   animation: shake 0.2s;
-}
-.red-input::-moz-placeholder {
-  color: #ff999e;
 }
 .red-input::placeholder {
   color: #ff999e;
@@ -336,7 +339,7 @@ p {
   color: #FF2F3B;
 }
 
-.button-base, .button-orange {
+.button-base, .button-red, .button-violet, .button-orange {
   box-sizing: border-box;
   padding: 10px;
   height: 50px;
@@ -358,6 +361,30 @@ p {
 .button-orange:hover {
   border-color: transparent;
   background-color: #FFAD7E;
+  color: #FFFFFF;
+}
+
+.button-violet {
+  border: solid 2px #807DFF;
+  background-color: #FFFFFF;
+  color: #807DFF;
+  transition: 0.3s ease-in-out;
+}
+.button-violet:hover {
+  border-color: transparent;
+  background-color: #807DFF;
+  color: #FFFFFF;
+}
+
+.button-red {
+  border: solid 2px #FF2F3B;
+  background-color: #FFFFFF;
+  color: #FF2F3B;
+  transition: 0.3s ease-in-out;
+}
+.button-red:hover {
+  border-color: transparent;
+  background-color: #FF2F3B;
   color: #FFFFFF;
 }
 
@@ -397,10 +424,10 @@ p {
   animation: loading 1s linear infinite;
 }
 @keyframes loading {
-  from {
+  0% {
     transform: rotate(0deg);
   }
-  to {
+  100% {
     transform: rotate(360deg);
   }
 }
@@ -422,8 +449,7 @@ p {
   top: 0;
   left: 0;
   background: rgba(0, 0, 0, 0.4);
-  -webkit-backdrop-filter: blur(10px);
-          backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   overflow: auto;
   display: flex;
   justify-content: center;
@@ -505,7 +531,6 @@ p {
 }
 
 .login-form {
-  max-width: -moz-fit-content;
   max-width: fit-content;
 }
 .login-form > *:not(:last-child) {
@@ -524,4 +549,29 @@ p {
   width: 100%;
   display: flex;
   justify-content: flex-end;
+}
+
+.profile {
+  width: auto;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+.profile > *:not(:last-child) {
+  margin-right: 200px;
+}
+
+.profile__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.profile__container *:not(:last-child) {
+  margin-bottom: 40px;
+}
+
+.profile__nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }

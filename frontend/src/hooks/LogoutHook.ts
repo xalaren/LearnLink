@@ -1,14 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { clearToken } from "../services/AccessToken"
-import { useGlobalAuthorizationState } from "./GlobalStateHook";
+import {useAuthorization} from "./GlobalStateHook";
 
 export function useLogout() {
     const navigate = useNavigate();
-    const { refresh } = useGlobalAuthorizationState();
+    const { refreshAuthorization } = useAuthorization();
 
     return function () {
         clearToken();
         navigate('/');
-        refresh();
+        refreshAuthorization();
     }
 }

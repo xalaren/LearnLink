@@ -6,12 +6,14 @@ import { LoginForm } from "./LoginForm";
 import { Modal } from "./Modal";
 import { useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
+import {useAuthorization} from "../hooks/GlobalStateHook.ts";
 
 export function LoginPage() {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [isModalActive, setIsModalActive] = useState(false);
     const navigate = useNavigate();
+    const { refreshAuthorization } = useAuthorization();
 
     const openModal = () => {
         setIsModalActive(true);
@@ -23,12 +25,13 @@ export function LoginPage() {
 
     async function fetchAuthResult(nickname: string, password: string) {
         try {
-            const response = await loginAsync(nickname, password);
+            const response = (await loginAsync(nickname, password))!;
 
             setSuccess(response.message);
             openModal();
 
             setAccessToken(response.value);
+            refreshAuthorization();
         }
         catch (error: unknown) {
             const axiosError = error as AxiosError;
