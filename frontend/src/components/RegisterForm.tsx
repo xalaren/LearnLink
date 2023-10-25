@@ -40,11 +40,15 @@ export function RegisterForm({ onSubmit }: IRegisterProps) {
             validationError = true;
         }
 
-        if (validationError) return;
+        console.log(validationError);
+
+        if (validationError) {
+            return;
+        }
 
         const user = new User(nickname, lastname, name);
 
-        onSubmit(user, password);
+        await onSubmit(user, password);
     }
 
     function onChange(event: React.ChangeEvent) {

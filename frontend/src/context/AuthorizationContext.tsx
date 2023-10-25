@@ -10,13 +10,13 @@ interface IAuthorizationContext {
 }
 
 export const AuthorizationContext = createContext<IAuthorizationContext>({
-    isAuthorized: false,
+    isAuthorized: true,
     user: null,
     refreshAuthorization: () => {}
 })
 
-export const AuthorizationState =({ children }: {children: React.ReactNode}) => {
-    const [isAuthorized, setAuthorized] = useState(false);
+export const AuthorizationState = ({ children }: {children: React.ReactNode}) => {
+    const [isAuthorized, setAuthorized] = useState(true);
     const [user, setUser] = useState<User | null>(null);
     const refreshAuthorization = () => {
         fetchData();
@@ -24,6 +24,7 @@ export const AuthorizationState =({ children }: {children: React.ReactNode}) => 
 
     useEffect(() => {
         refreshAuthorization();
+        setInterval(() => refreshAuthorization(), 20 * 60 * 1000);
     }, [isAuthorized])
     async function fetchData() {
         try {

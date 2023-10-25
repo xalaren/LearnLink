@@ -1,10 +1,17 @@
 import {User} from "../models/User.ts";
 import profile from "../assets/profile.svg"
+import {useState} from "react";
+import {Modal} from "./Modal.tsx";
+import {ErrorModal} from "./ErrorModal.tsx";
+import {validate} from "../services/Validation.ts";
+import {useRemoveUser} from "../hooks/UsersManipulationHook.ts";
 interface IProfileInfoProps {
     user: User;
 }
 
 export function ProfileInfoContainer({user} : IProfileInfoProps) {
+    const[removeModalIsActive, setRemoveModalActive] = useState(false);
+    const {removeUser, error, onError, success, onSuccess} = useRemoveUser(user);
 
     return(
         <div className="profile">
@@ -19,8 +26,41 @@ export function ProfileInfoContainer({user} : IProfileInfoProps) {
             <nav className="profile__nav">
                 <button className="button-violet">Редактировать данные</button>
                 <button className="button-violet">Сменить пароль</button>
-                <button className="button-red">Удалить аккаунт</button>
+                <button className="button-red" onClick={() => setRemoveModalActive(true)}>Удалить профиль</button>
             </nav>
+
+            <Modal title="Удаление профиля" active={removeModalIsActive} onClose={() => setRemoveModalActive(false)}>
+                    <p className="regular-red" style={{
+                        marginBottom: "40px",
+                    }}>Вы уверены, что хотите удалить профиль?</p>
+                    <nav style={{
+                        display: "flex",
+                        justifyContent: "flex-end"
+                    }}>
+                        <button
+                            style={{width: "80px", marginRight: "50px"}}
+                            className="button-red"
+                            onClick={removeUser}>
+                                Да
+                        </button>
+                        <button
+                            style={{width: "80px"}}
+                            className="button-violet"
+                            onClick={() => setRemoveModalActive(false)}>
+                                Нет
+                        </button>
+                    </nav>
+            </Modal>
+
+            {error &&
+                <ErrorModal active={validate(error)} onClose={onError} error={error}/>
+            }
+
+            {success &&
+                <Modal title={"Успешно"} active={validate(success)} onClose={onSuccess}>
+                    {success}
+                </Modal>
+            }
         </div>
     );
 }

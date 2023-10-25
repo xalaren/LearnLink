@@ -8,11 +8,10 @@ export function ProfilePage() {
     const logout = useLogout();
 
     useEffect(() => {
-        if(isAuthorized !== null && !isAuthorized) {
+        if(!isAuthorized) {
             logout();
         }
     }, [isAuthorized])
-
 
     return(
         <main className="main container">

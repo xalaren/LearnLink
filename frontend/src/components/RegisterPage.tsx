@@ -16,7 +16,7 @@ export function RegisterPage() {
 
     async function fetchRegisterResult(user: User, password: string) {
         try {
-            const response = await registerAsync(user, password);
+            const response = (await registerAsync(user, password))!;
 
             setSuccess(response.message);
         }
@@ -51,6 +51,7 @@ export function RegisterPage() {
                         closeModal();
                         navigate('/login');
                     }}>
+                        <>Регистрация прошла успешно. Теперь можно войти</>
                     </Modal>
                 }
             </div>

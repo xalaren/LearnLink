@@ -47,3 +47,16 @@ export async function getUserAsync(accessToken: string): Promise<ValueResponse<U
         handleInternalError(err);
     }
 }
+
+export async function removeUserAsync(userId: number, accessToken: string): Promise<Response | undefined> {
+    try {
+        return (await axios.delete<Response>(`${url}remove?userId=${userId}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        })).data;
+    }
+    catch (err: unknown) {
+        handleInternalError(err);
+    }
+}
