@@ -38,7 +38,7 @@ export function RegisterPage() {
     return (
         <main className="main container">
             <div className="inner-container">
-                <h2 className="main__title">Регистрация нового пользователя: </h2>
+                <h2 className="main__title">Регистрация нового пользователя </h2>
 
                 <RegisterForm onSubmit={fetchRegisterResult} />
 

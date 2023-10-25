@@ -18,7 +18,7 @@ namespace CoursePrototype.WebApi.Controllers
         {
             this.userInteractor = userInteractor;
             this.userVerifierService = verifierService;
-            
+
         }
 
         [Authorize]
@@ -46,11 +46,18 @@ namespace CoursePrototype.WebApi.Controllers
 
         [Authorize]
         [HttpPost("update-user")]
-        public async Task<Response> UpdateUserAsync(UserDto userDto)
+        public async Task<Response<string?>> UpdateUserAsync(UserDto userDto)
         {
             var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userDto.Id);
 
-            if (!verifyResponse.Success) return verifyResponse;
+            if (!verifyResponse.Success)
+            {
+                return new()
+                {
+                    Success = verifyResponse.Success,
+                    Message = verifyResponse.Message,
+                };
+            }
 
             return await userInteractor.UpdateUserAsync(userDto);
         }

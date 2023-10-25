@@ -290,7 +290,7 @@ namespace CoursesPrototype.Application.Interactors
             }
         }
 
-        public async Task<Response> UpdateUserAsync(UserDto userDto)
+        public async Task<Response<string?>> UpdateUserAsync(UserDto userDto)
         {
             try
             {
@@ -312,10 +312,13 @@ namespace CoursesPrototype.Application.Interactors
 
                 unitOfWork.Commit();
 
+                var token = authenticationService.GetToken(updatedEntity.Nickname);
+
                 return new()
                 {
                     Success = true,
                     Message = "Пользователь успешно изменен",
+                    Value = token,
                 };
             }
             catch (CustomException exception)
@@ -382,6 +385,7 @@ namespace CoursesPrototype.Application.Interactors
                 {
                     Success = true,
                     Message = "Пароль успешно изменен",
+
                 };
             }
             catch (CustomException exception)

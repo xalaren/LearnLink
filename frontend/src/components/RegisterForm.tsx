@@ -3,6 +3,7 @@ import { validate } from "../services/Validation";
 import { User } from "../models/User";
 
 interface IRegisterProps {
+    defaultValues?: User;
     onSubmit(user: User, password: string): Promise<void>;
 }
 

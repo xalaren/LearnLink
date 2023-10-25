@@ -43,7 +43,7 @@ export function LoginPage() {
     return (
         <main className="main container">
             <div className="inner-container">
-                <h2 className="main__title">Вход в систему: </h2>
+                <h2 className="main__title">Вход в систему</h2>
 
                 <LoginForm onSubmit={fetchAuthResult} />
 

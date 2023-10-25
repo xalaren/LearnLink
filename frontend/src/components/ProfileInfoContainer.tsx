@@ -5,13 +5,15 @@ import {Modal} from "./Modal.tsx";
 import {ErrorModal} from "./ErrorModal.tsx";
 import {validate} from "../services/Validation.ts";
 import {useRemoveUser} from "../hooks/UsersManipulationHook.ts";
+import {useNavigate} from "react-router-dom";
 interface IProfileInfoProps {
     user: User;
 }
 
 export function ProfileInfoContainer({user} : IProfileInfoProps) {
     const[removeModalIsActive, setRemoveModalActive] = useState(false);
-    const {removeUser, error, onError, success, onSuccess} = useRemoveUser(user);
+    const {removeUser, error, onError, success, onSuccess} = useRemoveUser(user.id!);
+    const navigate = useNavigate();
 
     return(
         <div className="profile">
@@ -24,8 +26,8 @@ export function ProfileInfoContainer({user} : IProfileInfoProps) {
             </div>
 
             <nav className="profile__nav">
-                <button className="button-violet">Редактировать данные</button>
-                <button className="button-violet">Сменить пароль</button>
+                <button className="button-violet" onClick={() => navigate('edit')}>Редактировать данные</button>
+                <button className="button-violet" onClick={() => navigate('edit/password')}>Сменить пароль</button>
                 <button className="button-red" onClick={() => setRemoveModalActive(true)}>Удалить профиль</button>
             </nav>
 

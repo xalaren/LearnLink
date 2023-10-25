@@ -29,9 +29,20 @@ namespace CoursesPrototype.Application.Mappers
 
         public static User Assign(this User user, UserDto userDto)
         {
-            user.Nickname = userDto.Nickname;
-            user.Name = userDto.Name;
-            user.Lastname = userDto.Lastname;
+            if(!string.Equals(user.Nickname, userDto.Nickname))
+            {
+                user.Nickname = userDto.Nickname;
+            }
+
+            if (!string.Equals(user.Name, userDto.Name))
+            {
+                user.Name = userDto.Name;
+            }
+
+            if (!string.Equals(user.Lastname, userDto.Lastname))
+            {
+                user.Lastname = userDto.Lastname;
+            }
 
             return user;
         }

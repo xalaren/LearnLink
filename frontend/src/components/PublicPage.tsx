@@ -29,7 +29,7 @@ export function PublicPage() {
     return (
         <main className="main container">
             <div className="inner-container">
-                <h2 className="main__title">Общедоступные курсы: </h2>
+                <h2 className="main__title">Общедоступные курсы </h2>
 
                 <section className="course-container">
                     <ViewContent />

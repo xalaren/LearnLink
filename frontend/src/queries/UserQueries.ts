@@ -60,3 +60,29 @@ export async function removeUserAsync(userId: number, accessToken: string): Prom
         handleInternalError(err);
     }
 }
+
+export async function updateUserAsync(user: User, accessToken: string): Promise<ValueResponse<string> | undefined> {
+    try {
+        return (await axios.post<ValueResponse<string>>(`${url}update-user`, user,{
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        })).data;
+    }
+    catch (err: unknown) {
+        handleInternalError(err);
+    }
+}
+
+export async function updateUserPasswordAsync(userId: number, accessToken: string, oldPassword: string, newPassword: string): Promise<ValueResponse<string> | undefined> {
+    try {
+        return (await axios.post<ValueResponse<string>>(`${url}update-pass?userId=${userId}&oldPassword=${oldPassword}&newPassword=${newPassword}`, {},{
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        })).data;
+    }
+    catch (err: unknown) {
+        handleInternalError(err);
+    }
+}

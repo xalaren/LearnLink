@@ -1,5 +1,5 @@
 export class User {
-    id?: number;
+    id: number;
     nickname: string;
     lastname: string;
     name: string;
@@ -8,7 +8,7 @@ export class User {
         nickname: string,
         lastname: string,
         name: string,
-        id?: number) {
+        id: number = 0) {
         this.id = id;
         this.nickname = nickname;
         this.lastname = lastname;
