@@ -18,18 +18,18 @@ namespace CoursesPrototype.Application.Mappers
 
         public static UserDto ToDto(this User userEntity)
         {
-            return new UserDto
-                (
-                    Id: userEntity.Id,
-                    Nickname: userEntity.Nickname,
-                    Lastname: userEntity.Lastname,
-                    Name: userEntity.Name
-                );
+            return new UserDto()
+            {
+                Id = userEntity.Id,
+                Nickname = userEntity.Nickname,
+                Lastname = userEntity.Lastname,
+                Name = userEntity.Name
+            };
         }
 
         public static User Assign(this User user, UserDto userDto)
         {
-            if(!string.Equals(user.Nickname, userDto.Nickname))
+            if (!string.Equals(user.Nickname, userDto.Nickname))
             {
                 user.Nickname = userDto.Nickname;
             }

@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { User } from "../models/User";
 import { registerAsync } from "../queries/UserQueries";
-import { RegisterForm } from "./RegisterForm";
+import { RegisterForm } from "../components/RegisterForm";
 import { AxiosError } from "axios";
-import { ErrorModal } from "./ErrorModal";
+import { ErrorModal } from "../components/ErrorModal";
 import { useNavigate } from "react-router-dom";
-import { Modal } from "./Modal";
+import { Modal } from "../components/Modal";
 
 export function RegisterPage() {
 

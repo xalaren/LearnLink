@@ -4,30 +4,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CoursesPrototype.WebApi.Controllers
 {
+    /// <summary>
+    /// Контроллер для получения состояния авторизации
+    /// </summary>
     [ApiController]
     [Route("api/Authentication")]
     public class AuthController : Controller
     {
-        [AllowAnonymous]
-        [HttpGet("status")]
-        public Response GetAuthorizedStatus()
-        {
-            if (User.Identity == null || string.IsNullOrWhiteSpace(User.Identity.Name))
-            {
-                return new()
-                {
-                    Success = false,
-                    Message = "Пользователь не авторизован",
-                };
-            }
 
-            return new()
-            {
-                Success = true,
-                Message = "Пользователь авторзиован",
-            };
-        }
-
+        /// <summary>
+        /// Получение никнейма авторизованного пользователя
+        /// </summary>
         [Authorize]
         [HttpGet("get-auth-nickname")]
         public Response<string> GetAuthorizedNickname()

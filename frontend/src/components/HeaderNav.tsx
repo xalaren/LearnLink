@@ -1,26 +1,22 @@
 import { useNavigate } from "react-router-dom";
 import { useLogout } from "../hooks/LogoutHook";
-import {useEffect} from "react";
-import {useAuthorization} from "../hooks/GlobalStateHook.ts";
-import {clearToken} from "../services/AccessToken.ts";
+import { useAppDispatch, useAppSelector } from "../hooks/redux.ts";
+
 export function HeaderNav() {
     const navigate = useNavigate();
     const logout = useLogout();
-    const {isAuthorized} = useAuthorization();
+    const dispatch = useAppDispatch();
+    const { isAuthorized } = useAppSelector(state => state.AuthorizationReducer);
 
-    useEffect(() => {
-    }, [isAuthorized])
 
     return (
         <>
             {
                 isAuthorized &&
                 <nav className="header__nav">
-                    <a className="white-link">Мои курсы</a>
+                    <a className="white-link" onClick={() => navigate('/courses')}>Мои курсы</a>
                     <a className="white-link" onClick={() => navigate('/profile')}>Профиль</a>
                     <a className="white-link" onClick={() => {
-                        clearToken();
-                        logout();
                     }}>Выйти</a>
                 </nav>
             }

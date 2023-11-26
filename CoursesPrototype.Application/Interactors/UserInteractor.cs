@@ -34,6 +34,64 @@ namespace CoursesPrototype.Application.Interactors
             this.authenticationService = authenticationService;
         }
 
+        public async Task<Response<string>> AuthenticateAsync(string nickname, string password)
+        {
+            try
+            {
+                if (!ValidateHelper.ValidateToEmptyStrings(nickname, password))
+                {
+                    throw new ValidationException("Не все поля были заполнены");
+                }
+
+                var user = await userRepository.GetByNicknameAsync(nickname);
+
+                if (user == null)
+                {
+                    throw new NotFoundException("Неверное имя пользователя");
+                }
+
+                var userCredentials = await credentialsRepository.GetCredentialsByUserId(user.Id);
+
+                if (userCredentials == null)
+                {
+                    throw new NotFoundException("Данные для входа не найдены");
+                }
+
+                var hashedPassword = encryptionService.GetHash(password, userCredentials.Salt);
+
+                var authenticationResult = authenticationService.Authenticate(nickname, hashedPassword, userCredentials.HashedPassword);
+
+                if (authenticationResult == null)
+                {
+                    throw new ValidationException("Неверный пароль");
+                }
+
+                return new()
+                {
+                    Success = true,
+                    Message = "Аутентификация прошла успешно",
+                    Value = authenticationResult,
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = "Аутентификация не удалась. Внутренняя ошибка",
+                    InnerErrorMessages = new string[] { exception.Message },
+                };
+            }
+        }
+
         public async Task<Response> RegisterAsync(UserDto userDto, string password)
         {
             if(userDto == null)
@@ -197,63 +255,6 @@ namespace CoursesPrototype.Application.Interactors
             }
         }
 
-        public async Task<Response<string>> AuthenticateAsync(string nickname, string password)
-        {
-            try
-            {
-                if (!ValidateHelper.ValidateToEmptyStrings(nickname, password))
-                {
-                    throw new ValidationException("Не все поля были заполнены");
-                }
-
-                var user = await userRepository.GetByNicknameAsync(nickname);
-
-                if(user == null)
-                {
-                    throw new NotFoundException("Неверное имя пользователя");
-                }
-
-                var userCredentials = await credentialsRepository.GetCredentialsByUserId(user.Id);
-
-                if (userCredentials == null)
-                {
-                    throw new NotFoundException("Данные для входа не найдены");
-                }
-
-                var hashedPassword = encryptionService.GetHash(password, userCredentials.Salt);
-
-                var authenticationResult = authenticationService.Authenticate(nickname, hashedPassword, userCredentials.HashedPassword);
-
-                if(authenticationResult == null)
-                {
-                    throw new ValidationException("Неверный пароль");
-                }
-
-                return new()
-                {
-                    Success = true,
-                    Message = "Аутентификация прошла успешно",
-                    Value = authenticationResult,
-                };
-            }
-            catch (CustomException exception)
-            {
-                return new()
-                {
-                    Success = false,
-                    Message = exception.Message,
-                };
-            }
-            catch (Exception exception)
-            {
-                return new()
-                {
-                    Success = false,
-                    Message = "Аутентификация не удалась. Внутренняя ошибка",
-                    InnerErrorMessages = new string[] { exception.Message },
-                };
-            }
-        }
 
         public async Task<Response> RemoveUserAsync(int userId)
         {

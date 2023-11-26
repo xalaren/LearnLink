@@ -1,11 +1,11 @@
-import { CourseItem } from "./CourseItem.tsx";
-import { Loader } from "./Loader.tsx";
-import { ErrorModal } from "./ErrorModal.tsx";
-import {usePublicCourses} from "../hooks/CoursesHook.ts";
-import {validate} from "../services/Validation.ts";
+import { Loader } from "../components/Loader.tsx";
+import { ErrorModal } from "../components/ErrorModal.tsx";
+import { usePublicCourses } from "../hooks/CoursesHook.ts";
+import { validate } from "../services/Validation.ts";
+import { CoursesContainer } from "../components/CoursesContainer.tsx";
 
 export function PublicPage() {
-    const {courses, error, onError, loading} = usePublicCourses();
+    const { courses, error, onError, loading } = usePublicCourses();
     function ViewContent() {
         if (loading) return <Loader />
 
@@ -21,9 +21,9 @@ export function PublicPage() {
             );
         }
 
-        if (courses.length == 0) return <p>Нет доступных курсов</p>;
 
-        return courses.map(course => <CourseItem course={course} key={course.id} />);
+
+        return <CoursesContainer courses={courses} />;
     }
 
     return (
@@ -31,9 +31,7 @@ export function PublicPage() {
             <div className="inner-container">
                 <h2 className="main__title">Общедоступные курсы </h2>
 
-                <section className="course-container">
-                    <ViewContent />
-                </section>
+                <ViewContent />
 
             </div>
         </main>

@@ -28,6 +28,5 @@ namespace CoursesPrototype.Core.Entities
                 title = value;
             }
         }
-
     }
 }

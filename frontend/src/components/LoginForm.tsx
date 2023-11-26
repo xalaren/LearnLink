@@ -2,7 +2,7 @@ import { useState } from "react";
 import { validate } from "../services/Validation";
 
 interface ILoginFormProps {
-    onSubmit(nickname: string, password: string): Promise<void>;
+    onSubmit(nickname: string, password: string): Promise<any>;
 }
 
 export function LoginForm({ onSubmit }: ILoginFormProps) {

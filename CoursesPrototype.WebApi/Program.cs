@@ -1,3 +1,4 @@
+using System.Reflection;
 using CoursesPrototype.Adapter.EFContexts;
 using CoursesPrototype.Adapter.EFRepositories;
 using CoursesPrototype.Adapter.EFTransaction;
@@ -91,7 +92,12 @@ namespace CoursePrototype.WebApi
 
             builder.Services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "CoursesPrototype", Version = "v1" });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+                options.IncludeXmlComments(xmlPath);
+
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "CoursesPrototype WebApi", Version = "v1" });
 
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
                 {
@@ -126,7 +132,12 @@ namespace CoursePrototype.WebApi
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(config =>
+                {
+                    config.RoutePrefix = string.Empty;
+                    config.SwaggerEndpoint("swagger/v1/swagger.json", "CoursesPrototype WebApi");
+                    config.DocumentTitle = "CoursesPrototype WebApi";
+                });
             }
 
             app.UseHttpsRedirection();

@@ -1,52 +1,40 @@
-import {useAuthorization} from "../hooks/GlobalStateHook.ts";
-import {useLogout} from "../hooks/LogoutHook.ts";
-import {useEffect, useState} from "react";
-import {EditUserForm} from "./EditUserForm.tsx";
-import {User} from "../models/User.ts";
-import {updateUserAsync, updateUserPasswordAsync} from "../queries/UserQueries.ts";
-import {AxiosError} from "axios";
-import {ErrorModal} from "./ErrorModal.tsx";
-import {validate} from "../services/Validation.ts";
-import {Modal} from "./Modal.tsx";
-import {getAccessToken, setAccessToken} from "../services/AccessToken.ts";
-import {EditUserPassForm} from "./EditUserPassForm.tsx";
-
-export enum EditActions {
-    EditUser = 'edit-user',
-    EditPassword = 'edit-pass'
-}
+import { useAuthorization } from "../hooks/GlobalStateHook.ts";
+import { useLogout } from "../hooks/LogoutHook.ts";
+import { useEffect, useState } from "react";
+import { EditUserForm } from "../components/EditUserForm.tsx";
+import { User } from "../models/User.ts";
+import { updateUserAsync, updateUserPasswordAsync } from "../queries/UserQueries.ts";
+import { AxiosError } from "axios";
+import { ErrorModal } from "../components/ErrorModal.tsx";
+import { validate } from "../services/Validation.ts";
+import { Modal } from "../components/Modal.tsx";
+import { getAccessToken, setAccessToken } from "../services/AccessToken.ts";
+import { EditUserPassForm } from "../components/EditUserPassForm.tsx";
+import { EditActions } from "../models/Constants.ts";
 
 interface IEditUserPageProps {
     action: EditActions;
 }
 
-export function EditUserPage({action}: IEditUserPageProps) {
+export function EditUserPage({ action }: IEditUserPageProps) {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
-    const {isAuthorized, user, refreshAuthorization} = useAuthorization();
-    const logout = useLogout();
-
-    useEffect(() => {
-        if(!isAuthorized) {
-            logout();
-        }
-    }, [isAuthorized]);
 
     async function fetchUpdateUserResult(user: User) {
         try {
             const token = getAccessToken();
 
-            if(!token) {
+            if (!token) {
                 return;
             }
 
-            if(!user) {
+            if (!user) {
                 return;
             }
 
             const response = (await updateUserAsync(user, token))!;
 
-            if(!response.success) {
+            if (!response.success) {
                 setError(response.message);
                 return;
             }
@@ -54,7 +42,6 @@ export function EditUserPage({action}: IEditUserPageProps) {
             setSuccess(response.message);
             setAccessToken(response.value);
 
-            refreshAuthorization();
         }
         catch (error: unknown) {
             const axiosError = error as AxiosError;
@@ -66,17 +53,17 @@ export function EditUserPage({action}: IEditUserPageProps) {
         try {
             const token = getAccessToken();
 
-            if(!token) {
+            if (!token) {
                 return;
             }
 
-            if(!user) {
+            if (!user) {
                 return;
             }
 
             const response = (await updateUserPasswordAsync(user.id, token, oldPassword, newPassword))!;
 
-            if(!response.success) {
+            if (!response.success) {
                 setError(response.message);
                 return;
             }
@@ -89,7 +76,7 @@ export function EditUserPage({action}: IEditUserPageProps) {
 
     }
 
-    return(
+    return (
         <main className="main container">
             <div className="inner-container">
                 <h2 className="main__title">Редактировать профиль </h2>

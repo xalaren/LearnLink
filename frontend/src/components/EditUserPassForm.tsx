@@ -73,7 +73,7 @@ export function EditUserPassForm({ onSubmit }: ILoginFormProps) {
                 </li>
             </ul>
             <nav className="form__nav">
-                <button className="button-orange" type="submit">Сохранить</button>
+                <button className="button-violet" type="submit">Сохранить</button>
             </nav>
         </form >
     );

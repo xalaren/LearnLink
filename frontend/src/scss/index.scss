@@ -5,11 +5,13 @@ $h1-fz: 42px;
 $h2-fz: 30px;
 $h3-fz: 26px;
 $reg-fz: 20px;
+$middle-fz: 22px;
 $big-fz: 40px;
 
 $white: #FFFFFF;
 $white-tp: rgba(255, 255, 255, 0.3);
 $violet: #807DFF;
+$light-violet: #f7f7ff;
 $violet-tp: rgba($violet, .1);
 $orange: #FFAD7E;
 $red: #FF2F3B;
@@ -304,11 +306,13 @@ p {
 .main {
     background-color: $white;
     width: 100%;
-}
 
-.main__title {
-    margin-top: 70px;
-    margin-bottom: 70px;
+    .inner-container {
+        >*:first-child {
+            margin-top: 70px;
+            margin-bottom: 70px;
+        }
+    }
 }
 
 .modal {
@@ -374,7 +378,7 @@ p {
 .course-container {
     padding: 20px;
 
-    *:not(:last-child) {
+    >*:not(:last-child) {
         margin-bottom: 40px;
     }
 }
@@ -392,8 +396,17 @@ p {
     cursor: pointer;
     transition: .3s ease-in-out all;
 
-    .course-item__title {
+    .course-item__title{
+        width: 100%;
+        line-height: 1.5;
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
         transition: inherit;
+    }
+
+    path {
+        transition: .3s ease-in-out all;
     }
 
     &:hover {
@@ -402,6 +415,10 @@ p {
 
         .course-item__title {
             color: $violet;
+        }
+
+        path {
+            fill: $violet;
         }
     }
 }
@@ -457,4 +474,41 @@ p {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+}
+
+.courses-type {
+    display: flex;
+    height: 60px;
+    font-size: $middle-fz;
+    font-weight: 500;
+}
+
+.course-type {
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: .3s ease-in-out;
+    position:relative;
+
+    &:hover {
+        background-color: $light-violet;
+        color: $violet;
+    }
+
+    &-selected {
+        background-color: $light-violet;
+        color: $violet;
+    }
+
+    &-selected::after {
+        content: "";
+        position: absolute;
+        top: 96%;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background-color: $violet;
+    }
 }

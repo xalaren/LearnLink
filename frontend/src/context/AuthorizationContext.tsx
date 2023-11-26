@@ -6,18 +6,21 @@ import {getAccessToken} from "../services/AccessToken.ts";
 interface IAuthorizationContext {
     isAuthorized: boolean;
     user: User | null;
+    token: string;
     refreshAuthorization: () => void;
 }
 
 export const AuthorizationContext = createContext<IAuthorizationContext>({
     isAuthorized: true,
     user: null,
+    token: '',
     refreshAuthorization: () => {}
 })
 
 export const AuthorizationState = ({ children }: {children: React.ReactNode}) => {
     const [isAuthorized, setAuthorized] = useState(true);
     const [user, setUser] = useState<User | null>(null);
+    const [token, setToken] = useState('');
     const refreshAuthorization = () => {
         fetchData();
     }
@@ -44,13 +47,14 @@ export const AuthorizationState = ({ children }: {children: React.ReactNode}) =>
 
             setAuthorized(response.success);
             setUser(response.value);
+            setToken(accessToken);
         } catch (error: unknown) {
             setAuthorized(false);
         }
     }
 
     return (
-        <AuthorizationContext.Provider value={{isAuthorized, refreshAuthorization, user}}>
+        <AuthorizationContext.Provider value={{isAuthorized, refreshAuthorization, user, token}}>
             { children }
         </AuthorizationContext.Provider>
     )

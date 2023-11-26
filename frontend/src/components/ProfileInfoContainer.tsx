@@ -8,11 +8,12 @@ import {useRemoveUser} from "../hooks/UsersManipulationHook.ts";
 import {useNavigate} from "react-router-dom";
 interface IProfileInfoProps {
     user: User;
+    token: string;
 }
 
-export function ProfileInfoContainer({user} : IProfileInfoProps) {
+export function ProfileInfoContainer({user, token} : IProfileInfoProps) {
     const[removeModalIsActive, setRemoveModalActive] = useState(false);
-    const {removeUser, error, onError, success, onSuccess} = useRemoveUser(user.id!);
+    const {removeUser, error, onError, success, onSuccess} = useRemoveUser(user.id!, token);
     const navigate = useNavigate();
 
     return(
