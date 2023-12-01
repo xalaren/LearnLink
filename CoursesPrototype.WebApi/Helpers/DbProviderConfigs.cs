@@ -1,5 +1,4 @@
-﻿using CoursesPrototype.Adapter.EFContexts;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace CoursesPrototype.WebApi.Helpers
 {
@@ -14,14 +13,6 @@ namespace CoursesPrototype.WebApi.Helpers
                 .Options;
         }
 
-        public static DbContextOptions GetSqlServerOptions(this DbContextOptionsBuilder builder, IConfiguration config)
-        {
-            var connection = config.GetConnectionString("SqlServerConnection");
-            return builder
-                .UseSqlServer(connection, b => b.MigrationsAssembly("CoursesPrototype.WebApi"))
-                .Options;
-        }
-
         public static DbContextOptions GetSqliteOptions(this DbContextOptionsBuilder builder, IConfiguration config)
         {
             var connection = config.GetConnectionString("SqliteConnection");
@@ -29,7 +20,5 @@ namespace CoursesPrototype.WebApi.Helpers
                 .UseSqlite(connection, b => b.MigrationsAssembly("CoursesPrototype.WebApi"))
                 .Options;
         }
-
-
     }
 }

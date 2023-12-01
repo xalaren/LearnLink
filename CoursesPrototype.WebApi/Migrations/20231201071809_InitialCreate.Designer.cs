@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoursesPrototype.WebApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231021184922_ModuleChanges")]
-    partial class ModuleChanges
+    [Migration("20231201071809_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -84,6 +84,29 @@ namespace CoursesPrototype.WebApi.Migrations
                     b.ToTable("Credentials");
                 });
 
+            modelBuilder.Entity("CoursesPrototype.Core.Entities.Lesson", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Lessons");
+                });
+
             modelBuilder.Entity("CoursesPrototype.Core.Entities.Module", b =>
                 {
                     b.Property<int>("Id")
@@ -107,10 +130,24 @@ namespace CoursesPrototype.WebApi.Migrations
                     b.ToTable("Modules");
                 });
 
+            modelBuilder.Entity("CoursesPrototype.Core.Entities.ModuleLesson", b =>
+                {
+                    b.Property<int>("ModuleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LessonId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ModuleId", "LessonId");
+
+                    b.HasIndex("LessonId");
+
+                    b.ToTable("ModuleLessons");
+                });
+
             modelBuilder.Entity("CoursesPrototype.Core.Entities.Subscription", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.Property<int>("CourseId")
@@ -119,14 +156,9 @@ namespace CoursesPrototype.WebApi.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("UserId", "CourseId");
 
                     b.HasIndex("CourseId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Subscriptions");
                 });
@@ -203,6 +235,25 @@ namespace CoursesPrototype.WebApi.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CoursesPrototype.Core.Entities.ModuleLesson", b =>
+                {
+                    b.HasOne("CoursesPrototype.Core.Entities.Lesson", "Lesson")
+                        .WithMany()
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CoursesPrototype.Core.Entities.Module", "Module")
+                        .WithMany()
+                        .HasForeignKey("ModuleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Lesson");
+
+                    b.Navigation("Module");
                 });
 
             modelBuilder.Entity("CoursesPrototype.Core.Entities.Subscription", b =>

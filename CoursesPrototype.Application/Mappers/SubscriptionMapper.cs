@@ -9,7 +9,6 @@ namespace CoursesPrototype.Application.Mappers
         {
             return new Subscription()
             {
-                Id = subscriptionDto.Id,
                 StartDate = subscriptionDto.StartDate,
                 CourseId = subscriptionDto.CourseId,
                 UserId = subscriptionDto.UserId,
@@ -20,7 +19,6 @@ namespace CoursesPrototype.Application.Mappers
         {
             return new SubscriptionDto
             (
-                Id: subscriptionEntity.Id,
                 StartDate: subscriptionEntity.StartDate,
                 CourseId: subscriptionEntity.CourseId,
                 UserId: subscriptionEntity.UserId

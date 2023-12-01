@@ -92,10 +92,6 @@ namespace CoursePrototype.WebApi
 
             builder.Services.AddSwaggerGen(options =>
             {
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-
-                options.IncludeXmlComments(xmlPath);
 
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "CoursesPrototype WebApi", Version = "v1" });
 
