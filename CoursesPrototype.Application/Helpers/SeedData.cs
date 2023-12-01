@@ -1,5 +1,7 @@
 ﻿using CoursesPrototype.Application.Interactors;
+using CoursesPrototype.Application.Mappers;
 using CoursesPrototype.Application.Transaction;
+using CoursesPrototype.Core.Constants;
 using CoursesPrototype.Shared.DataTransferObjects;
 
 namespace CoursesPrototype.Application.Helpers
@@ -8,28 +10,84 @@ namespace CoursesPrototype.Application.Helpers
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly UserInteractor userInteractor;
+        private readonly RoleInteractor roleInteractor;
 
-        public SeedData(IUnitOfWork unitOfWork, UserInteractor userInteractor)
+        public SeedData(IUnitOfWork unitOfWork, UserInteractor userInteractor, RoleInteractor roleInteractor)
         {
             this.unitOfWork = unitOfWork;
             this.userInteractor = userInteractor;
+            this.roleInteractor = roleInteractor;
         }
 
-        public async void InitializeAdmin()
+        public async Task InitializeAdmin()
         {
-            var admin = new UserDto()
+            try
             {
-                Id = 1,
-                Nickname = "admin",
-                Lastname = "AdminLastname",
-                Name = "AdminName",
-            };
+                if (unitOfWork.Users.Any()) return;
 
-            var password = "AdminPass01@";
+                var admin = new UserDto()
+                {
+                    Id = 1,
+                    Nickname = "admin",
+                    Name = "AdminName",
+                    Lastname = "AdminLastname",
+                };
 
-            if (unitOfWork.Users.Any()) return;
+                string password = "AdminSystemPass0!";
 
-            await userInteractor.RegisterAsync(admin, password);
+                await userInteractor.RegisterAsync(admin, password, 1);
+                
+            }
+            catch(Exception ex)
+            {
+                //Catch statement actions
+            }
+        }
+
+        public async Task InitializeAdminRole()
+        {
+            try
+            {
+                var existRole = await roleInteractor.GetRoleBySignAsync(RoleSignConstants.ADMIN);
+
+                if (existRole.Value != null) return;
+
+                var adminRole = new RoleDto()
+                {
+                    Id = 1,
+                    Name = "Администратор",
+                    Sign = RoleSignConstants.ADMIN,
+                };
+
+                await roleInteractor.CreateRoleAsync(adminRole);
+            }
+            catch (Exception ex)
+            {
+                //Catch statement actions
+            }
+        }
+
+        public async Task InitializeUserRole()
+        {
+            try
+            {
+                var existRole = await roleInteractor.GetRoleBySignAsync(RoleSignConstants.USER);
+
+                if (existRole.Value != null) return;
+
+                var userRole = new RoleDto()
+                {
+                    Id = 2,
+                    Name = "Пользователь",
+                    Sign = RoleSignConstants.USER,
+                };
+
+                await roleInteractor.CreateRoleAsync(userRole);
+            }
+            catch (Exception ex)
+            {
+                //Catch statement actions
+            }
         }
     }
 }

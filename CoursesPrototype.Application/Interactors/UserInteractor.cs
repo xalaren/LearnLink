@@ -2,6 +2,7 @@
 using CoursesPrototype.Application.Mappers;
 using CoursesPrototype.Application.Security;
 using CoursesPrototype.Application.Transaction;
+using CoursesPrototype.Core.Constants;
 using CoursesPrototype.Core.Entities;
 using CoursesPrototype.Core.Exceptions;
 using CoursesPrototype.Shared.DataTransferObjects;
@@ -86,7 +87,7 @@ namespace CoursesPrototype.Application.Interactors
             }
         }
 
-        public async Task<Response> RegisterAsync(UserDto userDto, string password)
+        public async Task<Response> RegisterAsync(UserDto userDto, string password, int roleId = 0)
         {
             if(userDto == null)
             {
@@ -100,13 +101,35 @@ namespace CoursesPrototype.Application.Interactors
                     throw new ValidationException("Пароль не был заполнен");
                 }
 
+                var existingUser = await unitOfWork.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Nickname == userDto.Nickname);
+
+                if(existingUser != null)
+                {
+                    throw new ValidationException("Данный пользователь уже зарегистрирован в системе");
+                }
+
                 var user = userDto.ToEntity();
+
+                Role role;
+
+                if (roleId == 0)
+                {
+                    role = (await unitOfWork.Roles.FindAsync(roleId))!;
+                }
+                else
+                {
+                    role = (await unitOfWork.Roles.FindAsync(RoleSignConstants.USER))!;
+                }
+
+                user.Role = role;
 
                 await unitOfWork.Users.AddAsync(user);
                 await unitOfWork.CommitAsync();
 
                 string salt = encryptionService.GetRandomString(SALT_LENGTH);
                 string hashedPassword = encryptionService.GetHash(password, salt);
+
+                
 
                 var userCredentials = new Credentials()
                 {

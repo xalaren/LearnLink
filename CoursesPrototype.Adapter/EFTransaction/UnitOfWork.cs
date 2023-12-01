@@ -16,6 +16,8 @@ namespace CoursesPrototype.Adapter.EFTransaction
 
         public DbSet<User> Users => context.Users;
         public DbSet<Credentials> Credentials => context.Credentials;
+        public DbSet<Role> Roles => context.Roles;
+
         public DbSet<Course> Courses => context.Courses;
         public DbSet<Subscription> Subscriptions => context.Subscriptions;
         public DbSet<UserCreatedCourse> UserCreatedCourses => context.UserCreatedCourses;
@@ -23,7 +25,6 @@ namespace CoursesPrototype.Adapter.EFTransaction
         public DbSet<CourseModule> CourseModules => context.CourseModules;
         public DbSet<Lesson> Lessons => context.Lessons;
         public DbSet<ModuleLesson> ModuleLessons => context.ModuleLessons;
-
 
         public ValueTask DisposeAsync()
         {

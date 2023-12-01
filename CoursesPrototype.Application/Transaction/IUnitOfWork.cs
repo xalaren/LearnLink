@@ -7,6 +7,7 @@ namespace CoursesPrototype.Application.Transaction
     {
         public DbSet<User> Users { get; }
         public DbSet<Credentials> Credentials { get; }
+        public DbSet<Role> Roles { get; }
 
         public DbSet<Course> Courses { get; }
         public DbSet<Subscription> Subscriptions { get; }

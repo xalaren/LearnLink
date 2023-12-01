@@ -19,5 +19,10 @@
 
             return true;
         }
+
+        public static bool ValidateToStringLength(string value, int maxLength)
+        {
+            return value.Length <= maxLength;
+        }
     }
 }

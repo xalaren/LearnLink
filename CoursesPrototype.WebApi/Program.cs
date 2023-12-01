@@ -1,4 +1,3 @@
-using System.Reflection;
 using CoursesPrototype.Adapter.EFContexts;
 using CoursesPrototype.Adapter.EFRepositories;
 using CoursesPrototype.Adapter.EFTransaction;
@@ -7,13 +6,10 @@ using CoursesPrototype.Application.Interactors;
 using CoursesPrototype.Application.Repository;
 using CoursesPrototype.Application.Security;
 using CoursesPrototype.Application.Transaction;
-using CoursesPrototype.Core.Entities;
 using CoursesPrototype.SecurityProvider;
-using CoursesPrototype.WebApi.Controllers;
 using CoursesPrototype.WebApi.Extensions;
 using CoursesPrototype.WebApi.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -45,6 +41,7 @@ namespace CoursePrototype.WebApi
             builder.Services.AddScoped<SubscriptionInteractor>();
             builder.Services.AddScoped<ModuleInteractor>();
             builder.Services.AddScoped<UserVerifierService>();
+            builder.Services.AddScoped<RoleInteractor>();
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<ICredentialsRepository, CredentialsRepository>();

@@ -23,7 +23,10 @@ namespace CoursesPrototype.Application.Mappers
                 Id = userEntity.Id,
                 Nickname = userEntity.Nickname,
                 Lastname = userEntity.Lastname,
-                Name = userEntity.Name
+                Name = userEntity.Name,
+
+                RoleId = userEntity.RoleId,
+                Role = userEntity.Role.ToDto(),
             };
         }
 

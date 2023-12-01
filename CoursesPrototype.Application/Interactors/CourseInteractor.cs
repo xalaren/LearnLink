@@ -204,7 +204,7 @@ namespace CoursesPrototype.Application.Interactors
 
                 await userCreatedCourseRepository.CreateAsync(userCreatedCourse);
 
-                unitOfWork.CommitAsync();
+                await unitOfWork.CommitAsync();
 
                 return new Response()
                 {
@@ -281,7 +281,7 @@ namespace CoursesPrototype.Application.Interactors
 
                 course = course.Assign(courseDto);
 
-                unitOfWork.CommitAsync();
+                await unitOfWork.CommitAsync();
 
                 return new Response()
                 {
@@ -313,7 +313,7 @@ namespace CoursesPrototype.Application.Interactors
             try
             {
                 await courseRepository.RemoveAsync(courseId);
-                unitOfWork.CommitAsync();
+                await unitOfWork.CommitAsync();
 
                 return new Response()
                 {

@@ -8,6 +8,7 @@ namespace CoursesPrototype.Adapter.EFContexts
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Credentials> Credentials { get; set; }
+        public DbSet<Role> Roles { get; set; }
 
         public DbSet<Course> Courses { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
@@ -32,6 +33,7 @@ namespace CoursesPrototype.Adapter.EFContexts
             modelBuilder.ApplyConfiguration(new CourseModulesEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new LessonsEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ModuleLessonsEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new RoleEntityTypeConfiguration());
         }
     }
 }
