@@ -110,18 +110,14 @@ namespace CoursesPrototype.Application.Interactors
 
                 var user = userDto.ToEntity();
 
-                Role role;
+                var role = await unitOfWork.Roles.FindAsync(roleId);
 
-                if (roleId == 0)
+                if (role == null)
                 {
-                    role = (await unitOfWork.Roles.FindAsync(roleId))!;
-                }
-                else
-                {
-                    role = (await unitOfWork.Roles.FindAsync(RoleSignConstants.USER))!;
+                    role = await unitOfWork.Roles.FindAsync(RoleSignConstants.USER);
                 }
 
-                user.Role = role;
+                user.Role = role!;
 
                 await unitOfWork.Users.AddAsync(user);
                 await unitOfWork.CommitAsync();

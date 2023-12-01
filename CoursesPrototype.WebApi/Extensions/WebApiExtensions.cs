@@ -1,6 +1,4 @@
-﻿using CoursePrototype.WebApi;
-using CoursesPrototype.Application.Helpers;
-using Microsoft.Extensions.Hosting;
+﻿using CoursesPrototype.Application.Helpers;
 
 namespace CoursesPrototype.WebApi.Extensions
 {
