@@ -1,6 +1,6 @@
 ﻿namespace CoursesPrototype.Application.Helpers
 {
-    public static class ValidateHelper
+    public static class ValidationHelper
     {
         /// <summary>
         /// Validates that strings are not empty

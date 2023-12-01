@@ -19,4 +19,8 @@
     <ProjectReference Include="..\CoursesPrototype.Application\CoursesPrototype.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Options\" />
+  </ItemGroup>
+
 </Project>

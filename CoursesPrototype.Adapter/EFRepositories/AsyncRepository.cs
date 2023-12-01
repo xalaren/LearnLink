@@ -1,5 +1,5 @@
 ﻿using CoursesPrototype.Adapter.EFContexts;
-using CoursesPrototype.Application.Repository.BasicRepositories;
+using CoursesPrototype.Application.Repository.GenericRepository;
 
 namespace CoursesPrototype.Adapter.EFRepositories
 {

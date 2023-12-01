@@ -1,4 +1,4 @@
-using CoursesPrototype.Application.Repository.BasicRepositories;
+using CoursesPrototype.Application.Repository.GenericRepository;
 using CoursesPrototype.Core.Entities;
 using CoursesPrototype.Shared.DataTransferObjects;
 

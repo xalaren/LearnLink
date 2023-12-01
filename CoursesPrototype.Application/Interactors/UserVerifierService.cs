@@ -18,7 +18,7 @@ namespace CoursesPrototype.Application.Interactors
         {
             try
             {
-                if (!ValidateHelper.ValidateToEmptyStrings(nickname))
+                if (!ValidationHelper.ValidateToEmptyStrings(nickname))
                 {
                     throw new AccessLevelException("Доступ отклонен");
                 }

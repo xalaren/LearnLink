@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.12" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CoursesPrototype.Core\CoursesPrototype.Core.csproj" />
     <ProjectReference Include="..\CoursesPrototype.Shared\CoursesPrototype.Shared.csproj" />
   </ItemGroup>

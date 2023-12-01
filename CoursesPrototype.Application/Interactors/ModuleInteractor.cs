@@ -50,7 +50,7 @@ namespace CoursesPrototype.Application.Interactors
                 await modulesRepository.CreateAsync(moduleEntity);
                 await courseModuleRepository.CreateAsync(courseModule);
 
-                unitOfWork.Commit();
+                unitOfWork.CommitAsync();
 
                 return new Response()
                 {
@@ -199,7 +199,7 @@ namespace CoursesPrototype.Application.Interactors
 
                 modulesRepository.Update(module);
 
-                unitOfWork.Commit();
+                unitOfWork.CommitAsync();
 
                 return new()
                 {
@@ -232,7 +232,7 @@ namespace CoursesPrototype.Application.Interactors
             {
                 await modulesRepository.RemoveAsync(moduleId);
 
-                unitOfWork.Commit();
+                unitOfWork.CommitAsync();
 
                 return new()
                 {

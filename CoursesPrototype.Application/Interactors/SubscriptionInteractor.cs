@@ -69,7 +69,7 @@ namespace CoursesPrototype.Application.Interactors
 
 
                 await subscriptionRepository.CreateAsync(subscriptionEntity);
-                unitOfWork.Commit();
+                unitOfWork.CommitAsync();
 
                 return new Response()
                 {
@@ -101,7 +101,7 @@ namespace CoursesPrototype.Application.Interactors
             try
             {
                 await subscriptionRepository.RemoveAsync(userId, courseId);
-                unitOfWork.Commit();
+                unitOfWork.CommitAsync();
 
                 return new Response()
                 {

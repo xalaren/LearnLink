@@ -1,4 +1,4 @@
-﻿namespace CoursesPrototype.Application.Repository.BasicRepositories
+﻿namespace CoursesPrototype.Application.Repository.GenericRepository
 {
     public interface IUpdateRepository<T> where T : class
     {

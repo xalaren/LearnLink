@@ -1,19 +1,17 @@
 ﻿using CoursesPrototype.Application.Helpers;
 using CoursesPrototype.Application.Mappers;
-using CoursesPrototype.Application.Repository;
 using CoursesPrototype.Application.Security;
 using CoursesPrototype.Application.Transaction;
 using CoursesPrototype.Core.Entities;
 using CoursesPrototype.Core.Exceptions;
 using CoursesPrototype.Shared.DataTransferObjects;
 using CoursesPrototype.Shared.Responses;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoursesPrototype.Application.Interactors
 {
     public class UserInteractor
     {
-        private readonly IUserRepository userRepository;
-        private readonly ICredentialsRepository credentialsRepository;
         private readonly IUnitOfWork unitOfWork;
         private readonly IEncryptionService encryptionService;
         private readonly IAuthenticationService authenticationService;
@@ -21,14 +19,10 @@ namespace CoursesPrototype.Application.Interactors
         private const int SALT_LENGTH = 6;
 
         public UserInteractor(
-            IUserRepository userRepository,
-            ICredentialsRepository credentialsRepository,
             IUnitOfWork unitOfWork,
             IEncryptionService encryptionService,
             IAuthenticationService authenticationService)
         {
-            this.userRepository = userRepository;
-            this.credentialsRepository = credentialsRepository;
             this.unitOfWork = unitOfWork;
             this.encryptionService = encryptionService;
             this.authenticationService = authenticationService;
@@ -38,19 +32,19 @@ namespace CoursesPrototype.Application.Interactors
         {
             try
             {
-                if (!ValidateHelper.ValidateToEmptyStrings(nickname, password))
+                if (!ValidationHelper.ValidateToEmptyStrings(nickname, password))
                 {
                     throw new ValidationException("Не все поля были заполнены");
                 }
-
-                var user = await userRepository.GetByNicknameAsync(nickname);
+                
+                var user = await unitOfWork.Users.AsNoTracking().FirstOrDefaultAsync(user => user.Nickname == nickname);
 
                 if (user == null)
                 {
                     throw new NotFoundException("Неверное имя пользователя");
                 }
 
-                var userCredentials = await credentialsRepository.GetCredentialsByUserId(user.Id);
+                var userCredentials = await unitOfWork.Credentials.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == user.Id);
 
                 if (userCredentials == null)
                 {
@@ -101,15 +95,15 @@ namespace CoursesPrototype.Application.Interactors
 
             try
             {
-                if(!ValidateHelper.ValidateToEmptyStrings(password))
+                if(!ValidationHelper.ValidateToEmptyStrings(password))
                 {
                     throw new ValidationException("Пароль не был заполнен");
                 }
 
                 var user = userDto.ToEntity();
 
-                await userRepository.CreateAsync(user);
-                unitOfWork.Commit();
+                await unitOfWork.Users.AddAsync(user);
+                await unitOfWork.CommitAsync();
 
                 string salt = encryptionService.GetRandomString(SALT_LENGTH);
                 string hashedPassword = encryptionService.GetHash(password, salt);
@@ -120,9 +114,9 @@ namespace CoursesPrototype.Application.Interactors
                     HashedPassword = hashedPassword,
                     Salt = salt,
                 };
-                await credentialsRepository.CreateAsync(userCredentials);
 
-                unitOfWork.Commit();
+                await unitOfWork.Credentials.AddAsync(userCredentials);
+                await unitOfWork.CommitAsync();
 
                 return new Response()
                 {
@@ -153,10 +147,11 @@ namespace CoursesPrototype.Application.Interactors
         {
             try
             {
+                var users = await unitOfWork.Users.AsNoTracking().Select(user => user.ToDto()).ToArrayAsync();
                 return new()
                 {
                     Success = true,
-                    Value = (await userRepository.GetAll()).Select(user => user.ToDto()).ToArray(),
+                    Value = users,
                 };
             }
             catch (CustomException exception)
@@ -182,7 +177,7 @@ namespace CoursesPrototype.Application.Interactors
         {
             try
             {
-                var user = await userRepository.GetAsync(userId);
+                var user = await unitOfWork.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == userId);
 
                 if (user == null)
                 {
@@ -218,12 +213,12 @@ namespace CoursesPrototype.Application.Interactors
         {
             try
             {
-                if(!ValidateHelper.ValidateToEmptyStrings(nickname))
+                if(!ValidationHelper.ValidateToEmptyStrings(nickname))
                 {
                     throw new ValidationException("Имя пользователя не указано, либо пользователь не найден");
                 }
 
-                var user = await userRepository.GetByNicknameAsync(nickname!);
+                var user = await unitOfWork.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Nickname ==  nickname);
 
                 if (user == null)
                 {
@@ -255,16 +250,20 @@ namespace CoursesPrototype.Application.Interactors
             }
         }
 
-
         public async Task<Response> RemoveUserAsync(int userId)
         {
             try
             {
-                var user = await userRepository.GetAsync(userId);
+                var user = await unitOfWork.Users.FirstOrDefaultAsync(u => u.Id == userId);
 
-                await userRepository.RemoveAsync(userId);
+                if(user == null)
+                {
+                    throw new NotFoundException("Пользователь не найден");
+                }
 
-                unitOfWork.Commit();
+                unitOfWork.Users.Remove(user);
+
+                await unitOfWork.CommitAsync();
 
                 return new()
                 {
@@ -295,7 +294,7 @@ namespace CoursesPrototype.Application.Interactors
         {
             try
             {
-                var user = await userRepository.GetAsync(userDto.Id);
+                var user = await unitOfWork.Users.FindAsync(userDto.Id);
 
                 if (user == null)
                 {
@@ -309,9 +308,8 @@ namespace CoursesPrototype.Application.Interactors
 
                 var updatedEntity = user.Assign(userDto);
 
-                userRepository.Update(user.Assign(userDto));
-
-                unitOfWork.Commit();
+                unitOfWork.Users.Update(updatedEntity);
+                await unitOfWork.CommitAsync();
 
                 var token = authenticationService.GetToken(updatedEntity.Nickname);
 
@@ -345,9 +343,9 @@ namespace CoursesPrototype.Application.Interactors
         {
             try
             {
-                var user = await userRepository.GetAsync(userId);
+                var user = await unitOfWork.Users.FindAsync(userId);
 
-                if (!ValidateHelper.ValidateToEmptyStrings(oldPassword, newPassword))
+                if (!ValidationHelper.ValidateToEmptyStrings(oldPassword, newPassword))
                 {
                     throw new ValidationException("Пароли не были заполнены");
                 }
@@ -357,7 +355,7 @@ namespace CoursesPrototype.Application.Interactors
                     throw new NotFoundException("Пользователь не найден");
                 }
 
-                var userCredentials = await credentialsRepository.GetCredentialsByUserId(user.Id);
+                var userCredentials = await unitOfWork.Credentials.FirstOrDefaultAsync(u => u.UserId == user.Id);
 
                 if (userCredentials == null)
                 {
@@ -378,9 +376,8 @@ namespace CoursesPrototype.Application.Interactors
                 userCredentials.Salt = newSalt;
                 userCredentials.HashedPassword = newHash;
 
-                credentialsRepository.Update(userCredentials);
-
-                unitOfWork.Commit();
+                unitOfWork.Credentials.Update(userCredentials);
+                await unitOfWork.CommitAsync();
 
                 return new()
                 {

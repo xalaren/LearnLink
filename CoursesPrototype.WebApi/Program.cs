@@ -2,16 +2,18 @@ using System.Reflection;
 using CoursesPrototype.Adapter.EFContexts;
 using CoursesPrototype.Adapter.EFRepositories;
 using CoursesPrototype.Adapter.EFTransaction;
+using CoursesPrototype.Application.Helpers;
 using CoursesPrototype.Application.Interactors;
 using CoursesPrototype.Application.Repository;
-using CoursesPrototype.Application.Repository.BasicRepositories;
 using CoursesPrototype.Application.Security;
 using CoursesPrototype.Application.Transaction;
 using CoursesPrototype.Core.Entities;
 using CoursesPrototype.SecurityProvider;
 using CoursesPrototype.WebApi.Controllers;
+using CoursesPrototype.WebApi.Extensions;
 using CoursesPrototype.WebApi.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -37,6 +39,7 @@ namespace CoursePrototype.WebApi
 
             // Add services to the container.
 
+
             builder.Services.AddScoped<UserInteractor>();
             builder.Services.AddScoped<CourseInteractor>();
             builder.Services.AddScoped<SubscriptionInteractor>();
@@ -51,6 +54,8 @@ namespace CoursePrototype.WebApi
             builder.Services.AddScoped<IModulesRepository, ModulesRepository>();
             builder.Services.AddScoped<ICourseModuleRepository, CourseModuleRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            builder.Services.AddTransient<SeedData>();
 
             builder.Services.AddSingleton<IEncryptionService, EncryptionService>();
             builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
@@ -144,8 +149,10 @@ namespace CoursePrototype.WebApi
             app.UseStaticFiles();
 
             app.UseAuthorization();
-
             app.MapControllers();
+
+
+            app.UseSeedData();
 
             app.Run();
         }
