@@ -1,25 +1,19 @@
 ﻿using CoursesPrototype.Application.Mappers;
-using CoursesPrototype.Application.Repository;
 using CoursesPrototype.Application.Transaction;
 using CoursesPrototype.Core.Entities;
 using CoursesPrototype.Core.Exceptions;
 using CoursesPrototype.Shared.DataTransferObjects;
 using CoursesPrototype.Shared.Responses;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoursesPrototype.Application.Interactors
 {
     public class ModuleInteractor
     {
-        private readonly IModulesRepository modulesRepository;
-        private readonly ICourseRepository coursesRepository;
-        private readonly ICourseModuleRepository courseModuleRepository;
         private readonly IUnitOfWork unitOfWork;
 
-        public ModuleInteractor(IModulesRepository modulesRepository, ICourseRepository coursesRepository, ICourseModuleRepository courseModuleRepository, IUnitOfWork unitOfWork)
+        public ModuleInteractor(IUnitOfWork unitOfWork)
         {
-            this.modulesRepository = modulesRepository;
-            this.coursesRepository = coursesRepository;
-            this.courseModuleRepository = courseModuleRepository;
             this.unitOfWork = unitOfWork;
         }
 
@@ -34,9 +28,9 @@ namespace CoursesPrototype.Application.Interactors
 
                 var moduleEntity = moduleDto.ToEntity();
 
-                var course = await coursesRepository.GetAsync(courseId);
+                var course = await unitOfWork.Courses.FindAsync(courseId);
 
-                if(course == null)
+                if (course == null)
                 {
                     throw new NotFoundException("Курс не найден");
                 }
@@ -47,8 +41,8 @@ namespace CoursesPrototype.Application.Interactors
                     Course = course,
                 };
 
-                await modulesRepository.CreateAsync(moduleEntity);
-                await courseModuleRepository.CreateAsync(courseModule);
+                await unitOfWork.Modules.AddAsync(moduleEntity);
+                await unitOfWork.CourseModules.AddAsync(courseModule);
 
                 await unitOfWork.CommitAsync();
 
@@ -81,13 +75,13 @@ namespace CoursesPrototype.Application.Interactors
         {
             try
             {
-                var modules = await modulesRepository.GetAllModulesAsync();
+                var modules = await unitOfWork.Modules.Select(module => module.ToDto()).ToArrayAsync();
 
                 return new()
                 {
                     Success = true,
                     Message = "Модули успешно получены",
-                    Value = modules.Select(module => module.ToDto()).ToArray(),
+                    Value = modules,
                 };
             }
             catch (CustomException exception)
@@ -113,14 +107,23 @@ namespace CoursesPrototype.Application.Interactors
         {
             try
             {
-                var courseModules = await courseModuleRepository.GetCourseModulesByCourseAsync(courseId);
-                var modules = await modulesRepository.GetModulesFromCourseModules(courseModules);
+                var modules = await unitOfWork.CourseModules
+                    .AsNoTracking()
+                    .Where(m => m.CourseId == courseId)
+                    .Join(
+                        unitOfWork.Modules.AsNoTracking(),
+                        courseModule => courseModule.ModuleId,
+                        module => module.Id,
+                        (courseModule, module) => module
+                    )
+                    .Select(module => module.ToDto())
+                    .ToArrayAsync();
 
                 return new()
                 {
                     Success = true,
                     Message = "Модули успешно получены",
-                    Value = modules.Select(module => module.ToDto()).ToArray(),
+                    Value = modules,
                 };
             }
             catch (CustomException exception)
@@ -146,9 +149,9 @@ namespace CoursesPrototype.Application.Interactors
         {
             try
             {
-                var module = await modulesRepository.GetAsync(moduleId);
+                var module = await unitOfWork.Modules.AsNoTracking().FirstOrDefaultAsync(module => module.Id == moduleId);
 
-                if(module == null)
+                if (module == null)
                 {
                     throw new NotFoundException("Модуль не найден");
                 }
@@ -188,7 +191,7 @@ namespace CoursesPrototype.Application.Interactors
                     throw new ArgumentNullException(nameof(moduleDto), "ModuleDto was null");
                 }
 
-                var module = await modulesRepository.GetAsync(moduleDto.Id);
+                var module = await unitOfWork.Modules.FindAsync(moduleDto.Id);
 
                 if (module == null)
                 {
@@ -196,8 +199,7 @@ namespace CoursesPrototype.Application.Interactors
                 }
 
                 module.Assign(moduleDto);
-
-                modulesRepository.Update(module);
+                unitOfWork.Modules.Update(module);
 
                 await unitOfWork.CommitAsync();
 
@@ -230,7 +232,13 @@ namespace CoursesPrototype.Application.Interactors
         {
             try
             {
-                await modulesRepository.RemoveAsync(moduleId);
+                var existModule = await unitOfWork.Modules.FindAsync(moduleId);
+
+                if(existModule == null)
+                {
+                    throw new NotFoundException("Модуль не найден");
+                }
+                unitOfWork.Modules.Remove(existModule);
 
                 await unitOfWork.CommitAsync();
 

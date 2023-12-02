@@ -1,36 +1,28 @@
 ﻿using System.Reflection;
 using CoursesPrototype.Application.Mappers;
-using CoursesPrototype.Application.Repository;
 using CoursesPrototype.Application.Transaction;
 using CoursesPrototype.Core.Entities;
 using CoursesPrototype.Core.Exceptions;
 using CoursesPrototype.Shared.DataTransferObjects;
 using CoursesPrototype.Shared.Responses;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoursesPrototype.Application.Interactors
 {
     public class CourseInteractor
     {
-        private readonly ICourseRepository courseRepository;
-        private readonly IUserRepository userRepository;
-        private readonly IUserCreatedCoursesRepository userCreatedCourseRepository;
-        private readonly ISubscriptionRepository subscriptionRepository;
         private readonly IUnitOfWork unitOfWork;
 
-        public CourseInteractor(ICourseRepository courseRepository, IUserRepository userRepository, IUnitOfWork unitOfWork, IUserCreatedCoursesRepository userCreatedCourseRepository, ISubscriptionRepository subscriptionRepository)
+        public CourseInteractor(IUnitOfWork unitOfWork)
         {
-            this.courseRepository = courseRepository;
-            this.userRepository = userRepository;
             this.unitOfWork = unitOfWork;
-            this.userCreatedCourseRepository = userCreatedCourseRepository;
-            this.subscriptionRepository = subscriptionRepository;
         }
 
         public async Task<Response<CourseDto?>> GetCourseAsync(int courseId)
         {
             try
             {
-                var course = await courseRepository.GetAsync(courseId);
+                var course = await unitOfWork.Courses.FirstOrDefaultAsync(course => course.Id == courseId);
 
                 if (course == null)
                 {
@@ -68,13 +60,13 @@ namespace CoursesPrototype.Application.Interactors
             try
             {
 
-                var courses = await courseRepository.GetCourses();
+                var courses = await unitOfWork.Courses.AsNoTracking().Select(course => course.ToDto()).ToArrayAsync();
 
                 return new()
                 {
                     Success = true,
                     Message = "Курсы успешно получены",
-                    Value = courses.Select(course => course.ToDto()).ToArray(),
+                    Value = courses,
                 };
             }
             catch (CustomException exception)
@@ -100,22 +92,31 @@ namespace CoursesPrototype.Application.Interactors
         {
             try
             {
-                var user = await userRepository.GetAsync(userId);
+                var user = await unitOfWork.Users.AsNoTracking().FirstOrDefaultAsync(user => user.Id == userId);
 
                 if(user == null)
                 {
                     throw new NotFoundException("Пользователь не найден");
                 }
 
-                var userCreatedCourses = await userCreatedCourseRepository.GetUserCreatedCoursesAsync(userId);
-
-                var courses = await courseRepository.GetByUserCreatedCoursesAsync(userCreatedCourses);
+                //TODO: проверить на работоспособность
+                var courses = await unitOfWork.UserCreatedCourses
+                    .AsNoTracking()
+                    .Where(u => u.UserId == userId)
+                    .Join(
+                        unitOfWork.Courses.AsNoTracking(),
+                        userCreatedCourse => userCreatedCourse.CourseId,
+                        course => course.Id,
+                        (userCreatedCourse, course) => course
+                    )
+                    .Select(course => course.ToDto())
+                    .ToArrayAsync();
 
                 return new()
                 {
                     Success = true,
                     Message = "Курсы пользователя успешно получены",
-                    Value = courses.Select(course => course.ToDto()).ToArray(),
+                    Value = courses,
                 };
             }
             catch (CustomException exception)
@@ -141,22 +142,32 @@ namespace CoursesPrototype.Application.Interactors
         {
             try
             {
-                var user = await userRepository.GetAsync(userId);
+                var user = await unitOfWork.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == userId);
 
                 if (user == null)
                 {
                     throw new NotFoundException("Пользователь не найден");
                 }
 
-                var subscriptions = await subscriptionRepository.GetUserSubscriptions(userId);
+                var subscriptions = await unitOfWork.Subscriptions.AsNoTracking().FirstOrDefaultAsync(s => s.UserId == userId);
 
-                var courses = await courseRepository.GetSubscribedCourses(subscriptions);
+                var courses = await unitOfWork.Subscriptions
+                    .AsNoTracking()
+                    .Where(s => s.UserId == userId)
+                    .Join(
+                        unitOfWork.Courses.AsNoTracking(),
+                        sub => sub.CourseId,
+                        course => course.Id,
+                        (sub, course) => course
+                    )
+                    .Select(course => course.ToDto())
+                    .ToArrayAsync();
 
                 return new()
                 {
                     Success = true,
                     Message = "Курсы пользователя успешно получены",
-                    Value = courses.Select(course => course.ToDto()).ToArray(),
+                    Value = courses,
                 };
             }
             catch (CustomException exception)
@@ -187,7 +198,7 @@ namespace CoursesPrototype.Application.Interactors
                     throw new ArgumentNullException("CourseDto was null");
                 }
 
-                var user = await userRepository.GetAsync(userId);
+                var user = await unitOfWork.Users.FindAsync(userId);
 
                 if (user == null)
                 {
@@ -202,7 +213,7 @@ namespace CoursesPrototype.Application.Interactors
                     Course = course,
                 };
 
-                await userCreatedCourseRepository.CreateAsync(userCreatedCourse);
+                await unitOfWork.UserCreatedCourses.AddAsync(userCreatedCourse);
 
                 await unitOfWork.CommitAsync();
 
@@ -235,13 +246,17 @@ namespace CoursesPrototype.Application.Interactors
         {
             try
             {
-                var courses = await courseRepository.GetPublicAsync();
+                var courses = await unitOfWork.Courses
+                    .AsNoTracking()
+                    .Where(c => c.IsPublic)
+                    .Select(c => c.ToDto())
+                    .ToArrayAsync();
 
                 return new()
                 {
                     Success = true,
                     Message = "Курсы успешно получены",
-                    Value = courses.Select(course => course.ToDto()).ToArray(),
+                    Value = courses,
                 };
             }
             catch (CustomException exception)
@@ -271,8 +286,8 @@ namespace CoursesPrototype.Application.Interactors
                 {
                     throw new ArgumentNullException(nameof(courseDto), "CourseDto was null");
                 }
-                
-                var course = await courseRepository.GetAsync(courseDto.Id);
+
+                var course = await unitOfWork.Courses.FindAsync(courseDto.Id);
 
                 if(course == null)
                 {
@@ -312,7 +327,14 @@ namespace CoursesPrototype.Application.Interactors
         {
             try
             {
-                await courseRepository.RemoveAsync(courseId);
+                var course = await unitOfWork.Courses.FindAsync(courseId);
+
+                if(course == null)
+                {
+                    throw new NotFoundException("Курс не найден");
+                }
+
+                unitOfWork.Courses.Remove(course);
                 await unitOfWork.CommitAsync();
 
                 return new Response()

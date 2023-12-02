@@ -1,33 +1,19 @@
 ﻿using CoursesPrototype.Application.Mappers;
-using CoursesPrototype.Application.Repository;
 using CoursesPrototype.Application.Transaction;
 using CoursesPrototype.Core.Exceptions;
 using CoursesPrototype.Shared.DataTransferObjects;
 using CoursesPrototype.Shared.Responses;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoursesPrototype.Application.Interactors
 {
     public class SubscriptionInteractor
     {
-        private readonly ICourseRepository courseRepository;
-        private readonly IUserRepository userRepository;
-        private readonly ISubscriptionRepository subscriptionRepository;
-        private readonly IUserCreatedCoursesRepository userCreatedCoursesRepository;
-
         private readonly IUnitOfWork unitOfWork;
 
-        public SubscriptionInteractor(
-            ICourseRepository courseRepository,
-            IUserRepository userRepository,
-            ISubscriptionRepository subscriptionRepository,
-            IUserCreatedCoursesRepository userCreatedCoursesRepository,
-            IUnitOfWork unitOfWork)
+        public SubscriptionInteractor(IUnitOfWork unitOfWork)
         {
-            this.courseRepository = courseRepository;
-            this.userRepository = userRepository;
             this.unitOfWork = unitOfWork;
-            this.subscriptionRepository = subscriptionRepository;
-            this.userCreatedCoursesRepository = userCreatedCoursesRepository;
         }
 
         public async Task<Response> CreateSubscriptionAsync(SubscriptionDto subscriptionDto)
@@ -39,21 +25,21 @@ namespace CoursesPrototype.Application.Interactors
                     throw new ArgumentNullException(nameof(subscriptionDto), "SubscriptionDto was null");
                 }
 
-                var user = await userRepository.GetAsync(subscriptionDto.UserId);
+                var user = await unitOfWork.Users.FindAsync(subscriptionDto.UserId);
 
                 if (user == null)
                 {
                     throw new NotFoundException("Пользователь не найден");
                 }
 
-                var course = await courseRepository.GetAsync(subscriptionDto.CourseId);
+                var course = await unitOfWork.Courses.FindAsync(subscriptionDto.CourseId);
 
                 if (course == null)
                 {
                     throw new NotFoundException("Курс не найден");
                 }
 
-                var userCreatedCourse = await userCreatedCoursesRepository.GetUserCreatedCourse(user.Id, course.Id);
+                var userCreatedCourse = await unitOfWork.UserCreatedCourses.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == user.Id && u.CourseId == course.Id);
 
                 if(userCreatedCourse != null)
                 {
@@ -68,7 +54,7 @@ namespace CoursesPrototype.Application.Interactors
                 subscriptionEntity.Course = course;
 
 
-                await subscriptionRepository.CreateAsync(subscriptionEntity);
+                await unitOfWork.Subscriptions.AddAsync(subscriptionEntity);
                 await unitOfWork.CommitAsync();
 
                 return new Response()
@@ -100,7 +86,14 @@ namespace CoursesPrototype.Application.Interactors
         {
             try
             {
-                await subscriptionRepository.RemoveAsync(userId, courseId);
+                var subscription = await unitOfWork.Subscriptions.FirstOrDefaultAsync(s => s.UserId == userId && s.CourseId == courseId);
+
+                if(subscription == null)
+                {
+                    throw new NotFoundException("Подписка не найдена");
+                }
+
+                unitOfWork.Subscriptions.Remove(subscription);
                 await unitOfWork.CommitAsync();
 
                 return new Response()

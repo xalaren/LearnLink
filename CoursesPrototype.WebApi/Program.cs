@@ -1,9 +1,7 @@
 using CoursesPrototype.Adapter.EFContexts;
-using CoursesPrototype.Adapter.EFRepositories;
 using CoursesPrototype.Adapter.EFTransaction;
 using CoursesPrototype.Application.Helpers;
 using CoursesPrototype.Application.Interactors;
-using CoursesPrototype.Application.Repository;
 using CoursesPrototype.Application.Security;
 using CoursesPrototype.Application.Transaction;
 using CoursesPrototype.SecurityProvider;
@@ -43,13 +41,6 @@ namespace CoursePrototype.WebApi
             builder.Services.AddScoped<UserVerifierService>();
             builder.Services.AddScoped<RoleInteractor>();
 
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
-            builder.Services.AddScoped<ICredentialsRepository, CredentialsRepository>();
-            builder.Services.AddScoped<ICourseRepository, CoursesRepository>();
-            builder.Services.AddScoped<IUserCreatedCoursesRepository, UserCreatedCoursesRepository>();
-            builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
-            builder.Services.AddScoped<IModulesRepository, ModulesRepository>();
-            builder.Services.AddScoped<ICourseModuleRepository, CourseModuleRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             builder.Services.AddTransient<SeedData>();

@@ -1,17 +1,17 @@
 ﻿using CoursesPrototype.Application.Helpers;
-using CoursesPrototype.Application.Repository;
+using CoursesPrototype.Application.Transaction;
 using CoursesPrototype.Core.Exceptions;
 using CoursesPrototype.Shared.Responses;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoursesPrototype.Application.Interactors
 {
     public class UserVerifierService
     {
-        private readonly IUserRepository userRepository;
-
-        public UserVerifierService(IUserRepository userRepository)
+        private readonly IUnitOfWork unitOfWork;
+        public UserVerifierService(IUnitOfWork unitOfWork)
         {
-            this.userRepository = userRepository;
+            this.unitOfWork = unitOfWork;
         }
 
         public async Task<Response> VerifyUserAsync(string? nickname, int userId)
@@ -23,7 +23,7 @@ namespace CoursesPrototype.Application.Interactors
                     throw new AccessLevelException("Доступ отклонен");
                 }
 
-                var user = await userRepository.GetByNicknameAsync(nickname!);
+                var user = await unitOfWork.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Nickname == nickname);
 
                 if (user == null)
                 {
