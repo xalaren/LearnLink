@@ -11,7 +11,6 @@ namespace LearnLink.Application.Mappers
             {
                 Id = moduleDto.Id,
                 Title = moduleDto.Title,
-                Content = moduleDto.Content,
                 Description = moduleDto.Description,
             };
         }
@@ -22,8 +21,7 @@ namespace LearnLink.Application.Mappers
                 (
                     Id: moduleEntity.Id,
                     Title: moduleEntity.Title,
-                    Description: moduleEntity.Description,
-                    Content: moduleEntity.Content
+                    Description: moduleEntity.Description
                 );
         }
 
@@ -31,7 +29,6 @@ namespace LearnLink.Application.Mappers
         {
             module.Title = moduleDto.Title;
             module.Description = moduleDto.Description;
-            module.Content = moduleDto.Content;
             return module;
         }
     }
