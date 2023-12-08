@@ -15,7 +15,7 @@ namespace LearnLink.WebApi.Controllers
         /// <summary>
         /// Получение никнейма авторизованного пользователя
         /// </summary>
-        [Authorize]
+        [Authorize(Roles="admin")]
         [HttpGet("get-auth-nickname")]
         public Response<string> GetAuthorizedNickname()
         {

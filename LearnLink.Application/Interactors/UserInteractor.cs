@@ -38,12 +38,14 @@ namespace LearnLink.Application.Interactors
                     throw new ValidationException("Не все поля были заполнены");
                 }
                 
-                var user = await unitOfWork.Users.AsNoTracking().FirstOrDefaultAsync(user => user.Nickname == nickname);
+                var user = await unitOfWork.Users.FirstOrDefaultAsync(user => user.Nickname == nickname);
 
                 if (user == null)
                 {
                     throw new NotFoundException("Неверное имя пользователя");
                 }
+
+                unitOfWork.Users.Entry(user).Reference(x => x.Role).Load();
 
                 var userCredentials = await unitOfWork.Credentials.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == user.Id);
 
@@ -54,7 +56,7 @@ namespace LearnLink.Application.Interactors
 
                 var hashedPassword = encryptionService.GetHash(password, userCredentials.Salt);
 
-                var authenticationResult = authenticationService.Authenticate(nickname, hashedPassword, userCredentials.HashedPassword);
+                var authenticationResult = authenticationService.Authenticate(nickname, hashedPassword, userCredentials.HashedPassword, user.Role.Sign);
 
                 if (authenticationResult == null)
                 {
@@ -101,7 +103,7 @@ namespace LearnLink.Application.Interactors
                     throw new ValidationException("Пароль не был заполнен");
                 }
 
-                var existingUser = await unitOfWork.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Nickname == userDto.Nickname);
+                var existingUser = await unitOfWork.Users.FirstOrDefaultAsync(u => u.Nickname == userDto.Nickname);
 
                 if(existingUser != null)
                 {
@@ -114,7 +116,7 @@ namespace LearnLink.Application.Interactors
 
                 if (role == null)
                 {
-                    role = await unitOfWork.Roles.FindAsync(RoleSignConstants.USER);
+                    role = await unitOfWork.Roles.FirstOrDefaultAsync(x => x.Sign == RoleSignConstants.USER);
                 }
 
                 user.Role = role!;
@@ -237,12 +239,14 @@ namespace LearnLink.Application.Interactors
                     throw new ValidationException("Имя пользователя не указано, либо пользователь не найден");
                 }
 
-                var user = await unitOfWork.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Nickname ==  nickname);
+                var user = await unitOfWork.Users.FirstOrDefaultAsync(u => u.Nickname ==  nickname);
 
                 if (user == null)
                 {
                     throw new NotFoundException("Пользователь не найден");
                 }
+
+                unitOfWork.Users.Entry(user).Reference(x => x.Role).Load();
 
                 return new()
                 {
@@ -324,13 +328,15 @@ namespace LearnLink.Application.Interactors
                 {
                     throw new AccessLevelException("Изменение пользователя отклонено");
                 }
+                
+                unitOfWork.Users.Entry(user).Reference(x => x.Role).Load();
 
                 var updatedEntity = user.Assign(userDto);
 
                 unitOfWork.Users.Update(updatedEntity);
                 await unitOfWork.CommitAsync();
 
-                var token = authenticationService.GetToken(updatedEntity.Nickname);
+                var token = authenticationService.GetToken(updatedEntity.Nickname, updatedEntity.Role.Sign);
 
                 return new()
                 {
@@ -374,7 +380,10 @@ namespace LearnLink.Application.Interactors
                     throw new NotFoundException("Пользователь не найден");
                 }
 
+                unitOfWork.Users.Entry(user).Reference(x => x.Role).Load();
+
                 var userCredentials = await unitOfWork.Credentials.FirstOrDefaultAsync(u => u.UserId == user.Id);
+                
 
                 if (userCredentials == null)
                 {
@@ -382,7 +391,7 @@ namespace LearnLink.Application.Interactors
                 }
 
                 var hashedPassword = encryptionService.GetHash(oldPassword, userCredentials.Salt);
-                var authenticationResult = authenticationService.Authenticate(user.Nickname, hashedPassword, userCredentials.HashedPassword);
+                var authenticationResult = authenticationService.Authenticate(user.Nickname, hashedPassword, userCredentials.HashedPassword, user.Role.Sign);
 
                 if (authenticationResult == null)
                 {

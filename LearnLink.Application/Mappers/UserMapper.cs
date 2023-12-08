@@ -24,8 +24,6 @@ namespace LearnLink.Application.Mappers
                 Nickname = userEntity.Nickname,
                 Lastname = userEntity.Lastname,
                 Name = userEntity.Name,
-
-                RoleId = userEntity.RoleId,
                 Role = userEntity.Role.ToDto(),
             };
         }

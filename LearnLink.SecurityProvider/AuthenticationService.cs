@@ -14,19 +14,19 @@ namespace LearnLink.SecurityProvider
             this.authOptions = authOptions;
         }
 
-        public string? Authenticate(string nickname, string inputPassword, string storedPassword)
+        public string? Authenticate(string nickname, string inputPassword, string storedPassword, string roleName)
         {
             if (!string.Equals(inputPassword, storedPassword, StringComparison.InvariantCulture))
             {
                 return null;
             }
 
-            return GetToken(nickname);
+            return GetToken(nickname, roleName);
         }
 
-        public string GetToken(string nickname)
+        public string GetToken(string nickname, string roleName)
         {
-            var identity = GetIdentity(nickname);
+            var identity = GetIdentity(nickname, roleName);
 
             var now = DateTime.UtcNow;
 
@@ -43,11 +43,12 @@ namespace LearnLink.SecurityProvider
             return encodedJwt;
         }
 
-        private ClaimsIdentity GetIdentity(string nickname)
+        private ClaimsIdentity GetIdentity(string nickname, string roleName)
         {
             var claims = new List<Claim>()
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, nickname)
+                new Claim(ClaimsIdentity.DefaultNameClaimType, nickname),
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, roleName),
             };
 
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(
