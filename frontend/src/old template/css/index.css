@@ -293,12 +293,18 @@ p {
   border-radius: 5px;
   color: #555555;
 }
+.base-input::-moz-placeholder, .red-input::-moz-placeholder, .violet-input::-moz-placeholder {
+  color: #B8B8B8;
+}
 .base-input::placeholder, .red-input::placeholder, .violet-input::placeholder {
   color: #B8B8B8;
 }
 
 .violet-input:focus {
   border: solid 2px #807DFF;
+  color: #807DFF;
+}
+.violet-input:focus::-moz-placeholder {
   color: #807DFF;
 }
 .violet-input:focus::placeholder {
@@ -309,6 +315,9 @@ p {
   border: solid 2px #FF2F3B;
   color: #FF2F3B;
   animation: shake 0.2s;
+}
+.red-input::-moz-placeholder {
+  color: #ff999e;
 }
 .red-input::placeholder {
   color: #ff999e;
@@ -448,7 +457,8 @@ p {
   top: 0;
   left: 0;
   background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
   overflow: auto;
   display: flex;
   justify-content: center;
@@ -542,6 +552,7 @@ p {
 }
 
 .login-form {
+  max-width: -moz-fit-content;
   max-width: fit-content;
 }
 .login-form > *:not(:last-child) {

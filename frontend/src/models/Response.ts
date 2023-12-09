@@ -1,9 +1,9 @@
-interface Response {
+export interface IVoidResponse {
     success: boolean;
-    message: string;
-    innerErrorMessages: string[];
+    message?: string;
+    innerErrorMessages?: string[];
 }
 
-interface ValueResponse<T> extends Response {
+export interface IValueResponse<T> extends IVoidResponse {
     value: T;
 }

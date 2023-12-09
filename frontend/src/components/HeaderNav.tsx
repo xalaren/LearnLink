@@ -1,33 +1,11 @@
-import { useNavigate } from "react-router-dom";
-import { useLogout } from "../hooks/LogoutHook";
-import { useAppDispatch, useAppSelector } from "../hooks/redux.ts";
+import { NavButton } from "../ui/NavButton";
 
 export function HeaderNav() {
-    const navigate = useNavigate();
-    const logout = useLogout();
-    const dispatch = useAppDispatch();
-    const { isAuthorized } = useAppSelector(state => state.AuthorizationReducer);
-
 
     return (
-        <>
-            {
-                isAuthorized &&
-                <nav className="header__nav">
-                    <a className="white-link" onClick={() => navigate('/courses')}>Мои курсы</a>
-                    <a className="white-link" onClick={() => navigate('/profile')}>Профиль</a>
-                    <a className="white-link" onClick={() => {
-                    }}>Выйти</a>
-                </nav>
-            }
-
-            {
-                !isAuthorized &&
-                <nav className="header__nav">
-                    <button className="white-tp-button" onClick={() => navigate('/register')}>Регистрация</button>
-                    <button className="white-tp-button" onClick={() => navigate('/login')}>Войти</button>
-                </nav>
-            }
-        </>
+        <nav className="header__nav">
+            <NavButton link="/">Регистрация</NavButton>
+            <NavButton link="/">Войти</NavButton>
+        </nav>
     );
 }
