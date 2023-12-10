@@ -9,7 +9,7 @@ export const fetchUser = () => {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem(ACCESS_KEY);
 
-        if (!token) return;
+        if (!token) dispatch(userSlice.actions.reset());
 
         try {
             const response = (await axios.get<IValueResponse<User>>(`${BASE_URL}Users/get`, {
@@ -23,11 +23,19 @@ export const fetchUser = () => {
             }
 
             dispatch(userSlice.actions.fetchUserSuccess({
-                user: response.data.value
+                user: response.data.value,
             }));
         }
         catch (err) {
-            dispatch(userSlice.actions.fetchUserError(err as Error));
+            dispatch(userSlice.actions.fetchUserError({
+                error: (err as AxiosError).message,
+            }));
         }
+    }
+}
+
+export const resetUserState = () => {
+    return (dispatch: AppDispatch) => {
+        dispatch(userSlice.actions.reset());
     }
 }

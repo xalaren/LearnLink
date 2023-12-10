@@ -8,3 +8,7 @@ export interface IDropdownData {
     onClick: () => void;
     iconPath?: string;
 }
+
+export interface IErrorString {
+    error: string;
+}

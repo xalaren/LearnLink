@@ -6,14 +6,14 @@ import { useNavigate } from "react-router-dom";
 
 function Profile() {
     const { isAuthenticated } = useAppSelector(state => state.authReducer);
-    const { user, error } = useAppSelector(state => state.userReducer);
+    const { user } = useAppSelector(state => state.userReducer);
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!isAuthenticated || error) {
+        if (!isAuthenticated) {
             navigate(Paths.homePath);
         }
-    }, [error, isAuthenticated, navigate]);
+    }, [isAuthenticated, navigate]);
 
 
     return (

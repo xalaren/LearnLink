@@ -1,5 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { User } from "../../models/user";
+import { IErrorString } from "../../helpers/interfaces";
 
 interface IUserPayload {
     user: User;
@@ -22,9 +23,13 @@ export const userSlice = createSlice({
         fetchUserSuccess(state: IUserState, action: PayloadAction<IUserPayload>) {
             state.user = action.payload.user;
         },
-        fetchUserError(state: IUserState, action: PayloadAction<Error>) {
+        fetchUserError(state: IUserState, action: PayloadAction<IErrorString>) {
             state.user = null;
-            state.error = action.payload.message;
+            state.error = action.payload.error;
+        },
+        reset(state: IUserState) {
+            state.user = null;
+            state.error = '';
         }
     }
 })

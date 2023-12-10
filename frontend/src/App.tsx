@@ -8,18 +8,28 @@ import { RegisterPage } from "./pages/RegisterPage";
 import { EditActions, Paths } from "./helpers/enums";
 import ProfilePage from "./pages/ProfilePage";
 import EditUserPage from "./pages/EditUserPage";
-import { useEffect } from "react";
-import { fetchUser } from "./store/actions/userActionCreators";
+import { useEffect, useState } from "react";
+import { fetchUser, resetUserState } from "./store/actions/userActionCreators";
 import { useAppDispatch, useAppSelector } from "./hooks/redux";
+import { ErrorModal } from "./components/ErrorModal";
+import userSlice from "./store/reducers/userSlice";
 
 
 function App() {
     const dispatch = useAppDispatch();
-    const user = useAppSelector(state => state.userReducer.user);
+    const { user, error } = useAppSelector(state => state.userReducer);
+    const [isErrorModalActive, setErrorModalActive] = useState(false);
 
     useEffect(() => {
         if (!user) dispatch(fetchUser());
-    }, [dispatch, user])
+        if (error) setErrorModalActive(true);
+
+    }, [user, dispatch, error]);
+
+    function closeModal() {
+        setErrorModalActive(false);
+        dispatch(resetUserState());
+    }
 
     return (
         <>
@@ -34,6 +44,8 @@ function App() {
                 <Route path={Paths.editPasswordPath} element={<EditUserPage action={EditActions.editPassword} />}></Route>
                 <Route path="*" element={<InvalidPage />}></Route>
             </Routes>
+
+            <ErrorModal active={isErrorModalActive} error={error} onClose={closeModal} />
         </>
     );
 }

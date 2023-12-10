@@ -49,9 +49,13 @@ export function Header() {
                         {
                             title: 'Выйти',
                             onClick: () => {
-                                dispatch(logout());
-                                dispatch(fetchUser());
-                                navigate(Paths.homePath);
+                                dispatch(logout())
+                                    .then(() => {
+                                        dispatch(fetchUser());
+                                    })
+                                    .then(() => {
+                                        navigate(Paths.homePath);
+                                    });
                             },
                             iconPath: powerIcon,
                         }]}
