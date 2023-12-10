@@ -6,6 +6,7 @@ import { useLogin } from "../hooks/userHooks";
 import { ErrorModal } from "../components/ErrorModal";
 import { useAppDispatch } from "../hooks/redux";
 import { loginSave } from "../store/actions/authActionCreators";
+import { fetchUser } from "../store/actions/userActionCreators";
 
 export function LoginForm() {
     const [nickname, setNickname] = useState('');
@@ -24,6 +25,7 @@ export function LoginForm() {
 
         if (authModel) {
             dispatch(loginSave(authModel.accessToken, authModel.nickname));
+            dispatch(fetchUser());
         }
     }, [error, authModel, dispatch]);
 

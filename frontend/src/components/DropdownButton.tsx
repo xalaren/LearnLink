@@ -41,7 +41,7 @@ export function DropdownButton({ title, children }: IDropdownButtonProps) {
                         <li className="dropdown__item" onClick={() => {
                             if (child.onClick) child.onClick();
                             setActive(false);
-                        }}>
+                        }} key={children.indexOf(child)}>
                             {child.iconPath && <img className="dropdown__icon" src={child.iconPath} alt="icon" />}
                             {child.title}
                         </li>)

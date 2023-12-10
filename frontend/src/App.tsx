@@ -5,8 +5,22 @@ import { PublicPage } from "./pages/PublicPage";
 import { LoginPage } from "./pages/LoginPage";
 import { InvalidPage } from "./pages/InvalidPage";
 import { RegisterPage } from "./pages/RegisterPage";
-import { Paths } from "./helpers/enums";
+import { EditActions, Paths } from "./helpers/enums";
+import ProfilePage from "./pages/ProfilePage";
+import EditUserPage from "./pages/EditUserPage";
+import { useEffect } from "react";
+import { fetchUser } from "./store/actions/userActionCreators";
+import { useAppDispatch, useAppSelector } from "./hooks/redux";
+
+
 function App() {
+    const dispatch = useAppDispatch();
+    const user = useAppSelector(state => state.userReducer.user);
+
+    useEffect(() => {
+        if (!user) dispatch(fetchUser());
+    }, [dispatch, user])
+
     return (
         <>
             <Header />
@@ -15,7 +29,9 @@ function App() {
                 <Route path={Paths.homePath} element={<PublicPage />}></Route>
                 <Route path={Paths.loginPath} element={<LoginPage />}></Route>
                 <Route path={Paths.registerPath} element={<RegisterPage />}></Route>
-                {/* <Route path="profile" element={<ProfilePage />}></Route> */}
+                <Route path={Paths.profilePath} element={<ProfilePage />}></Route>
+                <Route path={Paths.editUserPath} element={<EditUserPage action={EditActions.editUser} />}></Route>
+                <Route path={Paths.editPasswordPath} element={<EditUserPage action={EditActions.editPassword} />}></Route>
                 <Route path="*" element={<InvalidPage />}></Route>
             </Routes>
         </>

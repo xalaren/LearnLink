@@ -65,3 +65,33 @@ export function useRegister() {
 
     return { registerQuery, error, success, resetValues };
 }
+
+export function useGetUser() {
+    const [error, setError] = useState('');
+    const [user, setUser] = useState<User>();
+
+    const getUserQuery = async (accessToken: string) => {
+        try {
+            const response = (await axios.get<IValueResponse<User>>(`${userEndpointsParentUrl}get`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            }));
+
+            if (!response.data.success) {
+                throw new AxiosError(response.data.message);
+            }
+
+            setUser(response.data.value);
+        }
+        catch (err: unknown) {
+            setError((err as AxiosError).message);
+        }
+    }
+
+    const resetError = () => {
+        setError('');
+    }
+
+    return { getUserQuery, user, error, resetError }
+}

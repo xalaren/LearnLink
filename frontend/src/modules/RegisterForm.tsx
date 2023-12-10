@@ -16,6 +16,7 @@ export function RegisterForm() {
     const [passwordError, setPasswordError] = useState('');
     const [nameError, setNameError] = useState('');
     const [lastnameError, setLastnameError] = useState('');
+
     const [isErrorModalActive, setErrorModalActive] = useState(false);
     const [isSuccessModalActive, setSuccessModalActive] = useState(false);
 
@@ -54,7 +55,7 @@ export function RegisterForm() {
         }
 
         if (!validate(name)) {
-            setLastnameError("Имя должно быть заполнено");
+            setNameError("Имя должно быть заполнено");
             isValidDate = false;
         }
 

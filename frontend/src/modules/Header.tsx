@@ -7,6 +7,7 @@ import userIcon from "../assets/img/user.svg";
 import starIcon from "../assets/img/star.svg";
 import powerIcon from "../assets/img/power.svg";
 import { Paths } from "../helpers/enums";
+import { fetchUser } from "../store/actions/userActionCreators";
 
 
 export function Header() {
@@ -49,6 +50,7 @@ export function Header() {
                             title: 'Выйти',
                             onClick: () => {
                                 dispatch(logout());
+                                dispatch(fetchUser());
                                 navigate(Paths.homePath);
                             },
                             iconPath: powerIcon,

@@ -4,12 +4,12 @@ interface IHeaderNavButtonsProps {
     links: ILinkData[];
 }
 
-export function HeaderNavButtons({ links }: IHeaderNavProps) {
+export function HeaderNavButtons({ links }: IHeaderNavButtonsProps) {
 
     return (
         <nav className="header__nav">
             {
-                links.map(link => <NavButton link={link.path}>{link.title}</NavButton>)
+                links.map(item => <NavButton link={item.path} key={links.indexOf(item)}>{item.title}</NavButton>)
             }
         </nav>
     );

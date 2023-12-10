@@ -1,6 +1,6 @@
 export interface ILinkData {
     title: string;
-    path?: string;
+    path: string;
 }
 
 export interface IDropdownData {

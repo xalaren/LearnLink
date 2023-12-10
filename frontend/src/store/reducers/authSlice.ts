@@ -50,12 +50,6 @@ export const authSlice = createSlice({
             localStorage.setItem(NICKNAME_KEY, action.payload.nickname);
             localStorage.setItem(EXPIRES_KEY, tokenExpires.toString())
         },
-        // loginError(state: IAuthState, action: PayloadAction<IAuthErrorPayload>) {
-        //     state.accessToken = '';
-        //     state.isAuthenticated = false;
-        //     state.nickname = '';
-        //     state.error = action.payload.error;
-        // },
         logout(state: IAuthState) {
             state.accessToken = '';
             state.isAuthenticated = false;
