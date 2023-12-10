@@ -12,7 +12,6 @@ import { useEffect, useState } from "react";
 import { fetchUser, resetUserState } from "./store/actions/userActionCreators";
 import { useAppDispatch, useAppSelector } from "./hooks/redux";
 import { ErrorModal } from "./components/ErrorModal";
-import userSlice from "./store/reducers/userSlice";
 
 
 function App() {
