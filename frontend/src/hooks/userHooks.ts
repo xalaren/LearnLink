@@ -1,7 +1,9 @@
 import axios, { AxiosError } from "axios";
 import { BASE_URL } from "../helpers/constants";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { IAuthModel } from "../models/authModel";
+import { IValueResponse, IVoidResponse } from "../models/response";
+import { User } from "../models/user";
 
 const userEndpointsParentUrl: string = BASE_URL + 'Users/';
 
@@ -11,7 +13,7 @@ export function useLogin() {
 
     const loginQuery = async (nickname: string, password: string) => {
         try {
-            const response = await axios.post<ValueResponse<string>>(`${userEndpointsParentUrl}login?nickname=${nickname}&password=${password}`);
+            const response = await axios.post<IValueResponse<string>>(`${userEndpointsParentUrl}login?nickname=${nickname}&password=${password}`);
 
             if (!response.data.success) {
                 throw new AxiosError(response.data.message);
@@ -34,4 +36,32 @@ export function useLogin() {
     }
 
     return { loginQuery, error, resetError, authModel };
+}
+
+export function useRegister() {
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+
+    const registerQuery = async (nickname: string, password: string, lastname: string, name: string) => {
+        try {
+            const user = new User(nickname, lastname, name);
+            const response = await axios.post<IVoidResponse>(`${userEndpointsParentUrl}register?password=${password}`, user);
+
+            if (!response.data.success) {
+                throw new AxiosError(response.data.message);
+            }
+
+            setSuccess(response.data.message!);
+        }
+        catch (err: unknown) {
+            setError((err as AxiosError).message);
+        }
+    }
+
+    const resetValues = () => {
+        setError('');
+        setSuccess('');
+    }
+
+    return { registerQuery, error, success, resetValues };
 }

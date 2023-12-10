@@ -1,5 +1,10 @@
 export interface ILinkData {
     title: string;
     path?: string;
-    onClick?: () => void;
+}
+
+export interface IDropdownData {
+    title: string;
+    onClick: () => void;
+    iconPath?: string;
 }

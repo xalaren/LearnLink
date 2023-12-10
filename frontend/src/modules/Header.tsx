@@ -1,9 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import { HeaderNav, HeaderNavButtons } from "../components/HeaderNavButtons";
+import { HeaderNavButtons } from "../components/HeaderNavButtons";
 import { useAppSelector, useAppDispatch } from "../hooks/redux";
-import { HeaderNavLinks } from "../components/HeaderNavLinks";
-import { DropdownButton } from "../ui/DropdownButton";
+import { DropdownButton } from "../components/DropdownButton";
 import { logout } from "../store/actions/authActionCreators";
+import userIcon from "../assets/img/user.svg";
+import starIcon from "../assets/img/star.svg";
+import powerIcon from "../assets/img/power.svg";
+import { Paths } from "../helpers/enums";
 
 
 export function Header() {
@@ -20,11 +23,11 @@ export function Header() {
 
                 {!isAuthenticated && <HeaderNavButtons links={[
                     {
-                        path: '/login',
+                        path: Paths.loginPath,
                         title: 'Войти',
                     },
                     {
-                        path: '/register',
+                        path: Paths.registerPath,
                         title: 'Регистрация',
                     }
                 ]} />}
@@ -33,19 +36,22 @@ export function Header() {
                     <DropdownButton title={nickname}>
                         {[{
                             title: 'Профиль',
-                            onClick: () => navigate('/profile'),
+                            onClick: () => navigate(Paths.profilePath),
+                            iconPath: userIcon,
                         },
                         {
                             //TODO: make real redirection to courses page
                             title: 'Мои курсы',
-                            onClick: () => navigate('/')
+                            onClick: () => navigate(Paths.homePath),
+                            iconPath: starIcon,
                         },
                         {
                             title: 'Выйти',
                             onClick: () => {
                                 dispatch(logout());
-                                navigate('/');
-                            }
+                                navigate(Paths.homePath);
+                            },
+                            iconPath: powerIcon,
                         }]}
                     </DropdownButton>
                 }

@@ -2,13 +2,35 @@ import { useEffect, useState } from "react";
 import { ErrorModal } from "../components/ErrorModal";
 import { validate } from "../helpers/validation";
 import { Input } from "../ui/Input";
-import { InputType } from "../helpers/enums";
+import { InputType, Paths } from "../helpers/enums";
+import { useRegister } from "../hooks/userHooks";
+import { Modal } from "../components/Modal";
+import { useNavigate } from "react-router-dom";
 
 export function RegisterForm() {
     const [nickname, setNickname] = useState('');
     const [password, setPassword] = useState('');
+    const [lastname, setLastname] = useState('');
+    const [name, setName] = useState('');
     const [nicknameError, setNicknameError] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    const [nameError, setNameError] = useState('');
+    const [lastnameError, setLastnameError] = useState('');
+    const [isErrorModalActive, setErrorModalActive] = useState(false);
+    const [isSuccessModalActive, setSuccessModalActive] = useState(false);
+
+    const { registerQuery, error, success, resetValues } = useRegister();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (error) {
+            setErrorModalActive(true);
+        }
+
+        if (success) {
+            setSuccessModalActive(true);
+        }
+    }, [error, success])
 
     async function onSubmit(event: React.FormEvent) {
         event.preventDefault();
@@ -26,7 +48,19 @@ export function RegisterForm() {
             isValidDate = false;
         }
 
+        if (!validate(lastname)) {
+            setLastnameError("Фамилия должна быть заполнена");
+            isValidDate = false;
+        }
+
+        if (!validate(name)) {
+            setLastnameError("Имя должно быть заполнено");
+            isValidDate = false;
+        }
+
         if (!isValidDate) return;
+
+        await registerQuery(nickname, password, lastname, name);
 
     }
 
@@ -42,7 +76,26 @@ export function RegisterForm() {
                 setPassword(inputElement.value);
                 setPasswordError('');
                 break;
+            case 'lastname':
+                setLastname(inputElement.value);
+                setLastnameError('');
+                break;
+            case 'name':
+                setName(inputElement.value);
+                setNameError('');
+                break;
         }
+    }
+
+    function closeErrorModal() {
+        setErrorModalActive(false);
+        resetValues();
+    }
+
+    function closeSuccessModal() {
+        setSuccessModalActive(false);
+        resetValues();
+        navigate(Paths.loginPath);
     }
 
     return (
@@ -63,11 +116,28 @@ export function RegisterForm() {
                         errorMessage={passwordError}>
                         Введите пароль...
                     </Input>
+                    <Input
+                        type={InputType.text}
+                        name="lastname"
+                        onChange={onChange}
+                        errorMessage={lastnameError}>
+                        Введите фамилию...
+                    </Input>
+                    <Input
+                        type={InputType.text}
+                        name="name"
+                        onChange={onChange}
+                        errorMessage={nameError}>
+                        Введите имя...
+                    </Input>
                 </ul>
                 <nav className="form__nav">
-                    <button className="button-violet" type="submit">Войти</button>
+                    <button className="button-violet" type="submit">Регистрация</button>
                 </nav>
             </form >
+
+            <ErrorModal active={isErrorModalActive} error={error} onClose={closeErrorModal} />
+            <Modal active={isSuccessModalActive} onClose={closeSuccessModal} title="Успешно">{success}</Modal>
         </>
     );
 }

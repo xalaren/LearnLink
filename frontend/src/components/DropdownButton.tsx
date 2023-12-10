@@ -1,10 +1,10 @@
-import { ILinkData } from "../helpers/interfaces";
-import { Arrow } from "./Arrow";
+import { IDropdownData } from "../helpers/interfaces";
+import { Arrow } from "../ui/Arrow";
 import { useEffect, useState } from "react";
 
 interface IDropdownButtonProps {
     title: string,
-    children?: ILinkData[],
+    children?: IDropdownData[],
 }
 
 export function DropdownButton({ title, children }: IDropdownButtonProps) {
@@ -42,6 +42,7 @@ export function DropdownButton({ title, children }: IDropdownButtonProps) {
                             if (child.onClick) child.onClick();
                             setActive(false);
                         }}>
+                            {child.iconPath && <img className="dropdown__icon" src={child.iconPath} alt="icon" />}
                             {child.title}
                         </li>)
                     }

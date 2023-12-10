@@ -3,6 +3,7 @@ import { MainContainer } from "../components/MainContainer";
 import { useNavigate } from "react-router-dom";
 import { LoginForm } from "../modules/LoginForm";
 import { useAppSelector } from "../hooks/redux";
+import { Paths } from "../helpers/enums";
 
 
 export function LoginPage() {
@@ -10,7 +11,7 @@ export function LoginPage() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (isAuthenticated) navigate('/');
+        if (isAuthenticated) navigate(Paths.homePath);
     }, [isAuthenticated, navigate]);
 
     return (
