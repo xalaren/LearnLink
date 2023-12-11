@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using LearnLink.Application.Mappers;
 using LearnLink.Application.Transaction;
 using LearnLink.Core.Entities;
@@ -357,6 +358,92 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось удалить курс",
+                    InnerErrorMessages = new string[] { exception.Message },
+                };
+            }
+        }
+
+        public async Task<Response<bool>> IsCreator(int userId, int courseId)
+        {
+            try
+            {
+                var userCreatedCourse = await unitOfWork.UserCreatedCourses.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == userId && u.CourseId == courseId);
+
+                if(userCreatedCourse == null)
+                {
+                    return new()
+                    {
+                        Success = true,
+                        Message = "Пользователь не является создателем",
+                        Value = false,
+                    };
+                }
+
+                return new()
+                {
+                    Success = true,
+                    Message = "Пользователь является создателем",
+                    Value = true,
+                };
+
+            }
+            catch(CustomException exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = "Не удалось получить статус пользователя",
+                    InnerErrorMessages = new string[] { exception.Message },
+                };
+            }
+        }
+
+        public async Task<Response<bool>> IsSubscriber(int userId, int courseId)
+        {
+            try
+            {
+                var userCreatedCourse = await unitOfWork.Subscriptions.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == userId && u.CourseId == courseId);
+
+                if (userCreatedCourse == null)
+                {
+                    return new()
+                    {
+                        Success = true,
+                        Message = "Пользователь не является подписчиком",
+                        Value = false,
+                    };
+                }
+
+                return new()
+                {
+                    Success = true,
+                    Message = "Пользователь является подписчиком",
+                    Value = true,
+                };
+
+            }
+            catch (CustomException exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = "Не удалось получить статус пользователя",
                     InnerErrorMessages = new string[] { exception.Message },
                 };
             }

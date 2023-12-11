@@ -278,10 +278,18 @@ namespace LearnLink.Application.Interactors
             try
             {
                 var user = await unitOfWork.Users.FirstOrDefaultAsync(u => u.Id == userId);
+                
 
                 if(user == null)
                 {
                     throw new NotFoundException("Пользователь не найден");
+                }
+
+                await unitOfWork.Users.Entry(user).Reference(x => x.Role).LoadAsync();
+
+                if(user.Role.Sign == RoleSignConstants.ADMIN && user.Role.Id == 1)
+                {
+                    throw new AccessLevelException("Невозможно удалить, пользователь является системным");
                 }
 
                 unitOfWork.Users.Remove(user);

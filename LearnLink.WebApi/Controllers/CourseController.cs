@@ -22,10 +22,6 @@ namespace LearnLink.WebApi.Controllers
             this.userVerifierService = userVerifierService;
         }
 
-        /// <summary>
-        /// Получение курса по идентификатору
-        /// </summary>
-        /// <param name="courseId">Идентификатор курса</param>
         [Authorize]
         [HttpGet("get")]
         public async Task<Response<CourseDto?>> GetCourseAsync(int courseId)
@@ -33,19 +29,12 @@ namespace LearnLink.WebApi.Controllers
             return await courseInteractor.GetCourseAsync(courseId);
         }
 
-        /// <summary>
-        /// Получение всех курсов в системе
-        /// </summary>
         [HttpGet("get-all")]
         public async Task<Response<CourseDto[]>> GetAllCoursesAsync()
         {
             return await courseInteractor.GetAllAsync();
         }
 
-        /// <summary>
-        /// Получение курсов, созданных пользователем
-        /// </summary>
-        /// <param name="userId">Идентификатор пользователя</param>
         [Authorize]
         [HttpGet("get-user-courses")]
         public async Task<Response<CourseDto[]>> GetUserCreatedCoursesAsync(int userId)
@@ -65,9 +54,6 @@ namespace LearnLink.WebApi.Controllers
         }
 
 
-        /// <summary>
-        /// Получение всех общедоступных курсов
-        /// </summary>
         [AllowAnonymous]
         [HttpGet("get-public")]
         public async Task<Response<CourseDto[]>> GetPublicCoursesAsync()
@@ -75,10 +61,6 @@ namespace LearnLink.WebApi.Controllers
             return await courseInteractor.GetPublicCoursesAsync();
         }
 
-        /// <summary>
-        /// Получение курсов, на которые подписан пользователь
-        /// </summary>
-        /// <param name="userId">Идентификатор пользователя</param>
         [Authorize]
         [HttpGet("get-subscribed")]
         public async Task<Response<CourseDto[]>> GetSubscribedCoursesAsync(int userId)
@@ -94,11 +76,36 @@ namespace LearnLink.WebApi.Controllers
             return await courseInteractor.GetSubscribedCoursesAsync(userId);
         }
 
-        /// <summary>
-        /// Создание курса
-        /// </summary>
-        /// <param name="userId">Идентификатор пользователя</param>
-        /// <param name="courseDto">Объект курса</param>
+        [Authorize]
+        [HttpGet("get-creator-status")]
+        public async Task<Response<bool>> IsCreatorAsync(int userId, int courseId)
+        {
+            var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
+
+            if (!verifyResponse.Success) return new Response<bool>()
+            {
+                Success = verifyResponse.Success,
+                Message = verifyResponse.Message,
+            };
+
+            return await courseInteractor.IsCreator(userId, courseId);
+        }
+
+        [Authorize]
+        [HttpGet("get-subscriber-status")]
+        public async Task<Response<bool>> IsSubscriberAsync(int userId, int courseId)
+        {
+            var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
+
+            if (!verifyResponse.Success) return new Response<bool>()
+            {
+                Success = verifyResponse.Success,
+                Message = verifyResponse.Message,
+            };
+
+            return await courseInteractor.IsSubscriber(userId, courseId);
+        }
+
         [Authorize]
         [HttpPost("create")]
         public async Task<Response> CreateCourseAsync(int userId, CourseDto courseDto)
@@ -110,11 +117,7 @@ namespace LearnLink.WebApi.Controllers
             return await courseInteractor.CreateCourseAsync(userId, courseDto);
         }
 
-        /// <summary>
-        /// Изменение данных курса
-        /// </summary>
-        /// <param name="userId">Идентификатор пользователя</param>
-        /// <param name="courseDto">Идентификатор курса</param>
+
         [Authorize]
         [HttpPost("update")]
         public async Task<Response> UpdateCourseAsync(int userId, CourseDto courseDto)
@@ -126,11 +129,6 @@ namespace LearnLink.WebApi.Controllers
             return await courseInteractor.UpdateCourseAsync(courseDto);
         }
 
-        /// <summary>
-        /// Удаление курса
-        /// </summary>
-        /// <param name="userId">Идентификатор пользователя</param>
-        /// <param name="courseId">Идентификатор курса</param>
         [Authorize]
         [HttpDelete("remove")]
         public async Task<Response> RemoveCourseAsync(int userId, int courseId)
