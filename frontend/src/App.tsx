@@ -5,7 +5,7 @@ import { PublicPage } from "./pages/PublicPage";
 import { LoginPage } from "./pages/LoginPage";
 import { InvalidPage } from "./pages/InvalidPage";
 import { RegisterPage } from "./pages/RegisterPage";
-import { EditActions, Paths } from "./helpers/enums";
+import { EditActions, Paths } from "./models/enums";
 import ProfilePage from "./pages/ProfilePage";
 import EditUserPage from "./pages/EditUserPage";
 import { useEffect, useState } from "react";

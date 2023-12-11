@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ErrorModal } from "../components/ErrorModal";
 import { validate } from "../helpers/validation";
 import { Input } from "../ui/Input";
-import { InputType, Paths } from "../helpers/enums";
+import { InputType, Paths } from "../models/enums";
 import { useRegister } from "../hooks/userHooks";
 import { Modal } from "../components/Modal";
 import { useNavigate } from "react-router-dom";

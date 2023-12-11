@@ -1,7 +1,7 @@
 import { userSlice } from "../reducers/userSlice"
 import { AppDispatch } from "../store"
 import { User } from "../../models/user"
-import { ACCESS_KEY, BASE_URL } from "../../helpers/constants"
+import { ACCESS_KEY, BASE_URL, USER_ENDPOINTS_URL } from "../../models/constants"
 import { AxiosError } from "axios"
 import { IValueResponse } from "../../models/response"
 import axiosInstance from "../../axios_config/axiosConfig"
@@ -12,14 +12,13 @@ export const fetchUser = () => {
 
         const token = localStorage.getItem(ACCESS_KEY);
 
-
         if (!token) {
             dispatch(userSlice.actions.reset())
             return;
         }
 
         try {
-            const response = await axiosInstance.get<IValueResponse<User>>(`${BASE_URL}Users/get`, {
+            const response = await axiosInstance.get<IValueResponse<User>>(`${USER_ENDPOINTS_URL}get`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

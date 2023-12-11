@@ -1,6 +1,4 @@
-import { useAuthorization } from "../hooks/GlobalStateHook.ts";
-import { useLogout } from "../hooks/LogoutHook.ts";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { EditUserForm } from "../components/EditUserForm.tsx";
 import { User } from "../models/User.ts";
 import { updateUserAsync, updateUserPasswordAsync } from "../queries/UserQueries.ts";

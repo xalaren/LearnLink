@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { ACCESS_KEY, EXPIRES_KEY, NICKNAME_KEY } from "../../helpers/constants";
+import { ACCESS_KEY, EXPIRES_KEY, NICKNAME_KEY } from "../../models/constants";
 
 interface IAuthState {
     isAuthenticated: boolean;

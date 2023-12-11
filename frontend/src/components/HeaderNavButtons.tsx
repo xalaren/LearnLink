@@ -1,4 +1,4 @@
-import { ILinkData } from "../helpers/interfaces";
+import { ILinkData } from "../models/interfaces";
 import { NavButton } from "../ui/NavButton";
 interface IHeaderNavButtonsProps {
     links: ILinkData[];

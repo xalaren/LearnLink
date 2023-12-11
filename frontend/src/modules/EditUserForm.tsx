@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { User } from "../models/user";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
 import { Input } from "../ui/Input";
-import { InputType } from "../helpers/enums";
+import { InputType } from "../models/enums";
 import { useUpdateUserData } from "../hooks/userHooks";
 import { loginSave } from "../store/actions/authActionCreators";
 import { fetchUser } from "../store/actions/userActionCreators";

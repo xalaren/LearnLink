@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { MainContainer } from "../components/MainContainer";
-import { EditActions, Paths } from "../helpers/enums";
+import { EditActions, Paths } from "../models/enums";
 import { useAppSelector } from "../hooks/redux";
 import { EditUserForm } from "../modules/EditUserForm";
 import { useEffect } from "react";

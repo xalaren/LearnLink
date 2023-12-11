@@ -1,10 +1,10 @@
 import { MainContainer } from "../components/MainContainer";
-import { Loader } from "../ui/Loader";
+import PublicCoursesContainer from "../modules/PublicCoursesContainer";
 
 export function PublicPage() {
     return (
         <MainContainer title="Общедоступные курсы">
-            <Loader className="loader-center" />
+            <PublicCoursesContainer />
         </MainContainer>
     )
 }

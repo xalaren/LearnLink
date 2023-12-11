@@ -1,4 +1,4 @@
-import { IDropdownData } from "../helpers/interfaces";
+import { IDropdownData } from "../models/interfaces";
 import { Arrow } from "../ui/Arrow";
 import { useEffect, useState } from "react";
 

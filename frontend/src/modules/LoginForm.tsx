@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { InputType } from "../helpers/enums";
+import { InputType } from "../models/enums";
 import { validate } from "../helpers/validation";
 import { Input } from "../ui/Input";
 import { useLogin } from "../hooks/userHooks";

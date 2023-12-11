@@ -1,6 +1,6 @@
 import profileImage from "../assets/img/profile.svg";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
-import { Paths } from "../helpers/enums";
+import { Paths } from "../models/enums";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Modal } from "../components/Modal";

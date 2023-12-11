@@ -6,7 +6,7 @@ import { logout } from "../store/actions/authActionCreators";
 import userIcon from "../assets/img/user.svg";
 import starIcon from "../assets/img/star.svg";
 import powerIcon from "../assets/img/power.svg";
-import { Paths } from "../helpers/enums";
+import { Paths } from "../models/enums";
 import { fetchUser } from "../store/actions/userActionCreators";
 
 

@@ -1,4 +1,4 @@
-import { InputType } from "../helpers/enums";
+import { InputType } from "../models/enums";
 
 interface IInputProps {
     type: InputType,

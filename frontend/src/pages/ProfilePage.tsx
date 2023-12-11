@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { MainContainer } from "../components/MainContainer";
 import Profile from "../modules/Profile";
 import { useAppSelector } from "../hooks/redux";
-import { Paths } from "../helpers/enums";
+import { Paths } from "../models/enums";
 import { useNavigate } from "react-router-dom";
 
 function ProfilePage() {

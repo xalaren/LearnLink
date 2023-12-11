@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { validate } from "../helpers/validation";
-import { InputType } from "../helpers/enums";
+import { InputType } from "../models/enums";
 import { Input } from "../ui/Input";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
 import { useUpdatePassword } from "../hooks/userHooks";

@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { User } from "../../models/user";
-import { IErrorString } from "../../helpers/interfaces";
+import { IErrorString } from "../../models/interfaces";
 
 interface IUserPayload {
     user: User;

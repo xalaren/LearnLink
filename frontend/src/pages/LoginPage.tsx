@@ -3,7 +3,7 @@ import { MainContainer } from "../components/MainContainer";
 import { useNavigate } from "react-router-dom";
 import { LoginForm } from "../modules/LoginForm";
 import { useAppSelector } from "../hooks/redux";
-import { Paths } from "../helpers/enums";
+import { Paths } from "../models/enums";
 
 
 export function LoginPage() {

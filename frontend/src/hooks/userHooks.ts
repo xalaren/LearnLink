@@ -1,12 +1,10 @@
 import { AxiosError } from "axios";
-import { BASE_URL } from "../helpers/constants";
+import { BASE_URL, USER_ENDPOINTS_URL } from "../models/constants";
 import { useState } from "react";
 import { IAuthModel } from "../models/authModel";
 import { IValueResponse, IVoidResponse } from "../models/response";
 import { User } from "../models/user";
 import axiosInstance from "../axios_config/axiosConfig";
-
-const userEndpointsParentUrl: string = BASE_URL + 'Users/';
 
 export function useLogin() {
     const [error, setError] = useState('');
@@ -14,7 +12,7 @@ export function useLogin() {
 
     const loginQuery = async (nickname: string, password: string) => {
         try {
-            const response = await axiosInstance.post<IValueResponse<string>>(`${userEndpointsParentUrl}login?nickname=${nickname}&password=${password}`);
+            const response = await axiosInstance.post<IValueResponse<string>>(`${USER_ENDPOINTS_URL}login?nickname=${nickname}&password=${password}`);
 
             if (!response.data.success) {
                 throw new AxiosError(response.data.message);
@@ -46,7 +44,7 @@ export function useRegister() {
     const registerQuery = async (nickname: string, password: string, lastname: string, name: string) => {
         try {
             const user = new User(nickname, lastname, name);
-            const response = await axiosInstance.post<IVoidResponse>(`${userEndpointsParentUrl}register?password=${password}`, user);
+            const response = await axiosInstance.post<IVoidResponse>(`${USER_ENDPOINTS_URL}register?password=${password}`, user);
 
             if (!response.data.success) {
                 throw new AxiosError(response.data.message);
@@ -73,7 +71,7 @@ export function useGetUser() {
 
     const getUserQuery = async (accessToken: string) => {
         try {
-            const response = (await axiosInstance.get<IValueResponse<User>>(`${userEndpointsParentUrl}get`, {
+            const response = (await axiosInstance.get<IValueResponse<User>>(`${USER_ENDPOINTS_URL}get`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -104,7 +102,7 @@ export function useUpdateUserData() {
 
     const updateUserDataQuery = async (user: User, accessToken: string) => {
         try {
-            const response = (await axiosInstance.post<IValueResponse<string>>(`${userEndpointsParentUrl}update-user`, user, {
+            const response = (await axiosInstance.post<IValueResponse<string>>(`${USER_ENDPOINTS_URL}update-user`, user, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -137,7 +135,7 @@ export function useUpdatePassword() {
 
     const updatePasswordQuery = async (userId: number, accessToken: string, oldPassword: string, newPassword: string,) => {
         try {
-            const response = (await axiosInstance.post<IVoidResponse>(`${userEndpointsParentUrl}update-pass?userId=${userId}&oldPassword=${oldPassword}&newPassword=${newPassword}`, {}, {
+            const response = (await axiosInstance.post<IVoidResponse>(`${USER_ENDPOINTS_URL}update-pass?userId=${userId}&oldPassword=${oldPassword}&newPassword=${newPassword}`, {}, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -169,7 +167,7 @@ export function useRemoveUser() {
 
     const removeUserQuery = async (userId: number, accessToken: string) => {
         try {
-            const response = (await axiosInstance.delete<IVoidResponse>(`${userEndpointsParentUrl}remove?userId=${userId}`, {
+            const response = (await axiosInstance.delete<IVoidResponse>(`${USER_ENDPOINTS_URL}remove?userId=${userId}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
