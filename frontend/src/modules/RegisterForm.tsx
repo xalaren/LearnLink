@@ -6,6 +6,7 @@ import { InputType, Paths } from "../helpers/enums";
 import { useRegister } from "../hooks/userHooks";
 import { Modal } from "../components/Modal";
 import { useNavigate } from "react-router-dom";
+import { SuccessModal } from "../components/SuccessModal";
 
 export function RegisterForm() {
     const [nickname, setNickname] = useState('');
@@ -107,30 +108,31 @@ export function RegisterForm() {
                         type={InputType.text}
                         name="nickname"
                         onChange={onChange}
-                        errorMessage={nicknameError}>
-                        Введите никнейм...
-                    </Input>
+                        errorMessage={nicknameError}
+                        placeholder="Введите никнейм..."
+                    />
                     <Input
                         type={InputType.password}
                         name="password"
                         onChange={onChange}
-                        errorMessage={passwordError}>
-                        Введите пароль...
-                    </Input>
+                        errorMessage={passwordError}
+                        placeholder="Введите пароль..."
+                    />
+
                     <Input
                         type={InputType.text}
                         name="lastname"
                         onChange={onChange}
-                        errorMessage={lastnameError}>
-                        Введите фамилию...
-                    </Input>
+                        errorMessage={lastnameError}
+                        placeholder="Введите фамилию..."
+                    />
                     <Input
                         type={InputType.text}
                         name="name"
                         onChange={onChange}
-                        errorMessage={nameError}>
-                        Введите имя...
-                    </Input>
+                        errorMessage={nameError}
+                        placeholder="Введите имя..."
+                    />
                 </ul>
                 <nav className="form__nav">
                     <button className="button-violet" type="submit">Регистрация</button>
@@ -138,7 +140,7 @@ export function RegisterForm() {
             </form >
 
             <ErrorModal active={isErrorModalActive} error={error} onClose={closeErrorModal} />
-            <Modal active={isSuccessModalActive} onClose={closeSuccessModal} title="Успешно">{success}</Modal>
+            <SuccessModal active={isSuccessModalActive} message={success} onClose={closeSuccessModal} />
         </>
     );
 }

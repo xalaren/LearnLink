@@ -2,21 +2,30 @@ import { userSlice } from "../reducers/userSlice"
 import { AppDispatch } from "../store"
 import { User } from "../../models/user"
 import { ACCESS_KEY, BASE_URL } from "../../helpers/constants"
-import axios, { AxiosError } from "axios"
+import { AxiosError } from "axios"
 import { IValueResponse } from "../../models/response"
+import axiosInstance from "../../axios_config/axiosConfig"
 
 export const fetchUser = () => {
     return async (dispatch: AppDispatch) => {
+        dispatch(userSlice.actions.fetchingUser());
+
         const token = localStorage.getItem(ACCESS_KEY);
 
-        if (!token) dispatch(userSlice.actions.reset());
+
+        if (!token) {
+            dispatch(userSlice.actions.reset())
+            return;
+        }
 
         try {
-            const response = (await axios.get<IValueResponse<User>>(`${BASE_URL}Users/get`, {
+            const response = await axiosInstance.get<IValueResponse<User>>(`${BASE_URL}Users/get`, {
                 headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            }));
+                    Authorization: `Bearer ${token}`,
+                },
+
+            });
+
 
             if (!response.data.success) {
                 throw new AxiosError(response.data.message);

@@ -5,11 +5,12 @@ interface IInputProps {
     name: string,
     width?: number,
     errorMessage?: string,
-    children?: string,
+    placeholder?: string,
+    value?: string,
     onChange: (event: React.ChangeEvent) => void
 }
 
-export function Input({ type, name, width = 300, errorMessage, children, onChange }: IInputProps) {
+export function Input({ type, name, width = 300, errorMessage, onChange, value, placeholder }: IInputProps) {
     return (
         <li className="login-input">
             {errorMessage &&
@@ -18,9 +19,11 @@ export function Input({ type, name, width = 300, errorMessage, children, onChang
             <input
                 className={errorMessage ? 'red-input' : 'violet-input'}
                 type={type} name={name}
-                placeholder={children}
+                placeholder={placeholder}
                 style={{ width: width + 'px' }}
-                onChange={onChange} />
+                onChange={onChange}
+                value={value}
+            />
         </li>
     );
 }

@@ -16,11 +16,9 @@ function getInitialState(): IAuthState {
     const expiresIn = localStorage.getItem(EXPIRES_KEY) ?? null;
 
     if (expiresIn && new Date() > new Date(expiresIn)) {
-        return {
-            accessToken: '',
-            nickname: '',
-            isAuthenticated: false,
-        }
+        localStorage.removeItem(ACCESS_KEY);
+        localStorage.removeItem(NICKNAME_KEY);
+        localStorage.removeItem(EXPIRES_KEY);
     }
 
     const accessToken = localStorage.getItem(ACCESS_KEY) ?? '';

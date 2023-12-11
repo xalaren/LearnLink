@@ -12,23 +12,19 @@ import { useEffect, useState } from "react";
 import { fetchUser, resetUserState } from "./store/actions/userActionCreators";
 import { useAppDispatch, useAppSelector } from "./hooks/redux";
 import { ErrorModal } from "./components/ErrorModal";
+import { validate } from "./helpers/validation";
 
 
 function App() {
     const dispatch = useAppDispatch();
-    const { user, error } = useAppSelector(state => state.userReducer);
+    const { user } = useAppSelector(state => state.userReducer);
+    const { isAuthenticated } = useAppSelector(state => state.authReducer);
     const [isErrorModalActive, setErrorModalActive] = useState(false);
 
     useEffect(() => {
-        if (!user) dispatch(fetchUser());
-        if (error) setErrorModalActive(true);
+        if (isAuthenticated && !user) dispatch(fetchUser());
 
-    }, [user, dispatch, error]);
-
-    function closeModal() {
-        setErrorModalActive(false);
-        dispatch(resetUserState());
-    }
+    }, [dispatch, isAuthenticated, user]);
 
     return (
         <>
@@ -44,7 +40,7 @@ function App() {
                 <Route path="*" element={<InvalidPage />}></Route>
             </Routes>
 
-            <ErrorModal active={isErrorModalActive} error={error} onClose={closeModal} />
+            {/* <ErrorModal active={isErrorModalActive} error={error} onClose={closeModal} /> */}
         </>
     );
 }

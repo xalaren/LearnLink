@@ -13,7 +13,7 @@ function Profile() {
         if (!isAuthenticated) {
             navigate(Paths.homePath);
         }
-    }, [isAuthenticated, navigate]);
+    }, [isAuthenticated, navigate, user]);
 
 
     return (
@@ -28,7 +28,7 @@ function Profile() {
                 </div>
 
                 <nav className="profile__nav">
-                    <button className="button-violet" onClick={() => { }}>Редактировать данные</button>
+                    <button className="button-violet" onClick={() => { navigate(Paths.editUserPath) }}>Редактировать данные</button>
                     <button className="button-violet" onClick={() => { }}>Сменить пароль</button>
                     <button className="button-red" onClick={() => { }}>Удалить профиль</button>
                 </nav>

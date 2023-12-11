@@ -1,22 +1,52 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { User } from "../models/user";
-import { useAppSelector } from "../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../hooks/redux";
 import { Input } from "../ui/Input";
 import { InputType } from "../helpers/enums";
+import { useUpdateUserData } from "../hooks/userHooks";
+import { loginSave } from "../store/actions/authActionCreators";
+import { fetchUser } from "../store/actions/userActionCreators";
+import { ErrorModal } from "../components/ErrorModal";
+import { SuccessModal } from "../components/SuccessModal";
 
 export function EditUserForm() {
-    const user = useAppSelector(state => state.userReducer.user);
+    const { accessToken } = useAppSelector(state => state.authReducer);
+    const { user } = useAppSelector(state => state.userReducer);
+    const { updateUserDataQuery, token, error, success, resetValues } = useUpdateUserData();
+    const dispatch = useAppDispatch();
 
-    const [nickname, setNickname] = useState(user?.nickname || '');
-    const [lastname, setLastname] = useState(user?.lastname || '');
-    const [name, setName] = useState(user?.name || '');
+    const [nickname, setNickname] = useState('');
+    const [lastname, setLastname] = useState('');
+    const [name, setName] = useState('');
 
-    const submitHandler = async (event: React.FormEvent) => {
+    const [isErrorModalActive, setErrorModalActive] = useState(false);
+    const [isSuccessModalActive, setSuccessModalActive] = useState(false);
+
+
+    useEffect(() => {
+        setNickname(user?.nickname || '');
+        setLastname(user?.lastname || '');
+        setName(user?.name || '');
+    }, [user]);
+
+    useEffect(() => {
+        if (error) {
+            setErrorModalActive(true);
+        }
+
+        if (success && token) {
+            dispatch(loginSave(token, nickname));
+            dispatch(fetchUser());
+            setSuccessModalActive(true);
+        }
+    }, [dispatch, error, nickname, success, token]);
+
+    const onSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
         const newUser = new User(nickname, lastname, name, user?.role, user?.id);
 
-        console.log(newUser);
+        await updateUserDataQuery(newUser, accessToken);
     }
 
     function onChange(event: React.ChangeEvent) {
@@ -35,36 +65,53 @@ export function EditUserForm() {
         }
     }
 
+    function closeErrorModal() {
+        setErrorModalActive(false);
+        resetValues();
+    }
+
+    function closeSuccessModal() {
+        setSuccessModalActive(false);
+        resetValues();
+    }
+
     return (
-        <form className='login-form' onSubmit={submitHandler}>
-            <ul className="form__inputs">
-                <p className="medium-little">Никнейм</p>
-                <Input
-                    type={InputType.text}
-                    name="nickname"
-                    onChange={onChange}>
-                    Введите никнейм...
-                </Input>
+        <>
 
-                <p className="medium-little">Фамилия</p>
-                <Input
-                    type={InputType.text}
-                    name="lastname"
-                    onChange={onChange}>
-                    Введите фамилию...
-                </Input>
+            <form className='login-form' onSubmit={onSubmit}>
+                <ul className="form__inputs">
+                    <p className="medium-little">Никнейм</p>
+                    <Input
+                        type={InputType.text}
+                        name="nickname"
+                        onChange={onChange}
+                        placeholder="Введите никнейм..."
+                        value={nickname}
+                    />
 
-                <p className="medium-little">Имя</p>
-                <Input
-                    type={InputType.text}
-                    name="name"
-                    onChange={onChange}>
-                    Введите имя...
-                </Input>
-            </ul>
-            <nav className="form__nav">
-                <button className="button-violet" type="submit">Сохранить</button>
-            </nav>
-        </form >
+                    <p className="medium-little">Фамилия</p>
+                    <Input
+                        type={InputType.text}
+                        name="lastname"
+                        onChange={onChange}
+                        placeholder="Введите фамилию..."
+                        value={lastname} />
+
+                    <p className="medium-little">Имя</p>
+                    <Input
+                        type={InputType.text}
+                        name="name"
+                        onChange={onChange}
+                        placeholder="Введите имя..."
+                        value={name} />
+                </ul>
+                <nav className="form__nav">
+                    <button className="button-violet" type="submit">Сохранить</button>
+                </nav>
+            </form >
+
+            <ErrorModal active={isErrorModalActive} error={error} onClose={closeErrorModal} />
+            <SuccessModal active={isSuccessModalActive} message={success} onClose={closeSuccessModal} />
+        </>
     );
 }

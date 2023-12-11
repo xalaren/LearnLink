@@ -14,6 +14,7 @@ export function LoginForm() {
     const [nicknameError, setNicknameError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [isModalActive, setModalActive] = useState(false);
+
     const dispatch = useAppDispatch();
 
     const { loginQuery, error, resetError, authModel } = useLogin();
@@ -78,16 +79,16 @@ export function LoginForm() {
                         type={InputType.text}
                         name="nickname"
                         onChange={onChange}
-                        errorMessage={nicknameError}>
-                        Введите никнейм...
-                    </Input>
+                        errorMessage={nicknameError}
+                        placeholder="Введите никнейм..."
+                    />
                     <Input
                         type={InputType.password}
                         name="password"
                         onChange={onChange}
-                        errorMessage={passwordError}>
-                        Введите пароль...
-                    </Input>
+                        errorMessage={passwordError}
+                        placeholder="Введите пароль..."
+                    />
                 </ul>
                 <nav className="form__nav">
                     <button className="button-violet" type="submit">Войти</button>

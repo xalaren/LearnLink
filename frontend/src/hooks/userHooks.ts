@@ -1,9 +1,10 @@
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { BASE_URL } from "../helpers/constants";
 import { useState } from "react";
 import { IAuthModel } from "../models/authModel";
 import { IValueResponse, IVoidResponse } from "../models/response";
 import { User } from "../models/user";
+import axiosInstance from "../axios_config/axiosConfig";
 
 const userEndpointsParentUrl: string = BASE_URL + 'Users/';
 
@@ -13,7 +14,7 @@ export function useLogin() {
 
     const loginQuery = async (nickname: string, password: string) => {
         try {
-            const response = await axios.post<IValueResponse<string>>(`${userEndpointsParentUrl}login?nickname=${nickname}&password=${password}`);
+            const response = await axiosInstance.post<IValueResponse<string>>(`${userEndpointsParentUrl}login?nickname=${nickname}&password=${password}`);
 
             if (!response.data.success) {
                 throw new AxiosError(response.data.message);
@@ -45,7 +46,7 @@ export function useRegister() {
     const registerQuery = async (nickname: string, password: string, lastname: string, name: string) => {
         try {
             const user = new User(nickname, lastname, name);
-            const response = await axios.post<IVoidResponse>(`${userEndpointsParentUrl}register?password=${password}`, user);
+            const response = await axiosInstance.post<IVoidResponse>(`${userEndpointsParentUrl}register?password=${password}`, user);
 
             if (!response.data.success) {
                 throw new AxiosError(response.data.message);
@@ -72,7 +73,7 @@ export function useGetUser() {
 
     const getUserQuery = async (accessToken: string) => {
         try {
-            const response = (await axios.get<IValueResponse<User>>(`${userEndpointsParentUrl}get`, {
+            const response = (await axiosInstance.get<IValueResponse<User>>(`${userEndpointsParentUrl}get`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -94,4 +95,38 @@ export function useGetUser() {
     }
 
     return { getUserQuery, user, error, resetError }
+}
+
+export function useUpdateUserData() {
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+    const [token, setToken] = useState('');
+
+    const updateUserDataQuery = async (user: User, accessToken: string) => {
+        try {
+            const response = (await axiosInstance.post<IValueResponse<string>>(`${userEndpointsParentUrl}update-user`, user, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            }));
+
+            if (!response.data.success) {
+                throw new AxiosError(response.data.message);
+            }
+
+
+            setToken(response.data.value);
+            setSuccess(response.data.message!);
+        }
+        catch (err: unknown) {
+            setError((err as AxiosError).message);
+        }
+    }
+
+    const resetValues = () => {
+        setError('');
+        setSuccess('');
+    }
+
+    return { updateUserDataQuery, token, error, success, resetValues }
 }
