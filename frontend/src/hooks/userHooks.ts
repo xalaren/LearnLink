@@ -130,3 +130,67 @@ export function useUpdateUserData() {
 
     return { updateUserDataQuery, token, error, success, resetValues }
 }
+
+export function useUpdatePassword() {
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+
+    const updatePasswordQuery = async (userId: number, accessToken: string, oldPassword: string, newPassword: string,) => {
+        try {
+            const response = (await axiosInstance.post<IVoidResponse>(`${userEndpointsParentUrl}update-pass?userId=${userId}&oldPassword=${oldPassword}&newPassword=${newPassword}`, {}, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            }));
+
+            if (!response.data.success) {
+                throw new AxiosError(response.data.message);
+            }
+
+
+            setSuccess(response.data.message!);
+        }
+        catch (err: unknown) {
+            setError((err as AxiosError).message);
+        }
+    }
+
+    const resetValues = () => {
+        setError('');
+        setSuccess('');
+    }
+
+    return { updatePasswordQuery, error, success, resetValues }
+}
+
+export function useRemoveUser() {
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+
+    const removeUserQuery = async (userId: number, accessToken: string) => {
+        try {
+            const response = (await axiosInstance.delete<IVoidResponse>(`${userEndpointsParentUrl}remove?userId=${userId}`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            }));
+
+            if (!response.data.success) {
+                throw new AxiosError(response.data.message);
+            }
+
+
+            setSuccess(response.data.message!);
+        }
+        catch (err: unknown) {
+            setError((err as AxiosError).message);
+        }
+    }
+
+    const resetValues = () => {
+        setError('');
+        setSuccess('');
+    }
+
+    return { removeUserQuery, error, success, resetValues }
+}
