@@ -5,15 +5,11 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Profile() {
-    const { isAuthenticated } = useAppSelector(state => state.authReducer);
     const { user } = useAppSelector(state => state.userReducer);
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!isAuthenticated) {
-            navigate(Paths.homePath);
-        }
-    }, [isAuthenticated, navigate, user]);
+    }, [user]);
 
 
     return (
