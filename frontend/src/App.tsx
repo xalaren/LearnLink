@@ -13,6 +13,7 @@ import { fetchUser, resetUserState } from "./store/actions/userActionCreators";
 import { useAppDispatch, useAppSelector } from "./hooks/redux";
 import { ErrorModal } from "./components/ErrorModal";
 import { validate } from "./helpers/validation";
+import Footer from "./modules/Footer";
 
 
 function App() {
@@ -39,6 +40,8 @@ function App() {
                 <Route path={Paths.editPasswordPath} element={<EditUserPage action={EditActions.editPassword} />}></Route>
                 <Route path="*" element={<InvalidPage />}></Route>
             </Routes>
+
+            <Footer />
 
             {/* <ErrorModal active={isErrorModalActive} error={error} onClose={closeModal} /> */}
         </>

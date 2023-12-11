@@ -7,6 +7,7 @@ $h3-fz: 26px;
 $reg-fz: 20px;
 $middle-fz: 22px;
 $big-fz: 40px;
+$tiny-fz: 14px;
 
 $white: #FFFFFF;
 $white-tp: rgba(255, 255, 255, 0.3);
@@ -22,8 +23,11 @@ $gray-2: #B8B8B8;
 $gray-3: #EBEBEB;
 $light-gray: #f1f1f1;
 $bg-color: #f2f2f2;
+$dark-violet: #180034;
 
 $gradient: linear-gradient(90deg, #A269FF 0.05%, #FFAD7E 100%);
+
+$minBorderRadius: 5px;
 
 
 body {
@@ -72,7 +76,7 @@ p {
     box-sizing: border-box;
     padding: 10px;
     border: none;
-    border-radius: 5px;
+    border-radius: $minBorderRadius;
     font-size: $reg-fz;
     font-weight: 500;
     background-color: $white-tp;
@@ -92,7 +96,7 @@ p {
     font-weight: 500;
     cursor: pointer;
     padding: 10px;
-    border-radius: 5px;
+    border-radius: $minBorderRadius;
 
     &:hover {
         text-decoration: underline;
@@ -125,7 +129,7 @@ p {
     outline: none;
     font-size: $reg-fz;
     border: solid 2px $gray-2;
-    border-radius: 5px;
+    border-radius: $minBorderRadius;
 
     color: $dark-gray;
 
@@ -197,7 +201,7 @@ p {
     box-sizing: border-box;
     padding: 10px;
     height: 50px;
-    border-radius: 5px;
+    border-radius: $minBorderRadius;
     font-size: $reg-fz;
     font-weight: 500;
     color: $dark-gray;
@@ -251,7 +255,7 @@ p {
 
 .header {
     width: 100%;
-    height: 120px;
+    height: 90px;
     background: $gradient;
     color: $white;
 
@@ -269,6 +273,34 @@ p {
     .header__nav {
         *:not(:last-child) {
             margin-right: 40px;
+        }
+    }
+}
+
+.footer {
+    width: 100%;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: $dark-violet;
+    color: rgba(255, 255, 255, 0.9);
+
+    .footer__container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        width: 100%;
+
+        .footer__title {
+            font-size: $h2-fz;
+        }
+
+        .footer__content {
+            line-height: 1.5;
+            font-size: $tiny-fz;
+            text-align: right;
         }
     }
 }
@@ -303,14 +335,18 @@ p {
 }
 
 
+
 .main {
     background-color: $white;
     width: 100%;
 
     .inner-container {
+        height: 100%;
+        padding-top: 50px;
+        padding-bottom: 120px;
+
         >*:first-child {
-            margin-top: 70px;
-            margin-bottom: 70px;
+            margin-bottom: 100px;
         }
     }
 }
@@ -392,7 +428,7 @@ p {
     align-items: center;
     background-color: $white;
     border: solid 2px $light-gray;
-    border-radius: 5px;
+    border-radius: $minBorderRadius;
     cursor: pointer;
     transition: .3s ease-in-out all;
 
@@ -552,7 +588,7 @@ p {
         position: absolute;
         display: flex;
         flex-direction: column;
-        border-radius: 5px;
+        border-radius: $minBorderRadius;
         font-size: $reg-fz;
         background-color: $white;
         color: $dark-gray;
@@ -573,6 +609,16 @@ p {
 
             &:hover {
                 background-color: $light-gray;
+            }
+
+            &:first-child {
+                border-top-left-radius: $minBorderRadius;
+                border-top-right-radius: $minBorderRadius;
+            }
+
+            &:last-child {
+                border-bottom-left-radius: $minBorderRadius;
+                border-bottom-right-radius: $minBorderRadius;
             }
         }
 

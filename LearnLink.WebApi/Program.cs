@@ -26,7 +26,7 @@ namespace LearnLink.WebApi
             builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
                 policyBuilder =>
                 {
-                    policyBuilder.WithOrigins("https://localhost:5175")
+                    policyBuilder.WithOrigins("https://localhost:5174")
                            .AllowAnyHeader()
                            .AllowAnyMethod();
                 }));
