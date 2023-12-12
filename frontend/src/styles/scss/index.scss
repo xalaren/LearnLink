@@ -7,6 +7,7 @@ $h3-fz: 26px;
 $reg-fz: 20px;
 $middle-fz: 22px;
 $big-fz: 40px;
+$small-fz: 18px;
 $tiny-fz: 14px;
 
 $white: #FFFFFF;
@@ -432,16 +433,20 @@ p {
 
 .course-item {
     box-sizing: border-box;
-    padding: 0 20px;
+    padding: 20px;
     min-height: 60px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
     background-color: $white;
     border: solid 2px $light-gray;
     border-radius: $minBorderRadius;
     cursor: pointer;
     transition: .3s ease-in-out all;
+
+    .course-item__main {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        transition: inherit;
+    }
 
     .course-item__title {
         width: 100%;
@@ -452,6 +457,16 @@ p {
         transition: inherit;
     }
 
+    .course-item__info {
+        transition: inherit;
+        margin-top: 10px;
+
+        * {
+            font-size: $small-fz;
+            transition: inherit;
+        }
+    }
+
     path {
         transition: .3s ease-in-out all;
     }
@@ -460,7 +475,8 @@ p {
         border: solid 2px $violet;
         background-color: $violet-tp;
 
-        .course-item__title {
+        .course-item__title,
+        .course-item__info p {
             color: $violet;
         }
 
@@ -468,6 +484,9 @@ p {
             fill: $violet;
         }
     }
+
+
+
 }
 
 .login-form {

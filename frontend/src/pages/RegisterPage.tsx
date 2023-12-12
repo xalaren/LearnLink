@@ -1,17 +1,18 @@
 import { useEffect } from "react";
 import { MainContainer } from "../components/MainContainer";
-import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../hooks/redux";
 import { RegisterForm } from "../modules/RegisterForm";
+import { useHistoryNavigation } from "../hooks/historyNavigation";
+import { Paths } from "../models/enums";
 
 
 export function RegisterPage() {
     const isAuthenticated = useAppSelector(state => state.authReducer.isAuthenticated);
-    const navigate = useNavigate();
+    const { toNext } = useHistoryNavigation();
 
     useEffect(() => {
-        if (isAuthenticated) navigate('/');
-    }, [isAuthenticated, navigate]);
+        if (isAuthenticated) toNext(Paths.homePath);
+    }, [isAuthenticated, toNext]);
 
     return (
         <MainContainer title="Регистрация">

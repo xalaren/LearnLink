@@ -565,16 +565,19 @@ p {
 
 .course-item {
   box-sizing: border-box;
-  padding: 0 20px;
+  padding: 20px;
   min-height: 60px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
   background-color: #FFFFFF;
   border: solid 2px #f1f1f1;
   border-radius: 5px;
   cursor: pointer;
   transition: 0.3s ease-in-out all;
+}
+.course-item .course-item__main {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  transition: inherit;
 }
 .course-item .course-item__title {
   width: 100%;
@@ -584,6 +587,14 @@ p {
   justify-content: space-between;
   transition: inherit;
 }
+.course-item .course-item__info {
+  transition: inherit;
+  margin-top: 10px;
+}
+.course-item .course-item__info * {
+  font-size: 18px;
+  transition: inherit;
+}
 .course-item path {
   transition: 0.3s ease-in-out all;
 }
@@ -591,7 +602,8 @@ p {
   border: solid 2px #807DFF;
   background-color: rgba(128, 125, 255, 0.1);
 }
-.course-item:hover .course-item__title {
+.course-item:hover .course-item__title,
+.course-item:hover .course-item__info p {
   color: #807DFF;
 }
 .course-item:hover path {

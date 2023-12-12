@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { HeaderNavButtons } from "../components/HeaderNavButtons";
 import { useAppSelector, useAppDispatch } from "../hooks/redux";
 import { DropdownButton } from "../components/DropdownButton";
@@ -8,17 +7,18 @@ import starIcon from "../assets/img/star.svg";
 import powerIcon from "../assets/img/power.svg";
 import { Paths } from "../models/enums";
 import { fetchUser } from "../store/actions/userActionCreators";
+import { useHistoryNavigation } from "../hooks/historyNavigation";
 
 
 export function Header() {
-    const navigate = useNavigate();
+    const { toNext } = useHistoryNavigation();
     const { isAuthenticated, nickname } = useAppSelector(state => state.authReducer);
     const dispatch = useAppDispatch();
 
     return (
         <header className="header">
             <div className="container">
-                <h1 className="header__title" onClick={() => navigate('/')}>Learn Link</h1>
+                <h1 className="header__title" onClick={() => toNext(Paths.homePath)}>Learn Link</h1>
 
 
 
@@ -37,13 +37,13 @@ export function Header() {
                     <DropdownButton title={nickname}>
                         {[{
                             title: 'Профиль',
-                            onClick: () => navigate(Paths.profilePath),
+                            onClick: () => toNext(Paths.profilePath),
                             iconPath: userIcon,
                         },
                         {
                             //TODO: make real redirection to courses page
                             title: 'Мои курсы',
-                            onClick: () => navigate(Paths.homePath),
+                            onClick: () => toNext(Paths.homePath),
                             iconPath: starIcon,
                         },
                         {
@@ -54,7 +54,7 @@ export function Header() {
                                         dispatch(fetchUser());
                                     })
                                     .then(() => {
-                                        navigate(Paths.homePath);
+                                        toNext(Paths.homePath);
                                     });
                             },
                             iconPath: powerIcon,

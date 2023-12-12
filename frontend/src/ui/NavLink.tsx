@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useHistoryNavigation } from "../hooks/historyNavigation";
 
 interface INavLinkProps {
     link: string;
@@ -7,10 +7,10 @@ interface INavLinkProps {
 }
 
 export function NavLink({ link, children, className }: INavLinkProps) {
-    const navigate = useNavigate();
+    const { toNext } = useHistoryNavigation();
     const classes = className || 'white-link';
 
     return (
-        <a className={classes} onClick={() => navigate(link)}>{children}</a>
+        <a className={classes} onClick={() => toNext(link)}>{children}</a>
     )
 }

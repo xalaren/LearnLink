@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useHistoryNavigation } from "../hooks/historyNavigation";
 
 interface INavButtonProps {
     link: string;
@@ -7,10 +7,10 @@ interface INavButtonProps {
 }
 
 export function NavButton({ link, children, className }: INavButtonProps) {
-    const navigate = useNavigate();
+    const { toNext } = useHistoryNavigation();
     const classes = className || 'white-tp-button';
 
     return (
-        <button className={classes} onClick={() => navigate(link)}>{children}</button>
+        <button className={classes} onClick={() => toNext(link)}>{children}</button>
     )
 }

@@ -4,9 +4,8 @@ import { validate } from "../helpers/validation";
 import { Input } from "../ui/Input";
 import { InputType, Paths } from "../models/enums";
 import { useRegister } from "../hooks/userHooks";
-import { Modal } from "../components/Modal";
-import { useNavigate } from "react-router-dom";
 import { SuccessModal } from "../components/SuccessModal";
+import { useHistoryNavigation } from "../hooks/historyNavigation";
 
 export function RegisterForm() {
     const [nickname, setNickname] = useState('');
@@ -22,7 +21,7 @@ export function RegisterForm() {
     const [isSuccessModalActive, setSuccessModalActive] = useState(false);
 
     const { registerQuery, error, success, resetValues } = useRegister();
-    const navigate = useNavigate();
+    const { toNext } = useHistoryNavigation();
 
     useEffect(() => {
         if (error) {
@@ -97,7 +96,7 @@ export function RegisterForm() {
     function closeSuccessModal() {
         setSuccessModalActive(false);
         resetValues();
-        navigate(Paths.loginPath);
+        toNext(Paths.loginPath);
     }
 
     return (

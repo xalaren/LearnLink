@@ -39,13 +39,14 @@ namespace LearnLink.Application.Interactors
                     throw new NotFoundException("Курс не найден");
                 }
 
-                var userCreatedCourse = await unitOfWork.UserCreatedCourses.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == user.Id && u.CourseId == course.Id);
+                var userCreatedCourse = await unitOfWork.UserCreatedCourses.FirstOrDefaultAsync(u => u.UserId == user.Id && u.CourseId == course.Id);
 
                 if(userCreatedCourse != null)
                 {
                     throw new AccessLevelException("Пользователь является создателем этого курса");
                 }
 
+                course.SubscribersCount++;
                 //TODO: possibly it is necessary to lock the subscription for private courses
 
                 var subscriptionEntity = subscriptionDto.ToEntity();
@@ -55,6 +56,7 @@ namespace LearnLink.Application.Interactors
 
 
                 await unitOfWork.Subscriptions.AddAsync(subscriptionEntity);
+                unitOfWork.Courses.Update(course);
                 await unitOfWork.CommitAsync();
 
                 return new Response()

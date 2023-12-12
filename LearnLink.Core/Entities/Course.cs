@@ -28,5 +28,8 @@ namespace LearnLink.Core.Entities
                 title = value;
             }
         }
+
+        public int CreatorsCount { get; set; }
+        public int SubscribersCount { get; set; }
     }
 }

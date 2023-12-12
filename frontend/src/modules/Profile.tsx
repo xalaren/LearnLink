@@ -2,19 +2,19 @@ import profileImage from "../assets/img/profile.svg";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
 import { Paths } from "../models/enums";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Modal } from "../components/Modal";
 import { useRemoveUser } from "../hooks/userHooks";
 import { logout } from "../store/actions/authActionCreators";
 import { resetUserState } from "../store/actions/userActionCreators";
 import { ErrorModal } from "../components/ErrorModal";
 import { SuccessModal } from "../components/SuccessModal";
+import { useHistoryNavigation } from "../hooks/historyNavigation";
 
 function Profile() {
     const { accessToken } = useAppSelector(state => state.authReducer);
     const { user } = useAppSelector(state => state.userReducer);
     const { removeUserQuery, error, success, resetValues } = useRemoveUser();
-    const navigate = useNavigate();
+    const { toNext } = useHistoryNavigation();
     const dispatch = useAppDispatch();
 
     const [removeModalIsActive, setRemoveModalActive] = useState(false);
@@ -48,7 +48,7 @@ function Profile() {
         setSuccessModalActive(false);
         dispatch(logout());
         dispatch(resetUserState());
-        navigate(Paths.homePath);
+        toNext(Paths.homePath);
     }
 
     return (
@@ -64,8 +64,8 @@ function Profile() {
                     </div>
 
                     <nav className="profile__nav">
-                        <button className="button-violet" onClick={() => { navigate(Paths.editUserPath) }}>Редактировать данные</button>
-                        <button className="button-violet" onClick={() => { navigate(Paths.editPasswordPath) }}>Сменить пароль</button>
+                        <button className="button-violet" onClick={() => { toNext(Paths.editUserPath) }}>Редактировать данные</button>
+                        <button className="button-violet" onClick={() => { toNext(Paths.editPasswordPath) }}>Сменить пароль</button>
                         <button className="button-red" onClick={() => { setRemoveModalActive(true) }}>Удалить профиль</button>
                     </nav>
 

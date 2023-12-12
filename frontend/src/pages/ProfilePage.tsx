@@ -3,17 +3,17 @@ import { MainContainer } from "../components/MainContainer";
 import Profile from "../modules/Profile";
 import { useAppSelector } from "../hooks/redux";
 import { Paths } from "../models/enums";
-import { useNavigate } from "react-router-dom";
+import { useHistoryNavigation } from "../hooks/historyNavigation";
 
 function ProfilePage() {
     const { isAuthenticated } = useAppSelector(state => state.authReducer);
-    const navigate = useNavigate();
+    const { toNext } = useHistoryNavigation();
 
     useEffect(() => {
         if (!isAuthenticated) {
-            navigate(Paths.loginPath);
+            toNext(Paths.loginPath);
         }
-    }, [isAuthenticated, navigate]);
+    }, [isAuthenticated, toNext]);
     return (
         <MainContainer title="Профиль пользователя">
             <Profile />

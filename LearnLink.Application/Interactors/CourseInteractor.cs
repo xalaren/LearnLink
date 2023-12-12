@@ -214,6 +214,9 @@ namespace LearnLink.Application.Interactors
                     Course = course,
                 };
 
+                course.CreatorsCount++;
+
+                await unitOfWork.Courses.AddAsync(course);
                 await unitOfWork.UserCreatedCourses.AddAsync(userCreatedCourse);
 
                 await unitOfWork.CommitAsync();
