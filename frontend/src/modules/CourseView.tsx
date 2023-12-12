@@ -11,7 +11,8 @@ interface ICourseViewProps {
 function CourseView({ courseId }: ICourseViewProps) {
     const { getCourseQuery, course, loading, error: courseError, resetValues: resetCourseValues } = useGetCourse();
 
-    const { isAuthenticated, accessToken } = useAppSelector(state => state.authReducer);
+    const { isAuthenticated } = useAppSelector(state => state.authReducer);
+    const user = useAppSelector(state => state.userReducer.user);
     const [localError, setLocalError] = useState('');
 
     useEffect(() => {
@@ -20,7 +21,7 @@ function CourseView({ courseId }: ICourseViewProps) {
 
     async function fetchCourse() {
         if (courseId !== 0) {
-            await getCourseQuery(courseId, accessToken);
+            await getCourseQuery(courseId, user?.id);
             if (courseError) setLocalError(courseError);
         }
 

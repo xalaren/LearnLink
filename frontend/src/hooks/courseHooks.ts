@@ -44,15 +44,11 @@ export function useGetCourse() {
     const [loading, setLoading] = useState(false);
     const [course, setCourse] = useState<Course>();
 
-    const getCourseQuery = async (courseId: number, accessToken: string) => {
+    const getCourseQuery = async (courseId: number, userId: number = 0) => {
         try {
             setLoading(true);
 
-            const response = (await axiosInstance.get<IValueResponse<Course>>(`${COURSE_ENDPOINTS_URL}get?courseId=${courseId}`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            }));
+            const response = (await axiosInstance.get<IValueResponse<Course>>(`${COURSE_ENDPOINTS_URL}get-any?userId=${userId}&courseId=${courseId}`));
 
             if (!response.data.success) {
                 throw new AxiosError(response.data.message!);

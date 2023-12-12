@@ -56,6 +56,51 @@ namespace LearnLink.Application.Interactors
             }
         }
 
+        public async Task<Response<CourseDto?>> GetAnyCourseAsync(int userId, int courseId)
+        {
+            try
+            {
+                var course = await unitOfWork.Courses.FirstOrDefaultAsync(course => course.Id == courseId);
+
+                if (course == null)
+                {
+                    throw new NotFoundException("Курс не найден");
+                }
+
+                var userCreatedCourse = await unitOfWork.UserCreatedCourses.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == userId && u.CourseId == courseId);
+                var subscription = await unitOfWork.Subscriptions.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == userId && u.CourseId == courseId);
+
+                if(!course.IsPublic && userCreatedCourse == null && subscription == null)
+                {
+                    throw new AccessLevelException("Курс недоступен пользователю");
+                }
+
+                return new()
+                {
+                    Success = true,
+                    Message = "Курс успешно получен",
+                    Value = course.ToDto(),
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = "Не удалось получить курс",
+                    InnerErrorMessages = new string[] { exception.Message }
+                };
+            }
+        }
+
         public async Task<Response<CourseDto[]>> GetAllAsync()
         {
             try

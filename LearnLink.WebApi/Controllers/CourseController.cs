@@ -29,6 +29,13 @@ namespace LearnLink.WebApi.Controllers
             return await courseInteractor.GetCourseAsync(courseId);
         }
 
+        [AllowAnonymous]
+        [HttpGet("get-any")]
+        public async Task<Response<CourseDto?>> GetAnyCourseAsync(int userId, int courseId)
+        {
+            return await courseInteractor.GetAnyCourseAsync(userId, courseId);
+        }
+
         [HttpGet("get-all")]
         public async Task<Response<CourseDto[]>> GetAllCoursesAsync()
         {
