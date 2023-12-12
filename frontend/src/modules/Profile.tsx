@@ -59,7 +59,7 @@ function Profile() {
                         <img className="profile__image" src={profileImage} alt="Профиль" />
                         <div className="profile__text">
                             <p className="medium-big">{user!.name} {user!.lastname}</p>
-                            <p className="medium-little violet">@{user!.nickname} ({user!.role?.name})</p>
+                            <p className="medium-little-violet">@{user!.nickname} ({user!.role?.name})</p>
                         </div>
                     </div>
 

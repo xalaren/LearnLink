@@ -75,6 +75,7 @@ export function LoginForm() {
         <>
             <form className='login-form' onSubmit={onSubmit}>
                 <ul className="form__inputs">
+                    <p className="medium-little">Никнейм</p>
                     <Input
                         type={InputType.text}
                         name="nickname"
@@ -82,6 +83,8 @@ export function LoginForm() {
                         errorMessage={nicknameError}
                         placeholder="Введите никнейм..."
                     />
+
+                    <p className="medium-little">Пароль</p>
                     <Input
                         type={InputType.password}
                         name="password"
@@ -91,7 +94,7 @@ export function LoginForm() {
                     />
                 </ul>
                 <nav className="form__nav">
-                    <button className="button-violet" type="submit">Войти</button>
+                    <button className="button-violet" type="submit" style={{ width: '100%' }}>Войти</button>
                 </nav>
             </form >
 

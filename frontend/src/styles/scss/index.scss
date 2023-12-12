@@ -66,8 +66,13 @@ p {
 
 .medium-little {
     font-size: $reg-fz;
-    color: $violet;
+    color: $gray-1;
     font-weight: 500;
+}
+
+.medium-little-violet {
+    @extend .medium-little;
+    color: $violet;
 }
 
 .white-tp-button {
@@ -181,6 +186,12 @@ p {
             transform: translateX($ml * (-1));
         }
     }
+
+}
+
+.regular {
+    font-size: $reg-fz;
+    color: $gray-1;
 
 }
 
@@ -549,6 +560,18 @@ p {
         height: 4px;
         background-color: $violet;
     }
+}
+
+.course-view {
+    >*:not(:last-child) {
+        margin-bottom: 60px;
+    }
+}
+
+.description {
+    font-size: $reg-fz;
+    line-height: 1.5;
+    text-align: justify;
 }
 
 .dropdown {

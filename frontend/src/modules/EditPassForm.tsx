@@ -80,6 +80,7 @@ function EditPassForm() {
         <>
             <form className='login-form' onSubmit={onSubmit}>
                 <ul className="form__inputs">
+                    <p className="medium-little">Старый пароль</p>
                     <Input
                         type={InputType.password}
                         name="old-pass"
@@ -88,6 +89,8 @@ function EditPassForm() {
                         value={oldPassword}
                         errorMessage={oldPasswordError}
                     />
+
+                    <p className="medium-little">Новый пароль</p>
                     <Input
                         type={InputType.password}
                         name="new-pass"

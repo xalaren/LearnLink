@@ -14,6 +14,7 @@ import { useAppDispatch, useAppSelector } from "./hooks/redux";
 import { ErrorModal } from "./components/ErrorModal";
 import { validate } from "./helpers/validation";
 import Footer from "./modules/Footer";
+import CoursePage from "./pages/CoursePage";
 
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
                 <Route path={Paths.profilePath} element={<ProfilePage />}></Route>
                 <Route path={Paths.editUserPath} element={<EditUserPage action={EditActions.editUser} />}></Route>
                 <Route path={Paths.editPasswordPath} element={<EditUserPage action={EditActions.editPassword} />}></Route>
+                <Route path={Paths.courseViewPath + '/:id'} element={<CoursePage />}></Route>
                 <Route path="*" element={<InvalidPage />}></Route>
             </Routes>
 

@@ -104,6 +104,7 @@ export function RegisterForm() {
         <>
             <form className='login-form' onSubmit={onSubmit}>
                 <ul className="form__inputs">
+                    <p className="medium-little">Никнейм</p>
                     <Input
                         type={InputType.text}
                         name="nickname"
@@ -111,6 +112,8 @@ export function RegisterForm() {
                         errorMessage={nicknameError}
                         placeholder="Введите никнейм..."
                     />
+
+                    <p className="medium-little">Пароль</p>
                     <Input
                         type={InputType.password}
                         name="password"
@@ -119,6 +122,7 @@ export function RegisterForm() {
                         placeholder="Введите пароль..."
                     />
 
+                    <p className="medium-little">Фамилия</p>
                     <Input
                         type={InputType.text}
                         name="lastname"
@@ -126,6 +130,8 @@ export function RegisterForm() {
                         errorMessage={lastnameError}
                         placeholder="Введите фамилию..."
                     />
+
+                    <p className="medium-little">Имя</p>
                     <Input
                         type={InputType.text}
                         name="name"
@@ -135,7 +141,7 @@ export function RegisterForm() {
                     />
                 </ul>
                 <nav className="form__nav">
-                    <button className="button-violet" type="submit">Регистрация</button>
+                    <button className="button-violet" type="submit" style={{ width: '100%' }}>Регистрация</button>
                 </nav>
             </form >
 

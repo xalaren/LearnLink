@@ -10,6 +10,7 @@ export enum Paths {
     profilePath = '/profile',
     editUserPath = '/profile/edit/user',
     editPasswordPath = '/profile/edit/password',
+    courseViewPath = '/courses/id',
 }
 
 export enum EditActions {

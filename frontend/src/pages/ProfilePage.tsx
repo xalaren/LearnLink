@@ -13,7 +13,7 @@ function ProfilePage() {
         if (!isAuthenticated) {
             navigate(Paths.loginPath);
         }
-    }, []);
+    }, [isAuthenticated, navigate]);
     return (
         <MainContainer title="Профиль пользователя">
             <Profile />
