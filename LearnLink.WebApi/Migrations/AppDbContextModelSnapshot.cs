@@ -25,9 +25,6 @@ namespace LearnLink.WebApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("CreatorsCount")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
@@ -58,7 +55,8 @@ namespace LearnLink.WebApi.Migrations
 
                     b.HasKey("CourseId", "ModuleId");
 
-                    b.HasIndex("ModuleId");
+                    b.HasIndex("ModuleId")
+                        .IsUnique();
 
                     b.ToTable("CourseModules");
                 });
@@ -140,7 +138,8 @@ namespace LearnLink.WebApi.Migrations
 
                     b.HasKey("ModuleId", "LessonId");
 
-                    b.HasIndex("LessonId");
+                    b.HasIndex("LessonId")
+                        .IsUnique();
 
                     b.ToTable("ModuleLessons");
                 });
@@ -238,14 +237,14 @@ namespace LearnLink.WebApi.Migrations
             modelBuilder.Entity("LearnLink.Core.Entities.CourseModule", b =>
                 {
                     b.HasOne("LearnLink.Core.Entities.Course", "Course")
-                        .WithMany()
+                        .WithMany("CourseModules")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("LearnLink.Core.Entities.Module", "Module")
-                        .WithMany()
-                        .HasForeignKey("ModuleId")
+                        .WithOne("CourseModule")
+                        .HasForeignKey("LearnLink.Core.Entities.CourseModule", "ModuleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -268,13 +267,13 @@ namespace LearnLink.WebApi.Migrations
             modelBuilder.Entity("LearnLink.Core.Entities.ModuleLesson", b =>
                 {
                     b.HasOne("LearnLink.Core.Entities.Lesson", "Lesson")
-                        .WithMany()
-                        .HasForeignKey("LessonId")
+                        .WithOne("ModuleLesson")
+                        .HasForeignKey("LearnLink.Core.Entities.ModuleLesson", "LessonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("LearnLink.Core.Entities.Module", "Module")
-                        .WithMany()
+                        .WithMany("ModuleLessons")
                         .HasForeignKey("ModuleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -331,6 +330,25 @@ namespace LearnLink.WebApi.Migrations
                     b.Navigation("Course");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LearnLink.Core.Entities.Course", b =>
+                {
+                    b.Navigation("CourseModules");
+                });
+
+            modelBuilder.Entity("LearnLink.Core.Entities.Lesson", b =>
+                {
+                    b.Navigation("ModuleLesson")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("LearnLink.Core.Entities.Module", b =>
+                {
+                    b.Navigation("CourseModule")
+                        .IsRequired();
+
+                    b.Navigation("ModuleLessons");
                 });
 #pragma warning restore 612, 618
         }

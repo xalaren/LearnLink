@@ -9,6 +9,16 @@ namespace LearnLink.Adapter.EFConfigurations
         public void Configure(EntityTypeBuilder<CourseModule> builder)
         {
             builder.HasKey(courseModule => new { courseModule.CourseId, courseModule.ModuleId });
+
+            builder.HasOne(cm => cm.Course)
+                .WithMany(c => c.CourseModules)
+                .HasForeignKey(cm => cm.CourseId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(cm => cm.Module)
+                .WithOne(m => m.CourseModule)
+                .HasForeignKey<CourseModule>(cm => cm.ModuleId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

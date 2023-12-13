@@ -24,7 +24,6 @@ namespace LearnLink.Application.Mappers
                     Title: courseEntity.Title,
                     Description: courseEntity.Description,
                     IsPublic: courseEntity.IsPublic,
-                    CreatorsCount: courseEntity.CreatorsCount,
                     SubscribersCount: courseEntity.SubscribersCount
                 );
         }

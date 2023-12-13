@@ -212,7 +212,7 @@ p {
 .button-base {
     box-sizing: border-box;
     padding: 10px;
-    height: 50px;
+    min-height: 50px;
     border-radius: $minBorderRadius;
     font-size: $reg-fz;
     font-weight: 500;

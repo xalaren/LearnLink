@@ -1,6 +1,4 @@
-﻿using System;
-using System.Reflection;
-using LearnLink.Application.Mappers;
+﻿using LearnLink.Application.Mappers;
 using LearnLink.Application.Transaction;
 using LearnLink.Core.Entities;
 using LearnLink.Core.Exceptions;
@@ -259,7 +257,6 @@ namespace LearnLink.Application.Interactors
                     Course = course,
                 };
 
-                course.CreatorsCount++;
 
                 await unitOfWork.Courses.AddAsync(course);
                 await unitOfWork.UserCreatedCourses.AddAsync(userCreatedCourse);

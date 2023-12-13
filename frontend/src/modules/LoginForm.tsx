@@ -94,7 +94,7 @@ export function LoginForm() {
                     />
                 </ul>
                 <nav className="form__nav">
-                    <button className="button-violet" type="submit" style={{ width: '100%' }}>Войти</button>
+                    <button className="button-violet" type="submit">Войти</button>
                 </nav>
             </form >
 

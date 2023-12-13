@@ -140,7 +140,7 @@ export function RegisterForm() {
                     />
                 </ul>
                 <nav className="form__nav">
-                    <button className="button-violet" type="submit" style={{ width: '100%' }}>Регистрация</button>
+                    <button className="button-violet" type="submit">Регистрация</button>
                 </nav>
             </form >
 

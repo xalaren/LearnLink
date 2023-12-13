@@ -3,10 +3,9 @@
     public record CourseDto
         (
           int Id,
-          string? Description,
           string Title,
+          string? Description,
           bool IsPublic = false,
-          int CreatorsCount = 0,
           int SubscribersCount = 0
         );
 }

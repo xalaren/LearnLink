@@ -1,5 +1,4 @@
 ﻿using LearnLink.Application.Interactors;
-using LearnLink.Application.Mappers;
 using LearnLink.Application.Transaction;
 using LearnLink.Core.Constants;
 using LearnLink.Shared.DataTransferObjects;
@@ -38,7 +37,7 @@ namespace LearnLink.Application.Helpers
                 await userInteractor.RegisterAsync(admin, password, 1);
                 
             }
-            catch(Exception ex)
+            catch(Exception)
             {
                 //Catch statement actions
             }
@@ -61,7 +60,7 @@ namespace LearnLink.Application.Helpers
 
                 await roleInteractor.CreateRoleAsync(adminRole);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //Catch statement actions
             }
@@ -84,7 +83,7 @@ namespace LearnLink.Application.Helpers
 
                 await roleInteractor.CreateRoleAsync(userRole);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //Catch statement actions
             }

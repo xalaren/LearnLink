@@ -29,7 +29,8 @@ namespace LearnLink.Core.Entities
             }
         }
 
-        public int CreatorsCount { get; set; }
         public int SubscribersCount { get; set; }
+
+        public ICollection<CourseModule> CourseModules = new List<CourseModule>();
     }
 }

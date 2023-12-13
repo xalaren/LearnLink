@@ -370,7 +370,7 @@ p {
 .button-base, .button-red, .button-violet, .button-orange {
   box-sizing: border-box;
   padding: 10px;
-  height: 50px;
+  min-height: 50px;
   border-radius: 5px;
   font-size: 20px;
   font-weight: 500;
