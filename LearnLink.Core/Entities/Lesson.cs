@@ -10,7 +10,7 @@ namespace LearnLink.Core.Entities
         public string? Description { get; set; }
         public string? Content { get; set; } 
 
-        public string TitleS
+        public string Title
         {
             get => title;
             set
