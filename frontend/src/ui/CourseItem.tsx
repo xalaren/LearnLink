@@ -14,7 +14,7 @@ function CourseItem({ course, onClick }: ICourseItemProps) {
                 {!course.isPublic && <Locked />}
             </div>
             <div className="course-item__info">
-                <p>Подписчиков: <span className="medium-little-violet">{course.creatorsCount}</span></p>
+                <p>Подписчиков: <span className="medium-little-violet">{course.subscribersCount}</span></p>
             </div>
         </div>
     );

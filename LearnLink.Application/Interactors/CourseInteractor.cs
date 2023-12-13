@@ -68,7 +68,7 @@ namespace LearnLink.Application.Interactors
                 var userCreatedCourse = await unitOfWork.UserCreatedCourses.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == userId && u.CourseId == courseId);
                 var subscription = await unitOfWork.Subscriptions.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == userId && u.CourseId == courseId);
 
-                if(!course.IsPublic && userCreatedCourse == null && subscription == null)
+                if (!course.IsPublic && userCreatedCourse == null && subscription == null)
                 {
                     throw new AccessLevelException("Курс недоступен пользователю");
                 }
@@ -138,12 +138,11 @@ namespace LearnLink.Application.Interactors
             {
                 var user = await unitOfWork.Users.AsNoTracking().FirstOrDefaultAsync(user => user.Id == userId);
 
-                if(user == null)
+                if (user == null)
                 {
                     throw new NotFoundException("Пользователь не найден");
                 }
 
-                //TODO: проверить на работоспособность
                 var courses = await unitOfWork.UserCreatedCourses
                     .AsNoTracking()
                     .Where(u => u.UserId == userId)
@@ -335,7 +334,7 @@ namespace LearnLink.Application.Interactors
 
                 var course = await unitOfWork.Courses.FindAsync(courseDto.Id);
 
-                if(course == null)
+                if (course == null)
                 {
                     throw new NotFoundException("Курс не найден");
                 }
@@ -375,7 +374,8 @@ namespace LearnLink.Application.Interactors
             {
                 var course = await unitOfWork.Courses.FindAsync(courseId);
 
-                if(course == null)
+
+                if (course == null)
                 {
                     throw new NotFoundException("Курс не найден");
                 }
@@ -414,7 +414,7 @@ namespace LearnLink.Application.Interactors
             {
                 var userCreatedCourse = await unitOfWork.UserCreatedCourses.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == userId && u.CourseId == courseId);
 
-                if(userCreatedCourse == null)
+                if (userCreatedCourse == null)
                 {
                     return new()
                     {
@@ -432,7 +432,7 @@ namespace LearnLink.Application.Interactors
                 };
 
             }
-            catch(CustomException exception)
+            catch (CustomException exception)
             {
                 return new()
                 {

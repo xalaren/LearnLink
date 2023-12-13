@@ -29,8 +29,8 @@ namespace LearnLink.Core.Entities
             }
         }
 
-        public int SubscribersCount { get; set; }
+        public int SubscribersCount { get; set; } = 0;
 
-        public ICollection<CourseModule> CourseModules = new List<CourseModule>();
+        public ICollection<CourseModule> CourseModules { get; set; } = new List<CourseModule>();
     }
 }

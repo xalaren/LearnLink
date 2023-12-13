@@ -8,20 +8,18 @@ import { RegisterPage } from "./pages/RegisterPage";
 import { EditActions, Paths } from "./models/enums";
 import ProfilePage from "./pages/ProfilePage";
 import EditUserPage from "./pages/EditUserPage";
-import { useEffect, useState } from "react";
-import { fetchUser, resetUserState } from "./store/actions/userActionCreators";
+import { useEffect } from "react";
+import { fetchUser } from "./store/actions/userActionCreators";
 import { useAppDispatch, useAppSelector } from "./hooks/redux";
-import { ErrorModal } from "./components/ErrorModal";
-import { validate } from "./helpers/validation";
 import Footer from "./modules/Footer";
 import CoursePage from "./pages/CoursePage";
+import UserCoursesPage from "./pages/UserCoursesPage";
 
 
 function App() {
     const dispatch = useAppDispatch();
     const { user } = useAppSelector(state => state.userReducer);
     const { isAuthenticated } = useAppSelector(state => state.authReducer);
-    const [isErrorModalActive, setErrorModalActive] = useState(false);
 
     useEffect(() => {
         if (isAuthenticated && !user) dispatch(fetchUser());
@@ -37,6 +35,7 @@ function App() {
                 <Route path={Paths.loginPath} element={<LoginPage />}></Route>
                 <Route path={Paths.registerPath} element={<RegisterPage />}></Route>
                 <Route path={Paths.profilePath} element={<ProfilePage />}></Route>
+                <Route path={Paths.userCoursesPath + '/:type'} element={<UserCoursesPage />}></Route>
                 <Route path={Paths.editUserPath} element={<EditUserPage action={EditActions.editUser} />}></Route>
                 <Route path={Paths.editPasswordPath} element={<EditUserPage action={EditActions.editPassword} />}></Route>
                 <Route path={Paths.courseViewPath + '/:id'} element={<CoursePage />}></Route>

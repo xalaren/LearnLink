@@ -5,7 +5,7 @@ import { logout } from "../store/actions/authActionCreators";
 import userIcon from "../assets/img/user.svg";
 import starIcon from "../assets/img/star.svg";
 import powerIcon from "../assets/img/power.svg";
-import { Paths } from "../models/enums";
+import { Paths, ViewTypes } from "../models/enums";
 import { fetchUser } from "../store/actions/userActionCreators";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
 
@@ -43,7 +43,7 @@ export function Header() {
                         {
                             //TODO: make real redirection to courses page
                             title: 'Мои курсы',
-                            onClick: () => toNext(Paths.homePath),
+                            onClick: () => toNext(`${Paths.userCoursesPath}/${ViewTypes.created}`),
                             iconPath: starIcon,
                         },
                         {

@@ -1,16 +1,20 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { CoursesContainer } from "../components/CoursesContainer";
-import { usePublicCourses } from "../hooks/courseHooks";
+import { useCreatedCourses } from "../hooks/courseHooks";
 import { Loader } from "../ui/Loader";
 import { ErrorModal } from "../components/ErrorModal";
+import { useAppSelector } from "../hooks/redux";
 
-function PublicCoursesContainer() {
-    const { publicCoursesQuery, courses, loading, error, resetValues } = usePublicCourses();
+function CreatedCourseContainer() {
+    const { getCreatedCoursesQuery, courses, loading, error, resetValues } = useCreatedCourses();
     const [isErrorModalActive, setErrorModalActive] = useState(false);
+    const { accessToken } = useAppSelector(state => state.authReducer);
+    const { user } = useAppSelector(state => state.userReducer);
 
     useEffect(() => {
-        fetchPublicCourses();
-    }, []);
+        fetchCourses();
+    }, [accessToken, user]);
 
     useEffect(() => {
 
@@ -21,8 +25,8 @@ function PublicCoursesContainer() {
 
     }, [error, courses]);
 
-    async function fetchPublicCourses() {
-        await publicCoursesQuery();
+    async function fetchCourses() {
+        if (accessToken && user) await getCreatedCoursesQuery(user.id!, accessToken);
     }
 
     function closeModal() {
@@ -43,4 +47,4 @@ function PublicCoursesContainer() {
     );
 }
 
-export default PublicCoursesContainer;
+export default CreatedCourseContainer;

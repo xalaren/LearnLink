@@ -544,40 +544,64 @@ p {
     justify-content: space-between;
 }
 
-.courses-type {
+// .selection-item {
+//     padding: 0 20px;
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     cursor: pointer;
+//     transition: .3s ease-in-out;
+//     position: relative;
+
+//     &:hover {
+//         background-color: $light-violet;
+//         color: $violet;
+//     }
+
+//     &-selected {
+//         background-color: $light-violet;
+//         color: $violet;
+//     }
+
+
+// }
+
+.selection-panel {
     display: flex;
     height: 60px;
     font-size: $middle-fz;
     font-weight: 500;
-}
 
-.course-type {
-    padding: 0 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: .3s ease-in-out;
-    position: relative;
+    .selection-item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0 20px;
+        position: relative;
+        cursor: pointer;
+        transition: .3s ease-in-out;
+        color: $dark-gray;
 
-    &:hover {
-        background-color: $light-violet;
-        color: $violet;
+        &:hover {
+            background-color: $light-violet;
+            color: $violet;
+        }
     }
 
-    &-selected {
+    .active {
         background-color: $light-violet;
         color: $violet;
-    }
 
-    &-selected::after {
-        content: "";
-        position: absolute;
-        top: 96%;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background-color: $violet;
+        &::after {
+            $lh: 3px;
+            content: "";
+            position: absolute;
+            height: $lh;
+            width: 100%;
+            background-color: $violet;
+            bottom: $lh;
+            left: 0;
+        }
     }
 }
 
