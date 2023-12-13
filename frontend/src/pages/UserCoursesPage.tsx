@@ -5,13 +5,22 @@ import { Paths, ViewTypes } from "../models/enums";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
 import CreatedCourseContainer from "../modules/CreatedCoursesContainer";
 import SubscribedCoursesContainer from "../modules/SubscribedCoursesContainer";
+import { useAppSelector } from "../hooks/redux";
+import { useEffect } from "react";
+import UserCourseCreator from "../modules/UserCourseCreator";
 
 function UserCoursesPage() {
     const param = useParams<'type'>();
     const { toNext } = useHistoryNavigation();
+    const { isAuthenticated } = useAppSelector(state => state.authReducer);
+
+    useEffect(() => {
+        if (!isAuthenticated) toNext(Paths.homePath);
+    }, [isAuthenticated, toNext]);
 
     return (
-        <MainContainer title="Мои доступные курсы">
+        <MainContainer>
+            <UserCourseCreator />
             <SelectionPanel selectionItems={[
                 {
                     title: "Созданные",

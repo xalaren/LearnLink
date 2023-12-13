@@ -130,7 +130,7 @@ p {
 
 .base-input {
     min-width: 200px;
-    height: 50px;
+    min-height: 50px;
     padding: 10px;
     outline: none;
     font-size: $reg-fz;
@@ -211,9 +211,11 @@ p {
 
 .button-base {
     box-sizing: border-box;
-    padding: 10px;
     min-height: 50px;
     border-radius: $minBorderRadius;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-size: $reg-fz;
     font-weight: 500;
     color: $dark-gray;
@@ -240,6 +242,20 @@ p {
 .button-violet {
     @extend .button-base;
     border: solid 2px $violet;
+    background-color: $white;
+    color: $violet;
+    transition: .3s ease-in-out;
+
+    &:hover {
+        border-color: transparent;
+        background-color: $violet;
+        color: $white;
+    }
+}
+
+.button-gray-violet {
+    @extend .button-base;
+    border: solid 2px $gray-3;
     background-color: $white;
     color: $violet;
     transition: .3s ease-in-out;
@@ -351,14 +367,14 @@ p {
 .main {
     background-color: $white;
     width: 100%;
+    padding-top: 60px;
+    padding-bottom: 60px;
 
     .inner-container {
         height: 100%;
-        padding-top: 50px;
-        padding-bottom: 120px;
 
         >*:first-child {
-            margin-bottom: 100px;
+            margin-bottom: 60px;
         }
     }
 }
@@ -374,6 +390,7 @@ p {
     overflow: auto;
     display: flex;
     justify-content: center;
+    z-index: 10;
 }
 
 .modal__container {
@@ -385,6 +402,7 @@ p {
     margin: auto auto;
     padding: 40px;
     text-align: left;
+    z-index: 21;
 }
 
 
@@ -484,16 +502,13 @@ p {
             fill: $violet;
         }
     }
-
-
-
 }
 
-.login-form {
+.base-form {
     max-width: fit-content;
 
     >*:not(:last-child) {
-        margin-bottom: 70px;
+        margin-bottom: 30px;
     }
 }
 
@@ -503,7 +518,7 @@ p {
     }
 }
 
-.login-input {
+.form-input {
     list-style: none;
 
     >*:first-child {
@@ -571,6 +586,7 @@ p {
     height: 60px;
     font-size: $middle-fz;
     font-weight: 500;
+    z-index: 0;
 
     .selection-item {
         display: flex;
@@ -688,5 +704,57 @@ p {
             }
         }
 
+    }
+}
+
+.container__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.rich-text {
+    @extend .base-input;
+    resize: none;
+    min-height: 150px;
+}
+
+.checkbox-container {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.checkbox {
+    width: 30px;
+    height: 30px;
+    border: solid $gray-2 2px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: .3s ease-in-out all;
+
+    * {
+        transition: inherit;
+    }
+
+    .checkbox__icon svg path {
+        stroke: transparent;
+        transition: inherit;
+    }
+
+    &:hover {
+        border: solid $violet 2px;
+    }
+}
+
+.checked {
+    border-color: transparent;
+    background-color: $violet;
+
+    .checkbox__icon svg path {
+        stroke: $white;
     }
 }

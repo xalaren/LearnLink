@@ -78,7 +78,7 @@ export function EditUserForm() {
     return (
         <>
 
-            <form className='login-form' onSubmit={onSubmit}>
+            <form className='base-form' onSubmit={onSubmit}>
                 <ul className="form__inputs">
                     <p className="medium-little">Никнейм</p>
                     <Input

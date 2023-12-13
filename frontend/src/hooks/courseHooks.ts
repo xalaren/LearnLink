@@ -140,3 +140,11 @@ export function useGetCourse() {
 
     return { getCourseQuery, course, loading, error, resetValues };
 }
+
+export function useCreateCourse() {
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+
+    const createCourseQuery = async (title: string, description?: string, isPublic: string, userId: string, accessToken: string) => {
+    }
+}
