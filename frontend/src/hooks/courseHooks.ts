@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Course } from "../models/course";
 import { AxiosError } from "axios";
-import { IValueResponse } from "../models/response";
+import { IValueResponse, IVoidResponse } from "../models/response";
 import { COURSE_ENDPOINTS_URL } from "../models/constants";
 import axiosInstance from "../axios_config/axiosConfig";
 
@@ -142,9 +142,39 @@ export function useGetCourse() {
 }
 
 export function useCreateCourse() {
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
-    const createCourseQuery = async (title: string, description?: string, isPublic: string, userId: string, accessToken: string) => {
+    const createCourseQuery = async (title: string, isPublic: boolean, userId: string, accessToken: string, description?: string,) => {
+        try {
+            setLoading(true);
+
+            const course = new Course(0, title, isPublic, description);
+            const response = (await axiosInstance.post<IVoidResponse>(`${COURSE_ENDPOINTS_URL}/create ? userId = ${userId}`, course, {
+                headers: {
+                    Authorization: `Bearer ${accessToken} `
+                }
+            }));
+
+            setLoading(false);
+
+            if (!response.data.success) {
+                throw new AxiosError(response.data.message);
+            }
+
+            setSuccess(response.data.message!);
+        }
+        catch (err: unknown) {
+            setError((err as AxiosError).message);
+        }
     }
+
+    const resetValues = () => {
+        setLoading(false);
+        setError('');
+        setSuccess('');
+    }
+
+    return { createCourseQuery, loading, error, success, resetValues };
 }

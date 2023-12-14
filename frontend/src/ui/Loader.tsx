@@ -4,7 +4,7 @@ interface ILoaderProps {
 }
 
 export function Loader({ className, styles }: ILoaderProps) {
-    const resultClass = "loader " + className;
+    const resultClass = "loader " + className || '';
     return (
         <div className={resultClass} style={styles}>
         </div>

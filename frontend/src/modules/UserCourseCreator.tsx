@@ -1,18 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MainHeaderViaNav from "../components/ContainerHeaderViaNav";
 import { Modal } from "../components/Modal";
 import { Input } from "../ui/Input";
-import { InputType } from "../models/enums";
+import { InputType, NotificationType } from "../models/enums";
 import { validate } from "../helpers/validation";
 import Checkbox from "../ui/Checkbox";
+import PopupLoader from "../ui/PopupLoader";
+import Notification from "../ui/Notification";
 
 function UserCourseCreator() {
     const [createModalActive, setCreateModalActive] = useState(false);
+    const [isPublicCourse, setPublicCourse] = useState(false);
 
     const [courseTitle, setCourseTitle] = useState('');
     const [courseTitleError, setCourseTitleError] = useState('');
 
     const [courseDescription, setCourseDescription] = useState('');
+
 
     async function onSubmit(event: React.FormEvent) {
         event.preventDefault();
@@ -74,13 +78,17 @@ function UserCourseCreator() {
                             style={{ width: '500px' }}
                             className="rich-text"
                         />
-                        <Checkbox label="Hello" isChecked={false} />
+                        <Checkbox label="Общедоступный курс" isChecked={isPublicCourse} checkedChanger={() => { setPublicCourse(prev => !prev) }} />
                     </ul>
                     <nav className="form__nav">
                         <button className="button-violet" type="submit">Создать</button>
                     </nav>
                 </form>
             </Modal >
+
+            {/* <PopupLoader /> */}
+
+            {/* <Notification notificationType={NotificationType.success} onFade={() => { }}>Hello</Notification> */}
         </>
     );
 }

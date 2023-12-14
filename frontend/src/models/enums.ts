@@ -23,3 +23,9 @@ export enum ViewTypes {
     created = 'created',
     subscribed = 'subscribed',
 }
+
+export enum NotificationType {
+    error = 'error',
+    success = 'success',
+    default = '',
+}

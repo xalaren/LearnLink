@@ -17,7 +17,10 @@ $light-violet: #f7f7ff;
 $violet-tp: rgba($violet, .1);
 $orange: #FFAD7E;
 $red: #FF2F3B;
+$green: #1dc195;
 $light-red: #ff999e;
+$transparent-red: #ffe0e2;
+$transparent-green: #e0fff0;
 $dark-gray: #555555;
 $gray-1: #595959;
 $gray-2: #B8B8B8;
@@ -334,7 +337,6 @@ p {
 }
 
 .loader {
-    position: relative;
     display: flex;
     justify-content: center;
     width: 100%;
@@ -346,7 +348,6 @@ p {
         border: 5px solid $light-gray;
         border-top-color: $violet;
         border-radius: 50%;
-        position: absolute;
         animation: loading 1s linear infinite;
     }
 
@@ -390,6 +391,7 @@ p {
     overflow: auto;
     display: flex;
     justify-content: center;
+    align-items: center;
     z-index: 10;
 }
 
@@ -428,6 +430,20 @@ p {
     &:hover {
         background-color: $red;
         color: $white;
+    }
+}
+
+.popup-loader {
+    @extend .modal;
+
+    .popup-loader__container {
+        width: 200px;
+        height: 200px;
+        border-radius: 10px;
+        background-color: $white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 }
 
@@ -723,38 +739,86 @@ p {
     display: flex;
     gap: 20px;
     align-items: center;
-}
-
-.checkbox {
-    width: 30px;
-    height: 30px;
-    border: solid $gray-2 2px;
-    border-radius: 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     cursor: pointer;
+    user-select: none;
     transition: .3s ease-in-out all;
 
     * {
         transition: inherit;
     }
 
-    .checkbox__icon svg path {
-        stroke: transparent;
-        transition: inherit;
+    &:hover {
+        p {
+            color: $violet;
+        }
+
+        .checkbox {
+            border: solid $violet 2px;
+        }
     }
 
-    &:hover {
-        border: solid $violet 2px;
+    .checkbox {
+        width: 30px;
+        height: 30px;
+        border: solid $gray-2 2px;
+        border-radius: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+
+        .checkbox__icon svg path {
+            stroke: transparent;
+            transition: inherit;
+        }
+
+
+    }
+
+    .checked {
+        border-color: transparent;
+        background-color: $violet;
+
+        .checkbox__icon svg path {
+            stroke: $white;
+        }
     }
 }
 
-.checked {
-    border-color: transparent;
-    background-color: $violet;
+.notification {
+    min-width: 200px;
+    min-height: 60px;
+    background-color: $white;
+    z-index: 22;
+    position: fixed;
+    bottom: 60px;
+    right: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: $reg-fz;
+    font-weight: 500;
+    border-radius: 6px;
+    box-shadow: 0px 0px 20px 0px rgba(34, 60, 80, 0.1);
+    animation: fade .4s ease-in-out;
 
-    .checkbox__icon svg path {
-        stroke: $white;
+    &-error {
+        @extend .notification;
+        color: $red;
+    }
+
+    &-success {
+        @extend .notification;
+        color: $green;
+    }
+}
+
+@keyframes fade {
+    10% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
     }
 }
