@@ -13,7 +13,7 @@ function Notification({ notificationType, children, onFade }: INotificationProps
     useEffect(() => {
         setTimeout(() => {
             onFade();
-        }, 4000);
+        }, 650);
     }, [onFade]);
 
     return (

@@ -19,7 +19,7 @@ function PublicCoursesContainer() {
             return;
         }
 
-    }, [error, courses]);
+    }, [error]);
 
     async function fetchPublicCourses() {
         await publicCoursesQuery();

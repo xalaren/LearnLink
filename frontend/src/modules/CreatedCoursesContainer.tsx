@@ -6,7 +6,12 @@ import { Loader } from "../ui/Loader";
 import { ErrorModal } from "../components/ErrorModal";
 import { useAppSelector } from "../hooks/redux";
 
-function CreatedCourseContainer() {
+interface ICreatedCourseContainerProps {
+    shouldUpdate: boolean;
+    updateReset: () => void;
+}
+
+function CreatedCourseContainer({ shouldUpdate, updateReset }: ICreatedCourseContainerProps) {
     const { getCreatedCoursesQuery, courses, loading, error, resetValues } = useCreatedCourses();
     const [isErrorModalActive, setErrorModalActive] = useState(false);
     const { accessToken } = useAppSelector(state => state.authReducer);
@@ -17,13 +22,19 @@ function CreatedCourseContainer() {
     }, [accessToken, user]);
 
     useEffect(() => {
+        if (shouldUpdate) {
+            fetchCourses();
+            updateReset();
+        }
+    }, [shouldUpdate])
 
+    useEffect(() => {
         if (error) {
             setErrorModalActive(true);
             return;
         }
 
-    }, [error, courses]);
+    }, [error]);
 
     async function fetchCourses() {
         if (accessToken && user) await getCreatedCoursesQuery(user.id!, accessToken);

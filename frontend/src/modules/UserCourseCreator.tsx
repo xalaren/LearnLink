@@ -2,13 +2,24 @@ import { useEffect, useState } from "react";
 import MainHeaderViaNav from "../components/ContainerHeaderViaNav";
 import { Modal } from "../components/Modal";
 import { Input } from "../ui/Input";
-import { InputType, NotificationType } from "../models/enums";
+import { InputType, NotificationType, Paths, ViewTypes } from "../models/enums";
 import { validate } from "../helpers/validation";
 import Checkbox from "../ui/Checkbox";
 import PopupLoader from "../ui/PopupLoader";
 import Notification from "../ui/Notification";
+import { useCreateCourse } from "../hooks/courseHooks";
+import { useAppSelector } from "../hooks/redux";
+import SelectionPanel from "../ui/SelectionPanel";
+import { useParams } from "react-router-dom";
+import { useHistoryNavigation } from "../hooks/historyNavigation";
+import CreatedCourseContainer from "./CreatedCoursesContainer";
+import SubscribedCoursesContainer from "./SubscribedCoursesContainer";
+
 
 function UserCourseCreator() {
+    const param = useParams<'type'>();
+    const { toNext } = useHistoryNavigation();
+
     const [createModalActive, setCreateModalActive] = useState(false);
     const [isPublicCourse, setPublicCourse] = useState(false);
 
@@ -17,6 +28,17 @@ function UserCourseCreator() {
 
     const [courseDescription, setCourseDescription] = useState('');
 
+    const [courseAdded, setCourseAdded] = useState(false);
+
+    const { createCourseQuery, loading, error, success, resetValues } = useCreateCourse();
+    const { accessToken } = useAppSelector(state => state.authReducer);
+    const { user } = useAppSelector(state => state.userReducer);
+
+    useEffect(() => {
+        if (success) {
+            handleCourseAdded();
+        }
+    }, [success])
 
     async function onSubmit(event: React.FormEvent) {
         event.preventDefault();
@@ -29,6 +51,13 @@ function UserCourseCreator() {
             isValidDate = false;
         }
         if (!isValidDate) return;
+
+        console.log(isValidDate);
+
+
+        if (accessToken && user) {
+            await createCourseQuery(courseTitle, isPublicCourse, user.id!, accessToken, courseDescription);
+        }
     }
 
     function onChange(event: React.ChangeEvent) {
@@ -45,6 +74,16 @@ function UserCourseCreator() {
         }
     }
 
+    function handleCourseAdded() {
+        setCourseAdded(true);
+    }
+
+    function clearInputs() {
+        setCourseTitle('');
+        setCourseTitleError('');
+        setCourseDescription('');
+        setPublicCourse(false);
+    }
 
     return (
         <>
@@ -57,10 +96,31 @@ function UserCourseCreator() {
                 </button>
             </MainHeaderViaNav>
 
-            <Modal active={createModalActive} title="Создание курса" onClose={() => setCreateModalActive(false)}>
+            <SelectionPanel selectionItems={[
+                {
+                    title: "Созданные",
+                    onClick: () => { toNext(`${Paths.userCoursesPath}/${ViewTypes.created}`) },
+                    active: param.type === ViewTypes.created
+                },
+                {
+                    title: "Подписки",
+                    onClick: () => { toNext(`${Paths.userCoursesPath}/${ViewTypes.subscribed}`) },
+                    active: param.type === ViewTypes.subscribed
+                }]}
+            />
+
+            {param.type === ViewTypes.created && <CreatedCourseContainer shouldUpdate={courseAdded} updateReset={() => setCourseAdded(false)} />}
+            {param.type === ViewTypes.subscribed && <SubscribedCoursesContainer />}
+
+            <Modal active={createModalActive} title="Создание курса" onClose={() => {
+                setCreateModalActive(false);
+                clearInputs();
+            }}>
                 <form className="base-form" onSubmit={onSubmit}>
                     <ul className="form__inputs">
-                        <p className="medium-little">Название курса</p>
+                        <p className="medium-little">
+                            Название курса
+                        </p>
                         <Input
                             type={InputType.text}
                             name="courseTitle"
@@ -72,11 +132,12 @@ function UserCourseCreator() {
 
                         <p className="medium-little">Описание курса</p>
                         <textarea
-                            name="courseTitle"
+                            name="courseDescription"
                             onChange={onChange}
                             placeholder="Введите описание курса (Необязательно)..."
                             style={{ width: '500px' }}
                             className="rich-text"
+                            value={courseDescription}
                         />
                         <Checkbox label="Общедоступный курс" isChecked={isPublicCourse} checkedChanger={() => { setPublicCourse(prev => !prev) }} />
                     </ul>
@@ -86,9 +147,9 @@ function UserCourseCreator() {
                 </form>
             </Modal >
 
-            {/* <PopupLoader /> */}
-
-            {/* <Notification notificationType={NotificationType.success} onFade={() => { }}>Hello</Notification> */}
+            {loading && <PopupLoader />}
+            {error && <Notification notificationType={NotificationType.error} onFade={resetValues}>{error}</Notification>}
+            {success && <Notification notificationType={NotificationType.success} onFade={resetValues}>{success}</Notification>}
         </>
     );
 }

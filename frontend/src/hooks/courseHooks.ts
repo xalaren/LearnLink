@@ -146,14 +146,14 @@ export function useCreateCourse() {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
-    const createCourseQuery = async (title: string, isPublic: boolean, userId: string, accessToken: string, description?: string,) => {
+    const createCourseQuery = async (title: string, isPublic: boolean, userId: number, accessToken: string, description?: string,) => {
         try {
             setLoading(true);
 
             const course = new Course(0, title, isPublic, description);
-            const response = (await axiosInstance.post<IVoidResponse>(`${COURSE_ENDPOINTS_URL}/create ? userId = ${userId}`, course, {
+            const response = (await axiosInstance.post<IVoidResponse>(`${COURSE_ENDPOINTS_URL}create?userId=${userId}`, course, {
                 headers: {
-                    Authorization: `Bearer ${accessToken} `
+                    Authorization: `Bearer ${accessToken}`
                 }
             }));
 

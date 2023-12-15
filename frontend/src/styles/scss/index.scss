@@ -788,6 +788,7 @@ p {
 .notification {
     min-width: 200px;
     min-height: 60px;
+    padding: 0 10px;
     background-color: $white;
     z-index: 22;
     position: fixed;
@@ -800,7 +801,7 @@ p {
     font-weight: 500;
     border-radius: 6px;
     box-shadow: 0px 0px 20px 0px rgba(34, 60, 80, 0.1);
-    animation: fade .4s ease-in-out;
+    animation: fade .7s ease-in-out;
 
     &-error {
         @extend .notification;
@@ -814,7 +815,7 @@ p {
 }
 
 @keyframes fade {
-    10% {
+    30% {
         opacity: 1;
     }
 
