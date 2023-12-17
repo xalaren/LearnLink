@@ -258,3 +258,40 @@ export function useUpdateCourse() {
 
     return { updateCourseQuery, loading, error, success, resetValues };
 }
+
+export function useRemoveCourse() {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+
+    const removeCourseQuery = async (userId: number, courseId: number, accessToken: string) => {
+        try {
+            setLoading(true);
+
+            const response = (await axiosInstance.delete<IVoidResponse>(`${COURSE_ENDPOINTS_URL}remove?userId=${userId}&courseId=${courseId}`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            }));
+
+            setLoading(false);
+
+            if (!response.data.success) {
+                throw new AxiosError(response.data.message);
+            }
+
+            setSuccess(response.data.message!);
+        }
+        catch (err: unknown) {
+            setError((err as AxiosError).message);
+        }
+    }
+
+    const resetValues = () => {
+        setLoading(false);
+        setError('');
+        setSuccess('');
+    }
+
+    return { removeCourseQuery, loading, error, success, resetValues };
+}

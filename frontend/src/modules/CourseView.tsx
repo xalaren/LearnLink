@@ -1,24 +1,27 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { useGetCourse, useUserCourseStatus } from "../hooks/courseHooks";
+import { useGetCourse, useRemoveCourse, useUserCourseStatus } from "../hooks/courseHooks";
 import { ErrorModal } from "../components/ErrorModal";
 import { Loader } from "../ui/Loader";
 import { useAppSelector } from "../hooks/redux";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
-import { Paths } from "../models/enums";
+import { Paths, ViewTypes } from "../models/enums";
 import CourseInfoSidebar from "./CourseInfoSidebar";
 import ModulesContainer from "./ModulesContainer";
 import EllipsisDropdown from "../components/EllipsisDropdown";
 import penCircle from "../assets/img/pen-circle.svg"
+import crossCircle from "../assets/img/cross-circle.svg"
 import CourseEditModule from "./CourseEditModule";
+import { Modal } from "../components/Modal";
 
 interface ICourseViewProps {
     courseId: number;
 }
 
 function CourseView({ courseId }: ICourseViewProps) {
-    const { getCourseQuery, course, loading, error: courseError, resetValues: resetCourseValues } = useGetCourse();
+    const { getCourseQuery, course, loading: courseLoading, error: courseError, resetValues: resetCourseValues } = useGetCourse();
     const { getStatusesQuery, error: statusError, resetError: resetStatusError, isCreator, isSubscriber } = useUserCourseStatus();
+    const { removeCourseQuery, loading: removeLoading, error: removeError, success: removeSuccess, resetValues: resetRemoveValues } = useRemoveCourse();
     const { toNext } = useHistoryNavigation();
 
     const { accessToken } = useAppSelector(state => state.authReducer);
@@ -27,7 +30,10 @@ function CourseView({ courseId }: ICourseViewProps) {
     const [localError, setLocalError] = useState('');
     const [isSubscriptionChanged, setSubscriptionChanged] = useState(false);
 
+    const [localLoading, setLocalLoading] = useState(false);
+
     const [isEditModalActive, setEditModalActive] = useState(false);
+    const [removeModalActive, setRemoveModalActive] = useState(false);
     const [updateRequest, setUpdateRequest] = useState(true);
 
     useEffect(() => {
@@ -49,16 +55,36 @@ function CourseView({ courseId }: ICourseViewProps) {
         }
     }, [isSubscriptionChanged]);
 
+
     useEffect(() => {
         if (courseError) setLocalError(courseError);
         if (statusError) setLocalError(statusError);
-    }, [courseError, localError, statusError])
+    }, [courseError, statusError]);
+
+    useEffect(() => {
+        setLocalLoading(courseLoading || removeLoading);
+    }, [courseLoading, removeLoading]);
+
+    useEffect(() => {
+        if (removeSuccess) {
+            if (isCreator || isSubscriber) {
+                toNext(Paths.userCoursesPath + '/' + ViewTypes.created);
+            }
+            else {
+                toNext(Paths.homePath);
+            }
+        }
+    }, [removeSuccess])
 
     async function fetchCourse() {
         if (courseId !== 0) {
             await getCourseQuery(courseId, user?.id);
             if (user && accessToken) await getStatusesQuery(user.id!, courseId, accessToken);
         }
+    }
+
+    async function removeCourse() {
+        if (user && course && accessToken) await (removeCourseQuery(user.id, course.id, accessToken));
     }
 
     function resetError() {
@@ -69,9 +95,9 @@ function CourseView({ courseId }: ICourseViewProps) {
 
     return (
         <>
-            {loading && <Loader />}
+            {localLoading && <Loader />}
 
-            {!localError && !loading && course &&
+            {!localError && !localLoading && course &&
                 <section className="course-view">
                     <div className="course-view__header container__header">
                         <h2 className="course-view__title medium-big">{course.title}</h2>
@@ -82,6 +108,11 @@ function CourseView({ courseId }: ICourseViewProps) {
                                         title: "Редактировать",
                                         onClick: () => { setEditModalActive(true) },
                                         iconPath: penCircle
+                                    },
+                                    {
+                                        title: "Удалить",
+                                        onClick: () => { setRemoveModalActive(true) },
+                                        iconPath: crossCircle,
                                     }
                                 ]}
                             </EllipsisDropdown>
@@ -100,21 +131,47 @@ function CourseView({ courseId }: ICourseViewProps) {
                     <CourseInfoSidebar course={course} isSubscriber={isSubscriber} isCreator={isCreator} subscriptionChanged={() => setSubscriptionChanged(true)} />
 
                     <div className="course-view__footer">
-                        {/* {isCreator && <p>You are creator</p>}
-                        {!isAuthenticated && <p>You need to register or login</p>}
-                        {!isCreator && !isSubscriber && <p>You are not a subscriber</p>}
-                        {!isCreator && isSubscriber && <p>You are subscriber</p>} */}
                     </div>
                 </section >
             }
 
             {isCreator && course &&
-                < CourseEditModule
-                    active={isEditModalActive}
-                    onClose={() => setEditModalActive(false)}
-                    refreshRequest={() => setUpdateRequest(true)}
-                    defaultCourse={course}
-                />}
+                <>
+                    < CourseEditModule
+                        active={isEditModalActive}
+                        onClose={() => setEditModalActive(false)}
+                        refreshRequest={() => setUpdateRequest(true)}
+                        defaultCourse={course}
+                    />
+
+                    <Modal title="Удаление профиля" active={removeModalActive} onClose={() => setRemoveModalActive(false)}>
+                        <p className="regular-red" style={{
+                            marginBottom: "40px",
+                        }}>Вы уверены, что хотите удалить курс?</p>
+                        <nav style={{
+                            display: "flex",
+                            justifyContent: "flex-end"
+                        }}>
+                            <button
+                                style={{ width: "80px", marginRight: "50px" }}
+                                className="button-red"
+                                onClick={removeCourse}>
+                                Да
+                            </button>
+                            <button
+                                style={{ width: "80px" }}
+                                className="button-violet"
+                                onClick={() => setRemoveModalActive(false)}>
+                                Нет
+                            </button>
+                        </nav>
+                    </Modal>
+                </>
+            }
+
+            {removeError && <ErrorModal active={Boolean(removeError)} onClose={() => {
+                resetRemoveValues();
+            }} error={removeError} />}
 
             {localError && <ErrorModal active={Boolean(localError)} onClose={() => {
                 resetError();
