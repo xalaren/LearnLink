@@ -220,3 +220,41 @@ export function useUserCourseStatus() {
 
     return { getStatusesQuery, error, resetError, isCreator, isSubscriber };
 }
+
+export function useUpdateCourse() {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+
+    const updateCourseQuery = async (title: string, isPublic: boolean, userId: number, courseId: number, accessToken: string, description?: string,) => {
+        try {
+            setLoading(true);
+
+            const course = new Course(courseId, title, isPublic, description);
+            const response = (await axiosInstance.post<IVoidResponse>(`${COURSE_ENDPOINTS_URL}update?userId=${userId}`, course, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            }));
+
+            setLoading(false);
+
+            if (!response.data.success) {
+                throw new AxiosError(response.data.message);
+            }
+
+            setSuccess(response.data.message!);
+        }
+        catch (err: unknown) {
+            setError((err as AxiosError).message);
+        }
+    }
+
+    const resetValues = () => {
+        setLoading(false);
+        setError('');
+        setSuccess('');
+    }
+
+    return { updateCourseQuery, loading, error, success, resetValues };
+}

@@ -135,12 +135,12 @@ function UserCourseCreator() {
                         />
 
                         <p className="medium-little">Описание курса</p>
-                        <textarea
+                        <Input
+                            type={InputType.rich}
                             name="courseDescription"
                             onChange={onChange}
                             placeholder="Введите описание курса (Необязательно)..."
-                            style={{ width: '500px' }}
-                            className="rich-text"
+                            styles={{ width: '500px' }}
                             value={courseDescription}
                         />
                         <Checkbox label="Общедоступный курс" isChecked={isPublicCourse} checkedChanger={() => { setPublicCourse(prev => !prev) }} />

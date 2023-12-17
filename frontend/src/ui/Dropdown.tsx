@@ -11,8 +11,6 @@ export function Dropdown({ children, options, itemStyles }: IDropdownProps) {
     const [active, setActive] = useState(false);
 
     useEffect(() => {
-        console.log(active);
-
         const closeDropdown = (event: MouseEvent) => {
             const target = event.target as HTMLElement;
 

@@ -23,14 +23,27 @@ export function Input({ type, name, width = 300, errorMessage, onChange, value, 
             {errorMessage &&
                 <div className="regular-red required">{errorMessage}</div>
             }
-            <input
-                className={`${errorMessage ? 'red-input' : 'violet-input'} ${className}`}
-                type={type} name={name}
-                placeholder={placeholder}
-                style={style}
-                onChange={onChange}
-                value={value}
-            />
+            {type === InputType.rich ?
+                <textarea
+                    name="courseDescription"
+                    onChange={onChange}
+                    placeholder="Введите описание курса (Необязательно)..."
+                    style={{ width: '500px' }}
+                    className="rich-text"
+                    value={value}
+                /> :
+                <input
+                    className={`${errorMessage ? 'red-input' : 'violet-input'} ${className}`}
+                    type={type} name={name}
+                    placeholder={placeholder}
+                    style={style}
+                    onChange={onChange}
+                    value={value}
+                />
+            }
+
+
+
         </li>
     );
 }

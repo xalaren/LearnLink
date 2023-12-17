@@ -1,9 +1,9 @@
-interface IMainHeaderViaNavProps {
+interface IContainerHeaderViaNav {
     title: string;
     children?: React.ReactNode;
 }
 
-function ContainerHeaderViaNav({ title, children }: IMainHeaderViaNavProps) {
+function ContainerHeaderViaNav({ title, children }: IContainerHeaderViaNav) {
     return (
         <section className="container__header">
             <h2 className="main__title">{title}</h2>

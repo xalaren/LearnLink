@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import { BASE_URL, USER_ENDPOINTS_URL } from "../models/constants";
+import { USER_ENDPOINTS_URL } from "../models/constants";
 import { useState } from "react";
 import { IAuthModel } from "../models/authModel";
 import { IValueResponse, IVoidResponse } from "../models/response";

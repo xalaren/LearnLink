@@ -1,6 +1,7 @@
 export enum InputType {
     text = 'text',
     password = 'password',
+    rich = 'rich',
 }
 
 export enum Paths {
