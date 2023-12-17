@@ -909,3 +909,11 @@ p {
     opacity: 0.5;
     user-select: none;
 }
+
+
+.modules__container {
+    padding-top: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
