@@ -51,49 +51,52 @@ function Profile() {
         toNext(Paths.homePath);
     }
 
+
     return (
         <>
             {user &&
                 <div className="profile">
-                    <div className="profile__container">
-                        <img className="profile__image" src={profileImage} alt="Профиль" />
-                        <div className="profile__text">
-                            <p className="medium-big">{user!.name} {user!.lastname}</p>
-                            <p className="medium-little-violet">@{user!.nickname} ({user!.role?.name})</p>
+                    <div className="profile__wrapper">
+                        <div className="profile__container">
+                            <img className="profile__image" src={profileImage} alt="Профиль" />
+                            <div className="profile__text">
+                                <p className="medium-big">{user!.name} {user!.lastname}</p>
+                                <p className="medium-little-violet">@{user!.nickname} ({user!.role?.name})</p>
+                            </div>
                         </div>
-                    </div>
 
-                    <nav className="profile__nav">
-                        <button className="button-violet" onClick={() => { toNext(Paths.editUserPath) }}>Редактировать данные</button>
-                        <button className="button-violet" onClick={() => { toNext(Paths.editPasswordPath) }}>Сменить пароль</button>
-                        <button className="button-red" onClick={() => { setRemoveModalActive(true) }}>Удалить профиль</button>
-                    </nav>
-
-                    <Modal title="Удаление профиля" active={removeModalIsActive} onClose={() => setRemoveModalActive(false)}>
-                        <p className="regular-red" style={{
-                            marginBottom: "40px",
-                        }}>Вы уверены, что хотите удалить профиль?</p>
-                        <nav style={{
-                            display: "flex",
-                            justifyContent: "flex-end"
-                        }}>
-                            <button
-                                style={{ width: "80px", marginRight: "50px" }}
-                                className="button-red"
-                                onClick={onClick}>
-                                Да
-                            </button>
-                            <button
-                                style={{ width: "80px" }}
-                                className="button-violet"
-                                onClick={() => setRemoveModalActive(false)}>
-                                Нет
-                            </button>
+                        <nav className="profile__nav">
+                            <button className="button-violet" onClick={() => { toNext(Paths.editUserPath) }}>Редактировать данные</button>
+                            <button className="button-violet" onClick={() => { toNext(Paths.editPasswordPath) }}>Сменить пароль</button>
+                            <button className="button-red" onClick={() => { setRemoveModalActive(true) }}>Удалить профиль</button>
                         </nav>
-                    </Modal>
 
-                    <ErrorModal active={isErrorModalActive} error={error} onClose={closeErrorModal} />
-                    <SuccessModal active={isSuccessModalActive} message={success} onClose={closeSuccessModal} />
+                        <Modal title="Удаление профиля" active={removeModalIsActive} onClose={() => setRemoveModalActive(false)}>
+                            <p className="regular-red" style={{
+                                marginBottom: "40px",
+                            }}>Вы уверены, что хотите удалить профиль?</p>
+                            <nav style={{
+                                display: "flex",
+                                justifyContent: "flex-end"
+                            }}>
+                                <button
+                                    style={{ width: "80px", marginRight: "50px" }}
+                                    className="button-red"
+                                    onClick={onClick}>
+                                    Да
+                                </button>
+                                <button
+                                    style={{ width: "80px" }}
+                                    className="button-violet"
+                                    onClick={() => setRemoveModalActive(false)}>
+                                    Нет
+                                </button>
+                            </nav>
+                        </Modal>
+
+                        <ErrorModal active={isErrorModalActive} error={error} onClose={closeErrorModal} />
+                        <SuccessModal active={isSuccessModalActive} message={success} onClose={closeSuccessModal} />
+                    </div>
                 </div>
             }
         </>

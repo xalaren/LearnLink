@@ -499,11 +499,11 @@ p {
 .main {
   background-color: #FFFFFF;
   width: 100%;
-  padding-top: 60px;
-  padding-bottom: 60px;
+  padding: 60px 40px;
 }
 .main .inner-container {
-  height: 100vh;
+  height: 100%;
+  width: 100%;
 }
 .main .inner-container > *:first-child {
   margin-bottom: 60px;
@@ -661,12 +661,19 @@ p {
 }
 
 .profile {
+  height: calc(100% - 150px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.profile__wrapper {
   width: auto;
   display: flex;
   justify-content: center;
   text-align: center;
 }
-.profile > *:not(:last-child) {
+.profile__wrapper > *:not(:last-child) {
   margin-right: 200px;
 }
 

@@ -367,16 +367,18 @@ p {
 .main {
     background-color: $white;
     width: 100%;
-    padding-top: 60px;
-    padding-bottom: 60px;
+    padding: 60px 40px;
 
     .inner-container {
-        height: 100vh;
+        height: 100%;
+        width: 100%;
 
         >*:first-child {
             margin-bottom: 60px;
         }
     }
+
+
 }
 
 .modal {
@@ -548,6 +550,13 @@ p {
 }
 
 .profile {
+    height: calc(100% - 150px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.profile__wrapper {
     width: auto;
     display: flex;
     justify-content: center;
