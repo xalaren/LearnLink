@@ -14,6 +14,7 @@ import { useParams } from "react-router-dom";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
 import CreatedCourseContainer from "./CreatedCoursesContainer";
 import SubscribedCoursesContainer from "./SubscribedCoursesContainer";
+import { ErrorModal } from "../components/ErrorModal";
 
 
 function UserCourseCreator() {
@@ -30,15 +31,21 @@ function UserCourseCreator() {
 
     const [courseAdded, setCourseAdded] = useState(false);
 
-    const { createCourseQuery, loading, error, success, resetValues } = useCreateCourse();
+    const { createCourseQuery, loading, error: createError, success, resetValues } = useCreateCourse();
     const { accessToken } = useAppSelector(state => state.authReducer);
-    const { user } = useAppSelector(state => state.userReducer);
+    const { user, error: userError } = useAppSelector(state => state.userReducer);
+
+    const [isErrorModalActive, setErrorModalActive] = useState(false);
 
     useEffect(() => {
         if (success) {
             handleCourseAdded();
         }
-    }, [success])
+    }, [success]);
+
+    useEffect(() => {
+        if (userError) setErrorModalActive(true);
+    }, [userError]);
 
     async function onSubmit(event: React.FormEvent) {
         event.preventDefault();
@@ -51,9 +58,6 @@ function UserCourseCreator() {
             isValidDate = false;
         }
         if (!isValidDate) return;
-
-        console.log(isValidDate);
-
 
         if (accessToken && user) {
             await createCourseQuery(courseTitle, isPublicCourse, user.id!, accessToken, courseDescription);
@@ -148,8 +152,11 @@ function UserCourseCreator() {
             </Modal >
 
             {loading && <PopupLoader />}
-            {error && <Notification notificationType={NotificationType.error} onFade={resetValues}>{error}</Notification>}
+            {createError && <Notification notificationType={NotificationType.error} onFade={resetValues}>{createError}</Notification>}
             {success && <Notification notificationType={NotificationType.success} onFade={resetValues}>{success}</Notification>}
+            <ErrorModal active={isErrorModalActive} error={userError} onClose={() => setErrorModalActive(false)} />
+
+
         </>
     );
 }

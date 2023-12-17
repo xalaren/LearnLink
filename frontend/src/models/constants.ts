@@ -5,3 +5,5 @@ export const EXPIRES_KEY = 'lnk-expires';
 export const USER_KEY = 'lnk-user';
 export const USER_ENDPOINTS_URL: string = BASE_URL + 'Users/';
 export const COURSE_ENDPOINTS_URL: string = BASE_URL + 'Courses/';
+export const MODULE_ENDPOINRS_URL: string = BASE_URL + 'Modules/';
+export const SUBSCRIPTION_ENDPOINTS_URL: string = BASE_URL + 'Subscriptions/';

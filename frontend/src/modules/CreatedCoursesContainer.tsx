@@ -31,7 +31,6 @@ function CreatedCourseContainer({ shouldUpdate, updateReset }: ICreatedCourseCon
     useEffect(() => {
         if (error) {
             setErrorModalActive(true);
-            return;
         }
 
     }, [error]);

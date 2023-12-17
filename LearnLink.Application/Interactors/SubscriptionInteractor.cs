@@ -20,7 +20,7 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                if(subscriptionDto == null)
+                if (subscriptionDto == null)
                 {
                     throw new ArgumentNullException(nameof(subscriptionDto), "SubscriptionDto was null");
                 }
@@ -41,7 +41,7 @@ namespace LearnLink.Application.Interactors
 
                 var userCreatedCourse = await unitOfWork.UserCreatedCourses.FirstOrDefaultAsync(u => u.UserId == user.Id && u.CourseId == course.Id);
 
-                if(userCreatedCourse != null)
+                if (userCreatedCourse != null)
                 {
                     throw new AccessLevelException("Пользователь является создателем этого курса");
                 }
@@ -90,11 +90,21 @@ namespace LearnLink.Application.Interactors
             {
                 var subscription = await unitOfWork.Subscriptions.FirstOrDefaultAsync(s => s.UserId == userId && s.CourseId == courseId);
 
-                if(subscription == null)
+                var course = await unitOfWork.Courses.FindAsync(courseId);
+
+                if (course == null)
+                {
+                    throw new NotFoundException("Курс не найден");
+                }
+
+                course.SubscribersCount--;
+
+                if (subscription == null)
                 {
                     throw new NotFoundException("Подписка не найдена");
                 }
 
+                unitOfWork.Courses.Update(course);
                 unitOfWork.Subscriptions.Remove(subscription);
                 await unitOfWork.CommitAsync();
 

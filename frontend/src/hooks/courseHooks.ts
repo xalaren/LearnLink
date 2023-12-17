@@ -178,3 +178,45 @@ export function useCreateCourse() {
 
     return { createCourseQuery, loading, error, success, resetValues };
 }
+
+export function useUserCourseStatus() {
+    const [error, setError] = useState('');
+    const [isCreator, setCreator] = useState(false);
+    const [isSubscriber, setSubscriber] = useState(false);
+
+    const getStatusesQuery = async (userId: number, courseId: number, accessToken: string) => {
+        try {
+            const creatorResponse = await axiosInstance.get<IValueResponse<boolean>>(`${COURSE_ENDPOINTS_URL}get-creator-status?userId=${userId}&courseId=${courseId}`, {
+                headers: {
+                    Authorization: 'Bearer ' + accessToken
+                }
+            });
+
+            if (!creatorResponse.data.success) {
+                throw new AxiosError(creatorResponse.data.message);
+            }
+
+            const subscribedResponse = await axiosInstance.get<IValueResponse<boolean>>(`${COURSE_ENDPOINTS_URL}get-subscriber-status?userId=${userId}&courseId=${courseId}`, {
+                headers: {
+                    Authorization: 'Bearer ' + accessToken
+                }
+            });
+
+            if (!subscribedResponse.data.success) {
+                throw new AxiosError(creatorResponse.data.message);
+            }
+
+            setCreator(creatorResponse.data.value);
+            setSubscriber(subscribedResponse.data.value);
+        }
+        catch (err: unknown) {
+            setError((err as AxiosError).message);
+        }
+    }
+
+    const resetError = () => {
+        setError('');
+    }
+
+    return { getStatusesQuery, error, resetError, isCreator, isSubscriber };
+}

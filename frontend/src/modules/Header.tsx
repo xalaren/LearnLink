@@ -34,7 +34,7 @@ export function Header() {
                 ]} />}
 
                 {isAuthenticated &&
-                    <DropdownButton title={nickname}>
+                    <DropdownButton title={nickname} itemStyles={{ width: '150%' }}>
                         {[{
                             title: 'Профиль',
                             onClick: () => toNext(Paths.profilePath),
