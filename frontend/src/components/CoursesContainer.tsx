@@ -1,7 +1,7 @@
 import { Course } from "../models/course";
 import CourseItem from "../ui/CourseItem";
-import { Paths } from "../models/enums";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
+import { Paths } from "../models/paths";
 
 interface ICoursesContainerProps {
     courses?: Course[];

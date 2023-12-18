@@ -8,6 +8,6 @@ export class Paths {
     static readonly editPasswordPath = '/profile/edit/password';
     static readonly courseViewPath = '/courses';
     static readonly courseViewFullPath = this.courseViewPath + '/:courseId';
-    static readonly moduleViewPath = this.courseViewFullPath + '/modules';
-    static readonly moduleViewFullPath = this.moduleViewPath + '/:moduleId';
+    static readonly moduleViewPath = '/modules';
+    static readonly moduleViewFullPath = `${this.courseViewFullPath}${this.moduleViewPath}/:moduleId`;
 }

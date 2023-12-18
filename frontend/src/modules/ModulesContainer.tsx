@@ -8,10 +8,11 @@ import CheckIcon from "../ui/CheckIcon";
 import { useCreateModules, useGetCourseModules } from "../hooks/moduleHooks";
 import { useAppSelector } from "../hooks/redux";
 import { ErrorModal } from "../components/ErrorModal";
-import PopupLoader from "../ui/PopupLoader";
 import { Loader } from "../ui/Loader";
 import ModuleItem from "../ui/ModuleItem";
 import { validate } from "../helpers/validation";
+import { useHistoryNavigation } from "../hooks/historyNavigation";
+import { Paths } from "../models/paths";
 
 interface IModulesContainerProps {
     allowEdit: boolean;
@@ -30,6 +31,8 @@ function ModulesContainer({ allowEdit, courseId }: IModulesContainerProps) {
     const { createModulesQuery, success: createSuccess, error: createError, loading: createLoading, resetValues: resetCreateValues } = useCreateModules();
 
     const { accessToken } = useAppSelector(state => state.authReducer);
+
+    const { toNext } = useHistoryNavigation();
 
     useEffect(() => {
         fetchModules();
@@ -105,7 +108,9 @@ function ModulesContainer({ allowEdit, courseId }: IModulesContainerProps) {
                 }
             </section >
             <ul className="modules__container">
-                {modules && modules.map(module => <ModuleItem module={module} onClick={() => { }} />)
+                {modules && modules.map(module => <ModuleItem module={module} key={module.id} onClick={() => {
+                    toNext(`${Paths.courseViewPath}/${courseId}${Paths.moduleViewPath}/${module.id}`)
+                }} />)
                 }
                 {localLoading && <Loader />}
                 {allowEdit && inputActive &&

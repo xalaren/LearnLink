@@ -1,40 +1,40 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { useGetCourse, useRemoveCourse, useUserCourseStatus } from "../hooks/courseHooks";
+import { useUserCourseStatus } from "../hooks/courseHooks";
 import { ErrorModal } from "../components/ErrorModal";
 import { Loader } from "../ui/Loader";
 import { useAppSelector } from "../hooks/redux";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
-import { Paths, ViewTypes } from "../models/enums";
-import CourseInfoSidebar from "./CourseInfoSidebar";
-import ModulesContainer from "./ModulesContainer";
 import EllipsisDropdown from "../components/EllipsisDropdown";
 import penCircle from "../assets/img/pen-circle.svg"
 import crossCircle from "../assets/img/cross-circle.svg"
-import CourseEditModule from "./CourseEditModule";
 import { Modal } from "../components/Modal";
+import { useGetModule, useRemoveModule } from "../hooks/moduleHooks";
+import ModuleEditModal from "./ModuleEditModal";
+import { Paths } from "../models/paths";
 
-interface ICourseViewProps {
+interface IModuleViewProps {
     courseId: number;
+    moduleId: number;
 }
 
-function CourseView({ courseId }: ICourseViewProps) {
-    const { getCourseQuery, course, loading: courseLoading, error: courseError, resetValues: resetCourseValues } = useGetCourse();
+function CourseView({ courseId, moduleId }: IModuleViewProps) {
+    const { getModuleQuery, module, loading: moduleLoading, error: moduleError, resetValues: resetModuleValues } = useGetModule();
     const { getStatusesQuery, error: statusError, resetError: resetStatusError, isCreator, isSubscriber } = useUserCourseStatus();
-    const { removeCourseQuery, loading: removeLoading, error: removeError, success: removeSuccess, resetValues: resetRemoveValues } = useRemoveCourse();
+    const { removeModuleQuery, loading: removeLoading, error: removeError, success: removeSuccess, resetValues: resetRemoveValues } = useRemoveModule();
     const { toNext } = useHistoryNavigation();
 
     const { accessToken } = useAppSelector(state => state.authReducer);
     const user = useAppSelector(state => state.userReducer.user);
 
     const [localError, setLocalError] = useState('');
-    const [isSubscriptionChanged, setSubscriptionChanged] = useState(false);
 
     const [localLoading, setLocalLoading] = useState(false);
 
     const [isEditModalActive, setEditModalActive] = useState(false);
     const [removeModalActive, setRemoveModalActive] = useState(false);
     const [updateRequest, setUpdateRequest] = useState(true);
+    const [statusesLoaded, setStatusesLoaded] = useState(false);
 
     useEffect(() => {
         if (courseId === 0) {
@@ -42,65 +42,62 @@ function CourseView({ courseId }: ICourseViewProps) {
         }
 
         if (updateRequest) {
-            fetchCourse();
+            fetchModule();
             setUpdateRequest(false);
         }
 
+        fetchUserStatus();
+
     }, [courseId, user, accessToken, updateRequest]);
 
-    useEffect(() => {
-        if (isSubscriptionChanged) {
-            fetchCourse();
-            setSubscriptionChanged(false);
-        }
-    }, [isSubscriptionChanged]);
-
 
     useEffect(() => {
-        if (courseError) setLocalError(courseError);
+        if (moduleError) setLocalError(moduleError);
         if (statusError) setLocalError(statusError);
-    }, [courseError, statusError]);
+    }, [moduleError, statusError]);
 
     useEffect(() => {
-        setLocalLoading(courseLoading || removeLoading);
-    }, [courseLoading, removeLoading]);
+        setLocalLoading(moduleLoading || removeLoading);
+    }, [moduleLoading, removeLoading]);
 
     useEffect(() => {
         if (removeSuccess) {
-            if (isCreator || isSubscriber) {
-                toNext(Paths.userCoursesPath + '/' + ViewTypes.created);
-            }
-            else {
-                toNext(Paths.homePath);
-            }
+            returnToCoursePage();
         }
-    }, [removeSuccess])
+    }, [removeSuccess]);
 
-    async function fetchCourse() {
-        if (courseId !== 0) {
-            await getCourseQuery(courseId, user?.id);
-            if (user && accessToken) await getStatusesQuery(user.id!, courseId, accessToken);
+    async function fetchUserStatus() {
+        if (user && accessToken) await getStatusesQuery(user.id!, courseId, accessToken);
+    }
+
+    async function fetchModule() {
+        if (courseId !== 0 && accessToken) {
+            await getModuleQuery(moduleId, accessToken);
         }
     }
 
-    async function removeCourse() {
-        if (user && course && accessToken) await (removeCourseQuery(user.id, course.id, accessToken));
+    async function removeModule() {
+        if (user && module && accessToken) await (removeModuleQuery(module.id, accessToken));
     }
 
     function resetError() {
-        resetCourseValues();
+        resetModuleValues();
         resetStatusError();
         setLocalError('');
+    }
+
+    function returnToCoursePage() {
+        toNext(`${Paths.courseViewPath}/${courseId}`);
     }
 
     return (
         <>
             {localLoading && <Loader />}
 
-            {!localError && !localLoading && course &&
+            {!localError && !localLoading && module && (isCreator || isSubscriber) &&
                 <section className="course-view">
                     <div className="course-view__header container__header">
-                        <h2 className="course-view__title medium-big">{course.title}</h2>
+                        <h2 className="course-view__title medium-big">{module.title}</h2>
                         {isCreator && <nav className="container__navigation">
                             <EllipsisDropdown>
                                 {[
@@ -120,34 +117,28 @@ function CourseView({ courseId }: ICourseViewProps) {
                     </div>
                     <div className="course-view__description">
                         <p className="description regular">
-                            {course.description}
+                            {module.description}
                         </p>
                     </div>
-
-                    <div className="course-view__content">
-                        <ModulesContainer allowEdit={isCreator} courseId={course.id} />
-                    </div>
-
-                    <CourseInfoSidebar course={course} isSubscriber={isSubscriber} isCreator={isCreator} subscriptionChanged={() => setSubscriptionChanged(true)} />
 
                     <div className="course-view__footer">
                     </div>
                 </section >
             }
 
-            {isCreator && course &&
+            {isCreator && module &&
                 <>
-                    < CourseEditModule
+                    < ModuleEditModal
                         active={isEditModalActive}
                         onClose={() => setEditModalActive(false)}
                         refreshRequest={() => setUpdateRequest(true)}
-                        defaultCourse={course}
+                        defaultModule={module}
                     />
 
-                    <Modal title="Удаление курса" active={removeModalActive} onClose={() => setRemoveModalActive(false)}>
+                    <Modal title="Удаление модуля" active={removeModalActive} onClose={() => setRemoveModalActive(false)}>
                         <p className="regular-red" style={{
                             marginBottom: "40px",
-                        }}>Вы уверены, что хотите удалить курс?</p>
+                        }}>Вы уверены, что хотите удалить модуль?</p>
                         <nav style={{
                             display: "flex",
                             justifyContent: "flex-end"
@@ -155,7 +146,7 @@ function CourseView({ courseId }: ICourseViewProps) {
                             <button
                                 style={{ width: "80px", marginRight: "50px" }}
                                 className="button-red"
-                                onClick={removeCourse}>
+                                onClick={removeModule}>
                                 Да
                             </button>
                             <button
@@ -175,7 +166,7 @@ function CourseView({ courseId }: ICourseViewProps) {
 
             {localError && <ErrorModal active={Boolean(localError)} onClose={() => {
                 resetError();
-                toNext(Paths.homePath);
+                returnToCoursePage();
             }} error={localError} />}
         </>
     );
