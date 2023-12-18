@@ -1,10 +1,11 @@
 import { MainContainer } from "../components/MainContainer";
-import { EditActions, Paths } from "../models/enums";
+import { EditActions } from "../models/enums";
 import { useAppSelector } from "../hooks/redux";
 import { EditUserForm } from "../modules/EditUserForm";
 import { useEffect } from "react";
 import EditPassForm from "../modules/EditPassForm";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
+import { Paths } from "../models/paths";
 
 interface IEditUserPageProps {
     action: EditActions;

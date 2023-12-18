@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import MainHeaderViaNav from "../components/ContainerHeaderViaNav";
 import { Modal } from "../components/Modal";
 import { Input } from "../ui/Input";
-import { InputType, NotificationType, Paths, ViewTypes } from "../models/enums";
+import { InputType, NotificationType, ViewTypes } from "../models/enums";
 import { validate } from "../helpers/validation";
 import Checkbox from "../ui/Checkbox";
 import PopupLoader from "../ui/PopupLoader";
@@ -16,6 +16,7 @@ import CreatedCourseContainer from "./CreatedCoursesContainer";
 import SubscribedCoursesContainer from "./SubscribedCoursesContainer";
 import { ErrorModal } from "../components/ErrorModal";
 import { PlusIcon } from "../ui/PlusIcon";
+import { Paths } from "../models/paths";
 
 
 function UserCourseCreator() {

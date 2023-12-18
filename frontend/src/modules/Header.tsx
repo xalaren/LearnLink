@@ -5,9 +5,10 @@ import { logout } from "../store/actions/authActionCreators";
 import userIcon from "../assets/img/user.svg";
 import starIcon from "../assets/img/star.svg";
 import powerIcon from "../assets/img/power.svg";
-import { Paths, ViewTypes } from "../models/enums";
+import { ViewTypes } from "../models/enums";
 import { fetchUser } from "../store/actions/userActionCreators";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
+import { Paths } from "../models/paths";
 
 
 export function Header() {

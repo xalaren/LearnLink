@@ -3,18 +3,6 @@ export enum InputType {
     password = 'password',
     rich = 'rich',
 }
-
-export enum Paths {
-    homePath = '/',
-    loginPath = '/login',
-    registerPath = '/register',
-    profilePath = '/profile',
-    userCoursesPath = '/profile/courses',
-    editUserPath = '/profile/edit/user',
-    editPasswordPath = '/profile/edit/password',
-    courseViewPath = '/courses/id',
-}
-
 export enum EditActions {
     editUser = 'editUser',
     editPassword = 'editPassword',

@@ -5,7 +5,7 @@ import { ErrorModal } from "../components/ErrorModal";
 import { Loader } from "../ui/Loader";
 import { useAppSelector } from "../hooks/redux";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
-import { ViewTypes } from "../models/enums";
+import { Paths, ViewTypes } from "../models/enums";
 import CourseInfoSidebar from "./CourseInfoSidebar";
 import ModulesContainer from "./ModulesContainer";
 import EllipsisDropdown from "../components/EllipsisDropdown";
@@ -13,7 +13,6 @@ import penCircle from "../assets/img/pen-circle.svg"
 import crossCircle from "../assets/img/cross-circle.svg"
 import CourseEditModule from "./CourseEditModule";
 import { Modal } from "../components/Modal";
-import { Paths } from "../models/paths";
 
 interface ICourseViewProps {
     courseId: number;

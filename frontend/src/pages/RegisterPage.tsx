@@ -3,7 +3,7 @@ import { MainContainer } from "../components/MainContainer";
 import { useAppSelector } from "../hooks/redux";
 import { RegisterForm } from "../modules/RegisterForm";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
-import { Paths } from "../models/enums";
+import { Paths } from "../models/paths";
 
 
 export function RegisterPage() {

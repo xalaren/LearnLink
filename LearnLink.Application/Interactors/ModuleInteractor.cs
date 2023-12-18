@@ -151,6 +151,7 @@ namespace LearnLink.Application.Interactors
             {
                 var module = await unitOfWork.Modules.AsNoTracking().FirstOrDefaultAsync(module => module.Id == moduleId);
 
+
                 if (module == null)
                 {
                     throw new NotFoundException("Модуль не найден");
@@ -235,7 +236,7 @@ namespace LearnLink.Application.Interactors
                 var existModule = await unitOfWork.Modules.FindAsync(moduleId);
 
 
-                if(existModule == null)
+                if (existModule == null)
                 {
                     throw new NotFoundException("Модуль не найден");
                 }

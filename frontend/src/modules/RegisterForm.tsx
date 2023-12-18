@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { ErrorModal } from "../components/ErrorModal";
 import { validate } from "../helpers/validation";
 import { Input } from "../ui/Input";
-import { InputType, Paths } from "../models/enums";
+import { InputType } from "../models/enums";
 import { useRegister } from "../hooks/userHooks";
 import { SuccessModal } from "../components/SuccessModal";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
+import { Paths } from "../models/paths";
 
 export function RegisterForm() {
     const [nickname, setNickname] = useState('');

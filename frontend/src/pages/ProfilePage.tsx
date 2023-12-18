@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { MainContainer } from "../components/MainContainer";
 import Profile from "../modules/Profile";
 import { useAppSelector } from "../hooks/redux";
-import { Paths } from "../models/enums";
+import { Paths } from "../models/paths";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
 
 function ProfilePage() {

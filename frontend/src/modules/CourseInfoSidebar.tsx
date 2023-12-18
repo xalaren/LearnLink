@@ -6,7 +6,7 @@ import { ErrorModal } from "../components/ErrorModal";
 import PopupLoader from "../ui/PopupLoader";
 import { useAppSelector } from "../hooks/redux";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
-import { Paths } from "../models/enums";
+import { Paths } from "../models/paths";
 
 interface ICourseInfoSidebar {
     course: Course;

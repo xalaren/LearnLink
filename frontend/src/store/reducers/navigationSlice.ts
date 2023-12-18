@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { Paths } from "../../models/enums";
+import { Paths } from "../../models/paths";
 
 interface INavigationState {
     nextPath: string;

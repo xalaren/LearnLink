@@ -1,10 +1,9 @@
-import { useParams } from "react-router-dom";
 import { MainContainer } from "../components/MainContainer";
-import { Paths, ViewTypes } from "../models/enums";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
 import { useAppSelector } from "../hooks/redux";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import UserCourseCreator from "../modules/UserCourseCreator";
+import { Paths } from "../models/paths";
 
 function UserCoursesPage() {
     const { toNext } = useHistoryNavigation();

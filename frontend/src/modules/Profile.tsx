@@ -1,6 +1,6 @@
 import profileImage from "../assets/img/profile.svg";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
-import { Paths } from "../models/enums";
+import { Paths } from "../models/paths";
 import { useEffect, useState } from "react";
 import { Modal } from "../components/Modal";
 import { useRemoveUser } from "../hooks/userHooks";

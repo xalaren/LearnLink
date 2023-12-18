@@ -5,7 +5,7 @@ import { PublicPage } from "./pages/PublicPage";
 import { LoginPage } from "./pages/LoginPage";
 import { InvalidPage } from "./pages/InvalidPage";
 import { RegisterPage } from "./pages/RegisterPage";
-import { EditActions, Paths } from "./models/enums";
+import { EditActions } from "./models/enums";
 import ProfilePage from "./pages/ProfilePage";
 import EditUserPage from "./pages/EditUserPage";
 import { useEffect } from "react";
@@ -14,6 +14,8 @@ import { useAppDispatch, useAppSelector } from "./hooks/redux";
 import Footer from "./modules/Footer";
 import CoursePage from "./pages/CoursePage";
 import UserCoursesPage from "./pages/UserCoursesPage";
+import { Paths } from "./models/paths";
+import ModulePage from "./pages/ModulePage";
 
 
 function App() {
@@ -38,9 +40,10 @@ function App() {
                 <Route path={Paths.userCoursesPath + '/:type'} element={<UserCoursesPage />}></Route>
                 <Route path={Paths.editUserPath} element={<EditUserPage action={EditActions.editUser} />}></Route>
                 <Route path={Paths.editPasswordPath} element={<EditUserPage action={EditActions.editPassword} />}></Route>
-                <Route path={Paths.courseViewPath + '/:id'} element={<CoursePage />}></Route>
+                <Route path={Paths.courseViewFullPath} element={<CoursePage />}></Route>
+                <Route path={Paths.moduleViewFullPath} element={<ModulePage />}></Route>
                 <Route path="*" element={<InvalidPage />}></Route>
-            </Routes>
+            </Routes >
 
             <Footer />
 
