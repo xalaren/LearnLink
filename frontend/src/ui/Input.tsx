@@ -29,7 +29,7 @@ export function Input({ type, name, width = 300, errorMessage, onChange, value, 
                     onChange={onChange}
                     placeholder="Введите описание курса (Необязательно)..."
                     style={{ width: '500px' }}
-                    className="rich-text"
+                    className="rich-text-violet"
                     value={value}
                 /> :
                 <input

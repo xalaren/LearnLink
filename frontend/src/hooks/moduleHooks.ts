@@ -12,7 +12,7 @@ export function useGetCourseModules() {
 
 
 
-    const getCoursesQuery = async (courseId: number, accessToken: string) => {
+    const getModulesQuery = async (courseId: number, accessToken: string) => {
         try {
             setLoading(true);
             const response = await axiosInstance.get<IValueResponse<Module[]>>(`${MODULE_ENDPOINRS_URL}/get-course-modules?courseId=${courseId}`, {
@@ -34,5 +34,10 @@ export function useGetCourseModules() {
         }
     }
 
-    return { getCoursesQuery, modules, error, loading }
+    const resetValues = () => {
+        setError('');
+        setLoading(false);
+    }
+
+    return { getModulesQuery, modules, error, loading }
 }

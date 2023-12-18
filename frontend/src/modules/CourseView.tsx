@@ -125,7 +125,7 @@ function CourseView({ courseId }: ICourseViewProps) {
                     </div>
 
                     <div className="course-view__content">
-                        <ModulesContainer />
+                        <ModulesContainer allowEdit={isCreator} courseId={course.id} />
                     </div>
 
                     <CourseInfoSidebar course={course} isSubscriber={isSubscriber} isCreator={isCreator} subscriptionChanged={() => setSubscriptionChanged(true)} />
@@ -144,7 +144,7 @@ function CourseView({ courseId }: ICourseViewProps) {
                         defaultCourse={course}
                     />
 
-                    <Modal title="Удаление профиля" active={removeModalActive} onClose={() => setRemoveModalActive(false)}>
+                    <Modal title="Удаление курса" active={removeModalActive} onClose={() => setRemoveModalActive(false)}>
                         <p className="regular-red" style={{
                             marginBottom: "40px",
                         }}>Вы уверены, что хотите удалить курс?</p>

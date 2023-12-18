@@ -15,6 +15,7 @@ import { useHistoryNavigation } from "../hooks/historyNavigation";
 import CreatedCourseContainer from "./CreatedCoursesContainer";
 import SubscribedCoursesContainer from "./SubscribedCoursesContainer";
 import { ErrorModal } from "../components/ErrorModal";
+import { PlusIcon } from "../ui/PlusIcon";
 
 
 function UserCourseCreator() {
@@ -94,9 +95,7 @@ function UserCourseCreator() {
             <MainHeaderViaNav title="Мои доступные курсы">
                 <button className="button-gray-violet" style={{ width: '50px', height: '50px' }} onClick={() => setCreateModalActive(true)}>
 
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.2} stroke="currentColor" style={{ width: '30px', height: '30px' }}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                    </svg>
+                    <PlusIcon />
                 </button>
             </MainHeaderViaNav>
 

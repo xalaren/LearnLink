@@ -41,7 +41,6 @@ export function Header() {
                             iconPath: userIcon,
                         },
                         {
-                            //TODO: make real redirection to courses page
                             title: 'Мои курсы',
                             onClick: () => toNext(`${Paths.userCoursesPath}/${ViewTypes.created}`),
                             iconPath: starIcon,
@@ -49,13 +48,9 @@ export function Header() {
                         {
                             title: 'Выйти',
                             onClick: () => {
-                                dispatch(logout())
-                                    .then(() => {
-                                        dispatch(fetchUser());
-                                    })
-                                    .then(() => {
-                                        toNext(Paths.homePath);
-                                    });
+                                dispatch(logout());
+                                dispatch(fetchUser());
+                                toNext(Paths.homePath);
                             },
                             iconPath: powerIcon,
                         }]}

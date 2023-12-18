@@ -1,6 +1,6 @@
 import { CSSProperties } from "react";
 import { IDropdownData } from "../models/interfaces";
-import { Arrow } from "../ui/Arrow";
+import { ArrowIcon } from "../ui/ArrowIcon";
 import { Dropdown } from "../ui/Dropdown";
 
 interface IDropdownButtonProps {
@@ -14,7 +14,7 @@ export function DropdownButton({ title, children, itemStyles }: IDropdownButtonP
         <Dropdown options={children} itemStyles={itemStyles}>
             <div className="dropdown-button__head">
                 <p className="dropdown__title">{title}</p>
-                <Arrow className="dropdown__arrow" />
+                <ArrowIcon className="dropdown__arrow" />
             </div>
         </Dropdown>
     );

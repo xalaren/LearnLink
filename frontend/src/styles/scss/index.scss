@@ -213,7 +213,6 @@ p {
 
 .button-base {
     box-sizing: border-box;
-    min-height: 50px;
     border-radius: $minBorderRadius;
     display: flex;
     justify-content: center;
@@ -224,15 +223,19 @@ p {
     border: none;
     outline: none;
     cursor: pointer;
+    transition: .3s ease-in-out all;
+}
 
+.regular-button-base {
+    @extend .button-base;
+    min-height: 50px;
 }
 
 .button-orange {
-    @extend .button-base;
+    @extend .regular-button-base;
     border: solid 2px $orange;
     background-color: $white;
     color: $orange;
-    transition: .3s ease-in-out;
 
     &:hover {
         border-color: transparent;
@@ -242,11 +245,10 @@ p {
 }
 
 .button-violet {
-    @extend .button-base;
+    @extend .regular-button-base;
     border: solid 2px $violet;
     background-color: $white;
     color: $violet;
-    transition: .3s ease-in-out;
 
     &:hover {
         border-color: transparent;
@@ -256,30 +258,79 @@ p {
 }
 
 .button-gray-violet {
-    @extend .button-base;
-    border: solid 2px $gray-3;
-    background-color: $white;
-    color: $violet;
-    transition: .3s ease-in-out;
+    @extend .regular-button-base;
+    border: none;
+    background-color: $light-gray;
+    color: $dark-gray;
 
     &:hover {
-        border-color: transparent;
         background-color: $violet;
         color: $white;
     }
 }
 
 .button-red {
-    @extend .button-base;
+    @extend .regular-button-base;
     border: solid 2px $red;
     background-color: $white;
     color: $red;
-    transition: .3s ease-in-out;
 
     &:hover {
         border-color: transparent;
         background-color: $red;
         color: $white;
+    }
+}
+
+.transparent-button {
+    @extend .button-base;
+    height: 40px;
+    width: 40px;
+
+    * {
+        transition: .3s ease-in-out all;
+    }
+}
+
+.transparent-red-button {
+    @extend .transparent-button;
+    background-color: $transparent-red;
+    color: $red;
+
+    svg path {
+        color: $red;
+        stroke: $red;
+        transition: inherit;
+    }
+
+    &:hover {
+        background-color: $red;
+        color: $white;
+
+        svg path {
+            stroke: $white;
+        }
+    }
+}
+
+.transparent-green-button {
+    @extend .transparent-button;
+    background-color: $transparent-green;
+    color: $green;
+
+    svg path {
+        color: $green;
+        stroke: $green;
+        transition: inherit;
+    }
+
+    &:hover {
+        background-color: $green;
+        color: $white;
+
+        svg path {
+            stroke: $white;
+        }
     }
 }
 
@@ -700,6 +751,10 @@ p {
     }
 }
 
+.course-view__modules {
+    margin-right: 60px;
+}
+
 .description {
     font-size: $reg-fz;
     line-height: 1.5;
@@ -793,7 +848,15 @@ p {
 .rich-text {
     @extend .base-input;
     resize: none;
-    min-height: 150px;
+    min-height: 250px;
+}
+
+.rich-text-violet {
+    @extend .rich-text;
+
+    &:focus {
+        border: solid 2px $violet;
+    }
 }
 
 .checkbox-container {
@@ -916,4 +979,38 @@ p {
     display: flex;
     flex-direction: column;
     gap: 20px;
+}
+
+.module-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    button {
+        margin-bottom: 20px;
+    }
+}
+
+.module-item {
+    min-height: 60px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    cursor: pointer;
+    transition: .3s ease-in-out all;
+    border-radius: 5px;
+
+    &:hover {
+        background-color: $light-violet;
+    }
+}
+
+.line-input {
+    @extend .base-input;
+    border: none;
+
+    &:focus {
+        border: none;
+    }
 }
