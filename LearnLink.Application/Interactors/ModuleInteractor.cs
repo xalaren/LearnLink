@@ -234,6 +234,7 @@ namespace LearnLink.Application.Interactors
             {
                 var existModule = await unitOfWork.Modules.FindAsync(moduleId);
 
+
                 if(existModule == null)
                 {
                     throw new NotFoundException("Модуль не найден");

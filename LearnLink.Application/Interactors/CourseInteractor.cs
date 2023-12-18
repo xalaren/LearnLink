@@ -374,13 +374,24 @@ namespace LearnLink.Application.Interactors
             {
                 var course = await unitOfWork.Courses.FindAsync(courseId);
 
-
                 if (course == null)
                 {
                     throw new NotFoundException("Курс не найден");
                 }
 
                 unitOfWork.Courses.Remove(course);
+
+                var modules = unitOfWork.CourseModules
+                    .Where(m => m.CourseId == courseId)
+                    .Join(
+                        unitOfWork.Modules,
+                        courseModule => courseModule.ModuleId,
+                        module => module.Id,
+                        (courseModule, module) => module
+                    );
+
+                unitOfWork.Modules.RemoveRange(modules);
+
                 await unitOfWork.CommitAsync();
 
                 return new Response()

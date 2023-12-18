@@ -432,13 +432,13 @@ p {
 .transparent-button, .transparent-green-button, .transparent-red-button {
   height: 40px;
   width: 40px;
+  background-color: transparent;
 }
 .transparent-button *, .transparent-green-button *, .transparent-red-button * {
   transition: 0.3s ease-in-out all;
 }
 
 .transparent-red-button {
-  background-color: #ffe0e2;
   color: #FF2F3B;
 }
 .transparent-red-button svg path {
@@ -455,7 +455,6 @@ p {
 }
 
 .transparent-green-button {
-  background-color: #e0fff0;
   color: #1dc195;
 }
 .transparent-green-button svg path {

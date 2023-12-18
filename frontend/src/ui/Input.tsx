@@ -41,9 +41,6 @@ export function Input({ type, name, width = 300, errorMessage, onChange, value, 
                     value={value}
                 />
             }
-
-
-
         </li>
     );
 }

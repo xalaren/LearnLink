@@ -3,7 +3,7 @@ export class Module {
     title: string;
     description?: string;
 
-    constructor(title: string, id: number = 0, description?: string) {
+    constructor(title: string, description?: string, id: number = 0,) {
         this.id = id;
         this.title = title;
         this.description = description;

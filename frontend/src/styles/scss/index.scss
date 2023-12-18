@@ -286,6 +286,7 @@ p {
     @extend .button-base;
     height: 40px;
     width: 40px;
+    background-color: transparent;
 
     * {
         transition: .3s ease-in-out all;
@@ -294,7 +295,6 @@ p {
 
 .transparent-red-button {
     @extend .transparent-button;
-    background-color: $transparent-red;
     color: $red;
 
     svg path {
@@ -315,7 +315,6 @@ p {
 
 .transparent-green-button {
     @extend .transparent-button;
-    background-color: $transparent-green;
     color: $green;
 
     svg path {

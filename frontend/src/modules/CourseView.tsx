@@ -37,7 +37,7 @@ function CourseView({ courseId }: ICourseViewProps) {
     const [updateRequest, setUpdateRequest] = useState(true);
 
     useEffect(() => {
-        if (!user || !accessToken || courseId === 0) {
+        if (courseId === 0) {
             return;
         }
 
