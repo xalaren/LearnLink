@@ -34,7 +34,6 @@ function CourseView({ courseId, moduleId }: IModuleViewProps) {
     const [isEditModalActive, setEditModalActive] = useState(false);
     const [removeModalActive, setRemoveModalActive] = useState(false);
     const [updateRequest, setUpdateRequest] = useState(true);
-    const [statusesLoaded, setStatusesLoaded] = useState(false);
 
     useEffect(() => {
         if (courseId === 0) {
