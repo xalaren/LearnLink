@@ -93,6 +93,12 @@ function CourseView({ courseId, moduleId }: IModuleViewProps) {
         <>
             {localLoading && <Loader />}
 
+            {(!isCreator && !isSubscriber) &&
+                <p>
+                    Необходимо иметь статус подписчика или создателя для просмотра модуля...
+                </p>
+            }
+
             {!localError && !localLoading && module && (isCreator || isSubscriber) &&
                 <section className="course-view">
                     <div className="course-view__header container__header">
