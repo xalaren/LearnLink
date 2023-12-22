@@ -101,6 +101,4 @@ export function LoginForm() {
             <ErrorModal active={isModalActive} error={error} onClose={closeModal} />
         </>
     );
-
-
 }

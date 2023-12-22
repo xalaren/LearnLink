@@ -6,9 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LearnLink.WebApi.Controllers
 {
-    /// <summary>
-    /// Контроллер для управления курсами
-    /// </summary>
     [ApiController]
     [Route("api/Courses")]
     public class CourseController : Controller

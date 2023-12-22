@@ -8,14 +8,14 @@ import { RegisterPage } from "./pages/RegisterPage";
 import { EditActions } from "./models/enums";
 import ProfilePage from "./pages/ProfilePage";
 import EditUserPage from "./pages/EditUserPage";
-import { useEffect } from "react";
-import { fetchUser } from "./store/actions/userActionCreators";
-import { useAppDispatch, useAppSelector } from "./hooks/redux";
 import Footer from "./modules/Footer";
 import CoursePage from "./pages/CoursePage";
 import UserCoursesPage from "./pages/UserCoursesPage";
 import { Paths } from "./models/paths";
 import ModulePage from "./pages/ModulePage";
+import { useAppDispatch, useAppSelector } from "./hooks/redux";
+import { useEffect } from "react";
+import { fetchUser } from "./store/actions/userActionCreators";
 
 
 function App() {
@@ -46,8 +46,6 @@ function App() {
             </Routes >
 
             <Footer />
-
-            {/* <ErrorModal active={isErrorModalActive} error={error} onClose={closeModal} /> */}
         </>
     );
 }

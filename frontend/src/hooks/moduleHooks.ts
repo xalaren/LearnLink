@@ -4,7 +4,6 @@ import { AxiosError } from "axios";
 import axiosInstance from "../axios_config/axiosConfig";
 import { MODULE_ENDPOINRS_URL } from "../models/constants";
 import { IValueResponse, IVoidResponse } from "../models/response";
-import { useAppSelector } from "./redux";
 
 export function useGetCourseModules() {
     const [error, setError] = useState('');
@@ -36,7 +35,7 @@ export function useGetCourseModules() {
         setLoading(false);
     }
 
-    return { getModulesQuery, modules, error, loading }
+    return { getModulesQuery, modules, error, loading, resetValues }
 }
 
 export function useCreateModules() {

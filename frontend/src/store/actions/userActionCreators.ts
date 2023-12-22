@@ -1,7 +1,7 @@
 import { userSlice } from "../reducers/userSlice"
 import { AppDispatch } from "../store"
 import { User } from "../../models/user"
-import { ACCESS_KEY, BASE_URL, USER_ENDPOINTS_URL } from "../../models/constants"
+import { ACCESS_KEY, USER_ENDPOINTS_URL } from "../../models/constants"
 import { AxiosError } from "axios"
 import { IValueResponse } from "../../models/response"
 import axiosInstance from "../../axios_config/axiosConfig"
