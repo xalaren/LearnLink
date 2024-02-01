@@ -1,5 +1,6 @@
 ﻿using LearnLink.Application.Helpers;
 using LearnLink.Application.Transaction;
+using LearnLink.Core.Constants;
 using LearnLink.Core.Exceptions;
 using LearnLink.Shared.Responses;
 using Microsoft.EntityFrameworkCore;
@@ -23,14 +24,26 @@ namespace LearnLink.Application.Interactors
                     throw new AccessLevelException("Доступ отклонен");
                 }
 
-                var user = await unitOfWork.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Nickname == nickname);
+                var userByNickname = await unitOfWork.Users.FirstOrDefaultAsync(u => u.Nickname == nickname);
 
-                if (user == null)
+                var adminRole = await unitOfWork.Roles.FirstOrDefaultAsync(role => role.Sign == RoleSignConstants.ADMIN);
+
+                if(adminRole == null)
+                {
+                    throw new CustomException("Ошибка при получении роли пользователя");
+                }
+
+                if (userByNickname == null)
                 {
                     throw new NotFoundException("Пользователь не найден");
                 }
 
-                if (user.Id != userId)
+                unitOfWork.Users.Entry(userByNickname)
+                            .Reference(u => u.Role)
+                            .Load();
+
+
+                if (userByNickname.Id != userId && userByNickname.Role.Id != adminRole.Id)
                 {
                     throw new AccessLevelException("Доступ отклонен");
                 }

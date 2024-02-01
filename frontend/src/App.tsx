@@ -8,7 +8,7 @@ import { RegisterPage } from "./pages/RegisterPage";
 import { EditActions } from "./models/enums";
 import ProfilePage from "./pages/ProfilePage";
 import EditUserPage from "./pages/EditUserPage";
-import Footer from "./modules/Footer";
+import Footer from "./components/Footer";
 import CoursePage from "./pages/CoursePage";
 import UserCoursesPage from "./pages/UserCoursesPage";
 import { Paths } from "./models/paths";

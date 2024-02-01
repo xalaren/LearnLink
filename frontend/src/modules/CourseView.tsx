@@ -9,11 +9,11 @@ import { ViewTypes } from "../models/enums";
 import CourseInfoSidebar from "./CourseInfoSidebar";
 import ModulesContainer from "./ModulesContainer";
 import EllipsisDropdown from "../components/EllipsisDropdown";
-import penCircle from "../assets/img/pen-circle.svg"
-import crossCircle from "../assets/img/cross-circle.svg"
 import CourseEditModule from "./CourseEditModule";
 import { Modal } from "../components/Modal";
 import { Paths } from "../models/paths";
+import { DropdownState } from "../contexts/DropdownContext";
+import DropdownItem from "../ui/DropdownItem";
 
 interface ICourseViewProps {
     courseId: number;
@@ -46,6 +46,8 @@ function CourseView({ courseId }: ICourseViewProps) {
             fetchCourse();
             setUpdateRequest(false);
         }
+
+        fetchUserStatus();
 
     }, [courseId, user, accessToken, updateRequest]);
 
@@ -84,6 +86,10 @@ function CourseView({ courseId }: ICourseViewProps) {
         }
     }
 
+    async function fetchUserStatus() {
+        if (user && accessToken) await getStatusesQuery(user.id!, courseId, accessToken);
+    }
+
     async function removeCourse() {
         if (user && course && accessToken) await (removeCourseQuery(user.id, course.id, accessToken));
     }
@@ -103,20 +109,13 @@ function CourseView({ courseId }: ICourseViewProps) {
                     <div className="course-view__header container__header">
                         <h2 className="course-view__title medium-big">{course.title}</h2>
                         {isCreator && <nav className="container__navigation">
-                            <EllipsisDropdown>
-                                {[
-                                    {
-                                        title: "Редактировать",
-                                        onClick: () => { setEditModalActive(true) },
-                                        iconPath: penCircle
-                                    },
-                                    {
-                                        title: "Удалить",
-                                        onClick: () => { setRemoveModalActive(true) },
-                                        iconPath: crossCircle,
-                                    }
-                                ]}
-                            </EllipsisDropdown>
+                            <DropdownState>
+                                <EllipsisDropdown>
+                                    <DropdownItem title="Редактировать" onClick={() => { setEditModalActive(true) }} className="icon-pen-circle" />
+                                    <DropdownItem title="Удалить" onClick={() => { setRemoveModalActive(true) }} className="icon-cross-circle" />
+                                </EllipsisDropdown>
+                            </DropdownState>
+
                         </nav>}
                     </div>
                     <div className="course-view__description">

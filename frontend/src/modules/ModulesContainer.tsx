@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { Input } from "../ui/Input";
 import { InputType } from "../models/enums";
-import { PlusIcon } from "../ui/PlusIcon";
 import CrossIcon from "../ui/CrossIcon";
 import CheckIcon from "../ui/CheckIcon";
 import { useCreateModules, useGetCourseModules } from "../hooks/moduleHooks";
@@ -101,8 +100,8 @@ function ModulesContainer({ allowEdit, courseId }: IModulesContainerProps) {
                 <h3>Изучаемые модули</h3>
                 {allowEdit && !inputActive &&
                     <div className="container__navigation">
-                        <button className="button-gray-violet" style={{ width: '50px', height: '50px' }} onClick={() => { setInputActive(true) }}>
-                            <PlusIcon />
+                        <button className="button-gray-violet regular-big" style={{ width: '50px', height: '50px' }} onClick={() => { setInputActive(true) }}>
+                            +
                         </button>
                     </div>
                 }
@@ -125,12 +124,10 @@ function ModulesContainer({ allowEdit, courseId }: IModulesContainerProps) {
                                 className="line-input"
                                 errorMessage={moduleTitleError}
                             />
-                            <button className="transparent-red-button" type="button" onClick={closeInput}>
-                                <CrossIcon />
+                            <button className="transparent-red-button icon-cross" type="button" onClick={closeInput}>
                             </button>
 
-                            <button className="transparent-green-button" type="submit">
-                                <CheckIcon />
+                            <button className="transparent-green-button icon-check" type="submit">
                             </button>
                         </div>
 

@@ -12,11 +12,7 @@ interface IInputProps {
     onChange: (event: React.ChangeEvent) => void
 }
 
-export function Input({ type, name, width = 300, errorMessage, onChange, value, placeholder, className, styles }: IInputProps) {
-    const style = {
-        ...styles,
-        width: width + 'px'
-    }
+export function Input({ type, name, errorMessage, onChange, value, placeholder, className, styles }: IInputProps) {
 
     return (
         <li className="form-input">
@@ -28,7 +24,7 @@ export function Input({ type, name, width = 300, errorMessage, onChange, value, 
                     name="courseDescription"
                     onChange={onChange}
                     placeholder="Введите описание курса (Необязательно)..."
-                    style={{ width: '500px' }}
+                    style={styles}
                     className="rich-text-violet"
                     value={value}
                 /> :
@@ -36,7 +32,7 @@ export function Input({ type, name, width = 300, errorMessage, onChange, value, 
                     className={`${errorMessage ? 'red-input' : 'violet-input'} ${className}`}
                     type={type} name={name}
                     placeholder={placeholder}
-                    style={style}
+                    style={styles}
                     onChange={onChange}
                     value={value}
                 />

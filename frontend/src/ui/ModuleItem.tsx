@@ -1,5 +1,4 @@
 import { Module } from "../models/module";
-import ModuleIcon from "./ModuleIcon";
 
 interface IModuleItemProps {
     module: Module;
@@ -9,7 +8,7 @@ interface IModuleItemProps {
 function ModuleItem({ module, onClick }: IModuleItemProps) {
     return (
         <li className="module-item" onClick={onClick}>
-            <ModuleIcon />
+            <div className="medium-little-violet icon-module medium-3"></div>
             <p className="medium-little-violet">{module.title}</p>
         </li>
     );

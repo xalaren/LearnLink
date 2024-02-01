@@ -9,7 +9,7 @@ namespace LearnLink.WebApi.Helpers
             var connection = config.GetConnectionString("MySqlConnection");
 
             return builder
-                .UseMySql(connection, new MySqlServerVersion(new Version(8, 0, 34)), b => b.MigrationsAssembly("LearnLink.WebApi"))
+                .UseMySql(connection, new MySqlServerVersion(new Version(8, 0, 35)), b => b.MigrationsAssembly("LearnLink.WebApi"))
                 .Options;
         }
 

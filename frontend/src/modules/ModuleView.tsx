@@ -12,6 +12,8 @@ import { Modal } from "../components/Modal";
 import { useGetModule, useRemoveModule } from "../hooks/moduleHooks";
 import ModuleEditModal from "./ModuleEditModal";
 import { Paths } from "../models/paths";
+import { DropdownState } from "../contexts/DropdownContext";
+import DropdownItem from "../ui/DropdownItem";
 
 interface IModuleViewProps {
     courseId: number;
@@ -104,20 +106,12 @@ function CourseView({ courseId, moduleId }: IModuleViewProps) {
                     <div className="course-view__header container__header">
                         <h2 className="course-view__title medium-big">{module.title}</h2>
                         {isCreator && <nav className="container__navigation">
-                            <EllipsisDropdown>
-                                {[
-                                    {
-                                        title: "Редактировать",
-                                        onClick: () => { setEditModalActive(true) },
-                                        iconPath: penCircle
-                                    },
-                                    {
-                                        title: "Удалить",
-                                        onClick: () => { setRemoveModalActive(true) },
-                                        iconPath: crossCircle,
-                                    }
-                                ]}
-                            </EllipsisDropdown>
+                            <DropdownState>
+                                <EllipsisDropdown>
+                                    <DropdownItem title='Редактировать' className="icon-pen-circle" onClick={() => setEditModalActive(true)} />
+                                    <DropdownItem title='Удалить' className="icon-cross-circle" onClick={() => setRemoveModalActive(true)} />
+                                </EllipsisDropdown>
+                            </DropdownState>
                         </nav>}
                     </div>
                     <div className="course-view__description">

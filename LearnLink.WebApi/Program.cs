@@ -140,7 +140,6 @@ namespace LearnLink.WebApi
 
             app.UseAuthorization();
 
-            app.MapRazorPages();
             app.MapControllers();
 
             app.UseSeedData();

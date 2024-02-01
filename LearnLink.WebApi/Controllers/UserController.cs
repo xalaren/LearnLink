@@ -13,10 +13,10 @@ namespace CoursePrototype.WebApi.Controllers
         private readonly UserInteractor userInteractor;
         private readonly UserVerifierService userVerifierService;
 
-        public UserController(UserInteractor userInteractor, UserVerifierService verifierService)
+        public UserController(UserInteractor userInteractor, UserVerifierService userVerifierService)
         {
             this.userInteractor = userInteractor;
-            this.userVerifierService = verifierService;
+            this.userVerifierService = userVerifierService;
 
         }
 

@@ -1,21 +1,20 @@
-import { CSSProperties, useEffect, useState } from "react";
-import { IDropdownData } from "../models/interfaces";
+import { CSSProperties, useEffect } from "react";
 
 interface IDropdownProps {
+    onDeselect: () => void;
+    active: boolean;
     children: React.ReactNode;
-    options: IDropdownData[];
+    content: React.ReactNode;
     itemStyles?: CSSProperties;
 }
 
-export function Dropdown({ children, options, itemStyles }: IDropdownProps) {
-    const [active, setActive] = useState(false);
-
+export function Dropdown({ onDeselect, active, children, content, itemStyles }: IDropdownProps) {
     useEffect(() => {
         const closeDropdown = (event: MouseEvent) => {
             const target = event.target as HTMLElement;
 
             if (!target.closest('.dropdown')) {
-                setActive(false);
+                onDeselect();
             }
 
         };
@@ -24,27 +23,15 @@ export function Dropdown({ children, options, itemStyles }: IDropdownProps) {
         return () => {
             document.removeEventListener('click', closeDropdown);
         };
-    }, [active]);
+    }, [onDeselect]);
 
 
     return (
         <div className="dropdown">
-            <div className="dropdown__head" onClick={() => setActive(prev => !prev)}>
-                {children}
-            </div>
-
+            {children}
             {active &&
                 <ul className="dropdown__items" style={itemStyles}>
-                    {options && options.map(option =>
-                        <li className="dropdown__item" onClick={() => {
-                            if (option.onClick) option.onClick();
-                            setActive(false);
-                        }} key={options.indexOf(option)}>
-                            {option.iconPath &&
-                                <img className="dropdown__icon" src={option.iconPath} alt="icon" />}
-                            {option.title}
-                        </li>)
-                    }
+                    {content}
                 </ul>
             }
         </div >

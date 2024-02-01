@@ -129,8 +129,8 @@ namespace LearnLink.WebApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ModuleLessons_Modules_LessonId",
-                        column: x => x.LessonId,
+                        name: "FK_ModuleLessons_Modules_ModuleId",
+                        column: x => x.ModuleId,
                         principalTable: "Modules",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);

@@ -129,7 +129,8 @@ a {
   text-decoration: none;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   line-height: 1;
   font-size: 16px;
@@ -138,6 +139,7 @@ html, body {
 
 * {
   box-sizing: border-box;
+  min-width: 0;
 }
 
 h1,

@@ -15,7 +15,6 @@ import { useHistoryNavigation } from "../hooks/historyNavigation";
 import CreatedCourseContainer from "./CreatedCoursesContainer";
 import SubscribedCoursesContainer from "./SubscribedCoursesContainer";
 import { ErrorModal } from "../components/ErrorModal";
-import { PlusIcon } from "../ui/PlusIcon";
 import { Paths } from "../models/paths";
 
 
@@ -94,9 +93,8 @@ function UserCourseCreator() {
     return (
         <>
             <MainHeaderViaNav title="Мои доступные курсы">
-                <button className="button-gray-violet" style={{ width: '50px', height: '50px' }} onClick={() => setCreateModalActive(true)}>
-
-                    <PlusIcon />
+                <button className="button-gray-violet regular-big" style={{ width: '50px', height: '50px' }} onClick={() => setCreateModalActive(true)}>
+                    +
                 </button>
             </MainHeaderViaNav>
 
@@ -131,7 +129,6 @@ function UserCourseCreator() {
                             onChange={onChange}
                             errorMessage={courseTitleError}
                             placeholder="Введите название курса..."
-                            width={500}
                         />
 
                         <p className="medium-little">Описание курса</p>
@@ -140,7 +137,6 @@ function UserCourseCreator() {
                             name="courseDescription"
                             onChange={onChange}
                             placeholder="Введите описание курса (Необязательно)..."
-                            styles={{ width: '500px' }}
                             value={courseDescription}
                         />
                         <Checkbox label="Общедоступный курс" isChecked={isPublicCourse} checkedChanger={() => { setPublicCourse(prev => !prev) }} />

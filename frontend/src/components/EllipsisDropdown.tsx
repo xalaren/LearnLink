@@ -1,17 +1,17 @@
-import { IDropdownData } from "../models/interfaces";
 import { Dropdown } from "../ui/Dropdown";
-import ellipsis from "../assets/img/ellipsis.svg"
+import { DropdownContext } from "../contexts/DropdownContext";
+import { useContext } from "react";
 
 interface IEllipsisDropdownProps {
-    children: IDropdownData[];
+    children: React.ReactNode;
 }
 
 function EllipsisDropdown({ children }: IEllipsisDropdownProps) {
+    const { active, toggle, deselect } = useContext(DropdownContext);
     return (
         <div className="ellipsis">
-            <Dropdown options={children}>
-                <div className="ellipsis__icon">
-                    <img src={ellipsis} />
+            <Dropdown active={active} onDeselect={deselect} content={children}>
+                <div className="ellipsis__icon icon-ellipsis" onClick={toggle}>
                 </div>
             </Dropdown>
         </div>
