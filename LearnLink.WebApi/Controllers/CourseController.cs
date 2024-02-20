@@ -41,43 +41,43 @@ namespace LearnLink.WebApi.Controllers
 
         [Authorize]
         [HttpGet("get-user-courses")]
-        public async Task<Response<CourseDto[]>> GetUserCreatedCoursesAsync(int userId)
+        public async Task<Response<DataPage<CourseDto[]>>> GetUserCreatedCoursesAsync(int userId, int page, int size)
         {
             var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
 
             if (!verifyResponse.Success)
             {
-                return new Response<CourseDto[]>()
+                return new Response<DataPage<CourseDto[]>>()
                 {
                     Success = verifyResponse.Success,
                     Message = verifyResponse.Message,
                 };
             }
 
-            return await courseInteractor.GetCoursesCreatedByUserAsync(userId);
+            return await courseInteractor.GetCoursesCreatedByUserAsync(userId, new DataPageHeader(page, size));
         }
 
 
         [AllowAnonymous]
         [HttpGet("get-public")]
-        public async Task<Response<CourseDto[]>> GetPublicCoursesAsync()
+        public async Task<Response<DataPage<CourseDto[]>>> GetPublicCoursesAsync(int page, int size)
         {
-            return await courseInteractor.GetPublicCoursesAsync();
+            return await courseInteractor.GetPublicCoursesAsync(new DataPageHeader(page, size));
         }
 
         [Authorize]
         [HttpGet("get-subscribed")]
-        public async Task<Response<CourseDto[]>> GetSubscribedCoursesAsync(int userId)
+        public async Task<Response<DataPage<CourseDto[]>>> GetSubscribedCoursesAsync(int userId, int page, int size)
         {
             var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
 
-            if (!verifyResponse.Success) return new Response<CourseDto[]>()
+            if (!verifyResponse.Success) return new Response<DataPage<CourseDto[]>>()
             {
                 Success = verifyResponse.Success,
                 Message = verifyResponse.Message,
             };
 
-            return await courseInteractor.GetSubscribedCoursesAsync(userId);
+            return await courseInteractor.GetSubscribedCoursesAsync(userId, new DataPageHeader(page, size));
         }
 
         [Authorize]

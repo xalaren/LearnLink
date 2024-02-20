@@ -132,7 +132,7 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task<Response<CourseDto[]>> GetCoursesCreatedByUserAsync(int userId)
+        public async Task<Response<DataPage<CourseDto[]>>> GetCoursesCreatedByUserAsync(int userId, DataPageHeader pageHeader)
         {
             try
             {
@@ -143,7 +143,7 @@ namespace LearnLink.Application.Interactors
                     throw new NotFoundException("Пользователь не найден");
                 }
 
-                var courses = await unitOfWork.UserCreatedCourses
+                var courses = unitOfWork.UserCreatedCourses
                     .AsNoTracking()
                     .Where(u => u.UserId == userId)
                     .Join(
@@ -151,15 +151,28 @@ namespace LearnLink.Application.Interactors
                         userCreatedCourse => userCreatedCourse.CourseId,
                         course => course.Id,
                         (userCreatedCourse, course) => course
-                    )
+                    );
+                var total = courses.Count();
+
+                var result = await courses
+                    .Skip((pageHeader.PageNumber - 1) * pageHeader.PageSize)
+                    .Take(pageHeader.PageSize)
                     .Select(course => course.ToDto())
                     .ToArrayAsync();
+
+                var dataPage = new DataPage<CourseDto[]>()
+                {
+                    PageNumber = pageHeader.PageNumber,
+                    PageSize = pageHeader.PageSize,
+                    ItemsCount = total,
+                    Values = result
+                };
 
                 return new()
                 {
                     Success = true,
                     Message = "Курсы пользователя успешно получены",
-                    Value = courses,
+                    Value = dataPage,
                 };
             }
             catch (CustomException exception)
@@ -181,11 +194,13 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task<Response<CourseDto[]>> GetSubscribedCoursesAsync(int userId)
+        public async Task<Response<DataPage<CourseDto[]>>> GetSubscribedCoursesAsync(int userId, DataPageHeader pageHeader)
         {
             try
             {
-                var user = await unitOfWork.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == userId);
+                var user = await unitOfWork.Users
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(u => u.Id == userId);
 
                 if (user == null)
                 {
@@ -194,7 +209,7 @@ namespace LearnLink.Application.Interactors
 
                 var subscriptions = await unitOfWork.Subscriptions.AsNoTracking().FirstOrDefaultAsync(s => s.UserId == userId);
 
-                var courses = await unitOfWork.Subscriptions
+                var courses = unitOfWork.Subscriptions
                     .AsNoTracking()
                     .Where(s => s.UserId == userId)
                     .Join(
@@ -202,15 +217,29 @@ namespace LearnLink.Application.Interactors
                         sub => sub.CourseId,
                         course => course.Id,
                         (sub, course) => course
-                    )
+                    );
+
+                var total = courses.Count();
+
+                var coursesResult = await courses
+                    .Skip((pageHeader.PageNumber - 1) * pageHeader.PageSize)
+                    .Take(pageHeader.PageSize)
                     .Select(course => course.ToDto())
                     .ToArrayAsync();
+
+                var dataPage = new DataPage<CourseDto[]>()
+                {
+                    PageNumber = pageHeader.PageNumber,
+                    PageSize = pageHeader.PageSize,
+                    ItemsCount = total,
+                    Values = coursesResult
+                };
 
                 return new()
                 {
                     Success = true,
                     Message = "Курсы пользователя успешно получены",
-                    Value = courses,
+                    Value = dataPage,
                 };
             }
             catch (CustomException exception)
@@ -287,21 +316,35 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task<Response<CourseDto[]>> GetPublicCoursesAsync()
+        public async Task<Response<DataPage<CourseDto[]>>> GetPublicCoursesAsync(DataPageHeader pageHeader)
         {
             try
             {
+                var total = await unitOfWork.Courses
+                    .AsNoTracking()
+                    .CountAsync();
+
                 var courses = await unitOfWork.Courses
                     .AsNoTracking()
                     .Where(c => c.IsPublic)
+                    .Skip((pageHeader.PageNumber - 1) * pageHeader.PageSize)
+                    .Take(pageHeader.PageSize)
                     .Select(c => c.ToDto())
                     .ToArrayAsync();
+
+                var dataPage = new DataPage<CourseDto[]>()
+                {
+                    PageNumber = pageHeader.PageNumber,
+                    PageSize = pageHeader.PageSize,
+                    ItemsCount = total,
+                    Values = courses
+                };
 
                 return new()
                 {
                     Success = true,
                     Message = "Курсы успешно получены",
-                    Value = courses,
+                    Value = dataPage,
                 };
             }
             catch (CustomException exception)
