@@ -20,5 +20,13 @@ namespace LearnLink.WebApi.Helpers
                 .UseSqlite(connection, b => b.MigrationsAssembly("LearnLink.WebApi"))
                 .Options;
         }
+
+        public static DbContextOptions GetNpgSqlOptions(this DbContextOptionsBuilder builder, IConfiguration config)
+        {
+            var connection = config.GetConnectionString("PostgreSqlConnection");
+            return builder
+                .UseNpgsql(connection, b => b.MigrationsAssembly("LearnLink.WebApi"))
+                .Options;
+        }
     }
 }

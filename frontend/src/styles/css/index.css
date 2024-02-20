@@ -302,9 +302,11 @@ textarea {
 /*  Variables for margins, paddings, etc... end  */
 /*  Variables for breakpoints start  */
 /*  Variables for breakpoints end  */
+/*  Mixins start  */
+/*  Mixins end  */
 /*  Styles for built-in elements start  */
 body {
-  background-color: #f2f2f2;
+  background-color: #FFFFFF;
   font-family: "Golos Text", sans-serif;
 }
 
@@ -314,7 +316,7 @@ h1 {
 }
 @media (max-width: 768px) {
   h1 {
-    font-size: 38px;
+    font-size: 32px;
   }
 }
 @media (max-width: 460px) {
@@ -324,7 +326,7 @@ h1 {
 }
 @media (max-width: 320px) {
   h1 {
-    font-size: 22px;
+    font-size: 16px;
   }
 }
 
@@ -469,7 +471,7 @@ p, .regular, .regular-red, .base-input, .line-input, .rich-text, .rich-text-viol
 }
 @media (max-width: 768px) {
   .footer .footer__container .footer__content {
-    font-size: 10px;
+    font-size: 12px;
   }
 }
 @media (max-width: 460px) {
@@ -479,7 +481,7 @@ p, .regular, .regular-red, .base-input, .line-input, .rich-text, .rich-text-viol
 }
 @media (max-width: 320px) {
   .footer .footer__container .footer__content {
-    font-size: 4px;
+    font-size: 6px;
   }
 }
 
@@ -487,9 +489,10 @@ p, .regular, .regular-red, .base-input, .line-input, .rich-text, .rich-text-viol
 .main {
   background-color: #FFFFFF;
   width: 100%;
-  padding: 60px 40px;
 }
 .main .inner-container {
+  box-sizing: border-box;
+  padding: 60px 0;
   height: 100%;
   width: 100%;
 }
@@ -592,11 +595,8 @@ p, .regular, .regular-red, .base-input, .line-input, .rich-text, .rich-text-viol
   align-items: center;
 }
 
-.course-container {
-  padding: 20px;
-}
-.course-container > *:not(:last-child) {
-  margin-bottom: 40px;
+.course-container > * {
+  margin-top: 40px;
 }
 
 .course-item {
@@ -904,11 +904,11 @@ p, .regular, .regular-red, .base-input, .line-input, .rich-text, .rich-text-viol
 }
 .dropdown .dropdown-button__head {
   display: flex;
-  gap: 10px;
   box-sizing: content-box;
   padding: 20px 30px;
   border-radius: 2px;
   transition: 0.3s ease-in-out;
+  gap: 10px;
 }
 .dropdown .dropdown-button__head:hover {
   background: rgba(0, 0, 0, 0.2);
@@ -916,6 +916,23 @@ p, .regular, .regular-red, .base-input, .line-input, .rich-text, .rich-text-viol
 .dropdown .dropdown-button__head .dropdown__title {
   color: inherit;
 }
+@media (max-width: 576px) {
+  .dropdown .dropdown-button__head {
+    padding: 10px;
+  }
+  .dropdown .dropdown__items .dropdown__item {
+    padding: 10px 8px;
+  }
+}
+@media (max-width: 320px) {
+  .dropdown .dropdown-button__head {
+    padding: 5px;
+  }
+  .dropdown .dropdown__items .dropdown__item {
+    padding: 5px;
+  }
+}
+
 .container__header {
   display: flex;
   justify-content: space-between;
@@ -996,6 +1013,11 @@ p, .regular, .regular-red, .base-input, .line-input, .rich-text, .rich-text-viol
 @media (max-width: 460px) {
   .regular-button-base, .button-red, .button-gray-violet, .button-violet, .button-orange, .white-tp-button {
     min-height: 30px;
+  }
+}
+@media (max-width: 320px) {
+  .regular-button-base, .button-red, .button-gray-violet, .button-violet, .button-orange, .white-tp-button {
+    min-height: 20px;
   }
 }
 
@@ -1333,7 +1355,7 @@ p, .regular, .regular-red, .base-input, .line-input, .rich-text, .rich-text-viol
 }
 @media (max-width: 768px) {
   .regular-big {
-    font-size: 36px;
+    font-size: 34px;
   }
 }
 @media (max-width: 460px) {
@@ -1343,7 +1365,7 @@ p, .regular, .regular-red, .base-input, .line-input, .rich-text, .rich-text-viol
 }
 @media (max-width: 320px) {
   .regular-big {
-    font-size: 20px;
+    font-size: 18px;
   }
 }
 
@@ -1358,7 +1380,7 @@ p, .regular, .regular-red, .base-input, .line-input, .rich-text, .rich-text-viol
 }
 @media (max-width: 768px) {
   .medium-big {
-    font-size: 36px;
+    font-size: 34px;
   }
 }
 @media (max-width: 460px) {
@@ -1368,7 +1390,7 @@ p, .regular, .regular-red, .base-input, .line-input, .rich-text, .rich-text-viol
 }
 @media (max-width: 320px) {
   .medium-big {
-    font-size: 20px;
+    font-size: 18px;
   }
 }
 
@@ -1379,7 +1401,7 @@ p, .regular, .regular-red, .base-input, .line-input, .rich-text, .rich-text-viol
 }
 @media (max-width: 768px) {
   .medium-little, .medium-little-violet {
-    font-size: 14px;
+    font-size: 16px;
   }
 }
 @media (max-width: 460px) {
@@ -1389,7 +1411,7 @@ p, .regular, .regular-red, .base-input, .line-input, .rich-text, .rich-text-viol
 }
 @media (max-width: 320px) {
   .medium-little, .medium-little-violet {
-    font-size: 6px;
+    font-size: 8px;
   }
 }
 

@@ -39,7 +39,7 @@ export function Header() {
 
                 {isAuthenticated &&
                     <DropdownState>
-                        <DropdownButton title={nickname}>
+                        <DropdownButton title={nickname} itemStyles={{ width: '150%' }}>
                             <DropdownItem title="Профиль"
                                 className="icon-user"
                                 onClick={() => toNext(Paths.profilePath)}

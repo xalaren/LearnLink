@@ -7,7 +7,7 @@ namespace LearnLink.WebApi.Extensions
         public static async void UseSeedData(this WebApplication app)
         {
             var scopedFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
-            var scope = scopedFactory.CreateScope();
+            var scope = scopedFactory.CreateAsyncScope();
 
             var service = scope.ServiceProvider.GetRequiredService<SeedData>();
 
@@ -15,6 +15,8 @@ namespace LearnLink.WebApi.Extensions
             await service.InitializeUserRole();
 
             await service.InitializeAdmin();
+
+            await scope.DisposeAsync();
         }
     }
 }

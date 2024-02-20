@@ -50,7 +50,8 @@ namespace LearnLink.WebApi
             builder.Services.AddSingleton(provider => AuthenticationConfig.GetAuthenticationOptions(configuration));
 
 
-            builder.Services.AddDbContext<AppDbContext>(options => options.GetMySqlOptions(configuration));
+            //builder.Services.AddDbContext<AppDbContext>(options => options.GetMySqlOptions(configuration));
+            builder.Services.AddDbContext<AppDbContext>(options => options.GetNpgSqlOptions(configuration));
 
             builder.Services.AddControllers();
 
@@ -134,7 +135,7 @@ namespace LearnLink.WebApi
 
             app.UseHttpsRedirection();
             app.UseRouting();
-            app.UseCors("CorsPolicy");
+            app.UseCors("CorsPolicy");  
 
             app.UseStaticFiles();
 

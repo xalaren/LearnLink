@@ -36,6 +36,7 @@ $white-tp: rgba(255, 255, 255, 0.3);
 $violet: #807DFF;
 $light-violet: #f7f7ff;
 $violet-tp: rgba($violet, .1);
+$violet-tp-2: rgba($violet, .05);
 $orange: #FFAD7E;
 $red: #FF2F3B;
 $green: #1dc195;
@@ -83,11 +84,14 @@ $lg: $maxWidthContainer + $mainPadding;
 //     font-size: calc(#{$mobSize + px} + #{$addSize + px} * ((100vw - 320px) / #{$maxWidth}));
 // }
 
-@mixin adaptive-font($pcSize, $mobSize) {
+
+/*  Mixins start  */
+
+@mixin adaptive-font($pcSize, $mobSize, $decrease) {
     font-size: $pcSize;
 
     @media (max-width: $md) {
-        font-size: $pcSize - 4px;
+        font-size: $pcSize - $decrease;
     }
 
     @media (max-width: $xs) {
@@ -95,47 +99,49 @@ $lg: $maxWidthContainer + $mainPadding;
     }
 
     @media (max-width: $s) {
-        font-size: $mobSize - 4px;
+        font-size: $mobSize - $decrease;
     }
 }
 
 @mixin headingFont1() {
-    @include adaptive-font($h1-fz, $h1-fz-xs);
+    @include adaptive-font($h1-fz, $h1-fz-xs, 10px);
 }
 
 @mixin headingFont2() {
-    @include adaptive-font($h2-fz, $h2-fz-xs);
+    @include adaptive-font($h2-fz, $h2-fz-xs, 4px);
 }
 
 @mixin headingFont3() {
-    @include adaptive-font($h3-fz, $h3-fz-xs);
+    @include adaptive-font($h3-fz, $h3-fz-xs, 4px);
 }
 
 @mixin regularFont() {
-    @include adaptive-font($reg-fz, $reg-fz-xs);
+    @include adaptive-font($reg-fz, $reg-fz-xs, 4px);
 }
 
 @mixin bigFont() {
-    @include adaptive-font($big-fz, $big-fz-xs);
+    @include adaptive-font($big-fz, $big-fz-xs, 6px);
 }
 
 @mixin middleFont() {
-    @include adaptive-font($middle-fz, $middle-fz-xs);
+    @include adaptive-font($middle-fz, $middle-fz-xs, 4px);
 }
 
 @mixin smallFont() {
-    @include adaptive-font($small-fz, $small-fz-xs);
+    @include adaptive-font($small-fz, $small-fz-xs, 2px);
 }
 
 @mixin tinyFont() {
-    @include adaptive-font($tiny-fz, $tiny-fz-xs);
+    @include adaptive-font($tiny-fz, $tiny-fz-xs, 2px);
 }
+
+/*  Mixins end  */
 
 
 /*  Styles for built-in elements start  */
 
 body {
-    background-color: $bg-color;
+    background-color: $white;
     font-family: 'Golos Text', sans-serif;
 }
 
@@ -256,9 +262,10 @@ p {
 .main {
     background-color: $white;
     width: 100%;
-    padding: 60px 40px;
 
     .inner-container {
+        box-sizing: border-box;
+        padding: 60px 0;
         height: 100%;
         width: 100%;
 
@@ -385,10 +392,9 @@ p {
 }
 
 .course-container {
-    padding: 20px;
 
-    >*:not(:last-child) {
-        margin-bottom: 40px;
+    >* {
+        margin-top: 40px;
     }
 }
 
@@ -465,38 +471,46 @@ p {
 }
 
 .profile {
-    height: calc(100% - 150px);
     display: flex;
     flex-direction: column;
     justify-content: center;
-}
 
-.profile__wrapper {
-    width: auto;
-    display: flex;
-    justify-content: center;
-    text-align: center;
+    .profile__wrapper {
+        width: auto;
+        display: flex;
+        justify-content: center;
+        text-align: center;
 
-    >*:not(:last-child) {
-        margin-right: 200px;
+        >*:not(:last-child) {
+            margin-right: 200px;
+        }
+
+        .profile__container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            *:not(:last-child) {
+                margin-bottom: 40px;
+            }
+
+            .profile__image {
+
+                @media(max-width: $md) {
+                    width: 10px;
+                }
+            }
+        }
+
+        .profile__nav {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
     }
 }
 
-.profile__container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 
-    *:not(:last-child) {
-        margin-bottom: 40px;
-    }
-}
-
-.profile__nav {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
 
 .selection-panel {
     display: flex;
@@ -661,11 +675,11 @@ p {
 
     .dropdown-button__head {
         display: flex;
-        gap: 10px;
         box-sizing: content-box;
         padding: 20px 30px;
         border-radius: 2px;
         transition: .3s ease-in-out;
+        gap: 10px;
 
         &:hover {
             background: rgba(0, 0, 0, 0.2);
@@ -676,8 +690,28 @@ p {
         }
     }
 
-    @media (max-width: $md) {
-        .dropdown__items {}
+    @media (max-width: $sm) {
+        .dropdown-button__head {
+            padding: 10px;
+        }
+
+        .dropdown__items {
+            .dropdown__item {
+                padding: 10px 8px;
+            }
+        }
+    }
+
+    @media (max-width: $s) {
+        .dropdown-button__head {
+            padding: 5px;
+        }
+
+        .dropdown__items {
+            .dropdown__item {
+                padding: 5px;
+            }
+        }
     }
 }
 
@@ -752,6 +786,10 @@ p {
 
     @media (max-width: $xs) {
         min-height: 30px;
+    }
+
+    @media (max-width: $s) {
+        min-height: 20px;
     }
 }
 
