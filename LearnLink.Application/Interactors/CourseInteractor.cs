@@ -442,6 +442,32 @@ namespace LearnLink.Application.Interactors
             }
         }
 
+        public async Task<Response<CourseDto[]>> FindCoursesByParameters(string searchString, bool findPublic, bool findUnavailable)
+        {
+            try
+            {
+                //TODO: write find method
+                throw new();
+            }
+            catch(CustomException exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                };
+            }
+            catch(Exception exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = "Не удалось получить курсы",
+                    InnerErrorMessages = new string[] { exception.Message },
+                };
+            }
+        }
+
         public async Task<Response> UpdateCourseAsync(CourseDto courseDto)
         {
             try
