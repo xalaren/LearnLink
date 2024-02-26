@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LearnLink.WebApi.Controllers
 {
     [ApiController]
-    [Route("api/Roles")]
+    [Route("api/roles")]
     public class RoleController : Controller
     {
         private readonly RoleInteractor roleInteractor;

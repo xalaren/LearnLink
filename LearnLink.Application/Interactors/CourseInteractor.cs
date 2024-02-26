@@ -65,8 +65,13 @@ namespace LearnLink.Application.Interactors
                     throw new NotFoundException("Курс не найден");
                 }
 
-                var userCreatedCourse = await unitOfWork.UserCreatedCourses.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == userId && u.CourseId == courseId);
-                var subscription = await unitOfWork.Subscriptions.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == userId && u.CourseId == courseId);
+                var userCreatedCourse = await unitOfWork.UserCreatedCourses
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(u => u.UserId == userId && u.CourseId == courseId);
+
+                var subscription = await unitOfWork.Subscriptions
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(u => u.UserId == userId && u.CourseId == courseId);
 
                 if (!course.IsPublic && userCreatedCourse == null && subscription == null)
                 {
@@ -207,7 +212,10 @@ namespace LearnLink.Application.Interactors
                     throw new NotFoundException("Пользователь не найден");
                 }
 
-                var subscriptions = await unitOfWork.Subscriptions.AsNoTracking().FirstOrDefaultAsync(s => s.UserId == userId);
+                var subscriptions = await unitOfWork
+                    .Subscriptions
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(s => s.UserId == userId);
 
                 var courses = unitOfWork.Subscriptions
                     .AsNoTracking()
@@ -261,14 +269,77 @@ namespace LearnLink.Application.Interactors
             }
         }
 
+        public async Task<Response<DataPage<CourseDto[]>>> GetUnavailableUserCoursesAsync(int userId, DataPageHeader pageHeader)
+        {
+            try
+            {
+                var user = await unitOfWork.Users
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(user => user.Id == userId);
+
+                if (user == null)
+                {
+                    throw new NotFoundException("Пользователь не найден");
+                }
+
+                var courses = unitOfWork.UserCreatedCourses
+                    .AsNoTracking()
+                    .Where(u => u.UserId == userId)
+                    .Join(
+                        unitOfWork.Courses.AsNoTracking(),
+                        userCreatedCourse => userCreatedCourse.CourseId,
+                        course => course.Id,
+                        (userCreatedCourse, course) => course
+                    )
+                    .Where(c => c.IsUnavailable);
+
+                var total = courses.Count();
+
+                var result = await courses
+                    .Skip((pageHeader.PageNumber - 1) * pageHeader.PageSize)
+                    .Take(pageHeader.PageSize)
+                    .Select(course => course.ToDto())
+                    .ToArrayAsync();
+
+                var dataPage = new DataPage<CourseDto[]>()
+                {
+                    PageNumber = pageHeader.PageNumber,
+                    PageSize = pageHeader.PageSize,
+                    ItemsCount = total,
+                    Values = result
+                };
+
+                return new()
+                {
+                    Success = true,
+                    Message = "Курсы пользователя успешно получены",
+                    Value = dataPage,
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = "Не удалось получить курсы",
+                    InnerErrorMessages = new string[] { exception.Message },
+                };
+            }
+        }
+
         public async Task<Response> CreateCourseAsync(int userId, CourseDto courseDto)
         {
             try
             {
-                if (courseDto == null)
-                {
-                    throw new ArgumentNullException("CourseDto was null");
-                }
+                ArgumentNullException.ThrowIfNull(courseDto, "CourseDto was null");
 
                 var user = await unitOfWork.Users.FindAsync(userId);
 
@@ -278,6 +349,11 @@ namespace LearnLink.Application.Interactors
                 }
 
                 var course = courseDto.ToEntity();
+
+                if(course.IsUnavailable)
+                {
+                    course.IsPublic = false;
+                }
 
                 var userCreatedCourse = new UserCreatedCourse()
                 {

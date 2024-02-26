@@ -6,11 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LearnLink.WebApi.Controllers
 {
-    /// <summary>
-    /// Управление подписками пользователя
-    /// </summary>
     [ApiController]
-    [Route("api/Subscriptions")]
+    [Route("api/subscriptions")]
     public class SubscriptionController
     {
         private readonly SubscriptionInteractor subscriptionInteractor;

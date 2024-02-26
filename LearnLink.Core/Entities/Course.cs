@@ -8,6 +8,7 @@ namespace LearnLink.Core.Entities
 
         public int Id { get; set; }
         public bool IsPublic { get; set; } = false;
+        public bool IsUnavailable { get; set; } = false;
         public string? Description { get; set; }
 
         public string Title

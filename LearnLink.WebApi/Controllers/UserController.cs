@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CoursePrototype.WebApi.Controllers
 {
     [ApiController]
-    [Route("api/Users")]
+    [Route("api/users")]
     public class UserController : ControllerBase
     {
         private readonly UserInteractor userInteractor;

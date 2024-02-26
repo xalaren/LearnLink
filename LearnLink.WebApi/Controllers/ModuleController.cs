@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LearnLink.WebApi.Controllers
 {
     [ApiController]
-    [Route("api/Modules")]
+    [Route("api/modules")]
     public class ModuleController
     {
         private readonly ModuleInteractor moduleInteractor;

@@ -2,8 +2,13 @@
 {
     public class DataPageHeader
     {
+        private int pageSize = 1;
         public int PageNumber { get; init; } = 1;
-        public int PageSize { get; init; } = 1;
+        public int PageSize
+        {
+            get => pageSize;
+            init => pageSize = value == 0 ? 1 : value;
+        }
 
         public DataPageHeader() { }
 

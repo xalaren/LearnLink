@@ -13,6 +13,7 @@ namespace LearnLink.Application.Mappers
                 Title = courseDto.Title,
                 Description = courseDto.Description,
                 IsPublic = courseDto.IsPublic,
+                IsUnavailable = courseDto.IsUnavailable,
             };
         }
 
@@ -24,6 +25,7 @@ namespace LearnLink.Application.Mappers
                     Title: courseEntity.Title,
                     Description: courseEntity.Description,
                     IsPublic: courseEntity.IsPublic,
+                    IsUnavailable: courseEntity.IsUnavailable,
                     SubscribersCount: courseEntity.SubscribersCount
                 );
         }
@@ -33,6 +35,7 @@ namespace LearnLink.Application.Mappers
             course.Title = courseDto.Title;
             course.Description = courseDto.Description;
             course.IsPublic = courseDto.IsPublic;
+            course.IsUnavailable = courseDto.IsUnavailable;
 
             return course;
         }
