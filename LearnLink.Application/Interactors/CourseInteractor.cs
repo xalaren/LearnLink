@@ -21,11 +21,11 @@ namespace LearnLink.Application.Interactors
                 return course == null
                     ? throw new NotFoundException("Курс не найден")
                     : new()
-                {
-                    Success = true,
-                    Message = "Курс успешно получен",
-                    Value = course.ToDto(),
-                };
+                    {
+                        Success = true,
+                        Message = "Курс успешно получен",
+                        Value = course.ToDto(),
+                    };
             }
             catch (CustomException exception)
             {
@@ -50,8 +50,8 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                var course = 
-                    await unitOfWork.Courses.FirstOrDefaultAsync(course => course.Id == courseId) ?? 
+                var course =
+                    await unitOfWork.Courses.FirstOrDefaultAsync(course => course.Id == courseId) ??
                     throw new NotFoundException("Курс не найден");
 
                 var userCreatedCourse = await unitOfWork.UserCreatedCourses
@@ -143,6 +143,7 @@ namespace LearnLink.Application.Interactors
                         course => course.Id,
                         (userCreatedCourse, course) => course
                     );
+
                 var total = courses.Count();
 
                 var result = await courses
@@ -256,7 +257,7 @@ namespace LearnLink.Application.Interactors
             {
                 var user = await unitOfWork.Users
                     .AsNoTracking()
-                    .FirstOrDefaultAsync(user => user.Id == userId) ??  throw new NotFoundException("Пользователь не найден");
+                    .FirstOrDefaultAsync(user => user.Id == userId) ?? throw new NotFoundException("Пользователь не найден");
 
                 var courses = unitOfWork.UserCreatedCourses
                     .AsNoTracking()
@@ -322,7 +323,7 @@ namespace LearnLink.Application.Interactors
 
                 var course = courseDto.ToEntity();
 
-                if(course.IsUnavailable)
+                if (course.IsUnavailable)
                 {
                     course.IsPublic = false;
                 }
@@ -414,14 +415,29 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task<Response<CourseDto[]>> FindCoursesByParameters(string searchString, bool findPublic, bool findUnavailable)
+        public async Task<Response<CourseDto[]>> FindCoursesByTitle(string searchTitle, bool findPublic, bool findPrivate, bool findUnavailable)
         {
             try
             {
-                //TODO: write find method
-                throw new();
+                var coursesQuery = unitOfWork.Courses
+                                 .AsNoTracking()
+                                 .Where(course =>
+                                     (findPublic && course.IsPublic) ||
+                                     (findPrivate && !course.IsPublic && !course.IsUnavailable) ||
+                                     (findUnavailable && course.IsUnavailable))
+                                 .Where(course => course.Title.ToLower().Contains(searchTitle.ToLower()))
+                                 .Select(course => course.ToDto());
+
+                var courses = await coursesQuery.ToArrayAsync();
+
+                return new()
+                {
+                    Success = true,
+                    Message = "Курсы успешно получены",
+                    Value = courses
+                };
             }
-            catch(CustomException exception)
+            catch (CustomException exception)
             {
                 return new()
                 {
@@ -429,7 +445,7 @@ namespace LearnLink.Application.Interactors
                     Message = exception.Message,
                 };
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 return new()
                 {

@@ -10,6 +10,7 @@ namespace LearnLink.Core.Entities
         public bool IsPublic { get; set; } = false;
         public bool IsUnavailable { get; set; } = false;
         public string? Description { get; set; }
+        public DateTime CreationDate { get; set; }
 
         public string Title
         {

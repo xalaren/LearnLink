@@ -12,6 +12,7 @@ namespace LearnLink.Application.Mappers
                 Id = courseDto.Id,
                 Title = courseDto.Title,
                 Description = courseDto.Description,
+                CreationDate = courseDto.CreationDate ?? DateTime.Now,
                 IsPublic = courseDto.IsPublic,
                 IsUnavailable = courseDto.IsUnavailable,
             };
@@ -26,7 +27,8 @@ namespace LearnLink.Application.Mappers
                     Description: courseEntity.Description,
                     IsPublic: courseEntity.IsPublic,
                     IsUnavailable: courseEntity.IsUnavailable,
-                    SubscribersCount: courseEntity.SubscribersCount
+                    SubscribersCount: courseEntity.SubscribersCount,
+                    CreationDate: courseEntity.CreationDate
                 );
         }
 

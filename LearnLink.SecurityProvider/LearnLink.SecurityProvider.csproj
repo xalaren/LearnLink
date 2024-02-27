@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Options\**" />
+    <EmbeddedResource Remove="Options\**" />
+    <None Remove="Options\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
@@ -17,10 +23,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LearnLink.Application\LearnLink.Application.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Options\" />
   </ItemGroup>
 
 </Project>
