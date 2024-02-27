@@ -22,8 +22,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LearnLink.Shared", "LearnLi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LearnLink.WebApi", "LearnLink.WebApi\LearnLink.WebApi.csproj", "{B66375BD-5FE4-4B07-9762-26215DEABC0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearnLink.Tests", "LearnLink.Tests\LearnLink.Tests.csproj", "{76B593D3-9B9C-43AF-BA1F-988C96E03F2F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,10 +58,6 @@ Global
 		{B66375BD-5FE4-4B07-9762-26215DEABC0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B66375BD-5FE4-4B07-9762-26215DEABC0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B66375BD-5FE4-4B07-9762-26215DEABC0C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{76B593D3-9B9C-43AF-BA1F-988C96E03F2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{76B593D3-9B9C-43AF-BA1F-988C96E03F2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{76B593D3-9B9C-43AF-BA1F-988C96E03F2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{76B593D3-9B9C-43AF-BA1F-988C96E03F2F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -8,14 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Interactors
 {
-    public class CourseInteractor
+    public class CourseInteractor(IUnitOfWork unitOfWork)
     {
-        private readonly IUnitOfWork unitOfWork;
-
-        public CourseInteractor(IUnitOfWork unitOfWork)
-        {
-            this.unitOfWork = unitOfWork;
-        }
+        private readonly IUnitOfWork unitOfWork = unitOfWork;
 
         public async Task<Response<CourseDto?>> GetCourseAsync(int courseId)
         {
@@ -23,12 +18,9 @@ namespace LearnLink.Application.Interactors
             {
                 var course = await unitOfWork.Courses.FirstOrDefaultAsync(course => course.Id == courseId);
 
-                if (course == null)
-                {
-                    throw new NotFoundException("Курс не найден");
-                }
-
-                return new()
+                return course == null
+                    ? throw new NotFoundException("Курс не найден")
+                    : new()
                 {
                     Success = true,
                     Message = "Курс успешно получен",
@@ -49,7 +41,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось получить курс",
-                    InnerErrorMessages = new string[] { exception.Message }
+                    InnerErrorMessages = [exception.Message]
                 };
             }
         }
@@ -58,12 +50,9 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                var course = await unitOfWork.Courses.FirstOrDefaultAsync(course => course.Id == courseId);
-
-                if (course == null)
-                {
+                var course = 
+                    await unitOfWork.Courses.FirstOrDefaultAsync(course => course.Id == courseId) ?? 
                     throw new NotFoundException("Курс не найден");
-                }
 
                 var userCreatedCourse = await unitOfWork.UserCreatedCourses
                     .AsNoTracking()
@@ -99,7 +88,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось получить курс",
-                    InnerErrorMessages = new string[] { exception.Message }
+                    InnerErrorMessages = [exception.Message]
                 };
             }
         }
@@ -132,7 +121,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось получить курсы",
-                    InnerErrorMessages = new string[] { exception.Message },
+                    InnerErrorMessages = [exception.Message],
                 };
             }
         }
@@ -141,12 +130,9 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                var user = await unitOfWork.Users.AsNoTracking().FirstOrDefaultAsync(user => user.Id == userId);
-
-                if (user == null)
-                {
-                    throw new NotFoundException("Пользователь не найден");
-                }
+                var user = await unitOfWork.Users
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(user => user.Id == userId) ?? throw new NotFoundException("Пользователь не найден");
 
                 var courses = unitOfWork.UserCreatedCourses
                     .AsNoTracking()
@@ -194,7 +180,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось получить курсы",
-                    InnerErrorMessages = new string[] { exception.Message },
+                    InnerErrorMessages = [exception.Message],
                 };
             }
         }
@@ -205,12 +191,7 @@ namespace LearnLink.Application.Interactors
             {
                 var user = await unitOfWork.Users
                     .AsNoTracking()
-                    .FirstOrDefaultAsync(u => u.Id == userId);
-
-                if (user == null)
-                {
-                    throw new NotFoundException("Пользователь не найден");
-                }
+                    .FirstOrDefaultAsync(u => u.Id == userId) ?? throw new NotFoundException("Пользователь не найден");
 
                 var subscriptions = await unitOfWork
                     .Subscriptions
@@ -264,7 +245,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось получить курсы",
-                    InnerErrorMessages = new string[] { exception.Message },
+                    InnerErrorMessages = [exception.Message],
                 };
             }
         }
@@ -275,12 +256,7 @@ namespace LearnLink.Application.Interactors
             {
                 var user = await unitOfWork.Users
                     .AsNoTracking()
-                    .FirstOrDefaultAsync(user => user.Id == userId);
-
-                if (user == null)
-                {
-                    throw new NotFoundException("Пользователь не найден");
-                }
+                    .FirstOrDefaultAsync(user => user.Id == userId) ??  throw new NotFoundException("Пользователь не найден");
 
                 var courses = unitOfWork.UserCreatedCourses
                     .AsNoTracking()
@@ -330,7 +306,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось получить курсы",
-                    InnerErrorMessages = new string[] { exception.Message },
+                    InnerErrorMessages = [exception.Message],
                 };
             }
         }
@@ -341,12 +317,8 @@ namespace LearnLink.Application.Interactors
             {
                 ArgumentNullException.ThrowIfNull(courseDto, "CourseDto was null");
 
-                var user = await unitOfWork.Users.FindAsync(userId);
-
-                if (user == null)
-                {
+                var user = await unitOfWork.Users.FindAsync(userId) ??
                     throw new NotFoundException("Пользователь не найден");
-                }
 
                 var course = courseDto.ToEntity();
 
@@ -387,7 +359,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось создать курс",
-                    InnerErrorMessages = new string[] { exception.Message },
+                    InnerErrorMessages = [exception.Message],
                 };
             }
         }
@@ -437,7 +409,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось получить курсы",
-                    InnerErrorMessages = new string[] { exception.Message },
+                    InnerErrorMessages = [exception.Message],
                 };
             }
         }
@@ -463,7 +435,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось получить курсы",
-                    InnerErrorMessages = new string[] { exception.Message },
+                    InnerErrorMessages = [exception.Message],
                 };
             }
         }
@@ -472,17 +444,10 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                if (courseDto == null)
-                {
-                    throw new ArgumentNullException(nameof(courseDto), "CourseDto was null");
-                }
+                ArgumentNullException.ThrowIfNull(courseDto, nameof(courseDto));
 
-                var course = await unitOfWork.Courses.FindAsync(courseDto.Id);
-
-                if (course == null)
-                {
+                var course = await unitOfWork.Courses.FindAsync(courseDto.Id) ??
                     throw new NotFoundException("Курс не найден");
-                }
 
                 course = course.Assign(courseDto);
 
@@ -508,7 +473,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось изменить курс",
-                    InnerErrorMessages = new string[] { exception.Message },
+                    InnerErrorMessages = [exception.Message],
                 };
             }
         }
@@ -517,12 +482,8 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                var course = await unitOfWork.Courses.FindAsync(courseId);
-
-                if (course == null)
-                {
+                var course = await unitOfWork.Courses.FindAsync(courseId) ??
                     throw new NotFoundException("Курс не найден");
-                }
 
                 unitOfWork.Courses.Remove(course);
 
@@ -559,7 +520,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось удалить курс",
-                    InnerErrorMessages = new string[] { exception.Message },
+                    InnerErrorMessages = [exception.Message],
                 };
             }
         }
@@ -602,7 +563,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось получить статус пользователя",
-                    InnerErrorMessages = new string[] { exception.Message },
+                    InnerErrorMessages = [exception.Message],
                 };
             }
         }
@@ -645,7 +606,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось получить статус пользователя",
-                    InnerErrorMessages = new string[] { exception.Message },
+                    InnerErrorMessages = [exception.Message],
                 };
             }
         }
