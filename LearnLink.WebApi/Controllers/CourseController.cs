@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LearnLink.WebApi.Controllers
 {
     [ApiController]
-    [Route("api/courses")]
+    [Route("api/Courses")]
     public class CourseController : Controller
     {
         private readonly CourseInteractor courseInteractor;
@@ -78,21 +78,6 @@ namespace LearnLink.WebApi.Controllers
             };
 
             return await courseInteractor.GetSubscribedCoursesAsync(userId);
-        }
-
-        [Authorize]
-        [HttpGet("get-unavailable")]
-        public async Task<Response<DataPage<CourseDto[]>>> GetUnavailableCoursesAsync(int userId, int page, int size)
-        {
-            var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
-
-            if (!verifyResponse.Success) return new Response<DataPage<CourseDto[]>>()
-            {
-                Success = verifyResponse.Success,
-                Message = verifyResponse.Message,
-            };
-
-            return await courseInteractor.GetUnavailableUserCoursesAsync(userId, new DataPageHeader(page, size));
         }
 
         [Authorize]

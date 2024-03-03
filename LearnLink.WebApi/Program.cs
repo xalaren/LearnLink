@@ -46,7 +46,8 @@ builder.Services.AddSingleton(provider => AuthenticationConfig.GetAuthentication
 
 
 //builder.Services.AddDbContext<AppDbContext>(options => options.GetMySqlOptions(configuration));
-builder.Services.AddDbContext<AppDbContext>(options => options.GetNpgSqlOptions(configuration));
+//builder.Services.AddDbContext<AppDbContext>(options => options.GetNpgSqlOptions(configuration));
+builder.Services.AddDbContext<AppDbContext>(options => options.GetSqliteOptions(configuration));
 
 builder.Services.AddControllers();
 
