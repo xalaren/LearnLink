@@ -32,7 +32,7 @@ namespace LearnLink.Application.Helpers
                     Lastname = "AdminLastname",
                 };
 
-                string password = "admin";
+                string password = "AdminSystemPass0!";
 
                 await userInteractor.RegisterAsync(admin, password, 1);
                 

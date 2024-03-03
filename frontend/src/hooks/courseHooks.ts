@@ -14,7 +14,7 @@ export function usePublicCourses() {
         try {
             setLoading(true);
 
-            const response = (await axiosInstance.get<IValueResponse<Course[]>>(`${COURSE_ENDPOINTS_URL}get-public?page=1&size=4`));
+            const response = (await axiosInstance.get<IValueResponse<Course[]>>(`${COURSE_ENDPOINTS_URL}get-public`));
 
             if (!response.data.success) {
                 throw new AxiosError(response.data.message!);

@@ -8,9 +8,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Interactors
 {
-    public class CourseInteractor(IUnitOfWork unitOfWork)
+    public class CourseInteractor
     {
-        private readonly IUnitOfWork unitOfWork = unitOfWork;
+        private readonly IUnitOfWork unitOfWork;
+
+        public CourseInteractor(IUnitOfWork unitOfWork)
+        {
+            this.unitOfWork = unitOfWork;
+        }
 
         public async Task<Response<CourseDto?>> GetCourseAsync(int courseId)
         {
@@ -18,14 +23,17 @@ namespace LearnLink.Application.Interactors
             {
                 var course = await unitOfWork.Courses.FirstOrDefaultAsync(course => course.Id == courseId);
 
-                return course == null
-                    ? throw new NotFoundException("Курс не найден")
-                    : new()
-                    {
-                        Success = true,
-                        Message = "Курс успешно получен",
-                        Value = course.ToDto(),
-                    };
+                if (course == null)
+                {
+                    throw new NotFoundException("Курс не найден");
+                }
+
+                return new()
+                {
+                    Success = true,
+                    Message = "Курс успешно получен",
+                    Value = course.ToDto(),
+                };
             }
             catch (CustomException exception)
             {
@@ -41,7 +49,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось получить курс",
-                    InnerErrorMessages = [exception.Message]
+                    InnerErrorMessages = new string[] { exception.Message }
                 };
             }
         }
@@ -50,17 +58,15 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                var course =
-                    await unitOfWork.Courses.FirstOrDefaultAsync(course => course.Id == courseId) ??
+                var course = await unitOfWork.Courses.FirstOrDefaultAsync(course => course.Id == courseId);
+
+                if (course == null)
+                {
                     throw new NotFoundException("Курс не найден");
+                }
 
-                var userCreatedCourse = await unitOfWork.UserCreatedCourses
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(u => u.UserId == userId && u.CourseId == courseId);
-
-                var subscription = await unitOfWork.Subscriptions
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(u => u.UserId == userId && u.CourseId == courseId);
+                var userCreatedCourse = await unitOfWork.UserCreatedCourses.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == userId && u.CourseId == courseId);
+                var subscription = await unitOfWork.Subscriptions.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == userId && u.CourseId == courseId);
 
                 if (!course.IsPublic && userCreatedCourse == null && subscription == null)
                 {
@@ -88,7 +94,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось получить курс",
-                    InnerErrorMessages = [exception.Message]
+                    InnerErrorMessages = new string[] { exception.Message }
                 };
             }
         }
@@ -121,145 +127,23 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось получить курсы",
-                    InnerErrorMessages = [exception.Message],
+                    InnerErrorMessages = new string[] { exception.Message },
                 };
             }
         }
 
-        public async Task<Response<DataPage<CourseDto[]>>> GetCoursesCreatedByUserAsync(int userId, DataPageHeader pageHeader)
+        public async Task<Response<CourseDto[]>> GetCoursesCreatedByUserAsync(int userId)
         {
             try
             {
-                var user = await unitOfWork.Users
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(user => user.Id == userId) ?? throw new NotFoundException("Пользователь не найден");
+                var user = await unitOfWork.Users.AsNoTracking().FirstOrDefaultAsync(user => user.Id == userId);
 
-                var courses = unitOfWork.UserCreatedCourses
-                    .AsNoTracking()
-                    .Where(u => u.UserId == userId)
-                    .Join(
-                        unitOfWork.Courses.AsNoTracking(),
-                        userCreatedCourse => userCreatedCourse.CourseId,
-                        course => course.Id,
-                        (userCreatedCourse, course) => course
-                    );
-
-                var total = courses.Count();
-
-                var result = await courses
-                    .Skip((pageHeader.PageNumber - 1) * pageHeader.PageSize)
-                    .Take(pageHeader.PageSize)
-                    .Select(course => course.ToDto())
-                    .ToArrayAsync();
-
-                var dataPage = new DataPage<CourseDto[]>()
+                if (user == null)
                 {
-                    PageNumber = pageHeader.PageNumber,
-                    PageSize = pageHeader.PageSize,
-                    ItemsCount = total,
-                    Values = result
-                };
+                    throw new NotFoundException("Пользователь не найден");
+                }
 
-                return new()
-                {
-                    Success = true,
-                    Message = "Курсы пользователя успешно получены",
-                    Value = dataPage,
-                };
-            }
-            catch (CustomException exception)
-            {
-                return new()
-                {
-                    Success = false,
-                    Message = exception.Message,
-                };
-            }
-            catch (Exception exception)
-            {
-                return new()
-                {
-                    Success = false,
-                    Message = "Не удалось получить курсы",
-                    InnerErrorMessages = [exception.Message],
-                };
-            }
-        }
-
-        public async Task<Response<DataPage<CourseDto[]>>> GetSubscribedCoursesAsync(int userId, DataPageHeader pageHeader)
-        {
-            try
-            {
-                var user = await unitOfWork.Users
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(u => u.Id == userId) ?? throw new NotFoundException("Пользователь не найден");
-
-                var subscriptions = await unitOfWork
-                    .Subscriptions
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(s => s.UserId == userId);
-
-                var courses = unitOfWork.Subscriptions
-                    .AsNoTracking()
-                    .Where(s => s.UserId == userId)
-                    .Join(
-                        unitOfWork.Courses.AsNoTracking(),
-                        sub => sub.CourseId,
-                        course => course.Id,
-                        (sub, course) => course
-                    );
-
-                var total = courses.Count();
-
-                var coursesResult = await courses
-                    .Skip((pageHeader.PageNumber - 1) * pageHeader.PageSize)
-                    .Take(pageHeader.PageSize)
-                    .Select(course => course.ToDto())
-                    .ToArrayAsync();
-
-                var dataPage = new DataPage<CourseDto[]>()
-                {
-                    PageNumber = pageHeader.PageNumber,
-                    PageSize = pageHeader.PageSize,
-                    ItemsCount = total,
-                    Values = coursesResult
-                };
-
-                return new()
-                {
-                    Success = true,
-                    Message = "Курсы пользователя успешно получены",
-                    Value = dataPage,
-                };
-            }
-            catch (CustomException exception)
-            {
-                return new()
-                {
-                    Success = false,
-                    Message = exception.Message,
-                };
-            }
-            catch (Exception exception)
-            {
-                return new()
-                {
-                    Success = false,
-                    Message = "Не удалось получить курсы",
-                    InnerErrorMessages = [exception.Message],
-                };
-            }
-        }
-
-        public async Task<Response<DataPage<CourseDto[]>>> GetUnavailableUserCoursesAsync(int userId, DataPageHeader pageHeader)
-        {
-            try
-            {
-                var user = await unitOfWork.Users
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(user => user.Id == userId) ?? throw new NotFoundException("Пользователь не найден");
-
-                var courses = unitOfWork.UserCreatedCourses
+                var courses = await unitOfWork.UserCreatedCourses
                     .AsNoTracking()
                     .Where(u => u.UserId == userId)
                     .Join(
@@ -268,29 +152,14 @@ namespace LearnLink.Application.Interactors
                         course => course.Id,
                         (userCreatedCourse, course) => course
                     )
-                    .Where(c => c.IsUnavailable);
-
-                var total = courses.Count();
-
-                var result = await courses
-                    .Skip((pageHeader.PageNumber - 1) * pageHeader.PageSize)
-                    .Take(pageHeader.PageSize)
                     .Select(course => course.ToDto())
                     .ToArrayAsync();
-
-                var dataPage = new DataPage<CourseDto[]>()
-                {
-                    PageNumber = pageHeader.PageNumber,
-                    PageSize = pageHeader.PageSize,
-                    ItemsCount = total,
-                    Values = result
-                };
 
                 return new()
                 {
                     Success = true,
                     Message = "Курсы пользователя успешно получены",
-                    Value = dataPage,
+                    Value = courses,
                 };
             }
             catch (CustomException exception)
@@ -307,7 +176,58 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось получить курсы",
-                    InnerErrorMessages = [exception.Message],
+                    InnerErrorMessages = new string[] { exception.Message },
+                };
+            }
+        }
+
+        public async Task<Response<CourseDto[]>> GetSubscribedCoursesAsync(int userId)
+        {
+            try
+            {
+                var user = await unitOfWork.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == userId);
+
+                if (user == null)
+                {
+                    throw new NotFoundException("Пользователь не найден");
+                }
+
+                var subscriptions = await unitOfWork.Subscriptions.AsNoTracking().FirstOrDefaultAsync(s => s.UserId == userId);
+
+                var courses = await unitOfWork.Subscriptions
+                    .AsNoTracking()
+                    .Where(s => s.UserId == userId)
+                    .Join(
+                        unitOfWork.Courses.AsNoTracking(),
+                        sub => sub.CourseId,
+                        course => course.Id,
+                        (sub, course) => course
+                    )
+                    .Select(course => course.ToDto())
+                    .ToArrayAsync();
+
+                return new()
+                {
+                    Success = true,
+                    Message = "Курсы пользователя успешно получены",
+                    Value = courses,
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = "Не удалось получить курсы",
+                    InnerErrorMessages = new string[] { exception.Message },
                 };
             }
         }
@@ -316,17 +236,19 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                ArgumentNullException.ThrowIfNull(courseDto, "CourseDto was null");
+                if (courseDto == null)
+                {
+                    throw new ArgumentNullException("CourseDto was null");
+                }
 
-                var user = await unitOfWork.Users.FindAsync(userId) ??
+                var user = await unitOfWork.Users.FindAsync(userId);
+
+                if (user == null)
+                {
                     throw new NotFoundException("Пользователь не найден");
+                }
 
                 var course = courseDto.ToEntity();
-
-                if (course.IsUnavailable)
-                {
-                    course.IsPublic = false;
-                }
 
                 var userCreatedCourse = new UserCreatedCourse()
                 {
@@ -360,40 +282,26 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось создать курс",
-                    InnerErrorMessages = [exception.Message],
+                    InnerErrorMessages = new string[] { exception.Message },
                 };
             }
         }
 
-        public async Task<Response<DataPage<CourseDto[]>>> GetPublicCoursesAsync(DataPageHeader pageHeader)
+        public async Task<Response<CourseDto[]>> GetPublicCoursesAsync()
         {
             try
             {
-                var total = await unitOfWork.Courses
-                    .AsNoTracking()
-                    .CountAsync();
-
                 var courses = await unitOfWork.Courses
                     .AsNoTracking()
                     .Where(c => c.IsPublic)
-                    .Skip((pageHeader.PageNumber - 1) * pageHeader.PageSize)
-                    .Take(pageHeader.PageSize)
                     .Select(c => c.ToDto())
                     .ToArrayAsync();
 
-                var dataPage = new DataPage<CourseDto[]>()
-                {
-                    PageNumber = pageHeader.PageNumber,
-                    PageSize = pageHeader.PageSize,
-                    ItemsCount = total,
-                    Values = courses
-                };
-
                 return new()
                 {
                     Success = true,
                     Message = "Курсы успешно получены",
-                    Value = dataPage,
+                    Value = courses,
                 };
             }
             catch (CustomException exception)
@@ -410,48 +318,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось получить курсы",
-                    InnerErrorMessages = [exception.Message],
-                };
-            }
-        }
-
-        public async Task<Response<CourseDto[]>> FindCoursesByTitle(string searchTitle, bool findPublic, bool findPrivate, bool findUnavailable)
-        {
-            try
-            {
-                var coursesQuery = unitOfWork.Courses
-                                 .AsNoTracking()
-                                 .Where(course =>
-                                     (findPublic && course.IsPublic) ||
-                                     (findPrivate && !course.IsPublic && !course.IsUnavailable) ||
-                                     (findUnavailable && course.IsUnavailable))
-                                 .Where(course => course.Title.ToLower().Contains(searchTitle.ToLower()))
-                                 .Select(course => course.ToDto());
-
-                var courses = await coursesQuery.ToArrayAsync();
-
-                return new()
-                {
-                    Success = true,
-                    Message = "Курсы успешно получены",
-                    Value = courses
-                };
-            }
-            catch (CustomException exception)
-            {
-                return new()
-                {
-                    Success = false,
-                    Message = exception.Message,
-                };
-            }
-            catch (Exception exception)
-            {
-                return new()
-                {
-                    Success = false,
-                    Message = "Не удалось получить курсы",
-                    InnerErrorMessages = [exception.Message],
+                    InnerErrorMessages = new string[] { exception.Message },
                 };
             }
         }
@@ -460,10 +327,17 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                ArgumentNullException.ThrowIfNull(courseDto, nameof(courseDto));
+                if (courseDto == null)
+                {
+                    throw new ArgumentNullException(nameof(courseDto), "CourseDto was null");
+                }
 
-                var course = await unitOfWork.Courses.FindAsync(courseDto.Id) ??
+                var course = await unitOfWork.Courses.FindAsync(courseDto.Id);
+
+                if (course == null)
+                {
                     throw new NotFoundException("Курс не найден");
+                }
 
                 course = course.Assign(courseDto);
 
@@ -489,7 +363,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось изменить курс",
-                    InnerErrorMessages = [exception.Message],
+                    InnerErrorMessages = new string[] { exception.Message },
                 };
             }
         }
@@ -498,8 +372,12 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                var course = await unitOfWork.Courses.FindAsync(courseId) ??
+                var course = await unitOfWork.Courses.FindAsync(courseId);
+
+                if (course == null)
+                {
                     throw new NotFoundException("Курс не найден");
+                }
 
                 unitOfWork.Courses.Remove(course);
 
@@ -536,7 +414,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось удалить курс",
-                    InnerErrorMessages = [exception.Message],
+                    InnerErrorMessages = new string[] { exception.Message },
                 };
             }
         }
@@ -579,7 +457,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось получить статус пользователя",
-                    InnerErrorMessages = [exception.Message],
+                    InnerErrorMessages = new string[] { exception.Message },
                 };
             }
         }
@@ -622,7 +500,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось получить статус пользователя",
-                    InnerErrorMessages = [exception.Message],
+                    InnerErrorMessages = new string[] { exception.Message },
                 };
             }
         }
