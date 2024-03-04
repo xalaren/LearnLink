@@ -149,6 +149,7 @@ namespace LearnLink.Application.Interactors
                 var result = await courses
                     .Skip((pageHeader.PageNumber - 1) * pageHeader.PageSize)
                     .Take(pageHeader.PageSize)
+                    .OrderByDescending(course => course.CreationDate)
                     .Select(course => course.ToDto())
                     .ToArrayAsync();
 
@@ -214,6 +215,7 @@ namespace LearnLink.Application.Interactors
                 var coursesResult = await courses
                     .Skip((pageHeader.PageNumber - 1) * pageHeader.PageSize)
                     .Take(pageHeader.PageSize)
+                    .OrderByDescending(course => course.CreationDate)
                     .Select(course => course.ToDto())
                     .ToArrayAsync();
 
@@ -275,6 +277,7 @@ namespace LearnLink.Application.Interactors
                 var result = await courses
                     .Skip((pageHeader.PageNumber - 1) * pageHeader.PageSize)
                     .Take(pageHeader.PageSize)
+                    .OrderByDescending(course => course.CreationDate)
                     .Select(course => course.ToDto())
                     .ToArrayAsync();
 
@@ -378,6 +381,7 @@ namespace LearnLink.Application.Interactors
                     .Where(c => c.IsPublic)
                     .Skip((pageHeader.PageNumber - 1) * pageHeader.PageSize)
                     .Take(pageHeader.PageSize)
+                    .OrderByDescending(c => c.CreationDate)
                     .Select(c => c.ToDto())
                     .ToArrayAsync();
 
@@ -426,6 +430,7 @@ namespace LearnLink.Application.Interactors
                                      (findPrivate && !course.IsPublic && !course.IsUnavailable) ||
                                      (findUnavailable && course.IsUnavailable))
                                  .Where(course => course.Title.ToLower().Contains(searchTitle.ToLower()))
+                                 .OrderByDescending(course => course.CreationDate)
                                  .Select(course => course.ToDto());
 
                 var courses = await coursesQuery.ToArrayAsync();

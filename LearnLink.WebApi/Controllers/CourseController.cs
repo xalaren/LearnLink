@@ -158,5 +158,12 @@ namespace LearnLink.WebApi.Controllers
 
             return await courseInteractor.RemoveCourseAsync(courseId);
         }
+
+        [AllowAnonymous]
+        [HttpGet("find-public")]
+        public async Task<Response<CourseDto[]>> FindPublicCourses(string title)
+        {
+            return await courseInteractor.FindCoursesByTitle(title, true, false, false);
+        }
     }
 }
