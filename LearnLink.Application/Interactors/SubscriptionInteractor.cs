@@ -1,5 +1,6 @@
 ﻿using LearnLink.Application.Mappers;
 using LearnLink.Application.Transaction;
+using LearnLink.Core.Entities;
 using LearnLink.Core.Exceptions;
 using LearnLink.Shared.DataTransferObjects;
 using LearnLink.Shared.Responses;
@@ -14,6 +15,54 @@ namespace LearnLink.Application.Interactors
         public SubscriptionInteractor(IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
+        }
+
+        public async Task<Response> CreateGroupSubscriptions(int courseId, int[] userIdentifiers)
+        {
+            try
+            {
+                var course = await unitOfWork.Courses.FindAsync(courseId) ?? 
+                    throw new NotFoundException("Пользователь не найден");
+
+                var users = unitOfWork.Users.Where(u => userIdentifiers.Contains(u.Id));
+
+                var subscriptions = users.Select(user => new Subscription()
+                {
+                    User = user,
+                    Course = course,
+                    StartDate = DateTime.Now.ToUniversalTime(),
+                });
+
+                await unitOfWork.Subscriptions.AddRangeAsync(subscriptions);
+                course.SubscribersCount += users.Count();
+
+                unitOfWork.Courses.Update(course);
+
+                await unitOfWork.CommitAsync();
+
+                return new Response()
+                {
+                    Success = true,
+                    Message = "Запись прошла успешно",
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = "Не удалось записаться на курс",
+                    InnerErrorMessages = [exception.Message],
+                };
+            }
         }
 
         public async Task<Response> CreateSubscriptionAsync(SubscriptionDto subscriptionDto)
@@ -47,7 +96,6 @@ namespace LearnLink.Application.Interactors
                 }
 
                 course.SubscribersCount++;
-                //TODO: possibly it is necessary to lock the subscription for private courses
 
                 var subscriptionEntity = subscriptionDto.ToEntity();
 
@@ -132,5 +180,7 @@ namespace LearnLink.Application.Interactors
                 };
             }
         }
+
+
     }
 }
