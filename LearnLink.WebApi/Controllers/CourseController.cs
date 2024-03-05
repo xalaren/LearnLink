@@ -95,6 +95,30 @@ namespace LearnLink.WebApi.Controllers
             return await courseInteractor.GetUnavailableUserCoursesAsync(userId, new DataPageHeader(page, size));
         }
 
+
+        [AllowAnonymous]
+        [HttpGet("find-public")]
+        public async Task<Response<DataPage<CourseDto[]>>> FindPublicCourses(string title, int page, int size)
+        {
+            return await courseInteractor.FindCoursesByTitle(title, new DataPageHeader(page, size));
+        }
+
+        [Authorize]
+        [HttpGet("find-user-courses")]
+        public async Task<Response<DataPage<CourseDto[]>>> FindInUserCourses(int userId, string title, int page, int size, bool findSubscription, bool findUnavailable)
+        {
+            var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
+
+
+            if (!verifyResponse.Success) return new Response<DataPage<CourseDto[]>>
+            {
+                Success = verifyResponse.Success,
+                Message = verifyResponse.Message,
+            };
+
+            return await courseInteractor.FindCoursesByTitleInUserCourses(userId, title, new DataPageHeader(page, size), findSubscription, findUnavailable);
+        }
+
         [Authorize]
         [HttpGet("get-creator-status")]
         public async Task<Response<bool>> IsCreatorAsync(int userId, int courseId)
@@ -157,13 +181,6 @@ namespace LearnLink.WebApi.Controllers
             if (!verifyResponse.Success) return verifyResponse;
 
             return await courseInteractor.RemoveCourseAsync(courseId);
-        }
-
-        [AllowAnonymous]
-        [HttpGet("find-public")]
-        public async Task<Response<CourseDto[]>> FindPublicCourses(string title)
-        {
-            return await courseInteractor.FindCoursesByTitle(title, true, false, false);
         }
     }
 }

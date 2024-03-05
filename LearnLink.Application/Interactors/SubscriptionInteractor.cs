@@ -34,7 +34,8 @@ namespace LearnLink.Application.Interactors
                 });
 
                 await unitOfWork.Subscriptions.AddRangeAsync(subscriptions);
-                course.SubscribersCount += users.Count();
+                var count = users.Count();
+                course.SubscribersCount += count;
 
                 unitOfWork.Courses.Update(course);
 
