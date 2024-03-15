@@ -23,6 +23,12 @@ namespace LearnLink.WebApi.Controllers
             return await subscriptionInteractor.CreateSubscriptionAsync(subscriptionDto);
         }
 
+        [HttpPost("subscribe-group")]
+        public async Task<Response> SubscribeGroupAsync(int userId, int courseId, [FromBody] int[] userIdentifiers)
+        {
+            return await subscriptionInteractor.CreateGroupSubscriptions(courseId, userIdentifiers);
+        }
+
         [HttpDelete("unsubscribe")]
         public async Task<Response> UnsubscribeAsync(int userId, int courseId)
         {

@@ -1,4 +1,5 @@
-﻿using LearnLink.Application.Mappers;
+﻿using System.Reflection.PortableExecutable;
+using LearnLink.Application.Mappers;
 using LearnLink.Application.Transaction;
 using LearnLink.Core.Entities;
 using LearnLink.Core.Exceptions;
@@ -149,6 +150,7 @@ namespace LearnLink.Application.Interactors
                 var result = await courses
                     .Skip((pageHeader.PageNumber - 1) * pageHeader.PageSize)
                     .Take(pageHeader.PageSize)
+                    .OrderByDescending(course => course.CreationDate)
                     .Select(course => course.ToDto())
                     .ToArrayAsync();
 
@@ -214,6 +216,7 @@ namespace LearnLink.Application.Interactors
                 var coursesResult = await courses
                     .Skip((pageHeader.PageNumber - 1) * pageHeader.PageSize)
                     .Take(pageHeader.PageSize)
+                    .OrderByDescending(course => course.CreationDate)
                     .Select(course => course.ToDto())
                     .ToArrayAsync();
 
@@ -275,6 +278,7 @@ namespace LearnLink.Application.Interactors
                 var result = await courses
                     .Skip((pageHeader.PageNumber - 1) * pageHeader.PageSize)
                     .Take(pageHeader.PageSize)
+                    .OrderByDescending(course => course.CreationDate)
                     .Select(course => course.ToDto())
                     .ToArrayAsync();
 
@@ -378,6 +382,7 @@ namespace LearnLink.Application.Interactors
                     .Where(c => c.IsPublic)
                     .Skip((pageHeader.PageNumber - 1) * pageHeader.PageSize)
                     .Take(pageHeader.PageSize)
+                    .OrderByDescending(c => c.CreationDate)
                     .Select(c => c.ToDto())
                     .ToArrayAsync();
 
@@ -415,26 +420,112 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task<Response<CourseDto[]>> FindCoursesByTitle(string searchTitle, bool findPublic, bool findPrivate, bool findUnavailable)
+        public async Task<Response<DataPage<CourseDto[]>>> FindCoursesByTitle(string searchTitle, DataPageHeader pageHeader)
         {
             try
             {
                 var coursesQuery = unitOfWork.Courses
                                  .AsNoTracking()
-                                 .Where(course =>
-                                     (findPublic && course.IsPublic) ||
-                                     (findPrivate && !course.IsPublic && !course.IsUnavailable) ||
-                                     (findUnavailable && course.IsUnavailable))
                                  .Where(course => course.Title.ToLower().Contains(searchTitle.ToLower()))
-                                 .Select(course => course.ToDto());
+                                 .OrderByDescending(course => course.CreationDate);
 
-                var courses = await coursesQuery.ToArrayAsync();
+                var total = await coursesQuery.CountAsync();
+                var courses = await coursesQuery
+                    .Skip((pageHeader.PageNumber - 1) * pageHeader.PageSize)
+                    .Take(pageHeader.PageSize)
+                    .Select(course => course.ToDto())
+                    .ToArrayAsync();
+
+                var dataPage = new DataPage<CourseDto[]>()
+                {
+                    ItemsCount = total,
+                    PageSize = pageHeader.PageSize,
+                    PageNumber = pageHeader.PageNumber,
+                    Values = courses
+                };
 
                 return new()
                 {
                     Success = true,
                     Message = "Курсы успешно получены",
-                    Value = courses
+                    Value = dataPage
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = "Не удалось получить курсы",
+                    InnerErrorMessages = [exception.Message],
+                };
+            }
+        }
+
+        public async Task<Response<DataPage<CourseDto[]>>> FindCoursesByTitleInUserCourses(int userId, string searchTitle, DataPageHeader pageHeader, bool subscription, bool unavailable)
+        {
+            try
+            {
+                var user = await unitOfWork.Users
+                   .AsNoTracking()
+                   .FirstOrDefaultAsync(user => user.Id == userId) ?? throw new NotFoundException("Пользователь не найден");
+
+                var coursesQuery = subscription ?
+                    unitOfWork.Subscriptions
+                        .AsNoTracking()
+                        .Where(u => u.UserId == userId)
+                        .Join(
+                            unitOfWork.Courses.AsNoTracking(),
+                            sub => sub.CourseId,
+                            course => course.Id,
+                            (sub, course) => course
+                        ) :
+                    unitOfWork.UserCreatedCourses
+                        .AsNoTracking()
+                        .Where(u => u.UserId == userId)
+                        .Join(
+                            unitOfWork.Courses.AsNoTracking(),
+                            userCreatedCourse => userCreatedCourse.CourseId,
+                            course => course.Id,
+                            (userCreatedCourse, course) => course
+                        )
+                        .Where(course =>
+                            (unavailable && course.IsUnavailable) ||
+                            (!unavailable && !course.IsPublic && !course.IsUnavailable));
+
+                var filteredCourses = coursesQuery
+                    .Where(course => course.Title.ToLower().Contains(searchTitle.ToLower()))
+                    .OrderByDescending(course => course.CreationDate);
+
+                var total = await filteredCourses.CountAsync();
+
+                var courses = await filteredCourses
+                    .Skip((pageHeader.PageNumber - 1) * pageHeader.PageSize)
+                    .Take(pageHeader.PageSize)
+                    .Select(course => course.ToDto())
+                    .ToArrayAsync();
+
+                var dataPage = new DataPage<CourseDto[]>()
+                {
+                    ItemsCount = total,
+                    PageSize = pageHeader.PageSize,
+                    PageNumber = pageHeader.PageNumber,
+                    Values = courses
+                };
+
+                return new()
+                {
+                    Success = true,
+                    Message = "Курсы успешно получены",
+                    Value = dataPage
                 };
             }
             catch (CustomException exception)
@@ -626,5 +717,7 @@ namespace LearnLink.Application.Interactors
                 };
             }
         }
+
+
     }
 }
