@@ -16,5 +16,15 @@
             InternalStorageDirectory = Path.Combine(RootDirectory, STORAGE_DIRNAME);
             UsersStorageDirectory = Path.Combine(InternalStorageDirectory, USERS_DIRNAME);
         }
+
+        public static string GetRelativeDirectoryUrlToUserImages(int userId)
+        {
+            return $"{STORAGE_DIRNAME}/{USERS_DIRNAME}/{userId}/{IMAGES_DIRNAME}/";
+        }
+
+        public string GetDirectoryPathToUserImages(int userId)
+        {
+            return Path.Combine(UsersStorageDirectory, userId.ToString());
+        }
     }
 }

@@ -9,6 +9,7 @@ public record UserDto
     public string Lastname { get; init; } = string.Empty;
     public string Name { get; init; } = string.Empty;
     public RoleDto? Role { get; init; }
-    public string? AvatarFileName { get; set; }
     public IFormFile? AvatarFormFile { get; set; }
+    public string? AvatarFileName { get; set; }
+    public string? AvatarUrl { get; set; }
 }

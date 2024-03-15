@@ -144,7 +144,7 @@ app.UseInternalStorage();
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(Path.Combine(new DirectoryStore(rootDirectory).InternalStorageDirectory)),
-    RequestPath = "/" + DirectoryStore.STORAGE_DIRNAME
+    RequestPath = "/api/" + DirectoryStore.STORAGE_DIRNAME
 });
 
 

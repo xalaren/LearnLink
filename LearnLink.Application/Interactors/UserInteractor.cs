@@ -112,8 +112,8 @@ namespace LearnLink.Application.Interactors
                     throw new ValidationException("Данный пользователь уже зарегистрирован в системе");
                 }
 
-                userDto.AvatarFileName = userDto.AvatarFormFile != null ? GenerateAvatarFileName(userDto.Nickname, userDto.AvatarFormFile.FileName) : null;
 
+                userDto.AvatarFileName = userDto.AvatarFormFile != null ? GenerateAvatarFileName(userDto.Nickname, userDto.AvatarFormFile.FileName) : null;
                 var user = userDto.ToEntity();
 
                 var role = await unitOfWork.Roles.FindAsync(roleId);
@@ -474,7 +474,7 @@ namespace LearnLink.Application.Interactors
                 return;
             }
 
-            var directory = GetDirectory(user.Id);
+            var directory = directoryStore.GetDirectoryPathToUserImages(user.Id);
             var avatarPath = Path.Combine(directory, DirectoryStore.IMAGES_DIRNAME, user.AvatarFileName);
 
             Directory.CreateDirectory(Path.GetDirectoryName(avatarPath)!);
@@ -525,8 +525,8 @@ namespace LearnLink.Application.Interactors
                     return;
                 }
 
-                var directory = GetDirectory(userId);
-                var avatarPath = Path.Combine(directory, DirectoryStore.IMAGES_DIRNAME, fileName);
+                var directory = directoryStore.GetDirectoryPathToUserImages(userId);
+                var avatarPath = Path.Combine(directory, fileName);
 
                 if (!File.Exists(avatarPath) || !Directory.Exists(directory))
                 {
@@ -545,11 +545,6 @@ namespace LearnLink.Application.Interactors
         private string GenerateAvatarFileName(string username, string fileName)
         {
             return $"{DateTime.Now.ToString("yy-mm-ss-ffff")}-{username}{Path.GetExtension(fileName)}";
-        }
-
-        private string GetDirectory(int userId)
-        {
-            return Path.Combine(directoryStore.UsersStorageDirectory, userId.ToString());
         }
     }
 }

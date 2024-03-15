@@ -1,4 +1,5 @@
-﻿using LearnLink.Core.Entities;
+﻿using LearnLink.Application.Helpers;
+using LearnLink.Core.Entities;
 using LearnLink.Shared.DataTransferObjects;
 
 namespace LearnLink.Application.Mappers
@@ -27,6 +28,8 @@ namespace LearnLink.Application.Mappers
                 Name = userEntity.Name,
                 Role = userEntity.Role.ToDto(),
                 AvatarFileName = userEntity.AvatarFileName,
+                AvatarUrl = userEntity.AvatarFileName != null ? 
+                    DirectoryStore.GetRelativeDirectoryUrlToUserImages(userEntity.Id) + userEntity.AvatarFileName : null
             };
         }
 
