@@ -1,4 +1,5 @@
-﻿using LearnLink.Application.Interactors;
+﻿using System.IO;
+using LearnLink.Application.Interactors;
 using LearnLink.Application.Transaction;
 using LearnLink.Core.Constants;
 using LearnLink.Shared.DataTransferObjects;
@@ -10,12 +11,14 @@ namespace LearnLink.Application.Helpers
         private readonly IUnitOfWork unitOfWork;
         private readonly UserInteractor userInteractor;
         private readonly RoleInteractor roleInteractor;
+        private readonly DirectoryStore directoryStore;
 
-        public SeedData(IUnitOfWork unitOfWork, UserInteractor userInteractor, RoleInteractor roleInteractor)
+        public SeedData(IUnitOfWork unitOfWork, UserInteractor userInteractor, RoleInteractor roleInteractor, DirectoryStore directoryStore)
         {
             this.unitOfWork = unitOfWork;
             this.userInteractor = userInteractor;
             this.roleInteractor = roleInteractor;
+            this.directoryStore = directoryStore;
         }
 
         public async Task InitializeAdmin()
@@ -87,6 +90,11 @@ namespace LearnLink.Application.Helpers
             {
                 //Catch statement actions
             }
+        }
+
+        public void InitializeStorage()
+        {
+            Directory.CreateDirectory(directoryStore.InternalStorageDirectory);
         }
     }
 }

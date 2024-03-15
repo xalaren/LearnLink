@@ -18,5 +18,10 @@ namespace LearnLink.WebApi.Extensions
 
             await scope.DisposeAsync();
         }
+
+        public static void UseInternalStorage(this WebApplication app) {
+            var directoryStore = new DirectoryStore(app.Environment.ContentRootPath);
+            Directory.CreateDirectory(directoryStore.InternalStorageDirectory);
+        }
     }
 }

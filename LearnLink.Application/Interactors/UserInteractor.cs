@@ -1,4 +1,5 @@
-﻿using LearnLink.Application.Helpers;
+﻿using System.Runtime.CompilerServices;
+using LearnLink.Application.Helpers;
 using LearnLink.Application.Mappers;
 using LearnLink.Application.Security;
 using LearnLink.Application.Transaction;
@@ -16,17 +17,18 @@ namespace LearnLink.Application.Interactors
         private readonly IUnitOfWork unitOfWork;
         private readonly IEncryptionService encryptionService;
         private readonly IAuthenticationService authenticationService;
-
-        private const int SALT_LENGTH = 6;
+        private readonly DirectoryStore directoryStore;
 
         public UserInteractor(
             IUnitOfWork unitOfWork,
             IEncryptionService encryptionService,
-            IAuthenticationService authenticationService)
+            IAuthenticationService authenticationService,
+            DirectoryStore directoryStore)
         {
             this.unitOfWork = unitOfWork;
             this.encryptionService = encryptionService;
             this.authenticationService = authenticationService;
+            this.directoryStore = directoryStore;
         }
 
         public async Task<Response<string>> AuthenticateAsync(string nickname, string password)
@@ -110,6 +112,8 @@ namespace LearnLink.Application.Interactors
                     throw new ValidationException("Данный пользователь уже зарегистрирован в системе");
                 }
 
+                userDto.AvatarFileName = userDto.AvatarFormFile != null ? GenerateAvatarFileName(userDto.Nickname, userDto.AvatarFormFile.FileName) : null;
+
                 var user = userDto.ToEntity();
 
                 var role = await unitOfWork.Roles.FindAsync(roleId);
@@ -119,15 +123,15 @@ namespace LearnLink.Application.Interactors
                     role = await unitOfWork.Roles.FirstOrDefaultAsync(x => x.Sign == RoleSignConstants.USER);
                 }
 
+
                 user.Role = role!;
 
                 await unitOfWork.Users.AddAsync(user);
                 await unitOfWork.CommitAsync();
 
-                string salt = encryptionService.GetRandomString(SALT_LENGTH);
-                string hashedPassword = encryptionService.GetHash(password, salt);
 
-                
+                string salt = encryptionService.GetRandomString(EncryptionConstants.SALT_LENGTH);
+                string hashedPassword = encryptionService.GetHash(password, salt);
 
                 var userCredentials = new Credentials()
                 {
@@ -138,6 +142,14 @@ namespace LearnLink.Application.Interactors
 
                 await unitOfWork.Credentials.AddAsync(userCredentials);
                 await unitOfWork.CommitAsync();
+
+                if (userDto.AvatarFormFile != null)
+                {
+                    using (var avatarStream = userDto.AvatarFormFile.OpenReadStream())
+                    {
+                        await SaveAvatarAsync(avatarStream, user);
+                    }
+                }
 
                 return new Response()
                 {
@@ -159,7 +171,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось зарегистрироваться",
-                    InnerErrorMessages = new string[] { exception.Message },
+                    InnerErrorMessages = [ exception.Message ],
                 };
             }
         }
@@ -189,7 +201,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось получить данные",
-                    InnerErrorMessages = new string[] { exception.Message },
+                    InnerErrorMessages = [ exception.Message ],
                 };
             }
         }
@@ -205,10 +217,12 @@ namespace LearnLink.Application.Interactors
                     throw new NotFoundException("Пользователь не найден");
                 }
 
+                var userDto = user.ToDto();
+
                 return new()
                 {
                     Success = true,
-                    Value = user.ToDto(),
+                    Value = userDto,
                 };
             }
             catch (CustomException exception)
@@ -225,7 +239,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось получить данные",
-                    InnerErrorMessages = new string[] { exception.Message },
+                    InnerErrorMessages = [ exception.Message ],
                 };
             }
         }
@@ -296,6 +310,8 @@ namespace LearnLink.Application.Interactors
 
                 await unitOfWork.CommitAsync();
 
+                RemoveAvatar(user.Id, user.AvatarFileName);
+
                 return new()
                 {
                     Success = true,
@@ -316,7 +332,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Удаление не удалось",
-                    InnerErrorMessages = new string[] { exception.Message },
+                    InnerErrorMessages = [ exception.Message ],
                 };
             }
         }
@@ -339,6 +355,8 @@ namespace LearnLink.Application.Interactors
                 
                 unitOfWork.Users.Entry(user).Reference(x => x.Role).Load();
 
+                userDto.AvatarFileName = userDto.AvatarFormFile != null ? GenerateAvatarFileName(userDto.Nickname, userDto.AvatarFormFile.FileName) : null;
+
                 var updatedEntity = user.Assign(userDto);
 
                 unitOfWork.Users.Update(updatedEntity);
@@ -346,6 +364,14 @@ namespace LearnLink.Application.Interactors
 
                 var token = authenticationService.GetToken(updatedEntity.Nickname, updatedEntity.Role.Sign);
 
+                if(userDto.AvatarFormFile != null)
+                {
+                    using (var avatarStream = userDto.AvatarFormFile.OpenReadStream())
+                    {
+                        await SaveAvatarAsync(avatarStream, user);
+                    }
+                }
+            
                 return new()
                 {
                     Success = true,
@@ -367,7 +393,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Изменение не удалось",
-                    InnerErrorMessages = new string[] { exception.Message },
+                    InnerErrorMessages = [ exception.Message ],
                 };
             }
         }
@@ -406,7 +432,7 @@ namespace LearnLink.Application.Interactors
                     throw new ValidationException("Неверный пароль");
                 }
 
-                var newSalt = encryptionService.GetRandomString(SALT_LENGTH);
+                var newSalt = encryptionService.GetRandomString(EncryptionConstants.SALT_LENGTH);
                 var newHash = encryptionService.GetHash(newPassword, newSalt);
 
                 userCredentials.Salt = newSalt;
@@ -436,9 +462,94 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Изменение не удалось",
-                    InnerErrorMessages = new string[] { exception.Message },
+                    InnerErrorMessages = [ exception.Message ],
                 };
             }
+        }
+
+        private async Task SaveAvatarAsync(Stream? avatarStream, User user)
+        {
+            if(avatarStream == null || string.IsNullOrWhiteSpace(user.AvatarFileName))
+            {
+                return;
+            }
+
+            var directory = GetDirectory(user.Id);
+            var avatarPath = Path.Combine(directory, DirectoryStore.IMAGES_DIRNAME, user.AvatarFileName);
+
+            Directory.CreateDirectory(Path.GetDirectoryName(avatarPath)!);
+
+            try
+            {
+                using (var fileStream = new FileStream(avatarPath, FileMode.Create))
+                {
+                    await avatarStream.CopyToAsync(fileStream);
+                }
+            }
+            catch(Exception)
+            {
+                throw new CustomException("Не удалось сохранить аватар");
+            }
+        }
+
+        private async Task<byte[]?> GetAvatarAsync(int userId, string? fileName)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(fileName))
+                {
+                    return null;
+                }
+
+                var avatarPath = Path.Combine(directoryStore.UsersStorageDirectory, userId.ToString(), fileName);
+
+                if (!File.Exists(avatarPath))
+                {
+                    return null;
+                }
+
+                return await File.ReadAllBytesAsync(avatarPath);
+            }
+            catch(Exception)
+            {
+                return null;
+            }
+        }
+
+        private void RemoveAvatar(int userId, string? fileName)
+        {
+            try
+            {
+                if(fileName == null)
+                {
+                    return;
+                }
+
+                var directory = GetDirectory(userId);
+                var avatarPath = Path.Combine(directory, DirectoryStore.IMAGES_DIRNAME, fileName);
+
+                if (!File.Exists(avatarPath) || !Directory.Exists(directory))
+                {
+                    return;
+                }
+
+                File.Delete(avatarPath);
+                Directory.Delete(directory);
+            }
+            catch (Exception)
+            {
+                throw new CustomException("Не удалось удалить изображение пользователя");
+            }
+        }
+
+        private string GenerateAvatarFileName(string username, string fileName)
+        {
+            return $"{DateTime.Now.ToString("yy-mm-ss-ffff")}-{username}{Path.GetExtension(fileName)}";
+        }
+
+        private string GetDirectory(int userId)
+        {
+            return Path.Combine(directoryStore.UsersStorageDirectory, userId.ToString());
         }
     }
 }

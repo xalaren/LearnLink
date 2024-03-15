@@ -31,12 +31,11 @@ namespace CoursePrototype.WebApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<Response> RegisterAsync(UserDto userDto, string password)
+        public async Task<Response> RegisterAsync([FromForm] UserDto userDto, [FromQuery] string password)
         {
             return await userInteractor.RegisterAsync(userDto, password);
         }
-        
-       
+
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<Response<string>> Login(string nickname, string password)
@@ -44,7 +43,7 @@ namespace CoursePrototype.WebApi.Controllers
             return await userInteractor.AuthenticateAsync(nickname, password);
         }
 
-        
+
         [Authorize]
         [HttpPost("update-user")]
         public async Task<Response<string?>> UpdateUserAsync(UserDto userDto)

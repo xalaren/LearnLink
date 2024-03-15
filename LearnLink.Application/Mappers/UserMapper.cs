@@ -13,6 +13,7 @@ namespace LearnLink.Application.Mappers
                 Nickname = userDto.Nickname,
                 Lastname = userDto.Lastname,
                 Name = userDto.Name,
+                AvatarFileName = userDto.AvatarFileName,
             };
         }
 
@@ -25,6 +26,7 @@ namespace LearnLink.Application.Mappers
                 Lastname = userEntity.Lastname,
                 Name = userEntity.Name,
                 Role = userEntity.Role.ToDto(),
+                AvatarFileName = userEntity.AvatarFileName,
             };
         }
 
@@ -44,6 +46,8 @@ namespace LearnLink.Application.Mappers
             {
                 user.Lastname = userDto.Lastname;
             }
+
+            user.AvatarFileName = userDto.AvatarFileName;
 
             return user;
         }

@@ -13,6 +13,8 @@ namespace LearnLink.Core.Entities
         public int RoleId { get; set; }
         public Role Role { get; set; } = null!;
 
+        public string? AvatarFileName { get; set; }
+
         public string Nickname
         {
             get => nickname;

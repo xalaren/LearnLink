@@ -8,6 +8,7 @@ using LearnLink.SecurityProvider;
 using LearnLink.WebApi.Extensions;
 using LearnLink.WebApi.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -15,6 +16,7 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 var configuration = builder.Configuration;
+var rootDirectory = builder.Environment.ContentRootPath;
 
 builder.WebHost.UseUrls(ServerConfig.Url(configuration));
 
@@ -43,9 +45,8 @@ builder.Services.AddTransient<SeedData>();
 builder.Services.AddSingleton<IEncryptionService, EncryptionService>();
 builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
 builder.Services.AddSingleton(provider => AuthenticationConfig.GetAuthenticationOptions(configuration));
+builder.Services.AddTransient(provider => new DirectoryStore(rootDirectory));
 
-
-//builder.Services.AddDbContext<AppDbContext>(options => options.GetMySqlOptions(configuration));
 builder.Services.AddDbContext<AppDbContext>(options => options.GetNpgSqlOptions(configuration));
 
 builder.Services.AddControllers();
@@ -128,16 +129,27 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+
+
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors("CorsPolicy");
-
-app.UseStaticFiles();
 
 app.UseAuthorization();
 
 app.MapControllers();
 
+app.UseInternalStorage();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(new DirectoryStore(rootDirectory).InternalStorageDirectory)),
+    RequestPath = "/" + DirectoryStore.STORAGE_DIRNAME
+});
+
+
 app.UseSeedData();
+
+
 
 app.Run();
