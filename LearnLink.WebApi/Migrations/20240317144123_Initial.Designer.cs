@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LearnLink.WebApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240303174446_Initial")]
+    [Migration("20240317144123_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace LearnLink.WebApi.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.2")
+                .HasAnnotation("ProductVersion", "8.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -69,8 +69,7 @@ namespace LearnLink.WebApi.Migrations
 
                     b.HasKey("CourseId", "ModuleId");
 
-                    b.HasIndex("ModuleId")
-                        .IsUnique();
+                    b.HasIndex("ModuleId");
 
                     b.ToTable("CourseModules");
                 });
@@ -158,8 +157,7 @@ namespace LearnLink.WebApi.Migrations
 
                     b.HasKey("ModuleId", "LessonId");
 
-                    b.HasIndex("LessonId")
-                        .IsUnique();
+                    b.HasIndex("LessonId");
 
                     b.ToTable("ModuleLessons");
                 });
@@ -172,6 +170,14 @@ namespace LearnLink.WebApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("character varying(13)");
+
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -183,10 +189,11 @@ namespace LearnLink.WebApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Sign")
-                        .IsUnique();
-
                     b.ToTable("Roles");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Role");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("LearnLink.Core.Entities.Subscription", b =>
@@ -214,6 +221,9 @@ namespace LearnLink.WebApi.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AvatarFileName")
+                        .HasColumnType("text");
 
                     b.Property<string>("Lastname")
                         .IsRequired()
@@ -243,6 +253,26 @@ namespace LearnLink.WebApi.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("LearnLink.Core.Entities.UserCourseLocalRole", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("LocalRoleId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("UserId", "CourseId", "LocalRoleId");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("LocalRoleId");
+
+                    b.ToTable("UserCourseLocalRoles");
+                });
+
             modelBuilder.Entity("LearnLink.Core.Entities.UserCreatedCourse", b =>
                 {
                     b.Property<int>("UserId")
@@ -258,17 +288,39 @@ namespace LearnLink.WebApi.Migrations
                     b.ToTable("UserCreatedCourses");
                 });
 
+            modelBuilder.Entity("LearnLink.Core.Entities.LocalRole", b =>
+                {
+                    b.HasBaseType("LearnLink.Core.Entities.Role");
+
+                    b.Property<bool>("EditAcess")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("ManageInternalAccess")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("RemoveAcess")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("ViewAccess")
+                        .HasColumnType("boolean");
+
+                    b.HasIndex("Sign")
+                        .IsUnique();
+
+                    b.HasDiscriminator().HasValue("LocalRole");
+                });
+
             modelBuilder.Entity("LearnLink.Core.Entities.CourseModule", b =>
                 {
                     b.HasOne("LearnLink.Core.Entities.Course", "Course")
-                        .WithMany("CourseModules")
+                        .WithMany()
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("LearnLink.Core.Entities.Module", "Module")
-                        .WithOne("CourseModule")
-                        .HasForeignKey("LearnLink.Core.Entities.CourseModule", "ModuleId")
+                        .WithMany()
+                        .HasForeignKey("ModuleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -291,13 +343,13 @@ namespace LearnLink.WebApi.Migrations
             modelBuilder.Entity("LearnLink.Core.Entities.ModuleLesson", b =>
                 {
                     b.HasOne("LearnLink.Core.Entities.Lesson", "Lesson")
-                        .WithOne("ModuleLesson")
-                        .HasForeignKey("LearnLink.Core.Entities.ModuleLesson", "LessonId")
+                        .WithMany()
+                        .HasForeignKey("LessonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("LearnLink.Core.Entities.Module", "Module")
-                        .WithMany("ModuleLessons")
+                        .WithMany()
                         .HasForeignKey("ModuleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -337,6 +389,33 @@ namespace LearnLink.WebApi.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("LearnLink.Core.Entities.UserCourseLocalRole", b =>
+                {
+                    b.HasOne("LearnLink.Core.Entities.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LearnLink.Core.Entities.LocalRole", "LocalRole")
+                        .WithMany()
+                        .HasForeignKey("LocalRoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LearnLink.Core.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("LocalRole");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("LearnLink.Core.Entities.UserCreatedCourse", b =>
                 {
                     b.HasOne("LearnLink.Core.Entities.Course", "Course")
@@ -354,25 +433,6 @@ namespace LearnLink.WebApi.Migrations
                     b.Navigation("Course");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("LearnLink.Core.Entities.Course", b =>
-                {
-                    b.Navigation("CourseModules");
-                });
-
-            modelBuilder.Entity("LearnLink.Core.Entities.Lesson", b =>
-                {
-                    b.Navigation("ModuleLesson")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("LearnLink.Core.Entities.Module", b =>
-                {
-                    b.Navigation("CourseModule")
-                        .IsRequired();
-
-                    b.Navigation("ModuleLessons");
                 });
 #pragma warning restore 612, 618
         }

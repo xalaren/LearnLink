@@ -13,8 +13,10 @@ namespace LearnLink.WebApi.Extensions
 
             await service.InitializeAdminRole();
             await service.InitializeUserRole();
-
+            await service.InitializeModeratorLocalRole();
+            await service.InitializeMemberLocalRole();
             await service.InitializeAdmin();
+
 
             await scope.DisposeAsync();
         }

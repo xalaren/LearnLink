@@ -1,6 +1,7 @@
 ﻿using System.Reflection.PortableExecutable;
 using LearnLink.Application.Mappers;
 using LearnLink.Application.Transaction;
+using LearnLink.Core.Constants;
 using LearnLink.Core.Entities;
 using LearnLink.Core.Exceptions;
 using LearnLink.Shared.DataTransferObjects;
@@ -338,9 +339,23 @@ namespace LearnLink.Application.Interactors
                     Course = course,
                 };
 
+                var role = await unitOfWork.LocalRoles.FirstOrDefaultAsync(x => x.Sign == RoleSignConstants.MODERATOR);
+
+                if (role == null)
+                {
+                    throw new NotFoundException("Не найдена роль модератора. Обратитесь к администратору или разработчику.");
+                }
+
+                var userCourseRole = new UserCourseLocalRole()
+                {
+                    Course = course,
+                    LocalRole = role,
+                    User = user,
+                };
 
                 await unitOfWork.Courses.AddAsync(course);
                 await unitOfWork.UserCreatedCourses.AddAsync(userCreatedCourse);
+                await unitOfWork.UserCourseLocalRoles.AddAsync(userCourseRole);
 
                 await unitOfWork.CommitAsync();
 
@@ -547,7 +562,7 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task<Response> UpdateCourseAsync(CourseDto courseDto)
+        public async Task<Response> UpdateCourseAsync(int userId, CourseDto courseDto)
         {
             try
             {
@@ -555,6 +570,13 @@ namespace LearnLink.Application.Interactors
 
                 var course = await unitOfWork.Courses.FindAsync(courseDto.Id) ??
                     throw new NotFoundException("Курс не найден");
+
+                var editPermission = await GetPermissionAsync(userId: userId, courseId: courseDto.Id, toEdit: true);
+
+                if (!editPermission)
+                {
+                    throw new AccessLevelException("Доступ отклонен");
+                }
 
                 course = course.Assign(courseDto);
 
@@ -585,12 +607,19 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task<Response> RemoveCourseAsync(int courseId)
+        public async Task<Response> RemoveCourseAsync(int userId, int courseId)
         {
             try
             {
                 var course = await unitOfWork.Courses.FindAsync(courseId) ??
                     throw new NotFoundException("Курс не найден");
+
+                var removePermission = await GetPermissionAsync(userId: userId, courseId: courseId, toRemove: true);
+
+                if(!removePermission)
+                {
+                    throw new AccessLevelException("Доступ отклонен");
+                }
 
                 unitOfWork.Courses.Remove(course);
 
@@ -602,6 +631,22 @@ namespace LearnLink.Application.Interactors
                         module => module.Id,
                         (courseModule, module) => module
                     );
+
+                await modules.ForEachAsync(module =>
+                {
+                    var lessons = unitOfWork.ModuleLessons
+                        .Where(l => l.ModuleId == module.Id)
+                        .Join(
+                            unitOfWork.Lessons,
+                            moduleLesson => moduleLesson.LessonId,
+                            lesson => lesson.Id,
+                            (moduleLesson, lesson) => lesson
+                        );
+
+                    unitOfWork.Lessons.RemoveRange(lessons);
+                });
+
+
 
                 unitOfWork.Modules.RemoveRange(modules);
 
@@ -718,6 +763,81 @@ namespace LearnLink.Application.Interactors
             }
         }
 
+        public async Task<Response<LocalRoleDto?>> GetUserLocalRole(int userId, int courseId)
+        {
+            try
+            {
+                var userLocalRole = await unitOfWork.UserCourseLocalRoles.FirstOrDefaultAsync(x => x.UserId == userId && x.CourseId == courseId);
 
+                if (userLocalRole == null)
+                {
+                    throw new NotFoundException("Локальная роль пользователя в данном курсе не найдена");
+                }
+
+                await unitOfWork.UserCourseLocalRoles.Entry(userLocalRole)
+                    .Reference(u => u.LocalRole)
+                    .LoadAsync();
+
+                return new()
+                {
+                    Success = true,
+                    Message = "Локальная роль пользователя получена успешно",
+                    Value = userLocalRole.LocalRole.ToDto()
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = "Не удалось получить роль пользователя",
+                    InnerErrorMessages = [exception.Message],
+                };
+            }
+        }
+
+        private async Task<bool> GetPermissionAsync(int userId, int courseId, bool toView = false, bool toEdit = false, bool toRemove = false, bool toManageInternal = false)
+        {
+            var user = await unitOfWork.Users.FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            await unitOfWork.Users.Entry(user)
+                .Reference(u => u.Role)
+                .LoadAsync();
+
+            if (user.Role.IsAdmin)
+            {
+                return true;
+            }
+
+            var userCourseRole = await unitOfWork.UserCourseLocalRoles.FirstOrDefaultAsync(u => u.UserId == userId && u.CourseId == courseId);
+
+            if (userCourseRole == null)
+            {
+                return false;
+            }
+
+            await unitOfWork.UserCourseLocalRoles.Entry(userCourseRole)
+                .Reference(u => u.LocalRole)
+                .LoadAsync();
+
+            return
+                (userCourseRole.LocalRole.ViewAccess && toView) ||
+                (userCourseRole.LocalRole.EditAcess && toEdit) ||
+                (userCourseRole.LocalRole.RemoveAcess && toRemove) ||
+                (userCourseRole.LocalRole.ManageInternalAccess && toManageInternal);
+        }
     }
 }

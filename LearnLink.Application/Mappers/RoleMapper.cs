@@ -12,17 +12,18 @@ namespace LearnLink.Application.Mappers
                 Id = roleDto.Id,
                 Name = roleDto.Name,
                 Sign = roleDto.Sign,
+                IsAdmin = roleDto.IsAdmin
             };
         }
 
         public static RoleDto ToDto(this Role roleEntity)
         {
-            return new RoleDto()
-            {
-                Id = roleEntity.Id,
-                Name = roleEntity.Name,
-                Sign = roleEntity.Sign,
-            };
+            return new RoleDto(
+                Id: roleEntity.Id,
+                Name: roleEntity.Name,
+                Sign: roleEntity.Sign,
+                IsAdmin: roleEntity.IsAdmin
+            );
         }
 
         public static Role Assign(this Role role, RoleDto roleDto)
@@ -37,6 +38,7 @@ namespace LearnLink.Application.Mappers
                 role.Sign = roleDto.Sign;
             }
 
+            role.IsAdmin = roleDto.IsAdmin;
 
             return role;
         }

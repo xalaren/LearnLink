@@ -169,7 +169,7 @@ namespace LearnLink.WebApi.Controllers
 
             if (!verifyResponse.Success) return verifyResponse;
 
-            return await courseInteractor.UpdateCourseAsync(courseDto);
+            return await courseInteractor.UpdateCourseAsync(userId, courseDto);
         }
 
         [Authorize]
@@ -180,7 +180,7 @@ namespace LearnLink.WebApi.Controllers
 
             if (!verifyResponse.Success) return verifyResponse;
 
-            return await courseInteractor.RemoveCourseAsync(courseId);
+            return await courseInteractor.RemoveCourseAsync(userId,courseId);
         }
     }
 }

@@ -61,7 +61,6 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-
         public async Task<Response> AllocateRoleToUserAsync(int roleId, int userId)
         {
             try

@@ -37,6 +37,7 @@ builder.Services.AddScoped<SubscriptionInteractor>();
 builder.Services.AddScoped<ModuleInteractor>();
 builder.Services.AddScoped<UserVerifierService>();
 builder.Services.AddScoped<RoleInteractor>();
+builder.Services.AddScoped<LocalRoleInteractor>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 

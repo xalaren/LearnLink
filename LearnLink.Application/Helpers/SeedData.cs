@@ -11,14 +11,14 @@ namespace LearnLink.Application.Helpers
         private readonly IUnitOfWork unitOfWork;
         private readonly UserInteractor userInteractor;
         private readonly RoleInteractor roleInteractor;
-        private readonly DirectoryStore directoryStore;
+        private readonly LocalRoleInteractor localRoleInteractor;
 
-        public SeedData(IUnitOfWork unitOfWork, UserInteractor userInteractor, RoleInteractor roleInteractor, DirectoryStore directoryStore)
+        public SeedData(IUnitOfWork unitOfWork, UserInteractor userInteractor, RoleInteractor roleInteractor, LocalRoleInteractor localRoleInteractor)
         {
             this.unitOfWork = unitOfWork;
             this.userInteractor = userInteractor;
             this.roleInteractor = roleInteractor;
-            this.directoryStore = directoryStore;
+            this.localRoleInteractor = localRoleInteractor;
         }
 
         public async Task InitializeAdmin()
@@ -54,12 +54,12 @@ namespace LearnLink.Application.Helpers
 
                 if (existRole.Value != null) return;
 
-                var adminRole = new RoleDto()
-                {
-                    Id = 1,
-                    Name = "Администратор",
-                    Sign = RoleSignConstants.ADMIN,
-                };
+                var adminRole = new RoleDto(
+                    Id: 1,
+                    Name: "Администратор",
+                    Sign: RoleSignConstants.ADMIN,
+                    IsAdmin: true
+                );
 
                 await roleInteractor.CreateRoleAsync(adminRole);
             }
@@ -77,12 +77,12 @@ namespace LearnLink.Application.Helpers
 
                 if (existRole.Value != null) return;
 
-                var userRole = new RoleDto()
-                {
-                    Id = 2,
-                    Name = "Пользователь",
-                    Sign = RoleSignConstants.USER,
-                };
+                var userRole = new RoleDto(
+                    Id: 2,
+                    Name: "Пользователь",
+                    Sign: RoleSignConstants.USER,
+                    IsAdmin: false
+                );
 
                 await roleInteractor.CreateRoleAsync(userRole);
             }
@@ -92,9 +92,56 @@ namespace LearnLink.Application.Helpers
             }
         }
 
-        public void InitializeStorage()
+        public async Task InitializeModeratorLocalRole()
         {
-            Directory.CreateDirectory(directoryStore.InternalStorageDirectory);
+            try
+            {
+                var existRole = await roleInteractor.GetRoleBySignAsync(RoleSignConstants.MODERATOR);
+
+                if (existRole.Value != null) return;
+
+                var userRole = new LocalRoleDto(
+                    Id: 3,
+                    Name: "Модератор",
+                    Sign: RoleSignConstants.MODERATOR,
+                    ViewAccess: true,
+                    EditAccess: true,
+                    RemoveAccess: true,
+                    ManageInternalAccess: true
+                );
+
+                await localRoleInteractor.CreateLocalRoleAsync(userRole);
+            }
+            catch (Exception)
+            {
+                //Catch statement actions
+            }
+        }
+
+        public async Task InitializeMemberLocalRole()
+        {
+            try
+            {
+                var existRole = await roleInteractor.GetRoleBySignAsync(RoleSignConstants.MEMBER);
+
+                if (existRole.Value != null) return;
+
+                var userRole = new LocalRoleDto(
+                    Id: 4,
+                    Name: "Участник",
+                    Sign: RoleSignConstants.MEMBER,
+                    ViewAccess: true,
+                    EditAccess: false,
+                    RemoveAccess: false,
+                    ManageInternalAccess: false
+                );
+
+                await localRoleInteractor.CreateLocalRoleAsync(userRole);
+            }
+            catch (Exception)
+            {
+                //Catch statement actions
+            }
         }
     }
 }

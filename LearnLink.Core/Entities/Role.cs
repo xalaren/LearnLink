@@ -45,5 +45,7 @@ namespace LearnLink.Core.Entities
                 sign = value.ToLower();
             }
         }
+
+        public bool IsAdmin { get; set; }
     }
 }

@@ -66,7 +66,13 @@ namespace LearnLink.WebApi.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    Sign = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
+                    Sign = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    IsAdmin = table.Column<bool>(type: "boolean", nullable: false),
+                    Discriminator = table.Column<string>(type: "character varying(13)", maxLength: 13, nullable: false),
+                    ViewAccess = table.Column<bool>(type: "boolean", nullable: true),
+                    EditAcess = table.Column<bool>(type: "boolean", nullable: true),
+                    RemoveAcess = table.Column<bool>(type: "boolean", nullable: true),
+                    ManageInternalAccess = table.Column<bool>(type: "boolean", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -128,6 +134,7 @@ namespace LearnLink.WebApi.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     RoleId = table.Column<int>(type: "integer", nullable: false),
+                    AvatarFileName = table.Column<string>(type: "text", nullable: true),
                     Nickname = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
                     Lastname = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
                     Name = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false)
@@ -190,6 +197,37 @@ namespace LearnLink.WebApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserCourseLocalRoles",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    LocalRoleId = table.Column<int>(type: "integer", nullable: false),
+                    CourseId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserCourseLocalRoles", x => new { x.UserId, x.CourseId, x.LocalRoleId });
+                    table.ForeignKey(
+                        name: "FK_UserCourseLocalRoles_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserCourseLocalRoles_Roles_LocalRoleId",
+                        column: x => x.LocalRoleId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserCourseLocalRoles_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserCreatedCourses",
                 columns: table => new
                 {
@@ -216,8 +254,7 @@ namespace LearnLink.WebApi.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_CourseModules_ModuleId",
                 table: "CourseModules",
-                column: "ModuleId",
-                unique: true);
+                column: "ModuleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Credentials_UserId",
@@ -227,8 +264,7 @@ namespace LearnLink.WebApi.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_ModuleLessons_LessonId",
                 table: "ModuleLessons",
-                column: "LessonId",
-                unique: true);
+                column: "LessonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Roles_Sign",
@@ -240,6 +276,16 @@ namespace LearnLink.WebApi.Migrations
                 name: "IX_Subscriptions_CourseId",
                 table: "Subscriptions",
                 column: "CourseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserCourseLocalRoles_CourseId",
+                table: "UserCourseLocalRoles",
+                column: "CourseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserCourseLocalRoles_LocalRoleId",
+                table: "UserCourseLocalRoles",
+                column: "LocalRoleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserCreatedCourses_CourseId",
@@ -272,6 +318,9 @@ namespace LearnLink.WebApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "Subscriptions");
+
+            migrationBuilder.DropTable(
+                name: "UserCourseLocalRoles");
 
             migrationBuilder.DropTable(
                 name: "UserCreatedCourses");

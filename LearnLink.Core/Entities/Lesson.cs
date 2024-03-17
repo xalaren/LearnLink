@@ -28,7 +28,5 @@ namespace LearnLink.Core.Entities
                 title = value;
             }
         }
-
-        public ModuleLesson ModuleLesson { get; set; } = null!;
     }
 }

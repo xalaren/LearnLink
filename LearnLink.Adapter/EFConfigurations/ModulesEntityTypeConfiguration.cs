@@ -15,10 +15,10 @@ namespace LearnLink.Adapter.EFConfigurations
             builder.Property(module => module.Description)
                 .HasMaxLength(500);
 
-            builder.HasOne(m => m.CourseModule)
-                .WithOne(cm => cm.Module)
-                .HasForeignKey<CourseModule>(cm => cm.ModuleId)
-                .OnDelete(DeleteBehavior.Cascade);
+            //builder.HasOne(m => m.CourseModule)
+            //    .WithOne(cm => cm.Module)
+            //    .HasForeignKey<CourseModule>(cm => cm.ModuleId)
+            //    .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
