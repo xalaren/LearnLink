@@ -8,7 +8,7 @@ namespace CoursePrototype.WebApi.Controllers
 {
     [ApiController]
     [Route("api/users")]
-    public class UserController : ControllerBase
+    public class UserController : Controller
     {
         private readonly UserInteractor userInteractor;
         private readonly UserVerifierService userVerifierService;

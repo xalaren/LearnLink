@@ -46,6 +46,6 @@ namespace LearnLink.Core.Entities
             }
         }
 
-        public bool IsAdmin { get; set; }
+        public virtual bool IsAdmin { get; set; }
     }
 }

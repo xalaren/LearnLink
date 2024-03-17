@@ -35,8 +35,19 @@ namespace LearnLink.Application.Interactors
                     .Reference(u => u.Role)
                     .LoadAsync();
 
+                var userById = await unitOfWork.Users.FindAsync(userId);
 
-                if (!userByNickname.Role.IsAdmin)
+                if(userById == null)
+                {
+                    throw new NotFoundException("Пользватель не найден");
+                }
+
+                await unitOfWork.Users
+                    .Entry(userById)
+                    .Reference(u => u.Role)
+                    .LoadAsync();
+
+                if (!userByNickname.Role.IsAdmin && userByNickname.Id != userById.Id)
                 {
                     throw new AccessLevelException("Доступ отклонен");
                 }

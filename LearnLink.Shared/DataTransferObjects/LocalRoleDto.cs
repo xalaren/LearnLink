@@ -7,6 +7,7 @@
         bool ViewAccess,
         bool EditAccess,
         bool RemoveAccess,
-        bool ManageInternalAccess
+        bool ManageInternalAccess,
+        bool InviteAccess
     );
 }

@@ -107,7 +107,8 @@ namespace LearnLink.Application.Helpers
                     ViewAccess: true,
                     EditAccess: true,
                     RemoveAccess: true,
-                    ManageInternalAccess: true
+                    ManageInternalAccess: true,
+                    InviteAccess: true
                 );
 
                 await localRoleInteractor.CreateLocalRoleAsync(userRole);
@@ -133,7 +134,8 @@ namespace LearnLink.Application.Helpers
                     ViewAccess: true,
                     EditAccess: false,
                     RemoveAccess: false,
-                    ManageInternalAccess: false
+                    ManageInternalAccess: false,
+                    InviteAccess: false
                 );
 
                 await localRoleInteractor.CreateLocalRoleAsync(userRole);

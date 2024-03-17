@@ -9,7 +9,7 @@ namespace LearnLink.Application.Mappers
         {
             return new Subscription()
             {
-                StartDate = subscriptionDto.StartDate,
+                StartDate = subscriptionDto.StartDate.ToUniversalTime(),
                 CourseId = subscriptionDto.CourseId,
                 UserId = subscriptionDto.UserId,
             };

@@ -16,6 +16,7 @@ namespace LearnLink.Application.Mappers
                 EditAcess = roleDto.EditAccess,
                 RemoveAcess = roleDto.RemoveAccess,
                 ManageInternalAccess = roleDto.ManageInternalAccess,
+                InviteAccess = roleDto.InviteAccess
             };
         }
 
@@ -28,7 +29,8 @@ namespace LearnLink.Application.Mappers
                 ViewAccess: roleEntity.ViewAccess,
                 EditAccess: roleEntity.EditAcess,
                 RemoveAccess: roleEntity.RemoveAcess,
-                ManageInternalAccess: roleEntity.ManageInternalAccess
+                ManageInternalAccess: roleEntity.ManageInternalAccess,
+                InviteAccess: roleEntity.InviteAccess
             );
         }
 
@@ -48,6 +50,7 @@ namespace LearnLink.Application.Mappers
             role.EditAcess = roleDto.EditAccess;
             role.RemoveAcess = roleDto.RemoveAccess;
             role.ManageInternalAccess = roleDto.ManageInternalAccess;
+            role.InviteAccess = roleDto.InviteAccess;
 
             return role;
         }
