@@ -72,7 +72,9 @@ namespace LearnLink.WebApi.Migrations
                     ViewAccess = table.Column<bool>(type: "boolean", nullable: true),
                     EditAcess = table.Column<bool>(type: "boolean", nullable: true),
                     RemoveAcess = table.Column<bool>(type: "boolean", nullable: true),
-                    ManageInternalAccess = table.Column<bool>(type: "boolean", nullable: true)
+                    ManageInternalAccess = table.Column<bool>(type: "boolean", nullable: true),
+                    InviteAccess = table.Column<bool>(type: "boolean", nullable: true),
+                    KickAccess = table.Column<bool>(type: "boolean", nullable: true)
                 },
                 constraints: table =>
                 {

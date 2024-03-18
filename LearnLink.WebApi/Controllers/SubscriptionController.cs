@@ -1,4 +1,5 @@
 ﻿using LearnLink.Application.Interactors;
+using LearnLink.Core.Entities;
 using LearnLink.Shared.DataTransferObjects;
 using LearnLink.Shared.Responses;
 using Microsoft.AspNetCore.Authorization;
@@ -41,7 +42,6 @@ namespace LearnLink.WebApi.Controllers
         {
             var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
 
-
             if (!verifyResponse.Success) return new()
             {
                 Success = verifyResponse.Success,
@@ -55,6 +55,14 @@ namespace LearnLink.WebApi.Controllers
         [HttpPost("invite")]
         public async Task<Response> InviteAsync(int userId, int courseId, string localRoleSign, [FromBody] int[] userIdentifiers)
         {
+            var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
+
+            if (!verifyResponse.Success) return new()
+            {
+                Success = verifyResponse.Success,
+                Message = verifyResponse.Message,
+            };
+
             return await subscriptionInteractor.InviteAsync(userId, courseId, localRoleSign, userIdentifiers);
         }
 
@@ -62,6 +70,14 @@ namespace LearnLink.WebApi.Controllers
         [HttpDelete("kick")]
         public async Task<Response> KickAsync(int requesterUserId, int targetUserId, int courseId)
         {
+            var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, requesterUserId);
+
+            if (!verifyResponse.Success) return new()
+            {
+                Success = verifyResponse.Success,
+                Message = verifyResponse.Message,
+            };
+
             return await subscriptionInteractor.KickUserAsync(requesterUserId, targetUserId, courseId);
         }
     }

@@ -256,6 +256,14 @@ namespace LearnLink.Application.Interactors
                     .FirstOrDefaultAsync(x => x.UserId == targetUserId && x.CourseId == courseId) ??
                         throw new NotFoundException("Роль исключаемого пользователя не определена");
 
+                await unitOfWork.UserCourseLocalRoles.Entry(requesterCourseLocalRole)
+                    .Reference(u => u.LocalRole)
+                    .LoadAsync();
+
+                unitOfWork.UserCourseLocalRoles.Entry(targetCourseLocalRole)
+                    .Reference(u => u.LocalRole)
+                    .Load();
+
                 if (!requester.Role.IsAdmin &&
                    (!requesterCourseLocalRole.LocalRole.KickAccess || 
                      requesterCourseLocalRole.LocalRole.GetRolePriority() < targetCourseLocalRole.LocalRole.GetRolePriority()))
@@ -295,7 +303,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось отписаться от курса",
-                    InnerErrorMessages = new string[] { exception.Message },
+                    InnerErrorMessages = [ exception.Message ],
                 };
             }
         } 

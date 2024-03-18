@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LearnLink.WebApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240317160538_LocalRoleChange")]
-    partial class LocalRoleChange
+    [Migration("20240318132022_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -296,6 +296,9 @@ namespace LearnLink.WebApi.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<bool>("InviteAccess")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("KickAccess")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("ManageInternalAccess")
