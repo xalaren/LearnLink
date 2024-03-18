@@ -7,12 +7,13 @@
         public bool RemoveAcess { get; set; }
         public bool ManageInternalAccess { get; set; }
         public bool InviteAccess { get; set; }
+        public bool KickAccess { get; set; }
 
         public override bool IsAdmin
         {
             get
             {
-                return ViewAccess && EditAcess && RemoveAcess && ManageInternalAccess && InviteAccess;
+                return ViewAccess && EditAcess && RemoveAcess && ManageInternalAccess && InviteAccess && KickAccess;
             }
         }
 
@@ -25,6 +26,8 @@
             if (ManageInternalAccess) priority++;
 
             if (InviteAccess) priority++;
+
+            if(KickAccess) priority++;
 
             if (EditAcess && RemoveAcess) priority++;
 

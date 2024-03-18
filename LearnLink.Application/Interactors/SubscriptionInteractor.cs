@@ -256,7 +256,9 @@ namespace LearnLink.Application.Interactors
                     .FirstOrDefaultAsync(x => x.UserId == targetUserId && x.CourseId == courseId) ??
                         throw new NotFoundException("Роль исключаемого пользователя не определена");
 
-                if(!requester.Role.IsAdmin && requesterCourseLocalRole.LocalRole.GetRolePriority() < targetCourseLocalRole.LocalRole.GetRolePriority())
+                if (!requester.Role.IsAdmin &&
+                   (!requesterCourseLocalRole.LocalRole.KickAccess || 
+                     requesterCourseLocalRole.LocalRole.GetRolePriority() < targetCourseLocalRole.LocalRole.GetRolePriority()))
                 {
                     throw new AccessLevelException("Невозможно исключить данного пользователя");
                 }

@@ -16,7 +16,8 @@ namespace LearnLink.Application.Mappers
                 EditAcess = roleDto.EditAccess,
                 RemoveAcess = roleDto.RemoveAccess,
                 ManageInternalAccess = roleDto.ManageInternalAccess,
-                InviteAccess = roleDto.InviteAccess
+                InviteAccess = roleDto.InviteAccess,
+                KickAccess = roleDto.KickAccess
             };
         }
 
@@ -30,18 +31,19 @@ namespace LearnLink.Application.Mappers
                 EditAccess: roleEntity.EditAcess,
                 RemoveAccess: roleEntity.RemoveAcess,
                 ManageInternalAccess: roleEntity.ManageInternalAccess,
-                InviteAccess: roleEntity.InviteAccess
+                InviteAccess: roleEntity.InviteAccess,
+                KickAccess: roleEntity.KickAccess
             );
         }
 
         public static LocalRole Assign(this LocalRole role, LocalRoleDto roleDto)
         {
-            if (!string.Equals(role.Name, roleDto.Name))
+            if (!string.Equals(role.Name, roleDto.Name) && !string.IsNullOrWhiteSpace(roleDto.Name))
             {
                 role.Name = roleDto.Name;
             }
 
-            if (!string.Equals(role.Sign, roleDto.Sign))
+            if (!string.Equals(role.Sign, roleDto.Sign) && !string.IsNullOrWhiteSpace(roleDto.Sign))
             {
                 role.Sign = roleDto.Sign;
             }
@@ -51,6 +53,7 @@ namespace LearnLink.Application.Mappers
             role.RemoveAcess = roleDto.RemoveAccess;
             role.ManageInternalAccess = roleDto.ManageInternalAccess;
             role.InviteAccess = roleDto.InviteAccess;
+            role.KickAccess = roleDto.KickAccess;
 
             return role;
         }
