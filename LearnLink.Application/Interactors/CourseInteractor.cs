@@ -10,9 +10,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Interactors
 {
-    public class CourseInteractor(IUnitOfWork unitOfWork)
+    public class CourseInteractor(IUnitOfWork unitOfWork, PermissionService permissionService)
     {
         private readonly IUnitOfWork unitOfWork = unitOfWork;
+        private readonly PermissionService permissionService = permissionService;
 
         public async Task<Response<CourseDto?>> GetCourseAsync(int courseId)
         {
@@ -571,7 +572,7 @@ namespace LearnLink.Application.Interactors
                 var course = await unitOfWork.Courses.FindAsync(courseDto.Id) ??
                     throw new NotFoundException("Курс не найден");
 
-                var editPermission = await GetPermissionAsync(userId: userId, courseId: courseDto.Id, toEdit: true);
+                var editPermission = await permissionService.GetPermissionAsync(userId: userId, courseId: courseDto.Id, toEdit: true);
 
                 if (!editPermission)
                 {
@@ -614,7 +615,7 @@ namespace LearnLink.Application.Interactors
                 var course = await unitOfWork.Courses.FindAsync(courseId) ??
                     throw new NotFoundException("Курс не найден");
 
-                var removePermission = await GetPermissionAsync(userId: userId, courseId: courseId, toRemove: true);
+                var removePermission = await permissionService.GetPermissionAsync(userId: userId, courseId: courseId, toRemove: true);
 
                 if(!removePermission)
                 {
@@ -802,42 +803,6 @@ namespace LearnLink.Application.Interactors
                     InnerErrorMessages = [exception.Message],
                 };
             }
-        }
-
-        private async Task<bool> GetPermissionAsync(int userId, int courseId, bool toView = false, bool toEdit = false, bool toRemove = false, bool toManageInternal = false)
-        {
-            var user = await unitOfWork.Users.FirstOrDefaultAsync(u => u.Id == userId);
-
-            if (user == null)
-            {
-                return false;
-            }
-
-            await unitOfWork.Users.Entry(user)
-                .Reference(u => u.Role)
-                .LoadAsync();
-
-            if (user.Role.IsAdmin)
-            {
-                return true;
-            }
-
-            var userCourseRole = await unitOfWork.UserCourseLocalRoles.FirstOrDefaultAsync(u => u.UserId == userId && u.CourseId == courseId);
-
-            if (userCourseRole == null)
-            {
-                return false;
-            }
-
-            await unitOfWork.UserCourseLocalRoles.Entry(userCourseRole)
-                .Reference(u => u.LocalRole)
-                .LoadAsync();
-
-            return
-                (userCourseRole.LocalRole.ViewAccess && toView) ||
-                (userCourseRole.LocalRole.EditAcess && toEdit) ||
-                (userCourseRole.LocalRole.RemoveAcess && toRemove) ||
-                (userCourseRole.LocalRole.ManageInternalAccess && toManageInternal);
         }
     }
 }

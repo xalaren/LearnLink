@@ -8,16 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Interactors
 {
-    public class ModuleInteractor
+    public class ModuleInteractor(IUnitOfWork unitOfWork, PermissionService permissionService)
     {
-        private readonly IUnitOfWork unitOfWork;
+        private readonly IUnitOfWork unitOfWork = unitOfWork;
 
-        public ModuleInteractor(IUnitOfWork unitOfWork)
-        {
-            this.unitOfWork = unitOfWork;
-        }
-
-        public async Task<Response> CreateModuleAsync(int courseId, ModuleDto moduleDto)
+        public async Task<Response> CreateModuleAsync(int userId, int courseId, ModuleDto moduleDto)
         {
             try
             {
@@ -33,6 +28,13 @@ namespace LearnLink.Application.Interactors
                 if (course == null)
                 {
                     throw new NotFoundException("Курс не найден");
+                }
+
+                var createPermission = await permissionService.GetPermissionAsync(userId, courseId, toManageInternal: true);
+
+                if(!createPermission)
+                {
+                    throw new AccessLevelException("Недостаточно прав для создания модуля");
                 }
 
                 var courseModule = new CourseModule()
@@ -151,7 +153,6 @@ namespace LearnLink.Application.Interactors
             {
                 var module = await unitOfWork.Modules.AsNoTracking().FirstOrDefaultAsync(module => module.Id == moduleId);
 
-
                 if (module == null)
                 {
                     throw new NotFoundException("Модуль не найден");
@@ -224,7 +225,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось изменить модуль",
-                    InnerErrorMessages = new string[] { exception.Message }
+                    InnerErrorMessages = [exception.Message]
                 };
             }
         }
@@ -240,6 +241,7 @@ namespace LearnLink.Application.Interactors
                 {
                     throw new NotFoundException("Модуль не найден");
                 }
+
                 unitOfWork.Modules.Remove(existModule);
 
                 await unitOfWork.CommitAsync();

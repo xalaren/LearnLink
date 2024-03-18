@@ -5,6 +5,7 @@ namespace LearnLink.Core.Entities
     public class Course
     {
         private string title = string.Empty;
+        private int progressPercentage = 0;
 
         public int Id { get; set; }
         public bool IsPublic { get; set; } = false;
@@ -33,5 +34,16 @@ namespace LearnLink.Core.Entities
 
         public int SubscribersCount { get; set; } = 0;
 
+        public int ProgressPercentage
+        {
+            get => progressPercentage;
+            set
+            {
+                if (value < 0 && value > 100)
+                {
+                    throw new ValidationException("Процент прогресса не входит в пределы допустимого (0 - 100)");
+                }
+            }
+        }
     }
 }
