@@ -1,4 +1,5 @@
-﻿using LearnLink.Application.Mappers;
+﻿using System.Runtime.InteropServices;
+using LearnLink.Application.Mappers;
 using LearnLink.Application.Transaction;
 using LearnLink.Core.Constants;
 using LearnLink.Core.Entities;
@@ -47,6 +48,14 @@ namespace LearnLink.Application.Interactors
                     User = user,
                     Course = course,
                     StartDate = DateTime.Now.ToUniversalTime(),
+                });
+
+                var courseCompletions = users.Select(user => new CourseCompletion()
+                {
+                    Course = course,
+                    User = user,
+                    Completed = false,
+                    CompletionProgress = 0,
                 });
 
                 var role = await unitOfWork.LocalRoles.FirstOrDefaultAsync(l => l.Sign == localRoleSign);
@@ -140,11 +149,20 @@ namespace LearnLink.Application.Interactors
                     LocalRole = role,
                 };
 
+                var courseCompletion = new CourseCompletion()
+                {
+                    Course = course,
+                    User = user,
+                    Completed = false,
+                    CompletionProgress = 0,
+                };
+
                 subscriptionEntity.User = user;
                 subscriptionEntity.Course = course;
 
                 await unitOfWork.Subscriptions.AddAsync(subscriptionEntity);
                 await unitOfWork.UserCourseLocalRoles.AddAsync(newUserCourseLocalRole);
+                await unitOfWork.CourseCompletions.AddAsync(courseCompletion);
 
                 unitOfWork.Courses.Update(course);
 

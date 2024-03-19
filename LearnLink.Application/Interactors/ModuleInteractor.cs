@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Interactors
 {
-    public class ModuleInteractor(IUnitOfWork unitOfWork, PermissionService permissionService)
+    public class ModuleInteractor(IUnitOfWork unitOfWork)
     {
         private readonly IUnitOfWork unitOfWork = unitOfWork;
 
-        public async Task<Response> CreateModuleAsync(int userId, int courseId, ModuleDto moduleDto)
+        public async Task<Response> CreateModuleAsync(int courseId, ModuleDto moduleDto)
         {
             try
             {
@@ -30,13 +30,6 @@ namespace LearnLink.Application.Interactors
                     throw new NotFoundException("Курс не найден");
                 }
 
-                var createPermission = await permissionService.GetPermissionAsync(userId, courseId, toManageInternal: true);
-
-                if(!createPermission)
-                {
-                    throw new AccessLevelException("Недостаточно прав для создания модуля");
-                }
-
                 var courseModule = new CourseModule()
                 {
                     Module = moduleEntity,
@@ -45,6 +38,21 @@ namespace LearnLink.Application.Interactors
 
                 await unitOfWork.Modules.AddAsync(moduleEntity);
                 await unitOfWork.CourseModules.AddAsync(courseModule);
+
+                var courseCompletions = unitOfWork.CourseCompletions.Where(courseCompletion => courseCompletion.CourseId == courseId).Include(courseCompletion => courseCompletion.User);
+
+                if (courseCompletions.Count() > 0)
+                {
+                    var moduleCompletions = courseCompletions.Select(sub => new ModuleCompletion()
+                    {
+                        User = sub.User,
+                        Module = moduleEntity,
+                        Completed = false,
+                        CompletionProgress = 0,
+                    });
+
+                    await unitOfWork.ModuleCompletions.AddRangeAsync(moduleCompletions);
+                }
 
                 await unitOfWork.CommitAsync();
 

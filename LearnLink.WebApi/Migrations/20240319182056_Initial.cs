@@ -23,7 +23,8 @@ namespace LearnLink.WebApi.Migrations
                     Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     CreationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Title = table.Column<string>(type: "character varying(60)", maxLength: 60, nullable: false),
-                    SubscribersCount = table.Column<int>(type: "integer", nullable: false)
+                    SubscribersCount = table.Column<int>(type: "integer", nullable: false),
+                    ProgressPercentage = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -153,6 +154,32 @@ namespace LearnLink.WebApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CourseCompletions",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    CourseId = table.Column<int>(type: "integer", nullable: false),
+                    Completed = table.Column<bool>(type: "boolean", nullable: false),
+                    CompletionProgress = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CourseCompletions", x => new { x.UserId, x.CourseId });
+                    table.ForeignKey(
+                        name: "FK_CourseCompletions_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CourseCompletions_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Credentials",
                 columns: table => new
                 {
@@ -174,12 +201,40 @@ namespace LearnLink.WebApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ModuleCompletions",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    ModuleId = table.Column<int>(type: "integer", nullable: false),
+                    Completed = table.Column<bool>(type: "boolean", nullable: false),
+                    CompletionProgress = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ModuleCompletions", x => new { x.UserId, x.ModuleId });
+                    table.ForeignKey(
+                        name: "FK_ModuleCompletions_Modules_ModuleId",
+                        column: x => x.ModuleId,
+                        principalTable: "Modules",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ModuleCompletions_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Subscriptions",
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "integer", nullable: false),
                     CourseId = table.Column<int>(type: "integer", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Completed = table.Column<bool>(type: "boolean", nullable: false),
+                    CompletionProgress = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -254,6 +309,11 @@ namespace LearnLink.WebApi.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_CourseCompletions_CourseId",
+                table: "CourseCompletions",
+                column: "CourseId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CourseModules_ModuleId",
                 table: "CourseModules",
                 column: "ModuleId");
@@ -262,6 +322,11 @@ namespace LearnLink.WebApi.Migrations
                 name: "IX_Credentials_UserId",
                 table: "Credentials",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ModuleCompletions_ModuleId",
+                table: "ModuleCompletions",
+                column: "ModuleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ModuleLessons_LessonId",
@@ -310,10 +375,16 @@ namespace LearnLink.WebApi.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "CourseCompletions");
+
+            migrationBuilder.DropTable(
                 name: "CourseModules");
 
             migrationBuilder.DropTable(
                 name: "Credentials");
+
+            migrationBuilder.DropTable(
+                name: "ModuleCompletions");
 
             migrationBuilder.DropTable(
                 name: "ModuleLessons");

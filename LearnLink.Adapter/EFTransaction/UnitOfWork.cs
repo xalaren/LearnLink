@@ -29,6 +29,9 @@ namespace LearnLink.Adapter.EFTransaction
         public DbSet<LocalRole> LocalRoles => context.LocalRoles;
         public DbSet<UserCourseLocalRole> UserCourseLocalRoles => context.UserCourseLocalRoles;
 
+        public DbSet<CourseCompletion> CourseCompletions => context.CourseCompletions;
+        public DbSet<ModuleCompletion> ModuleCompletions => context.ModuleCompletions;
+
         public ValueTask DisposeAsync()
         {
             return context.DisposeAsync();

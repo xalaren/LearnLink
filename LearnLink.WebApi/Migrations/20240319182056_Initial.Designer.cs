@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LearnLink.WebApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240318132022_Initial")]
+    [Migration("20240319182056_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -46,6 +46,9 @@ namespace LearnLink.WebApi.Migrations
                     b.Property<bool>("IsUnavailable")
                         .HasColumnType("boolean");
 
+                    b.Property<int>("ProgressPercentage")
+                        .HasColumnType("integer");
+
                     b.Property<int>("SubscribersCount")
                         .HasColumnType("integer");
 
@@ -57,6 +60,27 @@ namespace LearnLink.WebApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Courses");
+                });
+
+            modelBuilder.Entity("LearnLink.Core.Entities.CourseCompletion", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("Completed")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("CompletionProgress")
+                        .HasColumnType("integer");
+
+                    b.HasKey("UserId", "CourseId");
+
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("CourseCompletions");
                 });
 
             modelBuilder.Entity("LearnLink.Core.Entities.CourseModule", b =>
@@ -147,6 +171,27 @@ namespace LearnLink.WebApi.Migrations
                     b.ToTable("Modules");
                 });
 
+            modelBuilder.Entity("LearnLink.Core.Entities.ModuleCompletion", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ModuleId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("Completed")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("CompletionProgress")
+                        .HasColumnType("integer");
+
+                    b.HasKey("UserId", "ModuleId");
+
+                    b.HasIndex("ModuleId");
+
+                    b.ToTable("ModuleCompletions");
+                });
+
             modelBuilder.Entity("LearnLink.Core.Entities.ModuleLesson", b =>
                 {
                     b.Property<int>("ModuleId")
@@ -202,6 +247,12 @@ namespace LearnLink.WebApi.Migrations
                         .HasColumnType("integer");
 
                     b.Property<int>("CourseId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("Completed")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("CompletionProgress")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("StartDate")
@@ -316,6 +367,25 @@ namespace LearnLink.WebApi.Migrations
                     b.HasDiscriminator().HasValue("LocalRole");
                 });
 
+            modelBuilder.Entity("LearnLink.Core.Entities.CourseCompletion", b =>
+                {
+                    b.HasOne("LearnLink.Core.Entities.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LearnLink.Core.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("LearnLink.Core.Entities.CourseModule", b =>
                 {
                     b.HasOne("LearnLink.Core.Entities.Course", "Course")
@@ -342,6 +412,25 @@ namespace LearnLink.WebApi.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LearnLink.Core.Entities.ModuleCompletion", b =>
+                {
+                    b.HasOne("LearnLink.Core.Entities.Module", "Module")
+                        .WithMany()
+                        .HasForeignKey("ModuleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LearnLink.Core.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Module");
 
                     b.Navigation("User");
                 });

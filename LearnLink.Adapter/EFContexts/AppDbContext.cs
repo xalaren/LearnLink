@@ -22,6 +22,9 @@ namespace LearnLink.Adapter.EFContexts
         public DbSet<Lesson> Lessons { get; set; }
         public DbSet<ModuleLesson> ModuleLessons { get; set; }
 
+        public DbSet<CourseCompletion> CourseCompletions { get; set; }
+        public DbSet<ModuleCompletion> ModuleCompletions { get; set; }
+
         public AppDbContext(DbContextOptions options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -37,6 +40,8 @@ namespace LearnLink.Adapter.EFContexts
             modelBuilder.ApplyConfiguration(new ModuleLessonsEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new LocalRoleEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new UserCourseLocalRoleEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new CourseCompletionEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new ModuleComletionEntityTypeConfiguration());
         }
     }
 }

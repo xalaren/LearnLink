@@ -15,6 +15,8 @@ namespace LearnLink.Application.Interactors
         private readonly IUnitOfWork unitOfWork = unitOfWork;
         private readonly PermissionService permissionService = permissionService;
 
+        //Get, Find methods
+
         public async Task<Response<CourseDto?>> GetCourseAsync(int courseId)
         {
             try
@@ -318,73 +320,6 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task<Response> CreateCourseAsync(int userId, CourseDto courseDto)
-        {
-            try
-            {
-                ArgumentNullException.ThrowIfNull(courseDto, "CourseDto was null");
-
-                var user = await unitOfWork.Users.FindAsync(userId) ??
-                    throw new NotFoundException("Пользователь не найден");
-
-                var course = courseDto.ToEntity();
-
-                if (course.IsUnavailable)
-                {
-                    course.IsPublic = false;
-                }
-
-                var userCreatedCourse = new UserCreatedCourse()
-                {
-                    User = user,
-                    Course = course,
-                };
-
-                var role = await unitOfWork.LocalRoles.FirstOrDefaultAsync(x => x.Sign == RoleSignConstants.MODERATOR);
-
-                if (role == null)
-                {
-                    throw new NotFoundException("Не найдена роль модератора. Обратитесь к администратору или разработчику.");
-                }
-
-                var userCourseRole = new UserCourseLocalRole()
-                {
-                    Course = course,
-                    LocalRole = role,
-                    User = user,
-                };
-
-                await unitOfWork.Courses.AddAsync(course);
-                await unitOfWork.UserCreatedCourses.AddAsync(userCreatedCourse);
-                await unitOfWork.UserCourseLocalRoles.AddAsync(userCourseRole);
-
-                await unitOfWork.CommitAsync();
-
-                return new Response()
-                {
-                    Success = true,
-                    Message = "Курс успешно создан",
-                };
-            }
-            catch (CustomException exception)
-            {
-                return new Response()
-                {
-                    Success = false,
-                    Message = exception.Message,
-                };
-            }
-            catch (Exception exception)
-            {
-                return new Response()
-                {
-                    Success = false,
-                    Message = "Не удалось создать курс",
-                    InnerErrorMessages = [exception.Message],
-                };
-            }
-        }
-
         public async Task<Response<DataPage<CourseDto[]>>> GetPublicCoursesAsync(DataPageHeader pageHeader)
         {
             try
@@ -563,6 +498,84 @@ namespace LearnLink.Application.Interactors
             }
         }
 
+        //Create, Edit, Remove methods
+
+        public async Task<Response> CreateCourseAsync(int userId, CourseDto courseDto)
+        {
+            try
+            {
+                ArgumentNullException.ThrowIfNull(courseDto, "CourseDto was null");
+
+                var user = await unitOfWork.Users.FindAsync(userId) ??
+                    throw new NotFoundException("Пользователь не найден");
+
+                var course = courseDto.ToEntity();
+
+                if (course.IsUnavailable)
+                {
+                    course.IsPublic = false;
+                }
+
+                var userCreatedCourse = new UserCreatedCourse()
+                {
+                    User = user,
+                    Course = course,
+                };
+
+                var courseCompletion = new CourseCompletion()
+                {
+                    Course = course,
+                    User = user,
+                    Completed = false,
+                    CompletionProgress = 0,
+                };
+
+                var role = await unitOfWork.LocalRoles.FirstOrDefaultAsync(x => x.Sign == RoleSignConstants.MODERATOR);
+
+                if (role == null)
+                {
+                    throw new NotFoundException("Не найдена роль модератора. Обратитесь к администратору или разработчику.");
+                }
+
+                var userCourseRole = new UserCourseLocalRole()
+                {
+                    Course = course,
+                    LocalRole = role,
+                    User = user,
+                };
+
+                await unitOfWork.Courses.AddAsync(course);
+                await unitOfWork.UserCreatedCourses.AddAsync(userCreatedCourse);
+                await unitOfWork.UserCourseLocalRoles.AddAsync(userCourseRole);
+                await unitOfWork.CourseCompletions.AddAsync(courseCompletion);
+
+                await unitOfWork.CommitAsync();
+
+                return new Response()
+                {
+                    Success = true,
+                    Message = "Курс успешно создан",
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new Response()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new Response()
+                {
+                    Success = false,
+                    Message = "Не удалось создать курс",
+                    InnerErrorMessages = [exception.Message],
+                };
+            }
+        }
+
         public async Task<Response> UpdateCourseAsync(int userId, CourseDto courseDto)
         {
             try
@@ -646,8 +659,6 @@ namespace LearnLink.Application.Interactors
 
                     unitOfWork.Lessons.RemoveRange(lessons);
                 });
-
-
 
                 unitOfWork.Modules.RemoveRange(modules);
 

@@ -3,20 +3,17 @@ using LearnLink.Core.Interfaces;
 
 namespace LearnLink.Core.Entities
 {
-    public class Subscription : ICompletion
+    public class CourseCompletion : ICompletion
     {
         private int completionProgress = 0;
 
         public int UserId { get; set; }
         public User User { get; set; } = null!;
-        
+
         public int CourseId { get; set; }
         public Course Course { get; set; } = null!;
 
-        public DateTime StartDate { get; set; }
-
         public bool Completed { get; set; }
-
         public int CompletionProgress
         {
             get => completionProgress;
