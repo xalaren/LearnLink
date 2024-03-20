@@ -1,6 +1,7 @@
 ﻿using LearnLink.Application.Interactors;
 using LearnLink.Shared.DataTransferObjects;
 using LearnLink.Shared.Responses;
+using LearnLink.WebApi.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +18,6 @@ namespace CoursePrototype.WebApi.Controllers
         {
             this.userInteractor = userInteractor;
             this.userVerifierService = userVerifierService;
-
         }
 
         [Authorize]
@@ -26,7 +26,9 @@ namespace CoursePrototype.WebApi.Controllers
         {
             var nickname = User.Identity?.Name;
 
-            return await userInteractor.GetUserByNicknameAsync(nickname);
+            var response = await userInteractor.GetUserByNicknameAsync(nickname);
+
+            return response;
         }
 
         [AllowAnonymous]
@@ -38,7 +40,7 @@ namespace CoursePrototype.WebApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<Response<string>> Login(string nickname, string password)
+        public async Task<Response> Login(string nickname, string password)
         {
             return await userInteractor.AuthenticateAsync(nickname, password);
         }

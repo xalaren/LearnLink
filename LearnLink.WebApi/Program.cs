@@ -30,7 +30,6 @@ builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
 
 // Add services to the container.
 
-
 builder.Services.AddScoped<UserInteractor>();
 builder.Services.AddScoped<CourseInteractor>();
 builder.Services.AddScoped<SubscriptionInteractor>();

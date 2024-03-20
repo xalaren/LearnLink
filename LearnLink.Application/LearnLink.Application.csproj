@@ -15,4 +15,8 @@
     <ProjectReference Include="..\LearnLink.Shared\LearnLink.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Specification\" />
+  </ItemGroup>
+
 </Project>

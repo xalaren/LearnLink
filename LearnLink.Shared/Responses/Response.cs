@@ -2,6 +2,7 @@
 {
     public class Response
     {
+        public int StatusCode { get; init; }
         public bool Success { get; init; }
         public string? Message { get; init; }
         public string[]? InnerErrorMessages { get; set; }

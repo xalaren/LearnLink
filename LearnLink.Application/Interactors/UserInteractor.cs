@@ -47,7 +47,7 @@ namespace LearnLink.Application.Interactors
                     throw new NotFoundException("Неверное имя пользователя");
                 }
 
-                unitOfWork.Users.Entry(user).Reference(x => x.Role).Load();
+                await unitOfWork.Users.Entry(user).Reference(user => user.Role).LoadAsync();
 
                 var userCredentials = await unitOfWork.Credentials.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == user.Id);
 
@@ -78,6 +78,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = exception.Message,
+                    StatusCode = exception.StatusCode,
                 };
             }
             catch (Exception exception)
@@ -86,7 +87,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Аутентификация не удалась. Внутренняя ошибка",
-                    InnerErrorMessages = new string[] { exception.Message },
+                    InnerErrorMessages = [exception.Message],
                 };
             }
         }
@@ -180,7 +181,8 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                var users = await unitOfWork.Users.AsNoTracking().Select(user => user.ToDto()).ToArrayAsync();
+                var users = await unitOfWork.Users.Select(x => x.ToDto()).ToArrayAsync();
+
                 return new()
                 {
                     Success = true,
