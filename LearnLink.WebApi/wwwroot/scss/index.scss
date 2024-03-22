@@ -1,0 +1,372 @@
+@import "./partials/_fontimports.scss";
+@import "./partials/_variables.scss";
+@import "./partials/_reset.scss";
+@import "./partials/_mixins.scss";
+@import "./partials/_icons.scss";
+
+//General styles
+
+* {
+    font-size: $reg-fz;
+    color: $mainGray;
+}
+
+button {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background: none;
+    padding: 0 10px;
+    margin: 0;
+    font-size: $reg-fz;
+    height: 50px;
+    border-radius: 5px;
+    width: max-content;
+}
+
+input,
+textarea {
+    padding: 0;
+    margin: 0;
+    min-height: 30px;
+    border: none;
+    outline: none;
+    color: $mainGray;
+    font-size: $reg-fz;
+}
+
+.textarea {
+    resize: none;
+    min-height: 250px !important;
+    color: $mainGray;
+}
+
+h1 {
+    font-size: $h1-fz;
+    font-weight: 800;
+}
+
+h2 {
+    font-size: $h2-fz;
+    font-weight: 700;
+}
+
+h3 {
+    font-size: $h3-fz;
+    font-weight: 600;
+}
+
+.container {
+    box-sizing: border-box;
+    padding: 0 20px;
+}
+
+.wrapper {
+    display: grid;
+    grid-template-rows: auto 1fr 40px;
+    min-height: 100dvh;
+}
+
+body {
+    background-color: $white;
+}
+
+.header {
+    box-sizing: border-box;
+    height: 60px;
+    background-color: $primary;
+
+    * {
+        color: $white;
+    }
+
+    &__nav {
+        display: flex;
+        gap: 40px;
+        align-items: center;
+        height: 100%;
+    }
+}
+
+.main {
+    width: 100%;
+
+    &__content {
+        @include child-not-last {
+            margin-bottom: 40px;
+        }
+    }
+    > * {
+        margin-bottom: 40px;
+    }
+}
+
+.footer {
+    width: 100%;
+    height: 100%;
+    color: $mainGray;
+    font-size: $reg-fz;
+    &__content {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.page {
+    > *:first-child {
+        margin-top: 40px;
+    }
+
+    > * {
+        margin-bottom: 40px;
+    }
+}
+
+.white-link {
+    color: $white;
+
+    &:hover {
+        color: $blue;
+        text-decoration: underline;
+    }
+}
+
+.input {
+    border-radius: 5px;
+    background: $veryLightGray;
+    padding: 10px;
+    min-height: 40px;
+    text-overflow: ellipsis;
+    border: solid 2px transparent;
+
+    &::placeholder {
+        color: $secondaryGray;
+    }
+
+    &:focus {
+        border: solid 2px $mainGray;
+    }
+}
+
+.primary-button {
+    color: $blue;
+    background-color: $lightBlue;
+    border: solid 2px $blue;
+    transition: 0.3s ease-in-out;
+
+    &:hover {
+        background-color: $blue;
+        color: $white;
+    }
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    max-width: 800px;
+}
+
+.breadcrumb {
+    display: flex;
+    gap: 5px;
+
+    &__item {
+        color: $blue;
+        &:after {
+            margin-left: 5px;
+            content: "\\";
+            color: $mainGray;
+            color: $blue;
+        }
+    }
+}
+
+.endpoints-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.endpoint-item {
+    display: grid;
+    grid-template-columns: 130px 1fr auto;
+    flex-grow: 1;
+    align-items: center;
+    width: 100%;
+    transition: 0.3s ease-in-out;
+
+    gap: 20px;
+    height: 60px;
+    border-radius: 5px;
+    background-color: $veryLightGray;
+    cursor: pointer;
+
+    &__method {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        padding: 0 30px;
+        height: 100%;
+        border-radius: inherit;
+        transition: 0.3s ease-in-out;
+        background-color: $secondaryGray;
+        color: $white;
+        text-transform: uppercase;
+    }
+
+    &__name {
+        padding: 0 10px;
+    }
+
+    &__arrow {
+        font-size: 24px;
+        color: inherit;
+        transition: 0.3s ease-in-out;
+        padding: 0 30px;
+    }
+
+    &:hover {
+        .endpoint-item__method {
+            background-color: $mainGray;
+        }
+
+        .endpoint-item__arrow {
+            transform: translateX(10px);
+        }
+    }
+}
+
+.endpoint-item-get {
+    background-color: $lightBlue;
+    color: $blue;
+
+    .endpoint-item__method {
+        background-color: $blue;
+        color: $white;
+    }
+
+    .endpoint-item__name {
+        color: $blue;
+    }
+
+    &:hover {
+        .endpoint-item__method {
+            background-color: $accentBlue;
+        }
+    }
+}
+
+.endpoint-item-post {
+    background-color: $lightGreen;
+
+    .endpoint-item__method {
+        background-color: $green;
+        color: $white;
+    }
+
+    .endpoint-item__name {
+        color: $green;
+    }
+
+    &:hover {
+        .endpoint-item__method {
+            background-color: $accentGreen;
+        }
+    }
+}
+
+.endpoint-item-delete {
+    background-color: $lightRed;
+
+    .endpoint-item__method {
+        background-color: $red;
+        color: $white;
+    }
+
+    .endpoint-item__name {
+        color: $red;
+    }
+
+    &:hover {
+        .endpoint-item__method {
+            background-color: $accentRed;
+        }
+    }
+}
+
+.width-400 {
+    width: 400px;
+}
+
+.response-container {
+    border: solid 2px $lightGray;
+    padding: 20px;
+    border-radius: 5px;
+    > *:first-child {
+        margin-bottom: 40px;
+    }
+
+    p {
+        line-height: 1.5;
+    }
+}
+
+.nav-link {
+    cursor: pointer;
+    color: $blue;
+    font-weight: 600;
+    transition: 0.3s ease-in-out;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.data-view {
+    > *:first-child {
+        margin-bottom: 40px;
+    }
+    table {
+        border: solid 2px #e2e2e2;
+        width: 100%;
+    }
+
+    th,
+    td {
+        padding: 10px 40px;
+        border: solid 2px #e2e2e2;
+    }
+
+    th {
+        font-size: 20px;
+        font-weight: 500;
+        text-align: left;
+    }
+}
+
+.alert {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background-color: $lightBlue;
+    color: $blue;
+    border: solid 2px $blue;
+    border-radius: 5px;
+}
+
+.alert-success {
+    background-color: $lightGreen;
+    color: $green;
+    border-color: $green;
+}
+
+.alert-danger {
+    background-color: $lightRed;
+    color: $red;
+    border-color: $red;
+}

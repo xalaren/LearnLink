@@ -11,9 +11,7 @@ namespace LearnLink.Application.Mappers
             {
                 StartDate = subscriptionDto.StartDate.ToUniversalTime(),
                 CourseId = subscriptionDto.CourseId,
-                UserId = subscriptionDto.UserId,
-                Completed = subscriptionDto.Completed,
-                CompletionProgress = subscriptionDto.CompletionProgress,
+                UserId = subscriptionDto.UserId
             };
         }
 
@@ -23,9 +21,7 @@ namespace LearnLink.Application.Mappers
             (
                 StartDate: subscriptionEntity.StartDate,
                 CourseId: subscriptionEntity.CourseId,
-                UserId: subscriptionEntity.UserId,
-                Completed: subscriptionEntity.Completed,
-                CompletionProgress: subscriptionEntity.CompletionProgress
+                UserId: subscriptionEntity.UserId
             );
         }
     }

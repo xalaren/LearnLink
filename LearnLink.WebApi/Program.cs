@@ -5,6 +5,7 @@ using LearnLink.Application.Interactors;
 using LearnLink.Application.Security;
 using LearnLink.Application.Transaction;
 using LearnLink.SecurityProvider;
+using LearnLink.WebApi.Components;
 using LearnLink.WebApi.Extensions;
 using LearnLink.WebApi.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -26,9 +27,10 @@ builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
         policyBuilder.WithOrigins("https://localhost:5174")
                .AllowAnyHeader()
                .AllowAnyMethod();
-    }));
+    }
+));
 
-// Add services to the container.
+builder.Services.AddRazorPages();
 
 builder.Services.AddScoped<UserInteractor>();
 builder.Services.AddScoped<CourseInteractor>();
@@ -53,7 +55,9 @@ builder.Services.AddDbContext<AppDbContext>(options => options.GetNpgSqlOptions(
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddRazorPages();
+
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
 
 /* Setup authentication start */
 
@@ -139,8 +143,11 @@ app.UseCors("CorsPolicy");
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapRazorPages();
 
 app.UseInternalStorage();
+
+app.UseStaticFiles();
 
 app.UseStaticFiles(new StaticFileOptions
 {
@@ -148,9 +155,11 @@ app.UseStaticFiles(new StaticFileOptions
     RequestPath = "/api/" + DirectoryStore.STORAGE_DIRNAME
 });
 
+app.UseAntiforgery();
+
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
 
 app.UseSeedData();
-
-
 
 app.Run();

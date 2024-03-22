@@ -1,0 +1,696 @@
+/* noto-sans-regular - latin */
+@font-face {
+  font-display: swap;
+  /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../fonts/noto-sans-v34-latin-regular.woff2") format("woff2");
+  /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+/* noto-sans-500 - latin */
+@font-face {
+  font-display: swap;
+  /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 500;
+  src: url("../fonts/noto-sans-v34-latin-500.woff2") format("woff2");
+  /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+/* noto-sans-600 - latin */
+@font-face {
+  font-display: swap;
+  /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 600;
+  src: url("../fonts/noto-sans-v34-latin-600.woff2") format("woff2");
+  /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+/* noto-sans-700 - latin */
+@font-face {
+  font-display: swap;
+  /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 700;
+  src: url("../fonts/noto-sans-v34-latin-700.woff2") format("woff2");
+  /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+blockquote,
+q {
+  quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: "";
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+html,
+body {
+  height: 100%;
+  line-height: 1;
+  font-size: 16px;
+  color: #000;
+  font-family: "Noto Sans";
+}
+
+* {
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: 400;
+}
+
+input,
+button,
+textarea {
+  font-family: inherit;
+}
+
+@font-face {
+  font-family: "learnlinkico";
+  src: url("../../assets/fonts/learnlinkico.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+[class^=icon-],
+[class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: "learnlinkico" !important;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-invisible:before {
+  content: "\e911";
+}
+
+.icon-visible:before {
+  content: "\e920";
+}
+
+.icon-search:before {
+  content: "\e924";
+}
+
+.icon-update:before {
+  content: "\e923";
+}
+
+.icon-burger:before {
+  content: "\e922";
+}
+
+.icon-lock:before {
+  content: "\e921";
+}
+
+.icon-document-add:before {
+  content: "\e90e";
+}
+
+.icon-arrow-down:before {
+  content: "\e900";
+}
+
+.icon-arrow-left:before {
+  content: "\e901";
+}
+
+.icon-arrow-left-dotted:before {
+  content: "\e902";
+}
+
+.icon-arrow-right:before {
+  content: "\e903";
+}
+
+.icon-arrow-right-dotted:before {
+  content: "\e904";
+}
+
+.icon-arrow-up:before {
+  content: "\e905";
+}
+
+.icon-beaker:before {
+  content: "\e906";
+}
+
+.icon-bolt:before {
+  content: "\e907";
+}
+
+.icon-book:before {
+  content: "\e908";
+}
+
+.icon-chat:before {
+  content: "\e909";
+}
+
+.icon-check:before {
+  content: "\e90a";
+}
+
+.icon-code-add:before {
+  content: "\e90b";
+}
+
+.icon-cross:before {
+  content: "\e90c";
+}
+
+.icon-cross-circle:before {
+  content: "\e90d";
+}
+
+.icon-ellipsis:before {
+  content: "\e90f";
+}
+
+.icon-file:before {
+  content: "\e910";
+}
+
+.icon-invisible-circle:before {
+  content: "\e912";
+}
+
+.icon-minus:before {
+  content: "\e913";
+}
+
+.icon-module:before {
+  content: "\e914";
+}
+
+.icon-pen:before {
+  content: "\e915";
+}
+
+.icon-pen-circle:before {
+  content: "\e916";
+}
+
+.icon-plus:before {
+  content: "\e917";
+}
+
+.icon-plus-circle:before {
+  content: "\e918";
+}
+
+.icon-power:before {
+  content: "\e919";
+}
+
+.icon-star:before {
+  content: "\e91a";
+}
+
+.icon-text-add:before {
+  content: "\e91b";
+}
+
+.icon-user:before {
+  content: "\e91c";
+}
+
+.icon-user-group:before {
+  content: "\e91d";
+}
+
+.icon-user-group-circle:before {
+  content: "\e91e";
+}
+
+.icon-user-lock:before {
+  content: "\e91f";
+}
+
+* {
+  font-size: 20px;
+  color: #383838;
+}
+
+button {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  background: none;
+  padding: 0 10px;
+  margin: 0;
+  font-size: 20px;
+  height: 50px;
+  border-radius: 5px;
+  width: -moz-max-content;
+  width: max-content;
+}
+
+input,
+textarea {
+  padding: 0;
+  margin: 0;
+  min-height: 30px;
+  border: none;
+  outline: none;
+  color: #383838;
+  font-size: 20px;
+}
+
+.textarea {
+  resize: none;
+  min-height: 250px !important;
+  color: #383838;
+}
+
+h1 {
+  font-size: 42px;
+  font-weight: 800;
+}
+
+h2 {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+h3 {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.container {
+  box-sizing: border-box;
+  padding: 0 20px;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-rows: auto 1fr 40px;
+  min-height: 100dvh;
+}
+
+body {
+  background-color: #fff;
+}
+
+.header {
+  box-sizing: border-box;
+  height: 60px;
+  background-color: #1f1f1f;
+}
+.header * {
+  color: #fff;
+}
+.header__nav {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  height: 100%;
+}
+
+.main {
+  width: 100%;
+}
+.main__content > *:not(:last-child) {
+  margin-bottom: 40px;
+}
+.main > * {
+  margin-bottom: 40px;
+}
+
+.footer {
+  width: 100%;
+  height: 100%;
+  color: #383838;
+  font-size: 20px;
+}
+.footer__content {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.page > *:first-child {
+  margin-top: 40px;
+}
+.page > * {
+  margin-bottom: 40px;
+}
+
+.white-link {
+  color: #fff;
+}
+.white-link:hover {
+  color: #6b6bff;
+  text-decoration: underline;
+}
+
+.input {
+  border-radius: 5px;
+  background: #f3f3f3;
+  padding: 10px;
+  min-height: 40px;
+  text-overflow: ellipsis;
+  border: solid 2px transparent;
+}
+.input::-moz-placeholder {
+  color: #949494;
+}
+.input::placeholder {
+  color: #949494;
+}
+.input:focus {
+  border: solid 2px #383838;
+}
+
+.primary-button {
+  color: #6b6bff;
+  background-color: #eaeaff;
+  border: solid 2px #6b6bff;
+  transition: 0.3s ease-in-out;
+}
+.primary-button:hover {
+  background-color: #6b6bff;
+  color: #fff;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  max-width: 800px;
+}
+
+.breadcrumb {
+  display: flex;
+  gap: 5px;
+}
+.breadcrumb__item {
+  color: #6b6bff;
+}
+.breadcrumb__item:after {
+  margin-left: 5px;
+  content: "\\";
+  color: #383838;
+  color: #6b6bff;
+}
+
+.endpoints-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.endpoint-item {
+  display: grid;
+  grid-template-columns: 130px 1fr auto;
+  flex-grow: 1;
+  align-items: center;
+  width: 100%;
+  transition: 0.3s ease-in-out;
+  gap: 20px;
+  height: 60px;
+  border-radius: 5px;
+  background-color: #f3f3f3;
+  cursor: pointer;
+}
+.endpoint-item__method {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  padding: 0 30px;
+  height: 100%;
+  border-radius: inherit;
+  transition: 0.3s ease-in-out;
+  background-color: #949494;
+  color: #fff;
+  text-transform: uppercase;
+}
+.endpoint-item__name {
+  padding: 0 10px;
+}
+.endpoint-item__arrow {
+  font-size: 24px;
+  color: inherit;
+  transition: 0.3s ease-in-out;
+  padding: 0 30px;
+}
+.endpoint-item:hover .endpoint-item__method {
+  background-color: #383838;
+}
+.endpoint-item:hover .endpoint-item__arrow {
+  transform: translateX(10px);
+}
+
+.endpoint-item-get {
+  background-color: #eaeaff;
+  color: #6b6bff;
+}
+.endpoint-item-get .endpoint-item__method {
+  background-color: #6b6bff;
+  color: #fff;
+}
+.endpoint-item-get .endpoint-item__name {
+  color: #6b6bff;
+}
+.endpoint-item-get:hover .endpoint-item__method {
+  background-color: #3b3bff;
+}
+
+.endpoint-item-post {
+  background-color: #e7fff9;
+}
+.endpoint-item-post .endpoint-item__method {
+  background-color: #00bb8e;
+  color: #fff;
+}
+.endpoint-item-post .endpoint-item__name {
+  color: #00bb8e;
+}
+.endpoint-item-post:hover .endpoint-item__method {
+  background-color: #05a17d;
+}
+
+.endpoint-item-delete {
+  background-color: #ffeeef;
+}
+.endpoint-item-delete .endpoint-item__method {
+  background-color: #ff4750;
+  color: #fff;
+}
+.endpoint-item-delete .endpoint-item__name {
+  color: #ff4750;
+}
+.endpoint-item-delete:hover .endpoint-item__method {
+  background-color: #ff1c28;
+}
+
+.width-400 {
+  width: 400px;
+}
+
+.response-container {
+  border: solid 2px #dfdfdf;
+  padding: 20px;
+  border-radius: 5px;
+}
+.response-container > *:first-child {
+  margin-bottom: 40px;
+}
+.response-container p {
+  line-height: 1.5;
+}
+
+.nav-link {
+  cursor: pointer;
+  color: #6b6bff;
+  font-weight: 600;
+  transition: 0.3s ease-in-out;
+}
+.nav-link:hover {
+  text-decoration: underline;
+}
+
+.data-view > *:first-child {
+  margin-bottom: 40px;
+}
+.data-view table {
+  border: solid 2px #e2e2e2;
+  width: 100%;
+}
+.data-view th,
+.data-view td {
+  padding: 10px 40px;
+  border: solid 2px #e2e2e2;
+}
+.data-view th {
+  font-size: 20px;
+  font-weight: 500;
+  text-align: left;
+}
+
+.alert {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  background-color: #eaeaff;
+  color: #6b6bff;
+  border: solid 2px #6b6bff;
+  border-radius: 5px;
+}
+
+.alert-success {
+  background-color: #e7fff9;
+  color: #00bb8e;
+  border-color: #00bb8e;
+}
+
+.alert-danger {
+  background-color: #ffeeef;
+  color: #ff4750;
+  border-color: #ff4750;
+}/*# sourceMappingURL=index.css.map */

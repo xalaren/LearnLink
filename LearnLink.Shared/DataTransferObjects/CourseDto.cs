@@ -8,6 +8,8 @@
           string? Description,
           int SubscribersCount = 0,
           bool IsPublic = false,
-          bool IsUnavailable = false
+          bool IsUnavailable = false,
+          int? CompletionProgress = null,
+          bool? Competed = null
         );
 }

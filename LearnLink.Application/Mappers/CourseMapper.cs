@@ -32,6 +32,21 @@ namespace LearnLink.Application.Mappers
                 );
         }
 
+        public static CourseDto JoinWithCompletionToDto(this Course courseEntity, CourseCompletion courseCompletion)
+        {
+            return new CourseDto(
+                    Id: courseEntity.Id,
+                    Title: courseEntity.Title,
+                    Description: courseEntity.Description,
+                    IsPublic: courseEntity.IsPublic,
+                    IsUnavailable: courseEntity.IsUnavailable,
+                    SubscribersCount: courseEntity.SubscribersCount,
+                    CreationDate: courseEntity.CreationDate,
+                    CompletionProgress: courseCompletion.CompletionProgress,
+                    Competed: courseCompletion.Completed
+                );
+        }
+
         public static Course Assign(this Course course, CourseDto courseDto)
         {
             course.Title = courseDto.Title;
