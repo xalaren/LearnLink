@@ -1,0 +1,56 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Users.FindModel
+@{
+    ViewData["Title"] = "Find User";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Users/UsersPage')">
+        Users
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Users/Find')">
+        Find
+    </h2>
+</div>
+
+<form class="form" method="get">
+    <div class="form-input">
+        <p class="form-input__label">Nickname</p>
+        <div class="line-container">
+            <input type="text" name="nickname" placeholder="Nickname..." class="input" />
+            <button class="primary-button">Find</button>
+        </div>
+    </div>
+
+</form>
+
+@{
+    if (Model.QueryResult != null)
+    {
+        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+        <div class="response-container" id="register-response">
+            <h3>Response:</h3>
+            <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+            <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+            <p>Message: @Model.QueryResult.Message</p>
+        </div>
+    }
+}
+
+@if (Model.FoundUser != null)
+{
+    <div class="data-view">
+        <h3>View data</h3>
+        <div class="result-value">
+            <p>Id: <span class="white-selection">@Model.FoundUser.Id</span></p>
+            <p>Nickname: <span class="white-selection">@Model.FoundUser.Nickname</span></p>
+            <p>Name: <span class="white-selection">@Model.FoundUser.Name</span></p>
+            <p>Lastname: <span class="white-selection">@Model.FoundUser.Lastname</span></p>
+            @if (Model.FoundUser.AvatarFileName != null)
+            {
+                <p>FileName: <span class="white-selection">@Model.FoundUser.AvatarFileName</span></p>
+                <p>Url: <a class="white-selection white-link" href="api/@Model.FoundUser.AvatarUrl">@Model.FoundUser.AvatarUrl</a></p>
+            }
+        </div>
+    </div>
+}

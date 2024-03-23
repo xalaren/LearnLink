@@ -19,7 +19,14 @@
         <div class="endpoint-item__name">List</div>
         <i class="endpoint-item__arrow icon-arrow-right"> </i>
     </div>
-    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Users/Register')">
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Users/Find')">
+        <div class="endpoint-item__method">
+            get
+        </div>
+        <div class="endpoint-item__name">Find</div>
+        <i class="endpoint-item__arrow icon-arrow-right"> </i>
+    </div>
+    <div class="endpoints-list__item endpoint-item endpoint-item-post" onclick="redirect('Users/Register')">
         <div class="endpoint-item__method">
             post
         </div>
@@ -27,11 +34,35 @@
         <i class="endpoint-item__arrow icon-arrow-right"> </i>
     </div>
 
-    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Users/Login')">
+    <div class="endpoints-list__item endpoint-item endpoint-item-post" onclick="redirect('Users/Login')">
         <div class="endpoint-item__method">
             post
         </div>
         <div class="endpoint-item__name">Login</div>
+        <i class="endpoint-item__arrow icon-arrow-right"> </i>
+    </div>
+
+    <div class="endpoints-list__item endpoint-item endpoint-item-post" onclick="redirect('Users/Edit')">
+        <div class="endpoint-item__method">
+            post
+        </div>
+        <div class="endpoint-item__name">Edit user</div>
+        <i class="endpoint-item__arrow icon-arrow-right"> </i>
+    </div>
+
+    <div class="endpoints-list__item endpoint-item endpoint-item-post" onclick="redirect('Users/EditPassword')">
+        <div class="endpoint-item__method">
+            post
+        </div>
+        <div class="endpoint-item__name">Edit password</div>
+        <i class="endpoint-item__arrow icon-arrow-right"> </i>
+    </div>
+
+    <div class="endpoints-list__item endpoint-item endpoint-item-delete" onclick="redirect('Users/Delete')">
+        <div class="endpoint-item__method">
+            delete
+        </div>
+        <div class="endpoint-item__name">Delete</div>
         <i class="endpoint-item__arrow icon-arrow-right"> </i>
     </div>
 </div>

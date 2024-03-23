@@ -21,12 +21,20 @@ namespace CoursePrototype.WebApi.Controllers
         }
 
         [Authorize]
-        [HttpGet("get")]
-        public async Task<Response<UserDto>> GetUserAsync()
+        [HttpGet("get-auth")]
+        public async Task<Response<UserDto>> GetAuthenticatedUser()
         {
             var nickname = User.Identity?.Name;
 
             var response = await userInteractor.GetUserByNicknameAsync(nickname);
+
+            return response;
+        }
+
+        [HttpGet("get")]
+        public async Task<Response<UserDto>> GetUserAsync(int userId)
+        {
+            var response = await userInteractor.GetUserAsync(userId);
 
             return response;
         }

@@ -222,12 +222,16 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                var user = await unitOfWork.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == userId);
+                var user = await unitOfWork.Users.FindAsync(userId);
 
                 if (user == null)
                 {
                     throw new NotFoundException("Пользователь не найден");
                 }
+
+                await unitOfWork.Users.Entry(user)
+                    .Reference(user => user.Role)
+                    .LoadAsync();
 
                 var userDto = user.ToDto();
 
@@ -328,6 +332,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = true,
                     Message = "Учетная запись удалена успешно",
+                    StatusCode = 200
                 };
             }
             catch (CustomException exception)
@@ -336,6 +341,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = exception.Message,
+                    StatusCode = exception.StatusCode,
                 };
             }
             catch (Exception exception)
@@ -345,6 +351,7 @@ namespace LearnLink.Application.Interactors
                     Success = false,
                     Message = "Удаление не удалось",
                     InnerErrorMessages = [ exception.Message ],
+                    StatusCode = 500
                 };
             }
         }
@@ -358,11 +365,6 @@ namespace LearnLink.Application.Interactors
                 if (user == null)
                 {
                     throw new NotFoundException("Пользователь не найден");
-                }
-
-                if (user.Id != userDto.Id)
-                {
-                    throw new AccessLevelException("Изменение пользователя отклонено");
                 }
                 
                 unitOfWork.Users.Entry(user).Reference(x => x.Role).Load();
@@ -389,6 +391,7 @@ namespace LearnLink.Application.Interactors
                     Success = true,
                     Message = "Пользователь успешно изменен",
                     Value = token,
+                    StatusCode = 200
                 };
             }
             catch (CustomException exception)
@@ -397,6 +400,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = exception.Message,
+                    StatusCode = exception.StatusCode,
                 };
             }
             catch (Exception exception)
@@ -406,6 +410,7 @@ namespace LearnLink.Application.Interactors
                     Success = false,
                     Message = "Изменение не удалось",
                     InnerErrorMessages = [ exception.Message ],
+                    StatusCode = 500
                 };
             }
         }

@@ -1,18 +1,13 @@
 using LearnLink.Application.Interactors;
 using LearnLink.Shared.DataTransferObjects;
 using LearnLink.Shared.Responses;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using LearnLink.WebApi.Pages.Users.PageModels;
 
 namespace LearnLink.WebApi.Pages.Users
 {
-    public class RegisterModel : PageModel
+    public class RegisterModel : UsersPageModel
     {
-        private readonly UserInteractor userInteractor;
-
-        public RegisterModel(UserInteractor userInteractor)
-        {
-            this.userInteractor = userInteractor;
-        }
+        public RegisterModel(UserInteractor userInteractor) : base(userInteractor) { }
 
         public Response? QueryResult { get; set; } = null;
 
@@ -26,7 +21,7 @@ namespace LearnLink.WebApi.Pages.Users
                 AvatarFormFile = avatar
             };
 
-            QueryResult = await userInteractor.RegisterAsync(userDto, password, roleId ?? 0);
+            QueryResult = await UserInteractor.RegisterAsync(userDto, password, roleId ?? 0);
         }
     }
 }

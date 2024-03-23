@@ -1,26 +1,22 @@
 using LearnLink.Application.Interactors;
 using LearnLink.Shared.DataTransferObjects;
 using LearnLink.Shared.Responses;
+using LearnLink.WebApi.Pages.Users.PageModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace LearnLink.WebApi.Pages.Users
 {
-    public class ListModel : PageModel
+    public class ListModel : UsersPageModel
     {
-        private readonly UserInteractor userInteractor;
-
-        public ListModel(UserInteractor userInteractor)
-        {
-            this.userInteractor = userInteractor;
-        }
+        public ListModel(UserInteractor userInteractor) : base(userInteractor) { }
 
         public Response<UserDto[]>? QueryResult { get; set; }
         public UserDto[]? Users { get; set; }
 
         public async Task OnGet()
         {
-            QueryResult = await userInteractor.GetUsersAsync();
+            QueryResult = await UserInteractor.GetUsersAsync();
             
             if(QueryResult.Success)
             {

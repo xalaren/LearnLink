@@ -17,6 +17,7 @@ button {
     cursor: pointer;
     background: none;
     padding: 0 10px;
+    box-sizing: content-box;
     margin: 0;
     font-size: $reg-fz;
     height: 50px;
@@ -287,6 +288,7 @@ body {
 
 .endpoint-item-post {
     background-color: $lightGreen;
+    color: $green;
 
     .endpoint-item__method {
         background-color: $green;
@@ -306,6 +308,7 @@ body {
 
 .endpoint-item-delete {
     background-color: $lightRed;
+    color: $red;
 
     .endpoint-item__method {
         background-color: $red;
@@ -518,7 +521,8 @@ body {
 
 .register-form {
     display: grid;
-    grid-template-columns: 1fr max-content;
+    grid-template-columns: 1fr 1fr;
+    align-items: end;
 
     .form__actions {
         grid-column: 2;
@@ -526,6 +530,19 @@ body {
 
     @media screen and (max-width: $md) {
         display: flex;
-        width: fit-content;
+        align-items: start;
+        > * {
+            width: 100%;
+        }
+    }
+}
+
+.line-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    .input {
+        width: max-content;
     }
 }

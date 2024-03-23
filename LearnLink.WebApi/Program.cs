@@ -30,8 +30,8 @@ builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
     }
 ));
 
-builder.Services.AddRazorPages();
 
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<UserInteractor>();
 builder.Services.AddScoped<CourseInteractor>();
 builder.Services.AddScoped<SubscriptionInteractor>();
@@ -41,12 +41,12 @@ builder.Services.AddScoped<RoleInteractor>();
 builder.Services.AddScoped<LocalRoleInteractor>();
 builder.Services.AddScoped<PermissionService>();
 
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddTransient<SeedData>();
 
 builder.Services.AddSingleton<IEncryptionService, EncryptionService>();
 builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
+
 builder.Services.AddSingleton(provider => AuthenticationConfig.GetAuthenticationOptions(configuration));
 builder.Services.AddTransient(provider => new DirectoryStore(rootDirectory));
 

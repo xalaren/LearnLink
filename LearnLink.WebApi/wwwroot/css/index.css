@@ -371,6 +371,7 @@ button {
   cursor: pointer;
   background: none;
   padding: 0 10px;
+  box-sizing: content-box;
   margin: 0;
   font-size: 20px;
   height: 50px;
@@ -614,7 +615,8 @@ body {
 }
 
 .endpoint-item-post {
-  background-color: #e7fff9;
+  background-color: #e7fff3;
+  color: #00bb8e;
 }
 .endpoint-item-post .endpoint-item__method {
   background-color: #00bb8e;
@@ -629,6 +631,7 @@ body {
 
 .endpoint-item-delete {
   background-color: #ffeeef;
+  color: #ff4750;
 }
 .endpoint-item-delete .endpoint-item__method {
   background-color: #ff4750;
@@ -709,7 +712,7 @@ body {
 }
 
 .alert-success {
-  background-color: #e7fff9;
+  background-color: #e7fff3;
   color: #00bb8e;
   border-color: #00bb8e;
 }
@@ -829,7 +832,8 @@ body {
 
 .register-form {
   display: grid;
-  grid-template-columns: 1fr max-content;
+  grid-template-columns: 1fr 1fr;
+  align-items: end;
 }
 .register-form .form__actions {
   grid-column: 2;
@@ -837,7 +841,19 @@ body {
 @media screen and (max-width: 768px) {
   .register-form {
     display: flex;
-    width: -moz-fit-content;
-    width: fit-content;
+    align-items: start;
   }
+  .register-form > * {
+    width: 100%;
+  }
+}
+
+.line-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.line-container .input {
+  width: -moz-max-content;
+  width: max-content;
 }/*# sourceMappingURL=index.css.map */
