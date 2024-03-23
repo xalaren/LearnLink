@@ -1,0 +1,53 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Users.ListModel
+
+@{
+    ViewData["Title"] = "Users List";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Users/UsersPage')">
+        Users
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Users/List')">
+        List
+    </h2>
+</div>
+
+@{
+    if (Model.QueryResult != null)
+    {
+        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+        <div class="response-container" id="register-response">
+            <h3>Response:</h3>
+            <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+            <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+            <p>Message: @Model.QueryResult.Message</p>
+        </div>
+    }
+}
+
+@if (Model.Users != null)
+{
+    <div class="data-view">
+        <h3>View data</h3>
+
+        @foreach(var user in Model.Users)
+        {
+            <div class="result-value">
+                <p>Id: <span class="white-selection">@user.Id</span></p>
+                <p>Nickname: <span class="white-selection">@user.Nickname</span></p>
+                <p>Name: <span class="white-selection">@user.Name</span></p>
+                <p>Lastname: <span class="white-selection">@user.Lastname</span></p>
+                @if(user.AvatarFileName != null)
+                {
+                    <p>FileName: <span class="white-selection">@user.AvatarFileName</span></p>
+                    <p>Url: <a class="white-selection white-link" href="api/@user.AvatarUrl">@user.AvatarUrl</a></p>
+                }
+            </div>
+        }
+    </div>
+}
+
+
+

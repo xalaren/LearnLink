@@ -1,0 +1,20 @@
+﻿<header class="header">
+    <nav class="header__nav container">
+        <h3>LearnLink Admin</h3>
+        <a class="white-link" asp-area="" asp-page="/Index">Home</a>
+        <a class="white-link" href="swagger">Swagger</a>
+
+        <div class="header__dropdown dropdown">
+            <div class="dropdown__head">
+                <p>Pages</p>
+                <p class="icon icon-arrow-down"></p>
+            </div>
+            <div class="dropdown__items">
+                <a class="dropdown__item" onclick="redirect('Users/UsersPage')">
+                    <span>&ndash;</span>
+                    Users
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>

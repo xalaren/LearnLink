@@ -56,8 +56,10 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+builder.Services.AddRazorPages();
+
+//builder.Services.AddRazorComponents()
+//    .AddInteractiveServerComponents();
 
 /* Setup authentication start */
 
@@ -155,10 +157,10 @@ app.UseStaticFiles(new StaticFileOptions
     RequestPath = "/api/" + DirectoryStore.STORAGE_DIRNAME
 });
 
-app.UseAntiforgery();
+//app.UseAntiforgery();
 
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+//app.MapRazorComponents<App>()
+//    .AddInteractiveServerRenderMode();
 
 app.UseSeedData();
 

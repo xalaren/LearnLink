@@ -1,0 +1,37 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Users.UserEndpointsModel
+
+@{
+    ViewData["Title"] = "Users";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Users/UsersPage')">
+        Users
+     </h2>
+</div>
+
+<div class="endpoints-list">
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Users/List')">
+        <div class="endpoint-item__method">
+            get
+        </div>
+        <div class="endpoint-item__name">List</div>
+        <i class="endpoint-item__arrow icon-arrow-right"> </i>
+    </div>
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Users/Register')">
+        <div class="endpoint-item__method">
+            post
+        </div>
+        <div class="endpoint-item__name">Register</div>
+        <i class="endpoint-item__arrow icon-arrow-right"> </i>
+    </div>
+
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Users/Login')">
+        <div class="endpoint-item__method">
+            post
+        </div>
+        <div class="endpoint-item__name">Login</div>
+        <i class="endpoint-item__arrow icon-arrow-right"> </i>
+    </div>
+</div>

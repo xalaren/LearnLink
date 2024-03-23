@@ -1,0 +1,59 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Users.RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Users/UsersPage')">
+        Users
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Users/Register')">
+        Register
+    </h2>
+</div>
+
+@{
+    if (Model.QueryResult != null)
+    {
+        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+        <div class="response-container" id="register-response">
+            <h3>Response:</h3>
+            <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+            <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+            <p>Message: @Model.QueryResult.Message</p>
+        </div>
+    }
+}
+
+<form class="form register-form" method="post" enctype="multipart/form-data">
+    <div class="form-input">
+        <p class="form-input__label">Nickname</p>
+        <input type="text" name="nickname" placeholder="Nickname..." class="input" />
+    </div>
+    <div class="form-input">
+        <p class="form-input__label">Password</p>
+        <input type="password" name="password" placeholder="Password..." class="input" />
+    </div>
+    <div class="form-input">
+        <p class="form-input__label">Name</p>
+        <input type="text" name="name" placeholder="Name..." class="input" />
+    </div>
+    <div class="form-input">
+        <p class="form-input__label">Lastname</p>
+        <input type="text" name="lastname" placeholder="Lastname..." class="input" />
+    </div>
+    <div class="form-input">
+        <p class="form-input__label">Role Id</p>
+        <input type="number" name="roleId" placeholder="Role Id..." value="0" class="input" />
+    </div>
+    <div class="form-input">
+        <p class="form-input__label">Avatar</p>
+        <input type="file" class="input" name="avatar" value="Upload avatar" accept="image/*" />
+    </div>
+
+    <div class="form__actions">
+        <button class="primary-button">Register</button>
+    </div>
+</form>
+

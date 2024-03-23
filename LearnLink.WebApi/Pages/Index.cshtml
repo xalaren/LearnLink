@@ -1,0 +1,33 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<h2>Управление платформой LearnLink</h2>
+
+@{
+    if (Model.ErrorText != null)
+    {
+        <div class="alert alert-danger">
+            @Model.ErrorText
+        </div>
+    }
+    else if (Model.SuccessText != null)
+    {
+        <div class="alert alert-success">
+            @Model.SuccessText
+        </div>
+        <p>Теперь можно использовать ссылки в навигации</p>
+    }
+    else
+    {
+        <p>Войдите, чтобы воспользоваться администрированием</p>
+    }
+}
+
+<form class="form login-form width-400" method="post">
+    <input type="text" name="login" placeholder="Логин" class="input" />
+    <input type="password" name="password" placeholder="Пароль" class="input" />
+    <button type="submit" class="primary-button form-group" onclick="">Войти</button>
+</form>

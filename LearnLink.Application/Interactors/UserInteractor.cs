@@ -31,7 +31,7 @@ namespace LearnLink.Application.Interactors
             this.directoryStore = directoryStore;
         }
 
-        public async Task<Response<string>> AuthenticateAsync(string nickname, string password)
+        public async Task<Response<string>> AuthenticateAsync(string nickname, string password, bool authenticateAdmin = false)
         {
             try
             {
@@ -48,6 +48,11 @@ namespace LearnLink.Application.Interactors
                 }
 
                 await unitOfWork.Users.Entry(user).Reference(user => user.Role).LoadAsync();
+
+                if(authenticateAdmin && !user.Role.IsAdmin)
+                {
+                    throw new AccessLevelException("Аутентификация администратора не пройдена");
+                }
 
                 var userCredentials = await unitOfWork.Credentials.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == user.Id);
 
@@ -70,6 +75,7 @@ namespace LearnLink.Application.Interactors
                     Success = true,
                     Message = "Аутентификация прошла успешно",
                     Value = authenticationResult,
+                    StatusCode = 200,
                 };
             }
             catch (CustomException exception)
@@ -164,6 +170,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = exception.Message,
+                    StatusCode = exception.StatusCode,
                 };
             }
             catch(Exception exception)
@@ -181,12 +188,14 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                var users = await unitOfWork.Users.Select(x => x.ToDto()).ToArrayAsync();
+                var users = await unitOfWork.Users.Include(user => user.Role).Select(x => x.ToDto()).ToArrayAsync();
 
                 return new()
                 {
                     Success = true,
                     Value = users,
+                    StatusCode = 200,
+                    Message = "Пользователи успешно получены"
                 };
             }
             catch (CustomException exception)
@@ -195,6 +204,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = exception.Message,
+                    StatusCode = exception.StatusCode,
                 };
             }
             catch (Exception exception)

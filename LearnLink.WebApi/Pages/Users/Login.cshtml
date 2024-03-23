@@ -1,0 +1,45 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Users.LoginModel
+
+@{
+    ViewData["Title"] = "User Login";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Users/UsersPage')">
+        Users
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Users/Login')">
+        Login
+    </h2>
+</div>
+
+@{
+    if (Model.QueryResult != null)
+    {
+        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+        <div class="response-container" id="register-response">
+            <h3>Response:</h3>
+            <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+            <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+            <p>Message: @Model.QueryResult.Message</p>
+            <p>Value: <span class="blue-selection">@Model.QueryResult.Value</span></p>
+        </div>
+    }
+}
+
+<form class="form adaptive-width" method="post">
+    <div class="form-input">
+        <p class="form-input__label">Nickname</p>
+        <input type="text" name="nickname" placeholder="Nickname..." class="input" />
+    </div>
+    <div class="form-input">
+        <p class="form-input__label">Password</p>
+        <input type="password" name="password" placeholder="Password..." class="input" />
+    </div>
+
+    <div class="form__actions">
+        <button class="primary-button">Login</button>
+    </div>
+</form>
+
