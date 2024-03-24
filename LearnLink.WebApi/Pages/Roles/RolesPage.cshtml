@@ -1,0 +1,21 @@
+﻿@page
+@model RolesPageModel
+@{
+    ViewData["Title"] = "Roles";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Roles/RolesPage')">
+        Roles
+    </h2>
+</div>
+
+<div class="endpoints-list">
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Roles/List')">
+        <div class="endpoint-item__method">
+            get
+        </div>
+        <div class="endpoint-item__name">List</div>
+        <i class="endpoint-item__arrow icon-arrow-right"> </i>
+    </div>
+</div>

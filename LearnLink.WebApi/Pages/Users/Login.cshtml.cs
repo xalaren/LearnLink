@@ -1,6 +1,7 @@
 using LearnLink.Application.Interactors;
 using LearnLink.Shared.Responses;
-using LearnLink.WebApi.Pages.Users.PageModels;
+using LearnLink.WebApi.Pages.PageModels;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LearnLink.WebApi.Pages.Users
 {
@@ -9,6 +10,18 @@ namespace LearnLink.WebApi.Pages.Users
         public LoginModel(UserInteractor userInteractor) : base(userInteractor) { }
 
         public Response<string>? QueryResult { get; set; } 
+
+        public IActionResult OnGet()
+        {
+            RequireAuthorize();
+
+            if (!AdminAuthorized)
+            {
+                return AccessDeniedPage();
+            }
+
+            return Page();
+        }
 
         public async Task OnPost(string nickname, string password)
         {

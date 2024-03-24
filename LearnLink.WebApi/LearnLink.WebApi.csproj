@@ -33,4 +33,11 @@
     <ProjectReference Include="..\LearnLink.SecurityProvider\LearnLink.SecurityProvider.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\Courses\" />
+    <Folder Include="Pages\LocalRoles\" />
+    <Folder Include="Pages\Modules\" />
+    <Folder Include="Pages\Subscriptions\" />
+  </ItemGroup>
+
 </Project>

@@ -1,9 +1,8 @@
 ﻿using LearnLink.Application.Interactors;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace LearnLink.WebApi.Pages.Users.PageModels
+namespace LearnLink.WebApi.Pages.PageModels
 {
-    public class UsersPageModel : PageModel
+    public class UsersPageModel : AuthorizePageModel
     {
         private readonly UserInteractor userInteractor;
 

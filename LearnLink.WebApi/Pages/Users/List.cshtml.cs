@@ -1,9 +1,9 @@
 using LearnLink.Application.Interactors;
 using LearnLink.Shared.DataTransferObjects;
 using LearnLink.Shared.Responses;
-using LearnLink.WebApi.Pages.Users.PageModels;
+using LearnLink.WebApi.Pages.PageModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace LearnLink.WebApi.Pages.Users
 {
@@ -14,14 +14,23 @@ namespace LearnLink.WebApi.Pages.Users
         public Response<UserDto[]>? QueryResult { get; set; }
         public UserDto[]? Users { get; set; }
 
-        public async Task OnGet()
+        public async Task<IActionResult> OnGet()
         {
+            RequireAuthorize();
+
+            if (!AdminAuthorized)
+            {
+                return AccessDeniedPage();
+            }
+
             QueryResult = await UserInteractor.GetUsersAsync();
             
             if(QueryResult.Success)
             {
                 Users = QueryResult.Value;
             }
+
+            return Page();
         }
     }
 }

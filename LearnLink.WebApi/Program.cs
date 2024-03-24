@@ -8,6 +8,7 @@ using LearnLink.SecurityProvider;
 using LearnLink.WebApi.Components;
 using LearnLink.WebApi.Extensions;
 using LearnLink.WebApi.Helpers;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
@@ -66,6 +67,7 @@ builder.Services.AddRazorPages();
 var authOptions = AuthenticationConfig.GetAuthenticationOptions(configuration);
 
 builder.Services.AddAuthorization();
+
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -84,7 +86,8 @@ builder.Services
 
             IssuerSigningKey = authOptions.GetSymmetricSecurityKey(),
         };
-    });
+    }
+);
 
 /* Setup authentication end */
 
@@ -120,6 +123,13 @@ builder.Services.AddSwaggerGen(options =>
 
 });
 
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(120); // Время жизни сессии
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -136,13 +146,13 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-
-
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors("CorsPolicy");
 
+app.UseAuthentication();
 app.UseAuthorization();
+app.UseSession();
 
 app.MapControllers();
 app.MapRazorPages();

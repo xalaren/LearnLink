@@ -1,7 +1,8 @@
+using System.Security.Claims;
 using LearnLink.Application.Interactors;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace WebApplication2.Pages
+namespace LearnLink.WebApi.Pages
 {
     public class IndexModel : PageModel
     {
@@ -26,7 +27,25 @@ namespace WebApplication2.Pages
                 return;
             }
 
+            var response = await userInteractor.GetUserByNicknameAsync(login);
+
+            if(!response.Success)
+            {
+                ErrorText = result.Message;
+                return;
+            }
+
+            var userRole = response.Value!.Role!;
+
+            if(!userRole.IsAdmin)
+            {
+                ErrorText = "Вы не являетесь администратором";
+            }
+
             SuccessText = result.Message;
+            HttpContext.Session.SetString("IsAdmin", userRole.IsAdmin.ToString());
+            //HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity([new Claim(ClaimTypes.Name, login)], "Cookies"));
+            //HttpContext.User.AddIdentity(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Role, userRole.Sign) }));
         }
     }
 }
