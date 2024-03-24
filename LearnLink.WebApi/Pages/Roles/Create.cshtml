@@ -1,0 +1,46 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Roles.CreateModel
+@{
+    ViewData["Title"] = "Create Role";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Roles/RolesPage')">
+        Roles
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Roles/Create')">
+        Create
+    </h2>
+</div>
+
+@{
+    if (Model.QueryResult != null)
+    {
+        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+        <div class="response-container" id="register-response">
+            <h3>Response:</h3>
+            <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+            <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+            <p>Message: @Model.QueryResult.Message</p>
+        </div>
+    }
+}
+
+<form class="form adaptive-width" method="post">
+    <div class="form-input">
+        <p class="form-input__label">Role Sign</p>
+        <input type="text" name="sign" placeholder="Role Sgin..." class="input" />
+    </div>
+    <div class="form-input">
+        <p class="form-input__label">Role Name</p>
+        <input type="text" name="name" placeholder="Role Name..." class="input" />
+    </div>
+    <div class="line-container">
+        <input type="checkbox" class="checkbox" id="isAdmin" name="isAdmin" />
+        <label for="isAdmin">IsAdmin</label>
+    </div>
+
+    <div class="form__actions">
+        <button class="primary-button">Create</button>
+    </div>
+</form>

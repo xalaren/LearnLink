@@ -1,6 +1,8 @@
 ﻿<header class="header">
     <nav class="header__nav container">
-        <h3>LearnLink Platform Manager</h3>
+        <div class="logo">
+            <img src="~/img/logo.svg" alt="Logo" class="logo__img" />
+        </div>
         <a class="white-link" asp-area="" asp-page="/Index">Home</a>
         <a class="white-link" href="swagger">Swagger</a>
 
@@ -11,11 +13,11 @@
             </div>
             <div class="dropdown__items">
                 <a class="dropdown__item" onclick="redirect('Users/UsersPage')">
-                    <span>&ndash;</span>
+                    <span class="icon-arrow-right-dotted"></span>
                     Users
                 </a>
                 <a class="dropdown__item" onclick="redirect('Roles/RolesPage')">
-                    <span>&ndash;</span>
+                    <span class="icon-arrow-right-dotted"></span>
                     Roles
                 </a>
             </div>

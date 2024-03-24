@@ -1,23 +1,23 @@
 ﻿@page
-@model DeleteModel
+@model LearnLink.WebApi.Pages.Roles.DeleteModel
 @{
     ViewData["Title"] = "Delete";
 }
 
 <div class="breadcrumb">
-    <h2 class="breadcrumb__item" onclick="redirect('Users/UsersPage')">
-        Users
+    <h2 class="breadcrumb__item" onclick="redirect('Roles/RolesPage')">
+        Roles
     </h2>
-    <h2 class="breadcrumb__item" onclick="redirect('Users/Delete')">
+    <h2 class="breadcrumb__item" onclick="redirect('Roles/Delete')">
         Delete
     </h2>
 </div>
 
 <form class="form" method="post">
     <div class="form-input">
-        <p class="form-input__label">User Id</p>
+        <p class="form-input__label">Role Id</p>
         <div class="line-container">
-            <input type="number" name="userId" placeholder="User Id..." class="input" />
+            <input type="number" name="roleId" placeholder="Role Id..." class="input" />
             <button class="primary-button">Remove</button>
         </div>
     </div>

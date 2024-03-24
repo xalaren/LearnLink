@@ -39,6 +39,7 @@ namespace LearnLink.Application.Interactors
                 return new Response()
                 {
                     Success = true,
+                    StatusCode = 200,
                     Message = "Роль успешно добавлена в систему",
                 };
             }
@@ -47,6 +48,7 @@ namespace LearnLink.Application.Interactors
                 return new Response()
                 {
                     Success = false,
+                    StatusCode = exception.StatusCode,
                     Message = exception.Message,
                 };
             }
@@ -55,8 +57,9 @@ namespace LearnLink.Application.Interactors
                 return new Response()
                 {
                     Success = false,
+                    StatusCode = 500,
                     Message = "Не удалось добавить роль. Внутренняя ошибка.",
-                    InnerErrorMessages = new string[] { exception.Message }
+                    InnerErrorMessages = [exception.Message]
                 };
             }
         }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace LearnLink.WebApi.Pages.Users
 {
-    public class EditPasswordModel : UsersPageModel
+    public class EditPasswordModel : UsersBasePageModel
     {
         public EditPasswordModel(UserInteractor userInteractor) : base(userInteractor) { }
 

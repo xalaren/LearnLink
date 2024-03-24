@@ -1,0 +1,44 @@
+﻿@page
+@model ListModel
+@{
+    ViewData["Title"] = "List";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Roles/RolesPage')">
+        Roles
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Roles/List')">
+        List
+    </h2>
+</div>
+
+@{
+    if (Model.QueryResult != null)
+    {
+        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+        <div class="response-container" id="register-response">
+            <h3>Response:</h3>
+            <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+            <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+            <p>Message: @Model.QueryResult.Message</p>
+        </div>
+    }
+}
+
+@if (Model.Roles != null)
+{
+    <div class="data-view">
+        <h3>View data</h3>
+
+        @foreach (var role in Model.Roles)
+        {
+            <div class="result-value">
+                <p>Id: <span class="white-selection">@role.Id</span></p>
+                <p>Nickname: <span class="white-selection">@role.Name</span></p>
+                <p>Name: <span class="white-selection">@role.Sign</span></p>
+                <p>IsAdmin: <span class="white-selection">@role.IsAdmin</span></p>
+            </div>
+        }
+    </div>
+}

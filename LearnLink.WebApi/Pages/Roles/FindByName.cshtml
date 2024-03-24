@@ -1,0 +1,51 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Roles.FindByNameModel
+@{
+    ViewData["Title"] = "Find Role";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Roles/RolesPage')">
+        Roles
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Roles/FindByName')">
+        Find-By-Name
+    </h2>
+</div>
+
+
+<form class="form" method="get">
+    <div class="form-input">
+        <p class="form-input__label">Role name</p>
+        <div class="line-container">
+            <input type="text" name="roleName" placeholder="Role Name..." class="input" />
+            <button class="primary-button">Find</button>
+        </div>
+    </div>
+
+</form>
+
+@{
+    if (Model.QueryResult != null)
+    {
+        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+        <div class="response-container" id="register-response">
+            <h3>Response:</h3>
+            <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+            <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+            <p>Message: @Model.QueryResult.Message</p>
+        </div>
+    }
+}
+
+@if (Model.FoundRole != null)
+{
+    <div class="data-view">
+        <h3>View data</h3>
+        <div class="result-value">
+            <p>Id: <span class="white-selection">@Model.FoundRole.Id</span></p>
+            <p>Nickname: <span class="white-selection">@Model.FoundRole.Name</span></p>
+            <p>Name: <span class="white-selection">@Model.FoundRole.Sign</span></p>
+        </div>
+    </div>
+}

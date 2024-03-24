@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LearnLink.WebApi.Pages.Users
 {
-    public class EditModel : UsersPageModel
+    public class EditModel : UsersBasePageModel
     {
         public EditModel(UserInteractor userInteractor) : base(userInteractor) { }
 

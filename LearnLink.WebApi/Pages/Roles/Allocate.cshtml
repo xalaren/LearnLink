@@ -1,0 +1,45 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Roles.AllocateModel
+@{
+    ViewData["Title"] = "Allocate Role";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Roles/RolesPage')">
+        Roles
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Roles/Allocate')">
+        Allocate
+    </h2>
+</div>
+
+@{
+    if (Model.QueryResult != null)
+    {
+        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+        <div class="response-container" id="register-response">
+            <h3>Response:</h3>
+            <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+            <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+            <p>Message: @Model.QueryResult.Message</p>
+        </div>
+    }
+}
+
+<form class="form adaptive-width" method="post">
+    <div class="form-input">
+        <p class="form-input__label">Role Id</p>
+        <input type="number" name="roleId" placeholder="Role Id..." class="input" />
+    </div>
+
+    <div class="form-input">
+        <p class="form-input__label">User Id</p>
+        <input type="number" name="userId" placeholder="User Id..." class="input" />
+    </div>
+
+    <div class="form__actions">
+        <button class="primary-button">Create</button>
+    </div>
+</form>
+
+

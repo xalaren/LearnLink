@@ -280,7 +280,7 @@ textarea {
   content: "\e909";
 }
 
-.icon-check:before {
+.icon-check:before, .checkbox:checked + label:before {
   content: "\e90a";
 }
 
@@ -780,6 +780,7 @@ body {
   position: relative;
 }
 .dropdown__items {
+  display: none;
   position: absolute;
   z-index: 3;
   top: calc(100% + 10px);
@@ -788,8 +789,7 @@ body {
   width: -moz-max-content;
   width: max-content;
   border-radius: 5px;
-  background-color: #fff;
-  border: solid 2px #dfdfdf;
+  background-color: rgba(31, 31, 31, 0.9);
 }
 .dropdown__items > *:first-child {
   border-top-left-radius: 5px;
@@ -802,26 +802,26 @@ body {
 .dropdown__item {
   display: flex;
   align-items: center;
-  padding: 10px 18px;
-  color: #383838;
+  padding: 16px 10px;
+  color: #fff;
   gap: 10px;
 }
 .dropdown__item * {
-  color: #383838;
+  color: #fff;
 }
 @media (hover: hover) {
   .dropdown__item:hover {
-    background: #f5f5f5;
+    background: #1f1f1f;
   }
 }
 @media (hover: none) {
   .dropdown__item:active {
-    background: #f5f5f5;
+    background: #1f1f1f;
   }
 }
 @media screen and (max-width: 576px) {
   .dropdown__item {
-    padding: 16px 24px;
+    padding: 20px 10px;
   }
 }
 
@@ -856,4 +856,62 @@ body {
 .line-container .input {
   width: -moz-max-content;
   width: max-content;
+}
+
+.checkbox {
+  display: none;
+}
+
+.checkbox + label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+.checkbox + label::before {
+  display: inline-block;
+  content: "";
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  border: solid 2px #dfdfdf;
+}
+.checkbox + label:focus::before {
+  background-color: #f5f5f5;
+}
+@media (hover: hover) {
+  .checkbox + label:hover::before {
+    background-color: #f5f5f5;
+  }
+}
+@media (hover: none) {
+  .checkbox + label:active::before {
+    background-color: #f5f5f5;
+  }
+}
+
+.checkbox:checked + label::before {
+  font-family: "learnlinkico";
+  color: #3b3bff;
+}
+
+.logo {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.logo__img {
+  min-width: 40px;
+  width: 40px;
+  height: 40px;
+}
+
+.container-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }/*# sourceMappingURL=index.css.map */

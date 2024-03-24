@@ -471,6 +471,7 @@ body {
     position: relative;
 
     &__items {
+        display: none;
         position: absolute;
         z-index: 3;
         top: calc(100% + 10px);
@@ -478,8 +479,7 @@ body {
         min-width: 200px;
         width: max-content;
         border-radius: $radius;
-        background-color: $white;
-        border: solid 2px $lightGray;
+        background-color: rgba($primary, 0.9);
 
         > *:first-child {
             border-top-left-radius: $radius;
@@ -495,21 +495,21 @@ body {
     &__item {
         display: flex;
         align-items: center;
-        padding: 10px 18px;
-        color: $mainGray;
+        padding: 16px 10px;
+        color: $white;
 
         * {
-            color: $mainGray;
+            color: $white;
         }
 
         gap: 10px;
 
         @include hover {
-            background: $veryLightGray;
+            background: $primary;
         }
 
         @media screen and (max-width: $sm) {
-            padding: 16px 24px;
+            padding: 20px 10px;
         }
     }
 }
@@ -545,4 +545,57 @@ body {
     .input {
         width: max-content;
     }
+}
+
+.checkbox {
+    display: none;
+}
+
+.checkbox + label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    &::before {
+        display: inline-block;
+        content: "";
+        top: 0;
+        left: 0;
+        width: 20px;
+        height: 20px;
+        border: solid 2px $lightGray;
+    }
+
+    @include hover-focus {
+        &::before {
+            background-color: $veryLightGray;
+        }
+    }
+}
+
+.checkbox:checked + label::before {
+    @extend .icon-check;
+    font-family: "learnlinkico";
+    color: $accentBlue;
+}
+
+.logo {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    &__img {
+        @include static-size(40px);
+    }
+}
+
+.container-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

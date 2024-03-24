@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LearnLink.WebApi.Pages.Users
 {
-    public class DeleteModel : UsersPageModel
+    public class DeleteModel : UsersBasePageModel
     {
         public DeleteModel(UserInteractor userInteractor) : base(userInteractor) { }
 

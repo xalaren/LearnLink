@@ -2,13 +2,13 @@
 
 namespace LearnLink.WebApi.Pages.PageModels
 {
-    public class UsersPageModel : AuthorizePageModel
+    public class UsersBasePageModel : AuthorizePageModel
     {
         private readonly UserInteractor userInteractor;
 
         protected UserInteractor UserInteractor => userInteractor;
 
-        public UsersPageModel(UserInteractor userInteractor)
+        public UsersBasePageModel(UserInteractor userInteractor)
         {
             this.userInteractor = userInteractor;
         }

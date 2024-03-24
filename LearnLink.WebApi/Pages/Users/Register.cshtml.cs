@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LearnLink.WebApi.Pages.Users
 {
-    public class RegisterModel : UsersPageModel
+    public class RegisterModel : UsersBasePageModel
     {
         public RegisterModel(UserInteractor userInteractor) : base(userInteractor) { }
 

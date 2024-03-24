@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LearnLink.WebApi.Pages.Users
 {
-    public class LoginModel : UsersPageModel
+    public class LoginModel : UsersBasePageModel
     {
         public LoginModel(UserInteractor userInteractor) : base(userInteractor) { }
 

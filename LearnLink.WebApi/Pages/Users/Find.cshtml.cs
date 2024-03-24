@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LearnLink.WebApi.Pages.Users
 {
-    public class FindModel : UsersPageModel
+    public class FindModel : UsersBasePageModel
     {
         public FindModel(UserInteractor userInteractor) : base(userInteractor) { }
 

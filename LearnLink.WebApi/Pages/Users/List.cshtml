@@ -32,17 +32,22 @@
     <div class="data-view">
         <h3>View data</h3>
 
-        @foreach(var user in Model.Users)
+        @foreach (var user in Model.Users)
         {
             <div class="result-value">
                 <p>Id: <span class="white-selection">@user.Id</span></p>
                 <p>Nickname: <span class="white-selection">@user.Nickname</span></p>
                 <p>Name: <span class="white-selection">@user.Name</span></p>
                 <p>Lastname: <span class="white-selection">@user.Lastname</span></p>
-                @if(user.AvatarFileName != null)
+                @if (user.AvatarFileName != null)
                 {
                     <p>FileName: <span class="white-selection">@user.AvatarFileName</span></p>
                     <p>Url: <a class="white-selection white-link" href="api/@user.AvatarUrl">@user.AvatarUrl</a></p>
+                }
+                @if (user.Role != null)
+                {
+                    <p>Role Id: <span class="white-selection">@user.Role.Id</span></p>
+                    <p>Role Name: <span class="white-selection">@user.Role.Name</span></p>
                 }
             </div>
         }

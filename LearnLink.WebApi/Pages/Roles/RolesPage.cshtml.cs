@@ -9,11 +9,7 @@ namespace LearnLink.WebApi.Pages.Roles
         public IActionResult OnGet()
         {
             RequireAuthorize();
-            
-            if(!AdminAuthorized)
-            {
-                return AccessDeniedPage();
-            }
+            if(!AdminAuthorized) return AccessDeniedPage();
 
             return Page();
         }
