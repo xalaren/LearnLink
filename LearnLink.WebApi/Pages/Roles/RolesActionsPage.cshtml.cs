@@ -1,18 +1,15 @@
 using LearnLink.WebApi.Pages.PageModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace LearnLink.WebApi.Pages.Users
+namespace LearnLink.WebApi.Pages.Roles
 {
-    public class UserEndpointsModel : AuthorizePageModel
+    public class RolesActionsPageModel : AuthorizePageModel
     {
         public IActionResult OnGet()
         {
             RequireAuthorize();
-
-            if (!AdminAuthorized)
-            {
-                return AccessDeniedPage();
-            }
+            if(!AdminAuthorized) return AccessDeniedPage();
 
             return Page();
         }

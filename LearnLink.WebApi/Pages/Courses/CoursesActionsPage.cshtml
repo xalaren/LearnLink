@@ -1,0 +1,117 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Courses.CoursesActionsPageModel
+@{
+    ViewData["Title"] = "Courses";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Courses/CoursesActionsPage')">
+        Courses
+    </h2>
+</div>
+
+<div class="endpoints-list">
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Courses/Get')">
+        <div class="endpoint-item__method">
+            get
+        </div>
+        <div class="endpoint-item__name">Get</div>
+        <i class="endpoint-item__arrow icon-arrow-right"> </i>
+    </div>
+
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Courses/GetAny')">
+        <div class="endpoint-item__method">
+            get
+        </div>
+        <div class="endpoint-item__name">Get any</div>
+        <i class="endpoint-item__arrow icon-arrow-right"> </i>
+    </div>
+
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Courses/List')">
+        <div class="endpoint-item__method">
+            get
+        </div>
+        <div class="endpoint-item__name">List</div>
+        <i class="endpoint-item__arrow icon-arrow-right"> </i>
+    </div>
+
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Courses/ListUserCourses')">
+        <div class="endpoint-item__method">
+            get
+        </div>
+        <div class="endpoint-item__name">List user courses</div>
+        <i class="endpoint-item__arrow icon-arrow-right"> </i>
+    </div>
+
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Courses/ListPublic')">
+        <div class="endpoint-item__method">
+            get
+        </div>
+        <div class="endpoint-item__name">List public</div>
+        <i class="endpoint-item__arrow icon-arrow-right"> </i>
+    </div>
+
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Courses/ListSubscribed')">
+        <div class="endpoint-item__method">
+            get
+        </div>
+        <div class="endpoint-item__name">List subscribed courses</div>
+        <i class="endpoint-item__arrow icon-arrow-right"> </i>
+    </div>
+
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Courses/ListUnavailable')">
+        <div class="endpoint-item__method">
+            get
+        </div>
+        <div class="endpoint-item__name">List unavailable courses</div>
+        <i class="endpoint-item__arrow icon-arrow-right"> </i>
+    </div>
+
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Courses/FindPublic')">
+        <div class="endpoint-item__method">
+            get
+        </div>
+        <div class="endpoint-item__name">Find public courses</div>
+        <i class="endpoint-item__arrow icon-arrow-right"> </i>
+    </div>
+
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Courses/FindUserCourses')">
+        <div class="endpoint-item__method">
+            get
+        </div>
+        <div class="endpoint-item__name">Find user courses</div>
+        <i class="endpoint-item__arrow icon-arrow-right"> </i>
+    </div>
+
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Courses/CreatorStatus')">
+        <div class="endpoint-item__method">
+            get
+        </div>
+        <div class="endpoint-item__name">Get creator status</div>
+        <i class="endpoint-item__arrow icon-arrow-right"></i>
+    </div>
+
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Courses/SubscriberStatus')">
+        <div class="endpoint-item__method">
+            get
+        </div>
+        <div class="endpoint-item__name">Get subscriber status</div>
+        <i class="endpoint-item__arrow icon-arrow-right"></i>
+    </div>
+
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Courses/Create')">
+        <div class="endpoint-item__method">
+            post
+        </div>
+        <div class="endpoint-item__name">Create</div>
+        <i class="endpoint-item__arrow icon-arrow-right"> </i>
+    </div>
+
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Courses/Delete')">
+        <div class="endpoint-item__method">
+            delete
+        </div>
+        <div class="endpoint-item__name">Delete</div>
+        <i class="endpoint-item__arrow icon-arrow-right"> </i>
+    </div>
+</div>

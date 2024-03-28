@@ -1,0 +1,49 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Courses.ListModel
+@{
+    ViewData["Title"] = "List courses";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Courses/CoursesActionsPage')">
+        Courses
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Courses/List')">
+        List
+    </h2>
+</div>
+
+@{
+    if (Model.QueryResult != null)
+    {
+        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+        <div class="response-container">
+            <h3>Response:</h3>
+            <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+            <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+            <p>Message: @Model.QueryResult.Message</p>
+        </div>
+    }
+}
+
+@if (Model.Courses != null)
+{
+    <div class="data-view">
+        <h3>View data</h3>
+        @foreach (var course in Model.Courses)
+        {
+            <div class="result-value">
+                <p>Id: <span class="white-selection">@course.Id</span></p>
+                <p>Title: <span class="white-selection">@course.Title</span></p>
+                <p>Description: <span class="white-selection">@course.Title</span></p>
+                <p>Subscribers: <span class="white-selection">@course.SubscribersCount</span></p>
+                <p>IsPublic: <span class="white-selection">@course.IsPublic</span></p>
+                <p>IsUnavailable: <span class="white-selection">@course.IsUnavailable</span></p>
+            </div>
+        }
+    </div>
+}
+
+
+
+

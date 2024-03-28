@@ -41,20 +41,20 @@ namespace LearnLink.WebApi.Controllers
 
         [Authorize]
         [HttpGet("get-user-courses")]
-        public async Task<Response<DataPage<CourseDto[]>>> GetUserCreatedCoursesAsync(int userId, int page, int size)
+        public async Task<Response<CourseDto[]>> GetUserCreatedCoursesAsync(int userId)
         {
             var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
 
             if (!verifyResponse.Success)
             {
-                return new Response<DataPage<CourseDto[]>>()
+                return new Response<CourseDto[]>()
                 {
                     Success = verifyResponse.Success,
                     Message = verifyResponse.Message,
                 };
             }
 
-            return await courseInteractor.GetCoursesCreatedByUserAsync(userId, new DataPageHeader(page, size));
+            return await courseInteractor.GetCoursesCreatedByUserAsync(userId);
         }
 
 
@@ -105,18 +105,18 @@ namespace LearnLink.WebApi.Controllers
 
         [Authorize]
         [HttpGet("find-user-courses")]
-        public async Task<Response<DataPage<CourseDto[]>>> FindInUserCourses(int userId, string title, int page, int size, bool findSubscription, bool findUnavailable)
+        public async Task<Response<CourseDto[]>> FindInUserCourses(int userId, string title, bool findSubscription, bool findUnavailable)
         {
             var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
 
 
-            if (!verifyResponse.Success) return new Response<DataPage<CourseDto[]>>
+            if (!verifyResponse.Success) return new Response<CourseDto[]>
             {
                 Success = verifyResponse.Success,
                 Message = verifyResponse.Message,
             };
 
-            return await courseInteractor.FindCoursesByTitleInUserCourses(userId, title, new DataPageHeader(page, size), findSubscription, findUnavailable);
+            return await courseInteractor.FindCoursesByTitleInUserCourses(userId, title, findSubscription, findUnavailable);
         }
 
         [Authorize]

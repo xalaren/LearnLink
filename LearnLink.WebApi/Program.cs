@@ -5,7 +5,6 @@ using LearnLink.Application.Interactors;
 using LearnLink.Application.Security;
 using LearnLink.Application.Transaction;
 using LearnLink.SecurityProvider;
-using LearnLink.WebApi.Components;
 using LearnLink.WebApi.Extensions;
 using LearnLink.WebApi.Helpers;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -59,8 +58,6 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddRazorPages();
 
-//builder.Services.AddRazorComponents()
-//    .AddInteractiveServerComponents();
 
 /* Setup authentication start */
 

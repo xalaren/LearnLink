@@ -1,0 +1,55 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Courses.ListUserCoursesModel
+@{
+    ViewData["Title"] = "List user courses";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Courses/CoursesActionsPage')">
+        Courses
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Courses/ListUserCourses')">
+        List-User-Courses
+    </h2>
+</div>
+
+<form class="form" method="get">
+    <div class="form-input">
+        <p class="form-input__label">User Id</p>
+        <div class="line-container">
+            <input type="number" name="userId" placeholder="User Id..." class="input" />
+            <button class="primary-button">Get user courses</button>
+        </div>
+    </div>
+</form>
+
+@{
+    if (Model.QueryResult != null)
+    {
+        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+        <div class="response-container">
+            <h3>Response:</h3>
+            <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+            <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+            <p>Message: @Model.QueryResult.Message</p>
+        </div>
+    }
+}
+
+@if (Model.Courses != null)
+{
+    @foreach (var course in Model.Courses)
+    {
+        <div class="data-view">
+            <h3>View data</h3>
+            <div class="result-value">
+                <p>Id: <span class="white-selection">@course.Id</span></p>
+                <p>Title: <span class="white-selection">@course.Title</span></p>
+                <p>Description: <span class="white-selection">@course.Title</span></p>
+                <p>Subscribers: <span class="white-selection">@course.SubscribersCount</span></p>
+                <p>IsPublic: <span class="white-selection">@course.IsPublic</span></p>
+                <p>IsUnavailable: <span class="white-selection">@course.IsUnavailable</span></p>
+            </div>
+        </div>
+    }
+}

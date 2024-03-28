@@ -1,0 +1,70 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Courses.ListPublicModel
+@{
+    ViewData["Title"] = "List public courses";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Courses/CoursesActionsPage')">
+        Courses
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Courses/ListPublic')">
+        List-Public
+    </h2>
+</div>
+
+<form class="form width-400" method="get">
+    <div class="form-input">
+        <p class="form-input__label">Page number</p>
+        <input type="number" name="pageNumber" placeholder="Page number..." class="input" />
+    </div>
+
+    <div class="form-input">
+        <p class="form-input__label">Page size</p>
+        <input type="number" name="pageSize" placeholder="Page size..." class="input" />
+    </div>
+
+    <div class="form__actions">
+        <button class="primary-button">Get public courses</button>
+    </div>
+</form>
+
+@{
+    if (Model.QueryResult != null)
+    {
+        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+        <div class="response-container">
+            <h3>Response:</h3>
+            <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+            <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+            <p>Message: @Model.QueryResult.Message</p>
+
+            @if(Model.QueryResult.Value != null)
+            {
+                <p>Page: @Model.QueryResult.Value.PageNumber</p>
+                <p>PageSize: @Model.QueryResult.Value.PageSize</p>
+                <p>PageCount: @Model.QueryResult.Value.PageCount</p>
+                <p>Total: @Model.QueryResult.Value.ItemsCount</p>
+            }
+
+        </div>
+    }
+}
+
+@if (Model.Courses != null)
+{
+    <div class="data-view">
+        <h3>View data: </h3>
+        @foreach (var course in Model.Courses)
+        {
+            <div class="result-value">
+                <p>Id: <span class="white-selection">@course.Id</span></p>
+                <p>Title: <span class="white-selection">@course.Title</span></p>
+                <p>Description: <span class="white-selection">@course.Title</span></p>
+                <p>Subscribers: <span class="white-selection">@course.SubscribersCount</span></p>
+                <p>IsPublic: <span class="white-selection">@course.IsPublic</span></p>
+                <p>IsUnavailable: <span class="white-selection">@course.IsUnavailable</span></p>
+            </div>
+        }
+    </div>
+}
