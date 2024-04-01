@@ -1,0 +1,43 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Subscriptions.SubscribeModel
+@{
+    ViewData["Title"] = "Subscribe";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Subscriptions/SubscriptionsActionsPage')">
+        Subscriptions
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Subscriptions/Subscribe')">
+        Subscribe
+    </h2>
+</div>
+
+<form class="form width-400" method="post">
+    <div class="form-input">
+        <p class="form-input__label">User Id</p>
+        <input type="number" name="userId" placeholder="User Id..." class="input" />
+    </div>
+
+    <div class="form-input">
+        <p class="form-input__label">Course Id</p>
+        <input type="number" name="courseId" placeholder="Course Id..." class="input" />
+    </div>
+
+    <div class="form__actions">
+        <button class="primary-button">Subscribe</button>
+    </div>
+</form>
+
+@{
+    if (Model.QueryResult != null)
+    {
+        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+        <div class="response-container" id="register-response">
+            <h3>Response:</h3>
+            <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+            <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+            <p>Message: @Model.QueryResult.Message</p>
+        </div>
+    }
+}

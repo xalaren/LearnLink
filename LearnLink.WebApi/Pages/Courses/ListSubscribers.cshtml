@@ -1,0 +1,61 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Courses.ListSubscribersModel
+@{
+    ViewData["Title"] = "List subscribers";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Courses/CoursesActionsPage')">
+        Courses
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Courses/ListSubscribers')">
+        List-Subscribers
+    </h2>
+</div>
+
+<form class="form width-400" method="get">
+    <div class="form-input">
+        <p class="form-input__label">User Id (requester)</p>
+        <input type="number" name="userId" placeholder="User Id..." min="0" class="input" />
+    </div>
+
+    <div class="form-input">
+        <p class="form-input__label">Course Id</p>
+        <input type="number" name="courseId" placeholder="Course Id..." class="input" min="0" />
+    </div>
+
+    <div class="form__actions">
+        <button class="primary-button">Get subscribers</button>
+    </div>
+</form>
+
+@{
+    if (Model.QueryResult != null)
+    {
+        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+        <div class="response-container">
+            <h3>Response:</h3>
+            <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+            <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+            <p>Message: @Model.QueryResult.Message</p>
+        </div>
+    }
+}
+
+@if (Model.CourseUsers != null)
+{
+    <div class="data-view">
+        <h3>View data: </h3>
+        @foreach (var user in Model.CourseUsers)
+        {
+            <div class="result-value">
+                <p>Id: <span class="white-selection">@user.Id</span></p>
+                <p>Nickname: <span class="white-selection">@user.Nickname</span></p>
+                <p>Name: <span class="white-selection">@user.Name</span></p>
+                <p>Lastname: <span class="white-selection">@user.Lastname</span></p>
+                <p>LocalRole: <span class="white-selection">@user.LocalRoleName</span></p>
+                <p>Subscription Date: <span class="white-selection">@user.SubscriptionDate.ToShortDateString()</span></p>
+            </div>
+        }
+    </div>
+}

@@ -1,7 +1,8 @@
 ﻿<header class="header">
     <nav class="header__nav container">
         <div class="logo">
-            <img src="~/img/logo.svg" alt="Logo" class="logo__img" />
+            <!-- <img src="~/img/logo.svg" alt="Logo" class="logo__img" /> -->
+            <h2>Learn Link</h2>
         </div>
         <a class="white-link" asp-area="" asp-page="/Index">Home</a>
         <a class="white-link" href="swagger">Swagger</a>
@@ -23,6 +24,10 @@
                 <a class="dropdown__item" onclick="redirect('Courses/CoursesActionsPage')">
                     <span class="icon-arrow-right-dotted"></span>
                     Courses
+                </a>
+                <a class="dropdown__item" onclick="redirect('Subscriptions/SubscriptionsActionsPage')">
+                    <span class="icon-arrow-right-dotted"></span>
+                    Subscriptions
                 </a>
             </div>
         </div>

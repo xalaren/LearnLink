@@ -1,4 +1,6 @@
-﻿using System.Reflection.PortableExecutable;
+﻿using System.Diagnostics;
+using System.Linq;
+using System.Reflection.PortableExecutable;
 using LearnLink.Application.Mappers;
 using LearnLink.Application.Transaction;
 using LearnLink.Core.Constants;
@@ -448,6 +450,83 @@ namespace LearnLink.Application.Interactors
                     Success = false,
                     Message = "Не удалось получить курсы",
                     InnerErrorMessages = [exception.Message],
+                };
+            }
+        }
+
+        public async Task<Response<CourseUserDto[]>> GetSubscribers(int userId, int courseId)
+        {
+            try
+            {
+                var viewPermission = await permissionService.GetPermissionAsync(userId: userId, courseId: courseId, toView: true);
+
+                if(!viewPermission)
+                {
+                    throw new AccessLevelException("Доступ отклонен");
+                }
+
+                var subscriptions = unitOfWork.Subscriptions
+                    .AsNoTracking()
+                    .Where(sub => sub.CourseId == courseId);
+
+                var users = subscriptions.Join(
+                        unitOfWork.Users.AsNoTracking(),
+                        sub => sub.UserId,
+                        user => user.Id,
+                        (sub, user) => user
+                    );
+
+                var userRoles = subscriptions.Join(
+                    unitOfWork.UserCourseLocalRoles.AsNoTracking(),
+                    sub => sub.UserId,
+                    userRole => userRole.UserId,
+                    (sub, userRole) => userRole)
+                    .Include(userRole => userRole.LocalRole);
+
+                var courseUserDtos = await subscriptions
+                        .Join(
+                            users,
+                            sub => sub.UserId,
+                            user => user.Id,
+                            (sub, user) => new { Subscription = sub, User = user })
+                        .Join(
+                            userRoles,
+                            combined => combined.Subscription.UserId,
+                            localRole => localRole.UserId,
+                            (combined, userRole) => new CourseUserDto(
+                                combined.User.Id,
+                                combined.User.Nickname,
+                                combined.User.Name,
+                                combined.User.Lastname,
+                                userRole.LocalRole.Name,
+                                combined.Subscription.StartDate))
+                        .ToArrayAsync();
+
+                return new()
+                {
+                    Success = true,
+                    Message = "Подписчики успешно получены",
+                    StatusCode = 200,
+                    Value = courseUserDtos
+                };
+            }
+            catch(CustomException exception)
+            {
+                return new ()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                    StatusCode = exception.StatusCode
+                };
+            }
+            catch(Exception exception)
+            {
+                return new ()
+                {
+                    Success = false,
+                    Message = "Не удалось получить подписчиков курса",
+                    InnerErrorMessages = [exception.Message],
+                    StatusCode = 500
                 };
             }
         }

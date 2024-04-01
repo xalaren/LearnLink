@@ -1,0 +1,20 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Subscriptions.InviteModel
+@{
+    ViewData["Title"] = "Invite user";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Subscriptions/SubscriptionsActionsPage')">
+        Subscriptions
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Subscriptions/Invite')">
+        Invite
+    </h2>
+</div>
+
+<form class="form width-400" method="get">
+    <button class="primary-button">Load users</button>
+</form>
+
+

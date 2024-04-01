@@ -19,11 +19,46 @@ namespace LearnLink.Application.Interactors
             this.unitOfWork = unitOfWork;
         }
 
+        public async Task<Response<SubscriptionDto[]>> GetAllAsync()
+        {
+            try
+            {
+                var subscriptions = await unitOfWork.Subscriptions.Select(sub => sub.ToDto()).ToArrayAsync();
+
+                return new()
+                {
+                    Success = true,
+                    Message = "Подписки успешно получены",
+                    StatusCode = 200,
+                    Value = subscriptions,
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                    StatusCode = exception.StatusCode,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = "Не удалось получить курсы",
+                    StatusCode = 500,
+                    InnerErrorMessages = [exception.Message],
+                };
+            }
+        }
+
         public async Task<Response> InviteAsync(int userId, int courseId, string localRoleSign, params int[] userIdentifiers)
         {
             try
             {
-                var course = await unitOfWork.Courses.FindAsync(courseId) ?? 
+                var course = await unitOfWork.Courses.FindAsync(courseId) ??
                     throw new NotFoundException("Курс не найден");
 
                 var user = await unitOfWork.Users.FindAsync(userId) ?? throw new NotFoundException("Пользователь не найден");
@@ -36,7 +71,7 @@ namespace LearnLink.Application.Interactors
                     .Reference(u => u.LocalRole)
                     .LoadAsync();
 
-                if(!userCourseLocalRole.LocalRole.InviteAccess)
+                if (!userCourseLocalRole.LocalRole.InviteAccess)
                 {
                     throw new AccessLevelException("Пользователь не может пригласить других участников");
                 }
@@ -65,7 +100,7 @@ namespace LearnLink.Application.Interactors
                     throw new NotFoundException("Локальная роль получена неверно, либо не найдена");
                 }
 
-                if(userCourseLocalRole.LocalRole.GetRolePriority() < role.GetRolePriority())
+                if (userCourseLocalRole.LocalRole.GetRolePriority() < role.GetRolePriority())
                 {
                     throw new AccessLevelException("Приоритет вашей роли недопустим для назначения данной роли пользователям");
                 }
@@ -149,20 +184,27 @@ namespace LearnLink.Application.Interactors
                     LocalRole = role,
                 };
 
-                var courseCompletion = new CourseCompletion()
-                {
-                    Course = course,
-                    User = user,
-                    Completed = false,
-                    CompletionProgress = 0,
-                };
 
                 subscriptionEntity.User = user;
                 subscriptionEntity.Course = course;
 
                 await unitOfWork.Subscriptions.AddAsync(subscriptionEntity);
                 await unitOfWork.UserCourseLocalRoles.AddAsync(newUserCourseLocalRole);
-                await unitOfWork.CourseCompletions.AddAsync(courseCompletion);
+
+                var oldCourseCompletion = await unitOfWork.CourseCompletions.AsNoTracking().FirstOrDefaultAsync(cp => cp.UserId == user.Id && cp.CourseId == course.Id);
+
+                if (oldCourseCompletion == null)
+                {
+                    var newCourseCompletion = new CourseCompletion()
+                    {
+                        Course = course,
+                        User = user,
+                        Completed = false,
+                        CompletionProgress = 0,
+                    };
+
+                    await unitOfWork.CourseCompletions.AddAsync(newCourseCompletion);
+                }
 
                 unitOfWork.Courses.Update(course);
 
@@ -206,15 +248,24 @@ namespace LearnLink.Application.Interactors
                     throw new NotFoundException("Курс не найден");
                 }
 
-                course.SubscribersCount--;
+                var courseUserLocalRole = await unitOfWork.UserCourseLocalRoles.FirstOrDefaultAsync(userRole => userRole.UserId == userId && userRole.CourseId == courseId);
+
+                if (courseUserLocalRole == null)
+                {
+                    throw new NotFoundException("Локальная роль пользователя не найдена");
+                }
 
                 if (subscription == null)
                 {
                     throw new NotFoundException("Подписка не найдена");
                 }
 
+                course.SubscribersCount--;
+
+
                 unitOfWork.Courses.Update(course);
                 unitOfWork.Subscriptions.Remove(subscription);
+                unitOfWork.UserCourseLocalRoles.Remove(courseUserLocalRole);
                 await unitOfWork.CommitAsync();
 
                 return new Response()
@@ -283,7 +334,7 @@ namespace LearnLink.Application.Interactors
                     .Load();
 
                 if (!requester.Role.IsAdmin &&
-                   (!requesterCourseLocalRole.LocalRole.KickAccess || 
+                   (!requesterCourseLocalRole.LocalRole.KickAccess ||
                      requesterCourseLocalRole.LocalRole.GetRolePriority() < targetCourseLocalRole.LocalRole.GetRolePriority()))
                 {
                     throw new AccessLevelException("Невозможно исключить данного пользователя");
@@ -294,11 +345,11 @@ namespace LearnLink.Application.Interactors
                     throw new NotFoundException("Подписка не найдена");
                 }
 
-                unitOfWork.Subscriptions.Remove(subscription);
 
                 course.SubscribersCount--;
                 unitOfWork.Courses.Update(course);
-
+                unitOfWork.Subscriptions.Remove(subscription);
+                unitOfWork.UserCourseLocalRoles.Remove(targetCourseLocalRole);
                 await unitOfWork.CommitAsync();
 
                 return new Response()
@@ -321,10 +372,10 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось отписаться от курса",
-                    InnerErrorMessages = [ exception.Message ],
+                    InnerErrorMessages = [exception.Message],
                 };
             }
-        } 
+        }
 
     }
 }
