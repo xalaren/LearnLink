@@ -1,0 +1,71 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Courses.EditModel
+@{
+    ViewData["Title"] = "Edit course";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Courses/CoursesActionsPage')">
+        Courses
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Courses/Edit')">
+        Edit
+    </h2>
+</div>
+
+@{
+    if (Model.QueryResult != null)
+    {
+        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+        <div class="response-container" id="register-response">
+            <h3>Response:</h3>
+            <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+            <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+            <p>Message: @Model.QueryResult.Message</p>
+        </div>
+    }
+}
+
+<form class="form" method="get">
+    <div class="line-container">
+        <input type="text" class="input" name="courseId" placeholder="Course Id" />
+        <button type="submit" class="primary-button">Load</button>
+    </div>
+</form>
+
+@if(Model.CourseDto != null)
+{
+    <form class="form" method="post">
+        <div class="form-input">
+            <p class="form-input__label">User Id</p>
+            <input type="number" min="0" name="userId" placeholder="User Id..." class="input" />
+        </div>
+        <div class="form-input">
+            <p class="form-input__label">Course Id</p>
+            <input type="number" min="0" name="courseId" placeholder="Course Id..." class="input" value="@Model.CourseDto.Id" />
+        </div>
+        <div class="form-input">
+            <p class="form-input__label">Title</p>
+            <input type="text" name="title" placeholder="Title..." class="input" value="@Model.CourseDto.Title" />
+        </div>
+
+        <div class="form-input">
+            <p class="form-input__label">Description</p>
+            <textarea class="textarea input" name="description" placeholder="Description...">@Model.CourseDto.Description</textarea>
+        </div>
+
+        <div class="line-container">
+            <input type="checkbox" class="checkbox" id="isPublic" name="isPublic" checked="@Model.CourseDto.IsPublic" />
+            <label for="isPublic">IsPublic</label>
+        </div>
+
+        <div class="line-container">
+            <input type="checkbox" class="checkbox" id="isUnavailable" name="isUnavailable" checked="@Model.CourseDto.IsUnavailable" />
+            <label for="isUnavailable">IsUnavailable</label>
+        </div>
+
+        <div class="form__actions">
+            <button class="primary-button">Edit</button>
+        </div>
+    </form>
+}

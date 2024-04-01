@@ -67,32 +67,32 @@ namespace LearnLink.WebApi.Controllers
 
         [Authorize]
         [HttpGet("get-subscribed")]
-        public async Task<Response<DataPage<CourseDto[]>>> GetSubscribedCoursesAsync(int userId, int page, int size)
+        public async Task<Response<CourseDto[]>> GetSubscribedCoursesAsync(int userId)
         {
             var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
 
-            if (!verifyResponse.Success) return new Response<DataPage<CourseDto[]>>()
+            if (!verifyResponse.Success) return new Response<CourseDto[]>()
             {
                 Success = verifyResponse.Success,
                 Message = verifyResponse.Message,
             };
 
-            return await courseInteractor.GetSubscribedCoursesAsync(userId, new DataPageHeader(page, size));
+            return await courseInteractor.GetSubscribedCoursesAsync(userId);
         }
 
         [Authorize]
         [HttpGet("get-unavailable")]
-        public async Task<Response<DataPage<CourseDto[]>>> GetUnavailableCoursesAsync(int userId, int page, int size)
+        public async Task<Response<CourseDto[]>> GetUnavailableCoursesAsync(int userId)
         {
             var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
 
-            if (!verifyResponse.Success) return new Response<DataPage<CourseDto[]>>()
+            if (!verifyResponse.Success) return new Response<CourseDto[]>()
             {
                 Success = verifyResponse.Success,
                 Message = verifyResponse.Message,
             };
 
-            return await courseInteractor.GetUnavailableUserCoursesAsync(userId, new DataPageHeader(page, size));
+            return await courseInteractor.GetUnavailableUserCoursesAsync(userId);
         }
 
 

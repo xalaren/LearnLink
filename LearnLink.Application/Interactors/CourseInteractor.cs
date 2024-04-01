@@ -182,7 +182,7 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task<Response<DataPage<CourseDto[]>>> GetSubscribedCoursesAsync(int userId, DataPageHeader pageHeader)
+        public async Task<Response<CourseDto[]>> GetSubscribedCoursesAsync(int userId)
         {
             try
             {
@@ -205,28 +205,16 @@ namespace LearnLink.Application.Interactors
                         (sub, course) => course
                     );
 
-                var total = courses.Count();
-
                 var coursesResult = await courses
-                    .Skip((pageHeader.PageNumber - 1) * pageHeader.PageSize)
-                    .Take(pageHeader.PageSize)
                     .OrderByDescending(course => course.CreationDate)
                     .Select(course => course.ToDto())
                     .ToArrayAsync();
-
-                var dataPage = new DataPage<CourseDto[]>()
-                {
-                    PageNumber = pageHeader.PageNumber,
-                    PageSize = pageHeader.PageSize,
-                    ItemsCount = total,
-                    Values = coursesResult
-                };
 
                 return new()
                 {
                     Success = true,
                     Message = "Курсы пользователя успешно получены",
-                    Value = dataPage,
+                    Value = coursesResult,
                 };
             }
             catch (CustomException exception)
@@ -248,7 +236,7 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task<Response<DataPage<CourseDto[]>>> GetUnavailableUserCoursesAsync(int userId, DataPageHeader pageHeader)
+        public async Task<Response<CourseDto[]>> GetUnavailableUserCoursesAsync(int userId)
         {
             try
             {
@@ -256,7 +244,7 @@ namespace LearnLink.Application.Interactors
                     .AsNoTracking()
                     .FirstOrDefaultAsync(user => user.Id == userId) ?? throw new NotFoundException("Пользователь не найден");
 
-                var courses = unitOfWork.UserCreatedCourses
+                var courses = await unitOfWork.UserCreatedCourses
                     .AsNoTracking()
                     .Where(u => u.UserId == userId)
                     .Join(
@@ -265,30 +253,16 @@ namespace LearnLink.Application.Interactors
                         course => course.Id,
                         (userCreatedCourse, course) => course
                     )
-                    .Where(c => c.IsUnavailable);
-
-                var total = courses.Count();
-
-                var result = await courses
-                    .Skip((pageHeader.PageNumber - 1) * pageHeader.PageSize)
-                    .Take(pageHeader.PageSize)
+                    .Where(c => c.IsUnavailable)
                     .OrderByDescending(course => course.CreationDate)
                     .Select(course => course.ToDto())
                     .ToArrayAsync();
-
-                var dataPage = new DataPage<CourseDto[]>()
-                {
-                    PageNumber = pageHeader.PageNumber,
-                    PageSize = pageHeader.PageSize,
-                    ItemsCount = total,
-                    Values = result
-                };
 
                 return new()
                 {
                     Success = true,
                     Message = "Курсы пользователя успешно получены",
-                    Value = dataPage,
+                    Value = courses,
                 };
             }
             catch (CustomException exception)
@@ -411,7 +385,7 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task<Response<CourseDto[]>> FindCoursesByTitleInUserCourses(int userId, string searchTitle, bool subscription, bool unavailable)
+        public async Task<Response<CourseDto[]>> FindCoursesByTitleInUserCourses(int userId, string searchTitle, bool isSubscription, bool isUnavailable)
         {
             try
             {
@@ -419,7 +393,7 @@ namespace LearnLink.Application.Interactors
                    .AsNoTracking()
                    .FirstOrDefaultAsync(user => user.Id == userId) ?? throw new NotFoundException("Пользователь не найден");
 
-                var coursesQuery = subscription ?
+                var coursesQuery = isSubscription ?
                     unitOfWork.Subscriptions
                         .AsNoTracking()
                         .Where(u => u.UserId == userId)
@@ -439,8 +413,8 @@ namespace LearnLink.Application.Interactors
                             (userCreatedCourse, course) => course
                         )
                         .Where(course =>
-                            (unavailable && course.IsUnavailable) ||
-                            (!unavailable && !course.IsPublic && !course.IsUnavailable));
+                            (isUnavailable && course.IsUnavailable) ||
+                            (!isUnavailable && !course.IsPublic && !course.IsUnavailable));
 
                 var filteredCourses = coursesQuery
                     .Where(course => course.Title.ToLower().Contains(searchTitle.ToLower()))

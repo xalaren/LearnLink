@@ -13,14 +13,7 @@ namespace LearnLink.WebApi.Pages.Users
 
         public IActionResult OnGet()
         {
-            RequireAuthorize();
-
-            if (!AdminAuthorized)
-            {
-                return AccessDeniedPage();
-            }
-
-            return Page();
+            return AuthRequired();
         }
 
         public async Task OnPost(string nickname, string password)

@@ -17,29 +17,23 @@ namespace LearnLink.WebApi.Pages.Users
 
         public async Task<IActionResult> OnGet(int userId)
         {
-            RequireAuthorize();
-
-            if(!AdminAuthorized)
+            return await AuthRequiredAsync(async () =>
             {
-                return AccessDeniedPage();
-            }
+                if (userId == 0)
+                {
+                    return;
+                }
 
-            if(userId == 0)
-            {
-                return Page();
-            }
+                var response = await UserInteractor.GetUserAsync(userId);
 
-            var response = await UserInteractor.GetUserAsync(userId);
+                if (response.Success)
+                {
+                    UserDto = response.Value;
+                    return;
+                }
 
-            if(response.Success)
-            {
-                UserDto = response.Value;
-                return Page();
-            }
-
-            QueryResult = response;
-
-            return Page();
+                QueryResult = response;
+            });
         }
 
         public async Task OnPost(UserDto userDto)

@@ -2,12 +2,11 @@ using LearnLink.Application.Interactors;
 using LearnLink.Shared.Responses;
 using LearnLink.WebApi.Pages.PageModels;
 using Microsoft.AspNetCore.Mvc;
-
-namespace LearnLink.WebApi.Pages.Users
+namespace LearnLink.WebApi.Pages.Courses
 {
-    public class DeleteModel : UsersBasePageModel
+    public class DeleteModel : CoursesBasePageModel
     {
-        public DeleteModel(UserInteractor userInteractor) : base(userInteractor) { }
+        public DeleteModel(CourseInteractor courseInteractor) : base(courseInteractor) { }
 
         public Response? QueryResult { get; set; }
 
@@ -16,9 +15,9 @@ namespace LearnLink.WebApi.Pages.Users
             return AuthRequired();
         }
 
-        public async Task OnPost(int userId)
+        public async Task OnPost(int userId, int courseId)
         {
-            QueryResult = await UserInteractor.RemoveUserAsync(userId);
+            QueryResult = await CourseInteractor.RemoveCourseAsync(userId, courseId);
         }
     }
 }

@@ -7,14 +7,7 @@ namespace LearnLink.WebApi.Pages.Users
     {
         public IActionResult OnGet()
         {
-            RequireAuthorize();
-
-            if (!AdminAuthorized)
-            {
-                return AccessDeniedPage();
-            }
-
-            return Page();
+            return AuthRequired();
         }
     }
 }

@@ -1,0 +1,35 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Courses.DeleteModel
+@{
+    ViewData["Title"] = "Delete course";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Courses/CoursesActionsPage')">
+        Courses
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Courses/Delete')">
+        Delete
+    </h2>
+</div>
+
+<form class="form width-400" method="post">
+    <input type="number" class="input" name="userId" min="0" placeholder="User Id..." />
+    <input type="number" class="input" name="courseId" min="0" placeholder="Course Id..." />
+    <div class="form__actions">
+        <button type="submit" class="primary-button">Delete</button>
+    </div>
+</form>
+
+@{
+    if (Model.QueryResult != null)
+    {
+        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+        <div class="response-container" id="register-response">
+            <h3>Response:</h3>
+            <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+            <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+            <p>Message: @Model.QueryResult.Message</p>
+        </div>
+    }
+}

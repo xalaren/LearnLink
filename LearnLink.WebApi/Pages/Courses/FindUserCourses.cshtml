@@ -1,31 +1,40 @@
 ﻿@page
-@model ListPublicModel
+@model LearnLink.WebApi.Pages.Courses.FindUserCoursesModel
 @{
-    ViewData["Title"] = "List public courses";
+    ViewData["Title"] = "Find user courses";
 }
 
 <div class="breadcrumb">
     <h2 class="breadcrumb__item" onclick="redirect('Courses/CoursesActionsPage')">
         Courses
     </h2>
-    <h2 class="breadcrumb__item" onclick="redirect('Courses/ListPublic')">
-        List-Public
+    <h2 class="breadcrumb__item" onclick="redirect('Courses/FindUserCourses')">
+        Find-User-Courses
     </h2>
 </div>
 
 <form class="form width-400" method="get">
     <div class="form-input">
-        <p class="form-input__label">Page number</p>
-        <input type="number" name="pageNumber" placeholder="Page number..." class="input" />
+        <p class="form-input__label">User Id</p>
+        <input type="number" name="userId" placeholder="User Id..." min="0" class="input" />
+    </div>
+    <div class="form-input">
+        <p class="form-input__label">Search text</p>
+        <input type="text" name="searchText" placeholder="Course title..." class="input" />
     </div>
 
-    <div class="form-input">
-        <p class="form-input__label">Page size</p>
-        <input type="number" name="pageSize" placeholder="Page size..." class="input" />
+    <div class="line-container">
+        <input type="checkbox" class="checkbox" id="subscription" name="subscriptionString" />
+        <label for="subscription">In subscription list</label>
+    </div>
+
+    <div class="line-container">
+        <input type="checkbox" class="checkbox" id="unavailable" name="unavailableString" />
+        <label for="unavailable">In unavailable list</label>
     </div>
 
     <div class="form__actions">
-        <button class="primary-button">Get public courses</button>
+        <button class="primary-button">Find courses</button>
     </div>
 </form>
 
@@ -38,15 +47,6 @@
             <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
             <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
             <p>Message: @Model.QueryResult.Message</p>
-
-            @if (Model.QueryResult.Value != null)
-            {
-                <p>Page: @Model.QueryResult.Value.PageNumber</p>
-                <p>PageSize: @Model.QueryResult.Value.PageSize</p>
-                <p>PageCount: @Model.QueryResult.Value.PageCount</p>
-                <p>Total: @Model.QueryResult.Value.ItemsCount</p>
-            }
-
         </div>
     }
 }

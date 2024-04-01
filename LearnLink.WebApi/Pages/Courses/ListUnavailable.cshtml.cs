@@ -3,18 +3,16 @@ using LearnLink.Shared.DataTransferObjects;
 using LearnLink.Shared.Responses;
 using LearnLink.WebApi.Pages.PageModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace LearnLink.WebApi.Pages.Courses
 {
-    public class ListUserCoursesModel : CoursesBasePageModel
+    public class ListUnavailableModel : CoursesBasePageModel
     {
-        public ListUserCoursesModel(CourseInteractor courseInteractor) : base(courseInteractor) { }
-
-        public CourseDto[]? Courses { get; set; }
+        public ListUnavailableModel(CourseInteractor courseInteractor) : base(courseInteractor) { }
 
         public Response<CourseDto[]>? QueryResult { get; set; }
+
+        public CourseDto[]? Courses { get; set; }
 
         public async Task<IActionResult> OnGet(int userId)
         {
@@ -22,9 +20,9 @@ namespace LearnLink.WebApi.Pages.Courses
             {
                 if (userId == 0) return;
 
-                QueryResult = await CourseInteractor.GetCoursesCreatedByUserAsync(userId);
+                QueryResult = await CourseInteractor.GetUnavailableUserCoursesAsync(userId);
 
-                if (QueryResult.Success)
+                if(QueryResult.Success && QueryResult.Value != null)
                 {
                     Courses = QueryResult.Value;
                 }

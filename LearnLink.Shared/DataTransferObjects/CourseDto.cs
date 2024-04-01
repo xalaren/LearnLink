@@ -4,8 +4,8 @@
         (
           int Id,
           string Title,
-          DateTime? CreationDate,
-          string? Description,
+          string? Description = null,
+          DateTime? CreationDate = null,
           int SubscribersCount = 0,
           bool IsPublic = false,
           bool IsUnavailable = false,

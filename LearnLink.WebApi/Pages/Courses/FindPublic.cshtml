@@ -1,15 +1,15 @@
 ﻿@page
-@model ListPublicModel
+@model LearnLink.WebApi.Pages.Courses.FindPublicModel
 @{
-    ViewData["Title"] = "List public courses";
+    ViewData["Title"] = "Find public courses";
 }
 
 <div class="breadcrumb">
     <h2 class="breadcrumb__item" onclick="redirect('Courses/CoursesActionsPage')">
         Courses
     </h2>
-    <h2 class="breadcrumb__item" onclick="redirect('Courses/ListPublic')">
-        List-Public
+    <h2 class="breadcrumb__item" onclick="redirect('Courses/FindPublic')">
+        Find-Public
     </h2>
 </div>
 
@@ -24,8 +24,13 @@
         <input type="number" name="pageSize" placeholder="Page size..." class="input" />
     </div>
 
+    <div class="form-input">
+        <p class="form-input__label">Search text</p>
+        <input type="text" name="searchText" placeholder="Course title..." class="input" />
+    </div>
+
     <div class="form__actions">
-        <button class="primary-button">Get public courses</button>
+        <button class="primary-button">Find public courses</button>
     </div>
 </form>
 
@@ -68,3 +73,4 @@
         }
     </div>
 }
+
