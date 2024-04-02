@@ -1,0 +1,42 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Modules.ListModel
+@{
+    ViewData["Title"] = "List modules";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Modules/ModulesActionsPage')">
+        Modules
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Modules/List')">
+        List
+    </h2>
+</div>
+
+@{
+    if (Model.QueryResult != null)
+    {
+        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+        <div class="response-container">
+            <h3>Response:</h3>
+            <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+            <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+            <p>Message: @Model.QueryResult.Message</p>
+        </div>
+    }
+}
+
+@if (Model.Modules != null)
+{
+    <div class="data-view">
+        <h3>View data</h3>
+        @foreach (var module in Model.Modules)
+        {
+            <div class="result-value">
+                <p>Id: <span class="white-selection">@module.Id</span></p>
+                <p>Title: <span class="white-selection">@module.Title</span></p>
+                <p>Description: <span class="white-selection">@module.Description</span></p>
+            </div>
+        }
+    </div>
+}

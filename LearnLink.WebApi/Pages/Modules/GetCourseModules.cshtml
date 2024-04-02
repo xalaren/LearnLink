@@ -1,0 +1,50 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Modules.GetCourseModulesModel
+@{
+    ViewData["Title"] = "Get course modules";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Modules/ModulesActionsPage')">
+        Modules
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Modules/GetCourseModules')">
+        Get-Course-Modules
+    </h2>
+</div>
+
+<form class="form" method="get">
+    <div class="form-input">
+        <p class="form-input__label">Course Id</p>
+        <div class="line-container">
+            <input type="number" name="courseId" placeholder="Module Id..." min="0" class="input" />
+            <button class="primary-button">Get course modules</button>
+        </div>
+    </div>
+</form>
+
+@if (Model.QueryResult != null)
+{
+    string className = Model.QueryResult.Success ? "green-text" : "red-text";
+    <div class="response-container">
+        <h3>Response:</h3>
+        <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+        <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+        <p>Message: @Model.QueryResult.Message</p>
+    </div>
+}
+
+@if (Model.Modules != null)
+{
+    <div class="data-view">
+        <h3>View data</h3>
+        @foreach (var module in Model.Modules)
+        {
+            <div class="result-value">
+                <p>Id: <span class="white-selection">@module.Id</span></p>
+                <p>Title: <span class="white-selection">@module.Title</span></p>
+                <p>Description: <span class="white-selection">@module.Description</span></p>
+            </div>
+        }
+    </div>
+}

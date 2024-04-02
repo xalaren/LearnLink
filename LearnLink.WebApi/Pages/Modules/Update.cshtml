@@ -1,0 +1,60 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Modules.UpdateModel
+@{
+    ViewData["Title"] = "Update module";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Modules/ModulesActionsPage')">
+        Modules
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Modules/Update')">
+        Update
+    </h2>
+</div>
+
+<form class="form" method="get">
+    <div class="form-input">
+        <p class="form-input__label">Module Id</p>
+        <div class="line-container">
+            <input type="number" name="moduleId" placeholder="Module Id..." class="input" />
+            <button class="primary-button">Get</button>
+        </div>
+    </div>
+</form>
+
+
+@if (Model.QueryResult != null)
+{
+    string className = Model.QueryResult.Success ? "green-text" : "red-text";
+    <div class="response-container" id="register-response">
+        <h3>Response:</h3>
+        <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+        <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+        <p>Message: @Model.QueryResult.Message</p>
+    </div>
+}
+
+@if (Model.FoundModule != null) 
+{
+    <form class="form" method="post">
+        <div class="form-input">
+            <p class="form-input__label">Module Id</p>
+            <input type="number" name="id" placeholder="Module Id..." min="0" class="input" value="@Model.FoundModule.Id" />
+        </div>
+
+        <div class="form-input">
+            <p class="form-input__label">Title</p>
+            <input type="text" name="title" placeholder="Title..." class="input" value="@Model.FoundModule.Title" />
+        </div>
+
+        <div class="form-input">
+            <p class="form-input__label">Description</p>
+            <textarea class="textarea input" name="description" placeholder="Description...">@Model.FoundModule.Description</textarea>
+        </div>
+
+        <div class="form__actions">
+            <button class="primary-button">Update</button>
+        </div>
+    </form>
+}
