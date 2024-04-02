@@ -18,11 +18,15 @@
             PageSize = pageSize;
         }
     }
-    public class DataPage<T> : DataPageHeader
+
+    public class DataPage : DataPageHeader
     {
         public int ItemsCount { get; init; }
         public int PageCount => (int)Math.Ceiling((decimal)ItemsCount / PageSize);
+    }
 
+    public class DataPage<T> : DataPage
+    {
         public T? Values { get; set; }
     }
 }

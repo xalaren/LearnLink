@@ -1,4 +1,6 @@
-﻿namespace LearnLink.Core.Exceptions
+﻿using LearnLink.Core.Interfaces;
+
+namespace LearnLink.Core.Exceptions
 {
     public class CustomException : Exception, IExceptionStatusCode
     {

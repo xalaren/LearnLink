@@ -26,7 +26,7 @@ namespace LearnLink.Application.Mappers
                 Nickname = userEntity.Nickname,
                 Lastname = userEntity.Lastname,
                 Name = userEntity.Name,
-                Role = userEntity.Role.ToDto(),
+                Role = userEntity.Role?.ToDto(),
                 AvatarFileName = userEntity.AvatarFileName,
                 AvatarUrl = userEntity.AvatarFileName != null ? 
                     DirectoryStore.GetRelativeDirectoryUrlToUserImages(userEntity.Id) + userEntity.AvatarFileName : null

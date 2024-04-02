@@ -14,7 +14,7 @@ namespace LearnLink.Application.Mappers
                 Sign = roleDto.Sign,
                 ViewAccess = roleDto.ViewAccess,
                 EditAcess = roleDto.EditAccess,
-                RemoveAcess = roleDto.RemoveAccess,
+                RemoveAccess = roleDto.RemoveAccess,
                 ManageInternalAccess = roleDto.ManageInternalAccess,
                 InviteAccess = roleDto.InviteAccess,
                 KickAccess = roleDto.KickAccess
@@ -29,7 +29,7 @@ namespace LearnLink.Application.Mappers
                 Sign: roleEntity.Sign,
                 ViewAccess: roleEntity.ViewAccess,
                 EditAccess: roleEntity.EditAcess,
-                RemoveAccess: roleEntity.RemoveAcess,
+                RemoveAccess: roleEntity.RemoveAccess,
                 ManageInternalAccess: roleEntity.ManageInternalAccess,
                 InviteAccess: roleEntity.InviteAccess,
                 KickAccess: roleEntity.KickAccess
@@ -50,7 +50,7 @@ namespace LearnLink.Application.Mappers
 
             role.ViewAccess = roleDto.ViewAccess;
             role.EditAcess = roleDto.EditAccess;
-            role.RemoveAcess = roleDto.RemoveAccess;
+            role.RemoveAccess = roleDto.RemoveAccess;
             role.ManageInternalAccess = roleDto.ManageInternalAccess;
             role.InviteAccess = roleDto.InviteAccess;
             role.KickAccess = roleDto.KickAccess;

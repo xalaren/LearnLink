@@ -4,7 +4,7 @@
     {
         public bool ViewAccess { get; set; }
         public bool EditAcess { get; set; }
-        public bool RemoveAcess { get; set; }
+        public bool RemoveAccess { get; set; }
         public bool ManageInternalAccess { get; set; }
         public bool InviteAccess { get; set; }
         public bool KickAccess { get; set; }
@@ -13,7 +13,7 @@
         {
             get
             {
-                return ViewAccess && EditAcess && RemoveAcess && ManageInternalAccess && InviteAccess && KickAccess;
+                return ViewAccess && EditAcess && RemoveAccess && ManageInternalAccess && InviteAccess && KickAccess;
             }
         }
 
@@ -29,14 +29,14 @@
 
             if(KickAccess) priority++;
 
-            if (EditAcess && RemoveAcess) priority++;
+            if (EditAcess && RemoveAccess) priority++;
 
             return priority;
         }
 
         public bool GetOnlyViewAccess()
         {
-            return ViewAccess && !(EditAcess || RemoveAcess || ManageInternalAccess || InviteAccess);
+            return ViewAccess && !(EditAcess || RemoveAccess || ManageInternalAccess || InviteAccess);
         }
     }
 }

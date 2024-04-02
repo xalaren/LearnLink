@@ -1,0 +1,50 @@
+﻿@page
+@model LearnLink.WebApi.Pages.LocalRoles.ListModel
+@{
+    ViewData["Title"] = "List local roles";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('LocalRoles/LocalRolesActionsPage')">
+        Local-Roles
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('LocalRoles/List')">
+        List
+    </h2>
+</div>
+
+@{
+    if (Model.QueryResult != null)
+    {
+        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+        <div class="response-container" id="register-response">
+            <h3>Response:</h3>
+            <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+            <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+            <p>Message: @Model.QueryResult.Message</p>
+        </div>
+    }
+}
+
+@if (Model.LocalRoles != null)
+{
+    <div class="data-view">
+        <h3>View data</h3>
+
+        @foreach (var role in Model.LocalRoles)
+        {
+
+                <div class="result-value">
+                    <p>Id: <span class="white-selection">@role.Id</span></p>
+                    <p>Name: <span class="white-selection">@role.Name</span></p>
+                    <p>Sign: <span class="white-selection">@role.Sign</span></p>
+                    <p>ViewAccess: <span class="white-selection">@role.ViewAccess</span></p>
+                    <p>ManageAccess: <span class="white-selection">@role.ManageInternalAccess</span></p>
+                    <p>EditAccess: <span class="white-selection">@role.EditAccess</span></p>
+                    <p>RemoveAccess: <span class="white-selection">@role.RemoveAccess</span></p>
+                    <p>InviteAccess: <span class="white-selection">@role.InviteAccess</span></p>
+                    <p>KickAccess: <span class="white-selection">@role.KickAccess</span></p>
+                </div>
+        }
+    </div>
+}

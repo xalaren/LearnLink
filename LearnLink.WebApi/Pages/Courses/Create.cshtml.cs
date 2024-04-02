@@ -17,7 +17,7 @@ namespace LearnLink.WebApi.Pages.Courses
             return AuthRequired();
         }
 
-        public async Task OnPost(int userId, string title, string? description, string isPublic, string isUnavailable)
+        public async Task OnPost(int userId, string title, string description, string isPublic, string isUnavailable)
         {
             bool isPublicValue = string.IsNullOrWhiteSpace(isPublic) ? false : true;
             bool isUnavailableValue = string.IsNullOrWhiteSpace(isUnavailable) ? false : true;

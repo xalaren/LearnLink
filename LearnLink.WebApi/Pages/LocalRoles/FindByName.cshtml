@@ -1,0 +1,57 @@
+﻿@page
+@model LearnLink.WebApi.Pages.LocalRoles.FindByNameModel
+@{
+    ViewData["Title"] = "Find by name";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('LocalRoles/LocalRolesActionsPage')">
+        Local-Roles
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('LocalRoles/FindByName')">
+        Find-By-Name
+    </h2>
+</div>
+
+
+<form class="form" method="get">
+    <div class="form-input">
+        <p class="form-input__label">Local Role Name</p>
+        <div class="line-container">
+            <input type="text" name="localRoleName" placeholder="Role Name..." class="input" />
+            <button class="primary-button">Find</button>
+        </div>
+    </div>
+
+</form>
+
+@{
+    if (Model.QueryResult != null)
+    {
+        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+        <div class="response-container" id="register-response">
+            <h3>Response:</h3>
+            <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+            <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+            <p>Message: @Model.QueryResult.Message</p>
+        </div>
+    }
+}
+
+@if (Model.FoundLocalRole != null)
+{
+    <div class="data-view">
+        <h3>View data</h3>
+        <div class="result-value">
+            <p>Id: <span class="white-selection">@Model.FoundLocalRole.Id</span></p>
+            <p>Name: <span class="white-selection">@Model.FoundLocalRole.Name</span></p>
+            <p>Sign: <span class="white-selection">@Model.FoundLocalRole.Sign</span></p>
+            <p>ViewAccess: <span class="white-selection">@Model.FoundLocalRole.ViewAccess</span></p>
+            <p>ManageAccess: <span class="white-selection">@Model.FoundLocalRole.ManageInternalAccess</span></p>
+            <p>EditAccess: <span class="white-selection">@Model.FoundLocalRole.EditAccess</span></p>
+            <p>RemoveAccess: <span class="white-selection">@Model.FoundLocalRole.RemoveAccess</span></p>
+            <p>InviteAccess: <span class="white-selection">@Model.FoundLocalRole.InviteAccess</span></p>
+            <p>KickAccess: <span class="white-selection">@Model.FoundLocalRole.KickAccess</span></p>
+        </div>
+    </div>
+}

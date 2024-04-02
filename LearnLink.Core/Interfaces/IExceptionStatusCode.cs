@@ -1,4 +1,4 @@
-﻿namespace LearnLink.Core.Exceptions
+﻿namespace LearnLink.Core.Interfaces
 {
     public interface IExceptionStatusCode
     {

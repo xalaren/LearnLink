@@ -39,7 +39,7 @@ namespace LearnLink.Application.Interactors
                 {
                     throw new ValidationException("Не все поля были заполнены");
                 }
-                
+
                 var user = await unitOfWork.Users.FirstOrDefaultAsync(user => user.Nickname == nickname);
 
                 if (user == null)
@@ -49,7 +49,7 @@ namespace LearnLink.Application.Interactors
 
                 await unitOfWork.Users.Entry(user).Reference(user => user.Role).LoadAsync();
 
-                if(authenticateAdmin && !user.Role.IsAdmin)
+                if (authenticateAdmin && !user.Role.IsAdmin)
                 {
                     throw new AccessLevelException("Аутентификация администратора не пройдена");
                 }
@@ -100,21 +100,21 @@ namespace LearnLink.Application.Interactors
 
         public async Task<Response> RegisterAsync(UserDto userDto, string password, int roleId = 0)
         {
-            if(userDto == null)
+            if (userDto == null)
             {
                 throw new ArgumentNullException("", "UserDto was null");
             }
 
             try
             {
-                if(!ValidationHelper.ValidateToEmptyStrings(password))
+                if (!ValidationHelper.ValidateToEmptyStrings(password))
                 {
                     throw new ValidationException("Пароль не был заполнен");
                 }
 
                 var existingUser = await unitOfWork.Users.FirstOrDefaultAsync(u => u.Nickname == userDto.Nickname);
 
-                if(existingUser != null)
+                if (existingUser != null)
                 {
                     throw new ValidationException("Данный пользователь уже зарегистрирован в системе");
                 }
@@ -164,7 +164,7 @@ namespace LearnLink.Application.Interactors
                     Message = "Пользователь успешно зарегистрирован",
                 };
             }
-            catch(CustomException exception)
+            catch (CustomException exception)
             {
                 return new Response()
                 {
@@ -173,13 +173,13 @@ namespace LearnLink.Application.Interactors
                     StatusCode = exception.StatusCode,
                 };
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 return new Response()
                 {
                     Success = false,
                     Message = "Не удалось зарегистрироваться",
-                    InnerErrorMessages = [ exception.Message ],
+                    InnerErrorMessages = [exception.Message],
                 };
             }
         }
@@ -213,7 +213,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось получить данные",
-                    InnerErrorMessages = [ exception.Message ],
+                    InnerErrorMessages = [exception.Message],
                 };
             }
         }
@@ -255,7 +255,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось получить данные",
-                    InnerErrorMessages = [ exception.Message ],
+                    InnerErrorMessages = [exception.Message],
                 };
             }
         }
@@ -264,12 +264,12 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                if(!ValidationHelper.ValidateToEmptyStrings(nickname))
+                if (!ValidationHelper.ValidateToEmptyStrings(nickname))
                 {
                     throw new ValidationException("Имя пользователя не указано, либо пользователь не найден");
                 }
 
-                var user = await unitOfWork.Users.FirstOrDefaultAsync(u => u.Nickname ==  nickname);
+                var user = await unitOfWork.Users.FirstOrDefaultAsync(u => u.Nickname == nickname);
 
                 if (user == null)
                 {
@@ -303,21 +303,86 @@ namespace LearnLink.Application.Interactors
             }
         }
 
+        public async Task<Response<DataPage<UserDto[]>>> FindUsers(string? searchString, DataPageHeader pageHeader)
+        {
+            try
+            {
+                var usersQuery = unitOfWork.Users
+                    .AsNoTracking();
+
+
+                if (searchString != null)
+                {
+                    usersQuery = usersQuery.Where(user =>
+                            user.Nickname.Contains(searchString) ||
+                            user.Lastname.Contains(searchString) ||
+                            user.Name.Contains(searchString)
+                    );
+                }
+
+                int total = usersQuery.Count();
+
+                var users = await usersQuery
+                    .OrderBy(user => user.Lastname)
+                    .ThenBy(user => user.Name)
+                    .ThenBy(user => user.Nickname)
+                    .Skip((pageHeader.PageNumber - 1) * pageHeader.PageSize)
+                    .Take(pageHeader.PageSize)
+                    .Select(user => user.ToDto())
+                    .ToArrayAsync();
+
+                var dataPage = new DataPage<UserDto[]>()
+                {
+                    ItemsCount = total,
+                    PageSize = pageHeader.PageSize,
+                    PageNumber = pageHeader.PageNumber,
+                    Values = users
+                };
+
+                return new()
+                {
+                    Success = true,
+                    Message = "Пользователи найдены успешно",
+                    StatusCode = 200,
+                    Value = dataPage,
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                    StatusCode = exception.StatusCode,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = "Не удалось найти пользователей",
+                    InnerErrorMessages = [exception.Message],
+                    StatusCode = 500
+                };
+            }
+        }
+
         public async Task<Response> RemoveUserAsync(int userId)
         {
             try
             {
                 var user = await unitOfWork.Users.FirstOrDefaultAsync(u => u.Id == userId);
-                
 
-                if(user == null)
+
+                if (user == null)
                 {
                     throw new NotFoundException("Пользователь не найден");
                 }
 
                 await unitOfWork.Users.Entry(user).Reference(x => x.Role).LoadAsync();
 
-                if(user.Role.Sign == RoleSignConstants.ADMIN && user.Role.Id == 1)
+                if (user.Role.Sign == RoleSignConstants.ADMIN && user.Role.Id == 1)
                 {
                     throw new AccessLevelException("Невозможно удалить, пользователь является системным");
                 }
@@ -350,7 +415,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Удаление не удалось",
-                    InnerErrorMessages = [ exception.Message ],
+                    InnerErrorMessages = [exception.Message],
                     StatusCode = 500
                 };
             }
@@ -366,7 +431,7 @@ namespace LearnLink.Application.Interactors
                 {
                     throw new NotFoundException("Пользователь не найден");
                 }
-                
+
                 unitOfWork.Users.Entry(user).Reference(x => x.Role).Load();
 
                 userDto.AvatarFileName = userDto.AvatarFormFile != null ? GenerateAvatarFileName(userDto.Nickname, userDto.AvatarFormFile.FileName) : null;
@@ -378,14 +443,14 @@ namespace LearnLink.Application.Interactors
 
                 var token = authenticationService.GetToken(updatedEntity.Nickname, updatedEntity.Role.Sign);
 
-                if(userDto.AvatarFormFile != null)
+                if (userDto.AvatarFormFile != null)
                 {
                     using (var avatarStream = userDto.AvatarFormFile.OpenReadStream())
                     {
                         await SaveAvatarAsync(avatarStream, user);
                     }
                 }
-            
+
                 return new()
                 {
                     Success = true,
@@ -409,7 +474,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Изменение не удалось",
-                    InnerErrorMessages = [ exception.Message ],
+                    InnerErrorMessages = [exception.Message],
                     StatusCode = 500
                 };
             }
@@ -426,7 +491,7 @@ namespace LearnLink.Application.Interactors
                     throw new ValidationException("Пароли не были заполнены");
                 }
 
-                if(user == null)
+                if (user == null)
                 {
                     throw new NotFoundException("Пользователь не найден");
                 }
@@ -434,7 +499,7 @@ namespace LearnLink.Application.Interactors
                 unitOfWork.Users.Entry(user).Reference(x => x.Role).Load();
 
                 var userCredentials = await unitOfWork.Credentials.FirstOrDefaultAsync(u => u.UserId == user.Id);
-                
+
 
                 if (userCredentials == null)
                 {
@@ -479,14 +544,14 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Изменение не удалось",
-                    InnerErrorMessages = [ exception.Message ],
+                    InnerErrorMessages = [exception.Message],
                 };
             }
         }
 
         private async Task SaveAvatarAsync(Stream? avatarStream, User user)
         {
-            if(avatarStream == null || string.IsNullOrWhiteSpace(user.AvatarFileName))
+            if (avatarStream == null || string.IsNullOrWhiteSpace(user.AvatarFileName))
             {
                 return;
             }
@@ -503,7 +568,7 @@ namespace LearnLink.Application.Interactors
                     await avatarStream.CopyToAsync(fileStream);
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw new CustomException("Не удалось сохранить аватар");
             }
@@ -527,7 +592,7 @@ namespace LearnLink.Application.Interactors
 
                 return await File.ReadAllBytesAsync(avatarPath);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return null;
             }
@@ -537,7 +602,7 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                if(fileName == null)
+                if (fileName == null)
                 {
                     return;
                 }

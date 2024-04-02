@@ -54,7 +54,7 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task<Response> InviteAsync(int userId, int courseId, string localRoleSign, params int[] userIdentifiers)
+        public async Task<Response> InviteAsync(int userId, int courseId, string? localRoleSign, params int[] userIdentifiers)
         {
             try
             {
@@ -93,7 +93,7 @@ namespace LearnLink.Application.Interactors
                     CompletionProgress = 0,
                 });
 
-                var role = await unitOfWork.LocalRoles.FirstOrDefaultAsync(l => l.Sign == localRoleSign);
+                var role = await unitOfWork.LocalRoles.FirstOrDefaultAsync(l => (localRoleSign != null && l.Sign == localRoleSign) || l.Sign == RoleSignConstants.MEMBER);
 
                 if (role == null)
                 {
@@ -124,7 +124,7 @@ namespace LearnLink.Application.Interactors
                 return new Response()
                 {
                     Success = true,
-                    Message = "Запись прошла успешно",
+                    Message = $"Успешно записано {count} пользователей под ролью {role.Name}",
                 };
             }
             catch (CustomException exception)

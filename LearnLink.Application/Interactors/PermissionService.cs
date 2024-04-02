@@ -50,7 +50,7 @@ namespace LearnLink.Application.Interactors
             return
                 (userCourseRole.LocalRole.ViewAccess && toView) ||
                 (userCourseRole.LocalRole.EditAcess && toEdit) ||
-                (userCourseRole.LocalRole.RemoveAcess && toRemove) ||
+                (userCourseRole.LocalRole.RemoveAccess && toRemove) ||
                 (userCourseRole.LocalRole.ManageInternalAccess && toManageInternal) ||
                 (userCourseRole.LocalRole.InviteAccess && toInvite) ||
                 (userCourseRole.LocalRole.KickAccess && toKick);

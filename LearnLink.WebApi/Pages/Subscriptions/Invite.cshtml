@@ -14,7 +14,88 @@
 </div>
 
 <form class="form width-400" method="get">
-    <button class="primary-button">Load users</button>
+
+    <div class="form-input">
+        <p class="form-input__label">Page number</p>
+        <input type="number" name="pageNumber" placeholder="Page number..." min="1" class="input" />
+    </div>
+
+    <div class="form-input">
+        <p class="form-input__label">Page size</p>
+        <input type="number" name="pageSize" placeholder="Page size..." min="1" class="input" />
+    </div>
+
+    <div class="form-input">
+        <p class="form-input__label">Search text</p>
+        <input type="text" name="searchText" placeholder="User nickname, name or lastname..." class="input" />
+    </div>
+
+    <div class="form__actions">
+        <button class="primary-button">Load users</button>
+    </div>
 </form>
+
+@{
+    if (Model.QueryResult != null)
+    {
+        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+        <div class="response-container">
+            <h3>Response:</h3>
+            <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+            <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+            <p>Message: @Model.QueryResult.Message</p>
+
+            @if (Model.DataPage != null)
+            {
+                <p>Page: @Model.DataPage.PageNumber</p>
+                <p>PageSize: @Model.DataPage.PageSize</p>
+                <p>PageCount: @Model.DataPage.PageCount</p>
+                <p>Total: @Model.DataPage.ItemsCount</p>
+            }
+        </div>
+    }
+}
+
+@if (Model.Users != null)
+{
+    <form class="form width-400" method="post">
+
+        <div class="form-input">
+            <p class="form-input__label">User Id (requester)</p>
+            <input type="number" name="userId" placeholder="User Id..." min="0" class="input" />
+        </div>
+
+        <div class="form-input">
+            <p class="form-input__label">Course Id</p>
+            <input type="number" name="courseId" placeholder="Course Id..." min="0" class="input" />
+        </div>
+
+        <div class="form-input">
+            <p class="form-input__label">Local role sign</p>
+            <input type="text" name="localRoleSign" placeholder="Local role sign..." class="input" />
+        </div>
+
+        @foreach (var user in Model.Users)
+        {
+            <div class="form-input">
+                <div class="line-container">
+                    <input type="checkbox" class="checkbox" id="user-@user.Id" name="selectedUsersStrings" value="@user.Id" />
+                    <label for="user-@user.Id">
+                    </label>
+                    <div class="result-value">
+                        <p>Id: <span class="white-selection">@user.Id</span></p>
+                        <p>Nickname: <span class="white-selection">@user.Nickname</span></p>
+                        <p>Name: <span class="white-selection">@user.Name</span></p>
+                        <p>Lastname: <span class="white-selection">@user.Lastname</span></p>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="form__actions">
+            <button class="primary-button">Invite selected users</button>
+        </div>
+    </form>
+}
 
 
