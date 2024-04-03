@@ -1,0 +1,21 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Completions.CompletionsActionsPageModel
+@{
+    ViewData["Title"] = "Completions";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Completions/CompletionsActionsPage')">
+        Completions
+    </h2>
+</div>
+
+<div class="endpoints-list">
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Completions/GetModuleCompletions')">
+        <div class="endpoint-item__method">
+            get
+        </div>
+        <div class="endpoint-item__name">Get module completions</div>
+        <i class="endpoint-item__arrow icon-arrow-right"> </i>
+    </div>
+</div>

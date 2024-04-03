@@ -40,6 +40,7 @@ builder.Services.AddScoped<UserVerifierService>();
 builder.Services.AddScoped<RoleInteractor>();
 builder.Services.AddScoped<LocalRoleInteractor>();
 builder.Services.AddScoped<PermissionService>();
+builder.Services.AddScoped<CompletionInteractor>();
 
 
 builder.Services.AddTransient<SeedData>();

@@ -85,13 +85,6 @@ namespace LearnLink.Application.Interactors
                     StartDate = DateTime.Now.ToUniversalTime(),
                 });
 
-                var courseCompletions = users.Select(user => new CourseCompletion()
-                {
-                    Course = course,
-                    User = user,
-                    Completed = false,
-                    CompletionProgress = 0,
-                });
 
                 var role = await unitOfWork.LocalRoles.FirstOrDefaultAsync(l => (localRoleSign != null && l.Sign == localRoleSign) || l.Sign == RoleSignConstants.MEMBER);
 
@@ -112,8 +105,59 @@ namespace LearnLink.Application.Interactors
                     LocalRole = role
                 });
 
+                //Add course and module completions for every invited user
+
+                var localUsers = await users.ToArrayAsync();
+                var courseModules = unitOfWork.CourseModules.Where(x => x.CourseId == course.Id);
+
+                await courseModules.ForEachAsync(courseModule =>
+                    unitOfWork.CourseModules
+                        .Entry(courseModule)
+                        .Reference(x => x.Module)
+                        .LoadAsync());
+
+                foreach (var localUser in localUsers)
+                {
+                    var oldCourseCompletion = await unitOfWork.CourseCompletions.AsNoTracking().FirstOrDefaultAsync(cp => cp.UserId == localUser.Id && cp.CourseId == course.Id);
+
+                    if (oldCourseCompletion == null)
+                    {
+                        var newCourseCompletion = new CourseCompletion()
+                        {
+                            Course = course,
+                            User = localUser,
+                            Completed = false,
+                            CompletionProgress = 0,
+                        };
+
+                        await unitOfWork.CourseCompletions.AddAsync(newCourseCompletion);
+                    }
+
+                    if (courseModules == null)
+                    {
+                        continue;
+                    }
+
+                    var oldModuleCompletions = unitOfWork.ModuleCompletions.AsNoTracking().Where(m => m.UserId == localUser.Id && m.CourseId == course.Id);
+
+                    if (oldModuleCompletions == null)
+                    {
+                        var newModuleCompletions = courseModules.Select(courseModule => new ModuleCompletion()
+                        {
+                            User = user,
+                            Course = course,
+                            Module = courseModule.Module,
+                            Completed = false,
+                            CompletionProgress = 0
+                        });
+
+                        await unitOfWork.ModuleCompletions.AddRangeAsync(newModuleCompletions);
+                    }
+                }
+
                 await unitOfWork.Subscriptions.AddRangeAsync(subscriptions);
                 await unitOfWork.UserCourseLocalRoles.AddRangeAsync(userLocalRoles);
+
                 var count = users.Count();
                 course.SubscribersCount += count;
 
@@ -204,6 +248,35 @@ namespace LearnLink.Application.Interactors
                     };
 
                     await unitOfWork.CourseCompletions.AddAsync(newCourseCompletion);
+                }
+
+                var oldModuleCompletions = unitOfWork.ModuleCompletions.AsNoTracking().Where(m => m.UserId == user.Id && m.CourseId == course.Id);
+
+                if (oldModuleCompletions == null)
+                {
+                    var courseModules = unitOfWork.CourseModules.Where(x => x.CourseId == subscriptionDto.CourseId);
+
+                    if(courseModules == null)
+                    {
+                        throw new NotFoundException("Курсы модуля не найдены");
+                    }
+
+                    await courseModules.ForEachAsync(courseModule => 
+                    unitOfWork.CourseModules
+                    .Entry(courseModule)
+                    .Reference(x => x.Module)
+                    .LoadAsync());
+
+                    var newModuleCompletions = courseModules.Select(courseModule => new ModuleCompletion()
+                    {
+                        User = user,
+                        Course = course,
+                        Module = courseModule.Module,
+                        Completed = false,
+                        CompletionProgress = 0
+                    });
+
+                    await unitOfWork.ModuleCompletions.AddRangeAsync(newModuleCompletions);
                 }
 
                 unitOfWork.Courses.Update(course);

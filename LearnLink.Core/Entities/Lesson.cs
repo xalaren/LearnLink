@@ -7,8 +7,6 @@ namespace LearnLink.Core.Entities
         private string title = string.Empty;
 
         public int Id { get; set; }
-        public string? Description { get; set; }
-        public string? Content { get; set; } 
 
         public string Title
         {
@@ -28,5 +26,7 @@ namespace LearnLink.Core.Entities
                 title = value;
             }
         }
+
+        public string? Description { get; set; }
     }
 }

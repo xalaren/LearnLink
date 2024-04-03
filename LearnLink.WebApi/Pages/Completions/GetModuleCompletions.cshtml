@@ -1,0 +1,60 @@
+﻿@page
+@model GetModuleCompletionsModel
+@{
+    ViewData["Title"] = "Get module completions";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Completions/CompletionsActionsPage')">
+        Completions
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Completions/GetModuleCompletions')">
+        Get-Module-Completions
+    </h2>
+</div>
+
+<form class="form width-400" method="get">
+    <div class="form-input">
+        <p class="form-input__label">User Id</p>
+        <input type="number" name="userId" placeholder="User Id..." min="0" class="input" />
+    </div>
+
+    <div class="form-input">
+        <p class="form-input__label">Course Id</p>
+        <input type="number" name="courseId" placeholder="Course Id..." min="0" class="input" />
+    </div>
+
+    <div class="form__actions">
+        <button class="primary-button">Get</button>
+    </div>
+</form>
+
+@if (Model.QueryResult != null)
+{
+    string className = Model.QueryResult.Success ? "green-text" : "red-text";
+
+    <div class="response-container">
+        <h3>Response:</h3>
+        <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+        <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+        <p>Message: @Model.QueryResult.Message</p>
+    </div>
+}
+
+@if (Model.ModuleCompletions != null)
+{
+    <div class="data-view">
+        <h3>View data</h3>
+        @foreach (var moduleCompletion in Model.ModuleCompletions)
+        {
+            <div class="result-value">
+                <p>UserId: <span class="white-selection">@moduleCompletion.UserId</span></p>
+                <p>CourseId: <span class="white-selection">@moduleCompletion.CourseId</span></p>
+                <p>ModuleId: <span class="white-selection">@moduleCompletion.ModuleDto.Id</span></p>
+                <p>Module title: <span class="white-selection">@moduleCompletion.ModuleDto.Title</span></p>
+                <p>Progress: <span class="white-selection">@moduleCompletion.CompletionProgress%</span></p>
+                <p>Completed: <span class="white-selection">@moduleCompletion.Completed</span></p>
+            </div>
+        }
+    </div>
+}
