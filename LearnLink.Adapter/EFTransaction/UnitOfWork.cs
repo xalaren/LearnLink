@@ -31,6 +31,7 @@ namespace LearnLink.Adapter.EFTransaction
 
         public DbSet<CourseCompletion> CourseCompletions => context.CourseCompletions;
         public DbSet<ModuleCompletion> ModuleCompletions => context.ModuleCompletions;
+        public DbSet<LessonCompletion> LessonCompletions => context.LessonCompletions;
 
         public ValueTask DisposeAsync()
         {

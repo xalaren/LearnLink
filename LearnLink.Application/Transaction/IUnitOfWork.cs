@@ -24,6 +24,7 @@ namespace LearnLink.Application.Transaction
 
         public DbSet<CourseCompletion> CourseCompletions { get; }
         public DbSet<ModuleCompletion> ModuleCompletions { get; }
+        public DbSet<LessonCompletion> LessonCompletions { get; }
 
         Task CommitAsync();
     }

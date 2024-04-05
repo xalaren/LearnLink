@@ -26,6 +26,7 @@ namespace LearnLink.Adapter.EFContexts
 
         public DbSet<CourseCompletion> CourseCompletions { get; set; }
         public DbSet<ModuleCompletion> ModuleCompletions { get; set; }
+        public DbSet<LessonCompletion> LessonCompletions { get; set; }
 
         public AppDbContext(DbContextOptions options) : base(options) { }
 
@@ -46,6 +47,7 @@ namespace LearnLink.Adapter.EFContexts
             modelBuilder.ApplyConfiguration(new ModuleComletionEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ContentEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new LessonContentEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new LessonCompletionEntityTypeConfiguration());
         }
     }
 }
