@@ -15,7 +15,6 @@ namespace LearnLink.Application.Mappers
             return new ModuleCompletionDto
             (
                 UserId: moduleCompletionEntity.UserId,
-                CourseId: moduleCompletionEntity.CourseId,
                 ModuleDto: moduleCompletionEntity.Module.ToDto(),
                 Completed: moduleCompletionEntity.Completed,
                 CompletionProgress: moduleCompletionEntity.CompletionProgress

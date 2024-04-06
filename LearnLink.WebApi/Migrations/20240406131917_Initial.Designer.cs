@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LearnLink.WebApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240403153510_Initial")]
+    [Migration("20240406131917_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -178,6 +178,32 @@ namespace LearnLink.WebApi.Migrations
                     b.ToTable("Lessons");
                 });
 
+            modelBuilder.Entity("LearnLink.Core.Entities.LessonCompletion", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ModuleId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("LessonId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("Completed")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("CompletionProgress")
+                        .HasColumnType("integer");
+
+                    b.HasKey("UserId", "ModuleId", "LessonId");
+
+                    b.HasIndex("LessonId");
+
+                    b.HasIndex("ModuleId");
+
+                    b.ToTable("LessonCompletions");
+                });
+
             modelBuilder.Entity("LearnLink.Core.Entities.LessonContent", b =>
                 {
                     b.Property<int>("LessonId")
@@ -220,9 +246,6 @@ namespace LearnLink.WebApi.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("CourseId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("ModuleId")
                         .HasColumnType("integer");
 
@@ -232,9 +255,7 @@ namespace LearnLink.WebApi.Migrations
                     b.Property<int>("CompletionProgress")
                         .HasColumnType("integer");
 
-                    b.HasKey("UserId", "CourseId", "ModuleId");
-
-                    b.HasIndex("CourseId");
+                    b.HasKey("UserId", "ModuleId");
 
                     b.HasIndex("ModuleId");
 
@@ -459,6 +480,33 @@ namespace LearnLink.WebApi.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("LearnLink.Core.Entities.LessonCompletion", b =>
+                {
+                    b.HasOne("LearnLink.Core.Entities.Lesson", "Lesson")
+                        .WithMany()
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LearnLink.Core.Entities.Module", "Module")
+                        .WithMany()
+                        .HasForeignKey("ModuleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LearnLink.Core.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Lesson");
+
+                    b.Navigation("Module");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("LearnLink.Core.Entities.LessonContent", b =>
                 {
                     b.HasOne("LearnLink.Core.Entities.Content", "Content")
@@ -480,12 +528,6 @@ namespace LearnLink.WebApi.Migrations
 
             modelBuilder.Entity("LearnLink.Core.Entities.ModuleCompletion", b =>
                 {
-                    b.HasOne("LearnLink.Core.Entities.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("LearnLink.Core.Entities.Module", "Module")
                         .WithMany()
                         .HasForeignKey("ModuleId")
@@ -497,8 +539,6 @@ namespace LearnLink.WebApi.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Course");
 
                     b.Navigation("Module");
 

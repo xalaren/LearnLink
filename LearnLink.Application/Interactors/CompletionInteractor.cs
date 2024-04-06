@@ -25,7 +25,8 @@ namespace LearnLink.Application.Interactors
                         moduleCompletion => moduleCompletion.ModuleId,
                         (courseModule, moduleCompletion) => moduleCompletion
                     )
-                    .Select(moduleCompletion => moduleCompletion.ToDto())
+                    .Where(courseCompletion => courseCompletion.UserId == userId)
+                    .Select(courseCompletion => courseCompletion.ToDto())
                     .ToArrayAsync();
 
                 return new()
@@ -66,7 +67,7 @@ namespace LearnLink.Application.Interactors
                 .AsNoTracking()
                 .FirstOrDefaultAsync(cp => cp.UserId == userId && cp.CourseId == courseId);
 
-            if (courseCompletion == null) return;
+            if (courseCompletion != null)  return;
 
             courseCompletion = new CourseCompletion()
             {

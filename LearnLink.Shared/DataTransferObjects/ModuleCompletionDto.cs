@@ -9,7 +9,6 @@ namespace LearnLink.Shared.DataTransferObjects
     public record ModuleCompletionDto
         (
             int UserId,
-            int CourseId,
             ModuleDto ModuleDto,
             bool Completed,
             int CompletionProgress

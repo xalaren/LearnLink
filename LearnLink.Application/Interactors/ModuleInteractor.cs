@@ -47,7 +47,6 @@ namespace LearnLink.Application.Interactors
                     {
                         User = sub.User,
                         Module = moduleEntity,
-                        Course = course,
                         Completed = false,
                         CompletionProgress = 0,
                     });

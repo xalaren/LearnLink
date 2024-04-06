@@ -242,24 +242,50 @@ namespace LearnLink.WebApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ModuleCompletions",
+                name: "LessonCompletions",
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "integer", nullable: false),
+                    LessonId = table.Column<int>(type: "integer", nullable: false),
                     ModuleId = table.Column<int>(type: "integer", nullable: false),
-                    CourseId = table.Column<int>(type: "integer", nullable: false),
                     Completed = table.Column<bool>(type: "boolean", nullable: false),
                     CompletionProgress = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ModuleCompletions", x => new { x.UserId, x.CourseId, x.ModuleId });
+                    table.PrimaryKey("PK_LessonCompletions", x => new { x.UserId, x.ModuleId, x.LessonId });
                     table.ForeignKey(
-                        name: "FK_ModuleCompletions_Courses_CourseId",
-                        column: x => x.CourseId,
-                        principalTable: "Courses",
+                        name: "FK_LessonCompletions_Lessons_LessonId",
+                        column: x => x.LessonId,
+                        principalTable: "Lessons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LessonCompletions_Modules_ModuleId",
+                        column: x => x.ModuleId,
+                        principalTable: "Modules",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LessonCompletions_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ModuleCompletions",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    ModuleId = table.Column<int>(type: "integer", nullable: false),
+                    Completed = table.Column<bool>(type: "boolean", nullable: false),
+                    CompletionProgress = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ModuleCompletions", x => new { x.UserId, x.ModuleId });
                     table.ForeignKey(
                         name: "FK_ModuleCompletions_Modules_ModuleId",
                         column: x => x.ModuleId,
@@ -370,14 +396,19 @@ namespace LearnLink.WebApi.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_LessonCompletions_LessonId",
+                table: "LessonCompletions",
+                column: "LessonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LessonCompletions_ModuleId",
+                table: "LessonCompletions",
+                column: "ModuleId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_LessonContents_ContentId",
                 table: "LessonContents",
                 column: "ContentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ModuleCompletions_CourseId",
-                table: "ModuleCompletions",
-                column: "CourseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ModuleCompletions_ModuleId",
@@ -438,6 +469,9 @@ namespace LearnLink.WebApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "Credentials");
+
+            migrationBuilder.DropTable(
+                name: "LessonCompletions");
 
             migrationBuilder.DropTable(
                 name: "LessonContents");
