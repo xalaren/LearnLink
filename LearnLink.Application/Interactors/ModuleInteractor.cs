@@ -46,6 +46,7 @@ namespace LearnLink.Application.Interactors
                     var moduleCompletions = courseCompletions.Select(sub => new ModuleCompletion()
                     {
                         User = sub.User,
+                        Course = course,
                         Module = moduleEntity,
                         Completed = false,
                         CompletionProgress = 0,

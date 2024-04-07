@@ -1,4 +1,5 @@
-﻿using LearnLink.Application.Mappers;
+﻿using System.Security.Cryptography.Xml;
+using LearnLink.Application.Mappers;
 using LearnLink.Application.Transaction;
 using LearnLink.Core.Entities;
 using LearnLink.Core.Exceptions;
@@ -12,22 +13,76 @@ namespace LearnLink.Application.Interactors
     {
         private readonly IUnitOfWork unitOfWork = unitOfWork;
 
-        public async Task<Response<ModuleCompletionDto[]>> GetModuleCompletionsAsync(int userId, int courseId)
+        public async Task<Response<CourseCompletionDto>> GetCourseCompletion(int userId, int courseId)
         {
             try
             {
-                var moduleCompletions = await unitOfWork.CourseModules
-                    .AsNoTracking()
-                    .Where(courseModule => courseModule.CourseId == courseId)
-                    .Join(
-                        unitOfWork.ModuleCompletions.AsNoTracking(),
-                        courseModule => courseModule.ModuleId,
-                        moduleCompletion => moduleCompletion.ModuleId,
-                        (courseModule, moduleCompletion) => moduleCompletion
-                    )
-                    .Where(courseCompletion => courseCompletion.UserId == userId)
-                    .Select(courseCompletion => courseCompletion.ToDto())
-                    .ToArrayAsync();
+                CourseCompletion? foundCourseCompletion =
+                    await unitOfWork.CourseCompletions.FirstOrDefaultAsync(courseCompletion =>
+                        courseCompletion.UserId == userId && courseCompletion.CourseId == courseId);
+
+
+                if (foundCourseCompletion == null)
+                {
+                    throw new NotFoundException("Прогресс курса не найден");
+                }
+
+                await unitOfWork.CourseCompletions.Entry(foundCourseCompletion)
+                    .Reference(courseCompletion => courseCompletion.Course)
+                    .LoadAsync();
+
+                CourseCompletionDto courseCompletionDto = foundCourseCompletion.ToDto();
+
+                return new Response<CourseCompletionDto>()
+                {
+                    Success = true,
+                    StatusCode = 200,
+                    Value = courseCompletionDto
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new Response<CourseCompletionDto>()
+                {
+                    Success = false,
+                    StatusCode = exception.StatusCode,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new Response<CourseCompletionDto>()
+                {
+                    Success = false,
+                    StatusCode = 500,
+                    Message = "Не удалось получить прогресс курса",
+                    InnerErrorMessages = new string[] { exception.Message },
+                };
+            }
+        }
+
+        public async Task<Response<ModuleCompletionDto[]>> GetModuleCompletionsOfCourseAsync(int userId, int courseId)
+        {
+            try
+            {
+                var foundModuleCompletions = await unitOfWork.ModuleCompletions
+                    .Where(moduleCompletion => moduleCompletion.UserId == userId && moduleCompletion.CourseId == courseId)
+                    .ToListAsync();
+
+                foreach (var moduleCompletion in foundModuleCompletions)
+                {
+                    await unitOfWork.ModuleCompletions.Entry(moduleCompletion)
+                        .Reference(mc => mc.Course)
+                        .LoadAsync();
+
+                    await unitOfWork.ModuleCompletions.Entry(moduleCompletion)
+                        .Reference(mc => mc.Module)
+                        .LoadAsync();
+                }
+
+                ModuleCompletionDto[] moduleCompletions = foundModuleCompletions
+                    .Select(moduleCompletion => moduleCompletion.ToDto())
+                    .ToArray();
 
                 return new()
                 {
@@ -58,6 +113,58 @@ namespace LearnLink.Application.Interactors
             }
         }
 
+        public async Task<Response<LessonCompletionDto[]>> GetLessonCompletionsOfModuleAsync(int userId, int moduleId)
+        {
+            try
+            {
+                var foundLessonCompletions = await unitOfWork.LessonCompletions
+                    .Where(lessonCompletion => lessonCompletion.UserId == userId && lessonCompletion.ModuleId == moduleId)
+                    .ToListAsync();
+
+
+                foreach (var lessonCompletion in foundLessonCompletions)
+                {
+                    await unitOfWork.LessonCompletions.Entry(lessonCompletion)
+                        .Reference(lc => lc.Module)
+                        .LoadAsync();
+
+                    await unitOfWork.LessonCompletions.Entry(lessonCompletion)
+                        .Reference(lc => lc.Lesson)
+                        .LoadAsync();
+                }
+
+                LessonCompletionDto[] lessonCompletions = foundLessonCompletions
+                    .Select(lessonCompletion => lessonCompletion.ToDto())
+                    .ToArray();
+
+                return new Response<LessonCompletionDto[]>()
+                {
+                    Success = true,
+                    StatusCode = 200,
+                    Value = lessonCompletions,
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new Response<LessonCompletionDto[]>()
+                {
+                    Success = false,
+                    StatusCode = exception.StatusCode,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new Response<LessonCompletionDto[]>()
+                {
+                    Success = false,
+                    StatusCode = 500,
+                    Message = "Не удалось получить прогрессы уроков",
+                    InnerErrorMessages = new string[] { exception.Message },
+                };
+            }
+        }
+
         public async Task CreateCourseCompletion(int userId, int courseId)
         {
             User? user = await unitOfWork.Users.FindAsync(userId) ?? throw new NotFoundException("Пользователь не найден");
@@ -67,7 +174,7 @@ namespace LearnLink.Application.Interactors
                 .AsNoTracking()
                 .FirstOrDefaultAsync(cp => cp.UserId == userId && cp.CourseId == courseId);
 
-            if (courseCompletion != null)  return;
+            if (courseCompletion != null) return;
 
             courseCompletion = new CourseCompletion()
             {
@@ -89,7 +196,7 @@ namespace LearnLink.Application.Interactors
                 .AsNoTracking()
                 .FirstOrDefaultAsync(moduleCompletion => moduleCompletion.UserId == userId && moduleCompletion.ModuleId == moduleId);
 
-            if (moduleCompletion != null)  return; 
+            if (moduleCompletion != null) return;
 
             moduleCompletion = new ModuleCompletion()
             {

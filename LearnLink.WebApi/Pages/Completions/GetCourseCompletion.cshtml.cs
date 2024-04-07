@@ -7,13 +7,13 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace LearnLink.WebApi.Pages.Completions
 {
-    public class GetModuleCompletionsModel : CompletionsBasePageModel
+    public class GetCourseCompletionModel : CompletionsBasePageModel
     {
-        public GetModuleCompletionsModel(CompletionInteractor completionInteractor) : base(completionInteractor) { }
+        public GetCourseCompletionModel(CompletionInteractor completionInteractor) : base(completionInteractor) { }
 
-        public Response<ModuleCompletionDto[]>? QueryResult { get; set; }
+        public Response<CourseCompletionDto>? QueryResult { get; set; }
 
-        public ModuleCompletionDto[]? ModuleCompletions { get; set; }
+        public CourseCompletionDto? FoundCourseCompletion { get; set; }
 
         public async Task<IActionResult> OnGet(int userId, int courseId)
         {
@@ -21,11 +21,11 @@ namespace LearnLink.WebApi.Pages.Completions
             {
                 if (userId == 0 || courseId == 0) return;
 
-                QueryResult = await CompletionInteractor.GetModuleCompletionsOfCourseAsync(userId, courseId);
+                QueryResult = await CompletionInteractor.GetCourseCompletion(userId, courseId);
 
-                if(QueryResult.Success && QueryResult.Value != null)
+                if (QueryResult.Success && QueryResult.Value != null)
                 {
-                    ModuleCompletions = QueryResult.Value;
+                    FoundCourseCompletion = QueryResult.Value;
                 }
             });
         }

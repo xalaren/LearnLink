@@ -1,0 +1,56 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Completions.GetCourseCompletionModel
+@{
+    ViewData["Title"] = "Get course completion";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Completions/CompletionsActionsPage')">
+        Completions
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Completions/GetCourseCompletion')">
+        Get-Course-Completion
+    </h2>
+</div>
+
+<form class="form width-400" method="get">
+    <div class="form-input">
+        <p class="form-input__label">User Id</p>
+        <input type="number" name="userId" placeholder="User Id..." min="0" class="input" />
+    </div>
+
+    <div class="form-input">
+        <p class="form-input__label">Course Id</p>
+        <input type="number" name="courseId" placeholder="Course Id..." min="0" class="input" />
+    </div>
+
+    <div class="form__actions">
+        <button class="primary-button">Get</button>
+    </div>
+</form>
+
+@if (Model.QueryResult != null)
+{
+    string className = Model.QueryResult.Success ? "green-text" : "red-text";
+
+    <div class="response-container">
+        <h3>Response:</h3>
+        <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+        <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+        <p>Message: @Model.QueryResult.Message</p>
+    </div>
+}
+
+@if (Model.FoundCourseCompletion != null)
+{
+    <div class="data-view">
+        <h3>View data</h3>
+        <div class="result-value">
+            <p>User Id: <span class="white-selection">@Model.FoundCourseCompletion.UserId</span></p>
+            <p>Course Id: <span class="white-selection">@Model.FoundCourseCompletion.Course.Id</span></p>
+            <p>Course Title: <span class="white-selection">@Model.FoundCourseCompletion.Course.Title</span></p>
+            <p>Progress: <span class="white-selection">@Model.FoundCourseCompletion.CompletionProgress%</span></p>
+            <p>Completed: <span class="white-selection">@Model.FoundCourseCompletion.Completed</span></p>
+        </div>
+    </div>
+}

@@ -1,9 +1,9 @@
 ﻿namespace LearnLink.Shared.DataTransferObjects
 {
-    public record CourseCompletionDto
+    public record LessonCompletionDto
         (
             int UserId,
-            CourseDto Course,
+            LessonDto LessonDto,
             bool Completed,
             int CompletionProgress
         );

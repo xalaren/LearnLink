@@ -1,0 +1,59 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Completions.GetLessonCompletionsModel
+@{
+    ViewData["Title"] = "Get lesson completions";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Completions/CompletionsActionsPage')">
+        Completions
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Completions/GetLessonCompletions')">
+        Get-Lesson-Completions
+    </h2>
+</div>
+
+<form class="form width-400" method="get">
+    <div class="form-input">
+        <p class="form-input__label">User Id</p>
+        <input type="number" name="userId" placeholder="User Id..." min="0" class="input" />
+    </div>
+
+    <div class="form-input">
+        <p class="form-input__label">Module Id</p>
+        <input type="number" name="moduleId" placeholder="Module Id..." min="0" class="input" />
+    </div>
+
+    <div class="form__actions">
+        <button class="primary-button">Get</button>
+    </div>
+</form>
+
+@if (Model.QueryResult != null)
+{
+    string className = Model.QueryResult.Success ? "green-text" : "red-text";
+
+    <div class="response-container">
+        <h3>Response:</h3>
+        <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+        <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+        <p>Message: @Model.QueryResult.Message</p>
+    </div>
+}
+
+@if (Model.LessonCompletions != null)
+{
+    <div class="data-view">
+        <h3>View data</h3>
+        @foreach (var lessonCompletion in Model.LessonCompletions)
+        {
+            <div class="result-value">
+                <p>UserId: <span class="white-selection">@lessonCompletion.UserId</span></p>
+                <p>LessonId: <span class="white-selection">@lessonCompletion.LessonDto.Id</span></p>
+                <p>Lesson title: <span class="white-selection">@lessonCompletion.LessonDto.Title</span></p>
+                <p>Progress: <span class="white-selection">@lessonCompletion.CompletionProgress%</span></p>
+                <p>Completed: <span class="white-selection">@lessonCompletion.Completed</span></p>
+            </div>
+        }
+    </div>
+}

@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using LearnLink.Application.Mappers;
+﻿using LearnLink.Application.Mappers;
 using LearnLink.Application.Transaction;
 using LearnLink.Core.Entities;
 using LearnLink.Core.Exceptions;
@@ -9,10 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Interactors
 {
-    public class LessonInteractor(IUnitOfWork unitOfWork, CompletionInteractor completionInteractor)
+    public class LessonInteractor(IUnitOfWork unitOfWork)
     {
         private readonly IUnitOfWork unitOfWork = unitOfWork;
-        private readonly CompletionInteractor completionInteractor = completionInteractor;
 
         public async Task<Response<LessonDto[]>> GetAllLessons()
         {
@@ -52,7 +50,6 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-
         public async Task<Response> CreateLesson(int moduleId, int courseId, LessonDto lessonDto)
         {
             try
@@ -87,6 +84,7 @@ namespace LearnLink.Application.Interactors
                     var lessonCompletions = courseCompletions.Select(sub => new LessonCompletion()
                     {
                         User = sub.User,
+                        Module = module,
                         Lesson = lesson,
                         Completed = false,
                         CompletionProgress = 0,

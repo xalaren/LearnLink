@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LearnLink.WebApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240406131917_Initial")]
+    [Migration("20240407125148_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -246,6 +246,9 @@ namespace LearnLink.WebApi.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("CourseId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("ModuleId")
                         .HasColumnType("integer");
 
@@ -255,7 +258,9 @@ namespace LearnLink.WebApi.Migrations
                     b.Property<int>("CompletionProgress")
                         .HasColumnType("integer");
 
-                    b.HasKey("UserId", "ModuleId");
+                    b.HasKey("UserId", "CourseId", "ModuleId");
+
+                    b.HasIndex("CourseId");
 
                     b.HasIndex("ModuleId");
 
@@ -528,6 +533,12 @@ namespace LearnLink.WebApi.Migrations
 
             modelBuilder.Entity("LearnLink.Core.Entities.ModuleCompletion", b =>
                 {
+                    b.HasOne("LearnLink.Core.Entities.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("LearnLink.Core.Entities.Module", "Module")
                         .WithMany()
                         .HasForeignKey("ModuleId")
@@ -539,6 +550,8 @@ namespace LearnLink.WebApi.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Course");
 
                     b.Navigation("Module");
 

@@ -280,12 +280,19 @@ namespace LearnLink.WebApi.Migrations
                 {
                     UserId = table.Column<int>(type: "integer", nullable: false),
                     ModuleId = table.Column<int>(type: "integer", nullable: false),
+                    CourseId = table.Column<int>(type: "integer", nullable: false),
                     Completed = table.Column<bool>(type: "boolean", nullable: false),
                     CompletionProgress = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ModuleCompletions", x => new { x.UserId, x.ModuleId });
+                    table.PrimaryKey("PK_ModuleCompletions", x => new { x.UserId, x.CourseId, x.ModuleId });
+                    table.ForeignKey(
+                        name: "FK_ModuleCompletions_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ModuleCompletions_Modules_ModuleId",
                         column: x => x.ModuleId,
@@ -409,6 +416,11 @@ namespace LearnLink.WebApi.Migrations
                 name: "IX_LessonContents_ContentId",
                 table: "LessonContents",
                 column: "ContentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ModuleCompletions_CourseId",
+                table: "ModuleCompletions",
+                column: "CourseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ModuleCompletions_ModuleId",

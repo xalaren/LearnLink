@@ -8,7 +8,7 @@ namespace LearnLink.Adapter.EFConfigurations
     {
         public void Configure(EntityTypeBuilder<ModuleCompletion> builder)
         {
-            builder.HasKey(moduleCompletion => new { moduleCompletion.UserId, moduleCompletion.ModuleId });
+            builder.HasKey(moduleCompletion => new { moduleCompletion.UserId, moduleCompletion.CourseId, moduleCompletion.ModuleId });
         }
     }
 }
