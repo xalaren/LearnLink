@@ -1,4 +1,5 @@
-﻿using LearnLink.Application.Mappers;
+﻿using System.Runtime.CompilerServices;
+using LearnLink.Application.Mappers;
 using LearnLink.Application.Transaction;
 using LearnLink.Core.Entities;
 using LearnLink.Core.Exceptions;
@@ -8,9 +9,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Interactors
 {
-    public class LessonInteractor(IUnitOfWork unitOfWork)
+    public class LessonInteractor(IUnitOfWork unitOfWork, CompletionInteractor completionInteractor)
     {
         private readonly IUnitOfWork unitOfWork = unitOfWork;
+        private readonly CompletionInteractor completionInteractor = completionInteractor;
 
         public async Task<Response<LessonDto[]>> GetAllLessons()
         {
@@ -51,7 +53,7 @@ namespace LearnLink.Application.Interactors
         }
 
 
-        public async Task<Response> CreateLesson(int moduleId, LessonDto lessonDto)
+        public async Task<Response> CreateLesson(int moduleId, int courseId, LessonDto lessonDto)
         {
             try
             {
@@ -64,6 +66,11 @@ namespace LearnLink.Application.Interactors
 
                 var module = await unitOfWork.Modules.FirstOrDefaultAsync(module => module.Id == moduleId);
 
+                if(module == null)
+                {
+                    throw new NotFoundException("Модуль не найден");
+                }
+
                 var moduleLesson = new ModuleLesson()
                 {
                     Lesson = lesson,
@@ -72,6 +79,21 @@ namespace LearnLink.Application.Interactors
 
                 await unitOfWork.ModuleLessons.AddAsync(moduleLesson);
                 await unitOfWork.Lessons.AddAsync(lesson);
+
+                var courseCompletions = unitOfWork.CourseCompletions.Where(courseCompletion => courseCompletion.CourseId == courseId).Include(courseCompletion => courseCompletion.User);
+
+                if (courseCompletions.Count() > 0)
+                {
+                    var lessonCompletions = courseCompletions.Select(sub => new LessonCompletion()
+                    {
+                        User = sub.User,
+                        Lesson = lesson,
+                        Completed = false,
+                        CompletionProgress = 0,
+                    });
+
+                    await unitOfWork.LessonCompletions.AddRangeAsync(lessonCompletions);
+                }
 
                 await unitOfWork.CommitAsync();
 
