@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using LearnLink.Core.Entities;
+﻿using LearnLink.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Transaction
@@ -21,6 +20,8 @@ namespace LearnLink.Application.Transaction
 
         public DbSet<Lesson> Lessons { get; }
         public DbSet<ModuleLesson> ModuleLessons { get; }
+        public DbSet<LessonContent> LessonContents { get; }
+        public DbSet<Content> Contents { get; }
 
         public DbSet<CourseCompletion> CourseCompletions { get; }
         public DbSet<ModuleCompletion> ModuleCompletions { get; }

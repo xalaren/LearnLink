@@ -12,10 +12,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Interactors
 {
-    public class CourseInteractor(IUnitOfWork unitOfWork, PermissionService permissionService)
+    public class CourseInteractor(IUnitOfWork unitOfWork, PermissionService permissionService, ModuleInteractor moduleInteractor)
     {
         private readonly IUnitOfWork unitOfWork = unitOfWork;
         private readonly PermissionService permissionService = permissionService;
+        private readonly ModuleInteractor moduleInteractor = moduleInteractor;
 
         //Get, Find methods
 
@@ -658,9 +659,6 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                var course = await unitOfWork.Courses.FindAsync(courseId) ??
-                    throw new NotFoundException("Курс не найден");
-
                 var removePermission = await permissionService.GetPermissionAsync(userId: userId, courseId: courseId, toRemove: true);
 
                 if(!removePermission)
@@ -668,32 +666,7 @@ namespace LearnLink.Application.Interactors
                     throw new AccessLevelException("Доступ отклонен");
                 }
 
-                unitOfWork.Courses.Remove(course);
-
-                var modules = unitOfWork.CourseModules
-                    .Where(m => m.CourseId == courseId)
-                    .Join(
-                        unitOfWork.Modules,
-                        courseModule => courseModule.ModuleId,
-                        module => module.Id,
-                        (courseModule, module) => module
-                    );
-
-                await modules.ForEachAsync(module =>
-                {
-                    var lessons = unitOfWork.ModuleLessons
-                        .Where(l => l.ModuleId == module.Id)
-                        .Join(
-                            unitOfWork.Lessons,
-                            moduleLesson => moduleLesson.LessonId,
-                            lesson => lesson.Id,
-                            (moduleLesson, lesson) => lesson
-                        );
-
-                    unitOfWork.Lessons.RemoveRange(lessons);
-                });
-
-                unitOfWork.Modules.RemoveRange(modules);
+                await RemoveCourseAsyncNoResponse(courseId);
 
                 await unitOfWork.CommitAsync();
 
@@ -847,6 +820,23 @@ namespace LearnLink.Application.Interactors
                     InnerErrorMessages = [exception.Message],
                 };
             }
+        }
+
+        public async Task RemoveCourseAsyncNoResponse(int courseId)
+        {
+            var course = await unitOfWork.Courses.FindAsync(courseId) ??
+                    throw new NotFoundException("Курс не найден");
+
+            var modules = await unitOfWork.CourseModules
+                .Where(courseModule => courseModule.CourseId == courseId)
+                .ToListAsync();
+
+            foreach(var module in modules)
+            {
+                await moduleInteractor.RemoveModuleAsyncNoResponse(module.ModuleId);
+            }
+
+            unitOfWork.Courses.Remove(course);
         }
     }
 }

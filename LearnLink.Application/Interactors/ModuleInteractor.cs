@@ -8,9 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Interactors
 {
-    public class ModuleInteractor(IUnitOfWork unitOfWork)
+    public class ModuleInteractor(IUnitOfWork unitOfWork, LessonInteractor lessonInteractor)
     {
         private readonly IUnitOfWork unitOfWork = unitOfWork;
+        private readonly LessonInteractor lessonInteractor = lessonInteractor;
 
         public async Task<Response> CreateModuleAsync(int courseId, ModuleDto moduleDto)
         {
@@ -243,16 +244,7 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                var existModule = await unitOfWork.Modules.FindAsync(moduleId);
-
-
-                if (existModule == null)
-                {
-                    throw new NotFoundException("Модуль не найден");
-                }
-
-                unitOfWork.Modules.Remove(existModule);
-
+                await RemoveModuleAsyncNoResponse(moduleId);
                 await unitOfWork.CommitAsync();
 
                 return new()
@@ -278,6 +270,27 @@ namespace LearnLink.Application.Interactors
                     InnerErrorMessages = new string[] { exception.Message }
                 };
             }
+        }
+
+        public async Task RemoveModuleAsyncNoResponse(int moduleId)
+        {
+            var module = await unitOfWork.Modules.FindAsync(moduleId);
+
+            if (module == null) return;
+
+            var moduleLessons = await unitOfWork.ModuleLessons
+                .Where(moduleLesson => moduleLesson.ModuleId == moduleId)
+                .ToListAsync();
+
+            foreach (var moduleLesson in moduleLessons)
+            {
+                await lessonInteractor.RemoveLessonAsyncNoResponse(moduleLesson.LessonId);
+            }
+
+            var completions = unitOfWork.ModuleCompletions.Where(moduleCompletion => moduleCompletion.ModuleId == moduleId);
+
+            unitOfWork.Modules.Remove(module);
+            unitOfWork.ModuleCompletions.RemoveRange(completions);
         }
     }
 }

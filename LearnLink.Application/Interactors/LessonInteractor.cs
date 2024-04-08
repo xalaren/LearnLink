@@ -8,11 +8,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Interactors
 {
-    public class LessonInteractor(IUnitOfWork unitOfWork)
+    public class LessonInteractor(IUnitOfWork unitOfWork, ContentInteractor contentInteractor)
     {
         private readonly IUnitOfWork unitOfWork = unitOfWork;
+        private readonly ContentInteractor contentInteractor = contentInteractor;
 
-        public async Task<Response<LessonDto[]>> GetAllLessons()
+        public async Task<Response<LessonDto[]>> GetAllLessonsAsync()
         {
             try
             {
@@ -50,7 +51,7 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task<Response> CreateLesson(int moduleId, int courseId, LessonDto lessonDto)
+        public async Task<Response> CreateLessonAsync(int moduleId, int courseId, LessonDto lessonDto)
         {
             try
             {
@@ -120,6 +121,27 @@ namespace LearnLink.Application.Interactors
                     InnerErrorMessages = new string[] { exception.Message },
                 };
             }
+        }
+
+        public async Task RemoveLessonAsyncNoResponse(int lessonId)
+        {
+            var lesson = await unitOfWork.Lessons.FindAsync(lessonId);
+
+            if (lesson == null) return;
+
+            var lessonContents = await unitOfWork.LessonContents
+                .Where(lessonContent => lessonContent.LessonId == lessonId)
+                .ToListAsync();
+
+            foreach(var lessonContent in lessonContents)
+            {
+                await contentInteractor.RemoveContentAsyncNoResponse(lessonContent.LessonId);
+            }
+
+            var completions = unitOfWork.LessonCompletions.Where(lessonCompletion => lessonCompletion.LessonId == lessonId);
+
+            unitOfWork.LessonCompletions.RemoveRange(completions);
+            unitOfWork.Lessons.Remove(lesson);
         }
     }
 

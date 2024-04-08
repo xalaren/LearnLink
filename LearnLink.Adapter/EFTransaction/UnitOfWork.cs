@@ -25,6 +25,8 @@ namespace LearnLink.Adapter.EFTransaction
         public DbSet<CourseModule> CourseModules => context.CourseModules;
         public DbSet<Lesson> Lessons => context.Lessons;
         public DbSet<ModuleLesson> ModuleLessons => context.ModuleLessons;
+        public DbSet<LessonContent> LessonContents => context.LessonContents;
+        public DbSet<Content> Contents => context.Contents;
 
         public DbSet<LocalRole> LocalRoles => context.LocalRoles;
         public DbSet<UserCourseLocalRole> UserCourseLocalRoles => context.UserCourseLocalRoles;
