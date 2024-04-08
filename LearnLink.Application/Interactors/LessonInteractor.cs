@@ -51,6 +51,40 @@ namespace LearnLink.Application.Interactors
             }
         }
 
+        public async Task<Response<LessonDto>> GetLessonAsync(int lessonId)
+        {
+            try
+            {
+                var lesson = await unitOfWork.Lessons.FindAsync(lessonId);
+
+                return new Response<LessonDto>()
+                {
+                    Success = true,
+                    StatusCode = 200,
+                    Value = lesson?.ToDto(),
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new Response<LessonDto>()
+                {
+                    Success = false,
+                    StatusCode = exception.StatusCode,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new Response<LessonDto>()
+                {
+                    Success = false,
+                    StatusCode = 500,
+                    Message = "Не удалось получить урок",
+                    InnerErrorMessages = new string[] { exception.Message },
+                };
+            }
+        }
+
         public async Task<Response> CreateLessonAsync(int moduleId, int courseId, LessonDto lessonDto)
         {
             try
@@ -118,6 +152,87 @@ namespace LearnLink.Application.Interactors
                     Success = false,
                     StatusCode = 500,
                     Message = "Не удалось создать урок",
+                    InnerErrorMessages = new string[] { exception.Message },
+                };
+            }
+        }
+
+        public async Task<Response> UpdateLessonAsync(LessonDto lessonDto)      
+        {
+            try
+            {
+                if (lessonDto == null)
+                {
+                    throw new ArgumentNullException(nameof(lessonDto), "ModuleDto was null");
+                }
+
+                var lesson = await unitOfWork.Lessons.FindAsync(lessonDto.Id);
+
+                if (lesson == null)
+                {
+                    throw new NotFoundException("Урко не найден");
+                }
+
+                lesson.Assign(lessonDto);
+                unitOfWork.Lessons.Update(lesson);
+
+                await unitOfWork.CommitAsync();
+
+                return new Response()
+                {
+                    Success = true,
+                    StatusCode = 200,
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new Response()
+                {
+                    Success = false,
+                    StatusCode = exception.StatusCode,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new Response()
+                {
+                    Success = false,
+                    StatusCode = 500,
+                    Message = "Не удалось изменить урок",
+                    InnerErrorMessages = new string[] { exception.Message },
+                };
+            }
+        }
+
+        public async Task<Response> RemoveLessonAsync(int lessonId)
+        {
+            try
+            {
+                await RemoveLessonAsyncNoResponse(lessonId);
+
+                return new Response()
+                {
+                    Success = true,
+                    StatusCode = 200,
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new Response()
+                {
+                    Success = false,
+                    StatusCode = exception.StatusCode,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new Response()
+                {
+                    Success = false,
+                    StatusCode = 500,
+                    Message = "Не удалось удалить урок",
                     InnerErrorMessages = new string[] { exception.Message },
                 };
             }

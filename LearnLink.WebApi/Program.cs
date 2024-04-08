@@ -7,7 +7,6 @@ using LearnLink.Application.Transaction;
 using LearnLink.SecurityProvider;
 using LearnLink.WebApi.Extensions;
 using LearnLink.WebApi.Helpers;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
@@ -41,6 +40,7 @@ builder.Services.AddScoped<RoleInteractor>();
 builder.Services.AddScoped<LocalRoleInteractor>();
 builder.Services.AddScoped<PermissionService>();
 builder.Services.AddScoped<CompletionInteractor>();
+builder.Services.AddScoped<ContentInteractor>();
 
 
 builder.Services.AddTransient<SeedData>();
