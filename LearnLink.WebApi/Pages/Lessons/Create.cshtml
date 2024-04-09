@@ -1,0 +1,55 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Lessons.CreateModel
+@{
+    ViewData["Title"] = "Create lesson";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Lessons/LessonsActionsPage')">
+        Lessons
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Lessons/Create')">
+        Create
+    </h2>
+</div>
+
+@{
+    if (Model.QueryResult != null)
+    {
+        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+        <div class="response-container" id="register-response">
+            <h3>Response:</h3>
+            <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+            <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+            <p>Message: @Model.QueryResult.Message</p>
+        </div>
+    }
+}
+
+<form class="form" method="post">
+    <div class="form-input">
+        <p class="form-input__label">Course Id</p>
+        <input type="number" min="0" name="courseId" placeholder="Course Id..." class="input" />
+    </div>
+
+    <div class="form-input">
+        <p class="form-input__label">Module Id</p>
+        <input type="number" min="0" name="moduleId" placeholder="Module Id..." class="input" />
+    </div>
+
+    <div class="form-input">
+        <p class="form-input__label">Title</p>
+        <input type="text" name="title" placeholder="Title..." class="input" />
+    </div>
+
+    <div class="form-input">
+        <p class="form-input__label">Description</p>
+        <textarea class="textarea input" name="description" placeholder="Description..."></textarea>
+    </div>
+
+    <div class="form__actions">
+        <button class="primary-button">Create</button>
+    </div>
+</form>
+
+

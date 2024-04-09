@@ -4,4 +4,46 @@
     ViewData["Title"] = "Lessons";
 }
 
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Lessons/LessonsActionsPage')">
+        Lessons
+    </h2>
+</div>
 
+<div class="endpoints-list">
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Lessons/Get')">
+        <div class="endpoint-item__method">
+            get
+        </div>
+        <div class="endpoint-item__name">Get</div>
+        <i class="endpoint-item__arrow icon-arrow-right"> </i>
+    </div>
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Lessons/List')">
+        <div class="endpoint-item__method">
+            get
+        </div>
+        <div class="endpoint-item__name">List</div>
+        <i class="endpoint-item__arrow icon-arrow-right"> </i>
+    </div>
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Lessons/Create')">
+        <div class="endpoint-item__method">
+            post
+        </div>
+        <div class="endpoint-item__name">Create</div>
+        <i class="endpoint-item__arrow icon-arrow-right"> </i>
+    </div>
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Lessons/Update')">
+        <div class="endpoint-item__method">
+            post
+        </div>
+        <div class="endpoint-item__name">Update</div>
+        <i class="endpoint-item__arrow icon-arrow-right"> </i>
+    </div>
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Lessons/Remove')">
+        <div class="endpoint-item__method">
+            delete
+        </div>
+        <div class="endpoint-item__name">Remove</div>
+        <i class="endpoint-item__arrow icon-arrow-right"> </i>
+    </div>
+</div>

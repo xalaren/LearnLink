@@ -35,6 +35,7 @@ builder.Services.AddScoped<UserInteractor>();
 builder.Services.AddScoped<CourseInteractor>();
 builder.Services.AddScoped<SubscriptionInteractor>();
 builder.Services.AddScoped<ModuleInteractor>();
+builder.Services.AddScoped<LessonInteractor>();
 builder.Services.AddScoped<UserVerifierService>();
 builder.Services.AddScoped<RoleInteractor>();
 builder.Services.AddScoped<LocalRoleInteractor>();

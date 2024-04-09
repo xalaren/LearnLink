@@ -1,0 +1,48 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Lessons.GetModel
+@{
+    ViewData["Title"] = "Get lesson";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Lessons/LessonsActionsPage')">
+        Lessons
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Lessons/Get')">
+        Get
+    </h2>
+</div>
+
+<form class="form" method="get">
+    <div class="form-input">
+        <p class="form-input__label">Lesson Id</p>
+        <div class="line-container">
+            <input type="number" name="lessonId" placeholder="Lesson Id..." class="input" />
+            <button class="primary-button">Get</button>
+        </div>
+    </div>
+</form>
+
+@if (Model.QueryResult != null)
+{
+    string className = Model.QueryResult.Success ? "green-text" : "red-text";
+    <div class="response-container" id="register-response">
+        <h3>Response:</h3>
+        <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+        <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+        <p>Message: @Model.QueryResult.Message</p>
+    </div>
+}
+
+@if (Model.FoundLesson != null)
+{
+    <div class="data-view">
+        <h3>View data</h3>
+        <div class="result-value">
+            <p>Id: <span class="white-selection">@Model.FoundLesson.Id</span></p>
+            <p>Title: <span class="white-selection">@Model.FoundLesson.Title</span></p>
+            <p>Description: <span class="white-selection">@Model.FoundLesson.Description</span></p>
+        </div>
+    </div>
+}
+

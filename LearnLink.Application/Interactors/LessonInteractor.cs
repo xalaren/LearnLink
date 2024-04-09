@@ -62,6 +62,7 @@ namespace LearnLink.Application.Interactors
                     Success = true,
                     StatusCode = 200,
                     Value = lesson?.ToDto(),
+                    Message = "Урок успешно получен"
                 };
             }
             catch (CustomException exception)
@@ -85,7 +86,7 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task<Response> CreateLessonAsync(int moduleId, int courseId, LessonDto lessonDto)
+        public async Task<Response> CreateLessonAsync(int courseId, int moduleId, LessonDto lessonDto)
         {
             try
             {
@@ -134,6 +135,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = true,
                     StatusCode = 200,
+                    Message = "Урок успешно создан",
                 };
             }
             catch (CustomException exception)
@@ -182,6 +184,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = true,
                     StatusCode = 200,
+                    Message = "Урок успешно изменен"
                 };
             }
             catch (CustomException exception)
@@ -215,6 +218,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = true,
                     StatusCode = 200,
+                    Message = "Урок успешно удален",
                 };
             }
             catch (CustomException exception)
