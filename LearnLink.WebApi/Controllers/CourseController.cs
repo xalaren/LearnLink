@@ -27,20 +27,20 @@ namespace LearnLink.WebApi.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("get-any")]
+        [HttpGet("get/any")]
         public async Task<Response<CourseDto?>> GetAnyCourseAsync(int userId, int courseId)
         {
             return await courseInteractor.GetAnyCourseAsync(userId, courseId);
         }
 
-        [HttpGet("get-all")]
+        [HttpGet("get/all")]
         public async Task<Response<CourseDto[]>> GetAllCoursesAsync()
         {
             return await courseInteractor.GetAllAsync();
         }
 
         [Authorize]
-        [HttpGet("get-user-courses")]
+        [HttpGet("get/user-courses")]
         public async Task<Response<CourseDto[]>> GetUserCreatedCoursesAsync(int userId)
         {
             var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
@@ -59,14 +59,14 @@ namespace LearnLink.WebApi.Controllers
 
 
         [AllowAnonymous]
-        [HttpGet("get-public")]
+        [HttpGet("get/public")]
         public async Task<Response<DataPage<CourseDto[]>>> GetPublicCoursesAsync(int page, int size)
         {
             return await courseInteractor.GetPublicCoursesAsync(new DataPageHeader(page, size));
         }
 
         [Authorize]
-        [HttpGet("get-subscribed")]
+        [HttpGet("get/subscribed")]
         public async Task<Response<CourseDto[]>> GetSubscribedCoursesAsync(int userId)
         {
             var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
@@ -81,7 +81,7 @@ namespace LearnLink.WebApi.Controllers
         }
 
         [Authorize]
-        [HttpGet("get-unavailable")]
+        [HttpGet("get/unavailable")]
         public async Task<Response<CourseDto[]>> GetUnavailableCoursesAsync(int userId)
         {
             var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
@@ -97,14 +97,14 @@ namespace LearnLink.WebApi.Controllers
 
 
         [AllowAnonymous]
-        [HttpGet("find-public")]
+        [HttpGet("find/public")]
         public async Task<Response<DataPage<CourseDto[]>>> FindPublicCourses(string title, int page, int size)
         {
             return await courseInteractor.FindCoursesByTitle(title, new DataPageHeader(page, size));
         }
 
         [Authorize]
-        [HttpGet("find-user-courses")]
+        [HttpGet("find/user-courses")]
         public async Task<Response<CourseDto[]>> FindInUserCourses(int userId, string title, bool findSubscription, bool findUnavailable)
         {
             var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
@@ -120,7 +120,7 @@ namespace LearnLink.WebApi.Controllers
         }
 
         [Authorize]
-        [HttpGet("get-creator-status")]
+        [HttpGet("get/status/creator")]
         public async Task<Response<bool>> IsCreatorAsync(int userId, int courseId)
         {
             var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
@@ -135,7 +135,7 @@ namespace LearnLink.WebApi.Controllers
         }
 
         [Authorize]
-        [HttpGet("get-subscriber-status")]
+        [HttpGet("get/status/subscriber")]
         public async Task<Response<bool>> IsSubscriberAsync(int userId, int courseId)
         {
             var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);

@@ -21,7 +21,7 @@ namespace CoursePrototype.WebApi.Controllers
         }
 
         [Authorize]
-        [HttpGet("get-auth")]
+        [HttpGet("get/auth")]
         public async Task<Response<UserDto>> GetAuthenticatedUser()
         {
             var nickname = User.Identity?.Name;
@@ -55,7 +55,7 @@ namespace CoursePrototype.WebApi.Controllers
 
 
         [Authorize]
-        [HttpPost("update-user")]
+        [HttpPost("update/user")]
         public async Task<Response<string?>> UpdateUserAsync(UserDto userDto)
         {
             var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userDto.Id);
@@ -73,7 +73,7 @@ namespace CoursePrototype.WebApi.Controllers
         }
 
         [Authorize]
-        [HttpPost("update-pass")]
+        [HttpPost("update/pass")]
         public async Task<Response> UpdatePasswordAsync(int userId, string oldPassword, string newPassword)
         {
             var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);

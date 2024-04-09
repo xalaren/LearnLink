@@ -16,7 +16,7 @@ namespace LearnLink.WebApi.Controllers
             this.roleInteractor = roleInteractor;
         }
 
-        [HttpGet("get-all")]
+        [HttpGet("get/all")]
         public async Task<Response<RoleDto[]>> GetAllRolesAsync()
         {
             return await roleInteractor.GetAllRolesAsync();
@@ -28,7 +28,7 @@ namespace LearnLink.WebApi.Controllers
             return await roleInteractor.GetRoleByIdAsync(roleId);
         }
 
-        [HttpGet("get-by-name")]
+        [HttpGet("get/by-name")]
         public async Task<Response<RoleDto?>> GetRoleByNameAsync(string name)
         {
             return await roleInteractor.GetRoleByNameAsync(name);

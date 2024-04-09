@@ -17,19 +17,20 @@ namespace LearnLink.WebApi.Controllers
             this.moduleInteractor = moduleInteractor;
         }
 
+
         [HttpGet("get")]
         public async Task<Response<ModuleDto?>> GetModule(int moduleId)
         {
             return await moduleInteractor.GetModuleAsync(moduleId);
         }
 
-        [HttpGet("get-all")]
+        [HttpGet("get/all")]
         public async Task<Response<ModuleDto[]>> GetAllModules()
         {
             return await moduleInteractor.GetAllModulesAsync();
         }
 
-        [HttpGet("get-course-modules")]
+        [HttpGet("get/course-modules")]
         public async Task<Response<ModuleDto[]>> GetCourseModulesAsync(int courseId)
         {
             return await moduleInteractor.GetCourseModulesAsync(courseId);
