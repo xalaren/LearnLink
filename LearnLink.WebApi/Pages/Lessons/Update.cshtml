@@ -12,3 +12,48 @@
         Update
     </h2>
 </div>
+
+<form class="form" method="get">
+    <div class="form-input">
+        <p class="form-input__label">Lesson Id</p>
+        <div class="line-container">
+            <input type="number" name="lessonId" placeholder="Lesson Id..." class="input" />
+            <button class="primary-button">Get</button>
+        </div>
+    </div>
+</form>
+
+@if (Model.QueryResult != null)
+{
+    string className = Model.QueryResult.Success ? "green-text" : "red-text";
+    <div class="response-container" id="register-response">
+        <h3>Response:</h3>
+        <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+        <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+        <p>Message: @Model.QueryResult.Message</p>
+    </div>
+}
+
+@if (Model.FoundLesson != null)
+{
+    <form class="form" method="post">
+        <div class="form-input">
+            <p class="form-input__label">Lesson Id</p>
+            <input type="number" name="id" placeholder="Lesson Id..." min="0" class="input" value="@Model.FoundLesson.Id" />
+        </div>
+
+        <div class="form-input">
+            <p class="form-input__label">Title</p>
+            <input type="text" name="title" placeholder="Title..." class="input" value="@Model.FoundLesson.Title" />
+        </div>
+
+        <div class="form-input">
+            <p class="form-input__label">Description</p>
+            <textarea class="textarea input" name="description" placeholder="Description...">@Model.FoundLesson.Description</textarea>
+        </div>
+
+        <div class="form__actions">
+            <button class="primary-button">Update</button>
+        </div>
+    </form>
+}
