@@ -262,6 +262,7 @@ namespace LearnLink.Application.Interactors
             unitOfWork.LessonCompletions.RemoveRange(completions);
             unitOfWork.Lessons.Remove(lesson);
         }
+
     }
 
 }

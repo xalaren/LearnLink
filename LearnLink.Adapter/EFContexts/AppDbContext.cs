@@ -46,7 +46,7 @@ namespace LearnLink.Adapter.EFContexts
             modelBuilder.ApplyConfiguration(new CourseCompletionEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ModuleComletionEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ContentEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new LessonContentEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new SectionEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new LessonCompletionEntityTypeConfiguration());
         }
     }
