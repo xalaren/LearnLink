@@ -20,7 +20,7 @@ namespace LearnLink.Application.Transaction
 
         public DbSet<Lesson> Lessons { get; }
         public DbSet<ModuleLesson> ModuleLessons { get; }
-        public DbSet<LessonContent> LessonContents { get; }
+        public DbSet<Section> Sections { get; }
         public DbSet<Content> Contents { get; }
 
         public DbSet<CourseCompletion> CourseCompletions { get; }

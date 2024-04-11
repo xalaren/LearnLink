@@ -6,6 +6,6 @@
             int ContentId,
             ContentDto Content,
             string Title,
-            int Order
+            int Order = 0
         );
 }

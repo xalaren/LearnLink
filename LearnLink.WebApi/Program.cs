@@ -42,6 +42,7 @@ builder.Services.AddScoped<LocalRoleInteractor>();
 builder.Services.AddScoped<PermissionService>();
 builder.Services.AddScoped<CompletionInteractor>();
 builder.Services.AddScoped<ContentInteractor>();
+builder.Services.AddScoped<SectionInteractor>();
 
 
 builder.Services.AddTransient<SeedData>();

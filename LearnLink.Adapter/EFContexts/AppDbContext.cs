@@ -21,7 +21,7 @@ namespace LearnLink.Adapter.EFContexts
 
         public DbSet<Lesson> Lessons { get; set; }
         public DbSet<Content> Contents { get; set; }
-        public DbSet<LessonContent> LessonContents { get; set; }
+        public DbSet<Section> Sections { get; set; }
         public DbSet<ModuleLesson> ModuleLessons { get; set; }
 
         public DbSet<CourseCompletion> CourseCompletions { get; set; }
