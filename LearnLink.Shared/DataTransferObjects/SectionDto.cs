@@ -2,10 +2,10 @@
 {
     public record SectionDto
         (
-            int LessonId,
-            int ContentId,
-            ContentDto Content,
-            string Title,
-            int Order = 0
+            int Id,
+            int Order,
+            ContentDto ContentDto,
+            int LessonId = 0,
+            string? Title = null
         );
 }

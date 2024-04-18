@@ -1,10 +1,7 @@
 ﻿using LearnLink.Application.Helpers;
-using LearnLink.Application.Mappers;
 using LearnLink.Application.Transaction;
-using LearnLink.Core.Entities;
 using LearnLink.Core.Exceptions;
 using LearnLink.Shared.DataTransferObjects;
-using LearnLink.Shared.Responses;
 
 namespace LearnLink.Application.Interactors
 {
@@ -19,55 +16,63 @@ namespace LearnLink.Application.Interactors
             this.directoryStore = directoryStore;
         }
 
-        public async Task<Content> CreateContentWithResult(ContentDto contentDto)
+        public async Task SaveLessonContentAsync(ContentDto contentDto, int lessonId, int sectionId)
         {
-            var contentEntity = contentDto.ToEntity();
-
-            await unitOfWork.Contents.AddAsync(contentEntity);
-
-            if(contentDto.IsFile && contentDto.FormFile != null)
-            {
-                using(var stream = contentDto.FormFile.OpenReadStream()) 
-                {
-                    await SaveContentFileAsync(stream, contentEntity);
-                }
-            }
-
-            return contentEntity;
-        }
-
-        public async Task RemoveContentAsyncNoResponse(int contentId)
-        {
-            var content = await unitOfWork.Contents.FindAsync(contentId);
-
-            if (content == null) return;
-
-            unitOfWork.Contents.Remove(content);
-        }
-
-        private async Task SaveContentFileAsync(Stream? stream, Content content)
-        {
-            if (stream == null || string.IsNullOrWhiteSpace(content.FileName))
-            {
-                throw new ValidationException("Файл или его название было пустое");
-            }
-
-            var directory = directoryStore.GetDirectoryPathToContent(content.Id);
-            var contentPath = Path.Combine(directory, DirectoryStore.CONTENT_DIRNAME, content.FileName);
-
-            Directory.CreateDirectory(Path.GetDirectoryName(contentPath)!);
-
             try
             {
-                using (var fileStream = new FileStream(contentPath, FileMode.Create))
+                if (contentDto.IsFile && contentDto.FormFile != null)
                 {
-                    await stream.CopyToAsync(fileStream);
+                    var fileName = contentDto.FormFile.FileName;
+
+                    using (var stream = contentDto.FormFile.OpenReadStream())
+                    {
+                        if (stream == null || string.IsNullOrWhiteSpace(fileName))
+                        {
+                            throw new ValidationException("Файл или его название было пустое");
+                        }
+
+                        var directory = directoryStore.GetDirectoryPathToLessonContents(lessonId, sectionId);
+                        var contentPath = Path.Combine(directory, fileName);
+
+                        Directory.CreateDirectory(Path.GetDirectoryName(contentPath)!);
+                        using (var fileStream = new FileStream(contentPath, FileMode.Create))
+                        {
+                            await stream.CopyToAsync(fileStream);
+                        }
+
+                    }
                 }
             }
-            catch (Exception)
+            catch(Exception)
             {
-                throw new CustomException("Не удалось сохранить аватар");
+                throw new CustomException("Не удалось сохранить файл контента");
             }
+        }
+
+        public void RemoveLessonContent(int lessonId, int sectionId, string? fileName)
+        {
+            if (string.IsNullOrWhiteSpace(fileName)) return;
+
+            var directory = directoryStore.GetDirectoryPathToLessonContents(lessonId, sectionId);
+            var path = Path.Combine(directory, fileName);
+
+            RemoveContent(path);
+        }
+
+
+        private void RemoveContent(string filePath)
+        {
+            if (string.IsNullOrWhiteSpace(filePath)) return;
+
+            var directory = Path.GetDirectoryName(filePath);
+
+            if (!File.Exists(filePath) || !Directory.Exists(directory))
+            {
+                return;
+            }
+
+            File.Delete(filePath);
+            Directory.Delete(directory);
         }
     }
 }

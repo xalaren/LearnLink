@@ -666,7 +666,7 @@ namespace LearnLink.Application.Interactors
                     throw new AccessLevelException("Доступ отклонен");
                 }
 
-                await RemoveCourseAsyncNoResponse(courseId);
+                await RemoveCourseAsyncNoResponse(courseId, true);
 
                 await unitOfWork.CommitAsync();
 
@@ -822,7 +822,7 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task RemoveCourseAsyncNoResponse(int courseId)
+        public async Task RemoveCourseAsyncNoResponse(int courseId, bool strictRemove)
         {
             var course = await unitOfWork.Courses.FindAsync(courseId) ??
                     throw new NotFoundException("Курс не найден");
@@ -833,7 +833,7 @@ namespace LearnLink.Application.Interactors
 
             foreach(var module in modules)
             {
-                await moduleInteractor.RemoveModuleAsyncNoResponse(module.ModuleId);
+                await moduleInteractor.RemoveModuleAsyncNoResponse(module.ModuleId, false);
             }
 
             unitOfWork.Courses.Remove(course);

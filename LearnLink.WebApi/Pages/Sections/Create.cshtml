@@ -1,0 +1,63 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Sections.CreateModel
+@{
+    ViewData["Title"] = "Create section";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Sections/SectionsActionsPage')">
+        Sections
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Sections/Create')">
+        Create
+    </h2>
+</div>
+
+@{
+    if (Model.QueryResult != null)
+    {
+        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+        <div class="response-container" id="register-response">
+            <h3>Response:</h3>
+            <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+            <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+            <p>Message: @Model.QueryResult.Message</p>
+        </div>
+    }
+}
+
+<form class="form" method="post" enctype="multipart/form-data">
+    <div class="form-input">
+        <p class="form-input__label">Lesson Id</p>
+        <input type="number" min="0" name="lessonId" placeholder="Lesson Id..." class="input" />
+    </div>
+
+    <div class="form-input">
+        <p class="form-input__label">Title</p>
+        <input type="text" name="title" placeholder="Title..." class="input" />
+    </div>
+    <div class="form-input">
+        <p class="form-input__label">Text</p>
+        <textarea class="textarea input" name="text" placeholder="Text..."></textarea>
+    </div>
+    <div class="form-input">
+        <p class="form-input__label">File</p>
+        <input type="file" class="input" name="contentFile" value="Upload file" />
+    </div>
+    <div class="line-container">
+        <input type="checkbox" class="checkbox" id="isText" name="isText" />
+        <label for="isText">IsText</label>
+    </div>
+    <div class="line-container">
+        <input type="checkbox" class="checkbox" id="isCodeBlock" name="isCodeBlock" />
+        <label for="isCodeBlock">IsCodeBlock</label>
+    </div>
+    <div class="line-container">
+        <input type="checkbox" class="checkbox" id="isFile" name="isFile" />
+        <label for="isFile">IsFile</label>
+    </div>
+
+    <div class="form__actions">
+        <button class="primary-button">Create</button>
+    </div>
+</form>

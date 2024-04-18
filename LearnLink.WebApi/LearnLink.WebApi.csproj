@@ -34,4 +34,8 @@
     <ProjectReference Include="..\LearnLink.SecurityProvider\LearnLink.SecurityProvider.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Storage\Users\" />
+  </ItemGroup>
+
 </Project>

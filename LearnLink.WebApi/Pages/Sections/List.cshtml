@@ -1,0 +1,77 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Sections.ListModel
+@{
+    ViewData["Title"] = "List lesson sections";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Sections/SectionsActionsPage')">
+        Sections
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Sections/List')">
+        List
+    </h2>
+</div>
+
+
+<form class="form" method="get">
+    <div class="form-input">
+        <p class="form-input__label">Lesson Id</p>
+        <div class="line-container">
+            <input type="number" name="lessonId"  placeholder="Lesson Id..." min="0" class="input" />
+            <button class="primary-button">List lesson sections</button>
+        </div>
+    </div>
+</form>
+
+@{
+    if (Model.QueryResult != null)
+    {
+        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+        <div class="response-container" id="register-response">
+            <h3>Response:</h3>
+            <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+            <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+            <p>Message: @Model.QueryResult.Message</p>
+        </div>
+    }
+}
+
+@if (Model.Sections != null)
+{
+    <div class="data-view">
+        <h3>View data</h3>
+
+        @foreach (var sectionExample in Model.Sections)
+        {
+            <div class="result-value">
+                <p>Id: <span class="white-selection">@sectionExample.Id</span></p>
+                <p>Lesson Id: <span class="white-selection">@sectionExample.LessonId</span></p>
+                @if(sectionExample.Title != null)
+                {
+                    <p>Title: <span class="white-selection">@sectionExample.Title</span></p>
+                }
+                <p>Order: <span class="white-selection">@sectionExample.Order</span></p>
+                @if (sectionExample.ContentDto.FileName != null)
+                {
+                    <p>FileName: <span class="white-selection">@sectionExample.ContentDto.FileName</span></p>
+                    <p>Url: <a class="white-selection white-link" href="api/@sectionExample.ContentDto.FileUrl">@sectionExample.ContentDto.FileUrl</a></p>
+                }
+                @if(sectionExample.ContentDto.IsText)
+                {
+                    <p>Text:</p>
+                    <p class="white-selection">@sectionExample.ContentDto.Text</p>
+                }
+            </div>
+        }
+    </div>
+}
+
+
+
+
+
+
+
+
+

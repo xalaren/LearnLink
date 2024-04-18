@@ -4,7 +4,6 @@ namespace LearnLink.Core.Entities
 {
     public class Content
     {
-        public int Id { get; set; }
         public bool IsText { get; set; }
         public bool IsCodeBlock { get; set; }
         public bool IsFile { get; set; }

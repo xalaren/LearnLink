@@ -244,7 +244,7 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                await RemoveModuleAsyncNoResponse(moduleId);
+                await RemoveModuleAsyncNoResponse(moduleId, true);
                 await unitOfWork.CommitAsync();
 
                 return new()
@@ -272,9 +272,11 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task RemoveModuleAsyncNoResponse(int moduleId)
+        public async Task RemoveModuleAsyncNoResponse(int moduleId, bool strictRemove)
         {
             var module = await unitOfWork.Modules.FindAsync(moduleId);
+
+            if (module == null && strictRemove) throw new NotFoundException("Модуль не найден");
 
             if (module == null) return;
 
@@ -284,7 +286,7 @@ namespace LearnLink.Application.Interactors
 
             foreach (var moduleLesson in moduleLessons)
             {
-                await lessonInteractor.RemoveLessonAsyncNoResponse(moduleLesson.LessonId);
+                await lessonInteractor.RemoveLessonAsyncNoResponse(moduleLesson.LessonId, false);
             }
 
             var completions = unitOfWork.ModuleCompletions.Where(moduleCompletion => moduleCompletion.ModuleId == moduleId);

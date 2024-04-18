@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using LearnLink.Core.Exceptions;
 
 namespace LearnLink.Core.Entities
 {

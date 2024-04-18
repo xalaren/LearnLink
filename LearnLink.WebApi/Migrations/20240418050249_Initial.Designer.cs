@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LearnLink.WebApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240407125148_Initial")]
+    [Migration("20240418050249_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -24,38 +24,6 @@ namespace LearnLink.WebApi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("LearnLink.Core.Entities.Content", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FileName")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsCodeBlock")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsFile")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsText")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Contents");
-                });
 
             modelBuilder.Entity("LearnLink.Core.Entities.Course", b =>
                 {
@@ -77,9 +45,6 @@ namespace LearnLink.WebApi.Migrations
 
                     b.Property<bool>("IsUnavailable")
                         .HasColumnType("boolean");
-
-                    b.Property<int>("ProgressPercentage")
-                        .HasColumnType("integer");
 
                     b.Property<int>("SubscribersCount")
                         .HasColumnType("integer");
@@ -204,21 +169,6 @@ namespace LearnLink.WebApi.Migrations
                     b.ToTable("LessonCompletions");
                 });
 
-            modelBuilder.Entity("LearnLink.Core.Entities.LessonContent", b =>
-                {
-                    b.Property<int>("LessonId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ContentId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("LessonId", "ContentId");
-
-                    b.HasIndex("ContentId");
-
-                    b.ToTable("LessonContents");
-                });
-
             modelBuilder.Entity("LearnLink.Core.Entities.Module", b =>
                 {
                     b.Property<int>("Id")
@@ -314,6 +264,45 @@ namespace LearnLink.WebApi.Migrations
                     b.HasDiscriminator<string>("Discriminator").HasValue("Role");
 
                     b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("LearnLink.Core.Entities.Section", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsCodeBlock")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsFile")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsText")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("LessonId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LessonId");
+
+                    b.ToTable("Sections");
                 });
 
             modelBuilder.Entity("LearnLink.Core.Entities.Subscription", b =>
@@ -512,25 +501,6 @@ namespace LearnLink.WebApi.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("LearnLink.Core.Entities.LessonContent", b =>
-                {
-                    b.HasOne("LearnLink.Core.Entities.Content", "Content")
-                        .WithMany()
-                        .HasForeignKey("ContentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LearnLink.Core.Entities.Lesson", "Lesson")
-                        .WithMany()
-                        .HasForeignKey("LessonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Content");
-
-                    b.Navigation("Lesson");
-                });
-
             modelBuilder.Entity("LearnLink.Core.Entities.ModuleCompletion", b =>
                 {
                     b.HasOne("LearnLink.Core.Entities.Course", "Course")
@@ -575,6 +545,17 @@ namespace LearnLink.WebApi.Migrations
                     b.Navigation("Lesson");
 
                     b.Navigation("Module");
+                });
+
+            modelBuilder.Entity("LearnLink.Core.Entities.Section", b =>
+                {
+                    b.HasOne("LearnLink.Core.Entities.Lesson", "Lesson")
+                        .WithMany()
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Lesson");
                 });
 
             modelBuilder.Entity("LearnLink.Core.Entities.Subscription", b =>

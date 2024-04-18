@@ -7,8 +7,7 @@ namespace LearnLink.Adapter.EFConfigurations
     public class SectionEntityTypeConfiguration : IEntityTypeConfiguration<Section>
     {
         public void Configure(EntityTypeBuilder<Section> builder)
-        {
-            builder.HasKey(section => new { section.LessonId, section.ContentId });
+        { 
         }
     }
 }

@@ -13,24 +13,6 @@ namespace LearnLink.WebApi.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Contents",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    IsText = table.Column<bool>(type: "boolean", nullable: false),
-                    IsCodeBlock = table.Column<bool>(type: "boolean", nullable: false),
-                    IsFile = table.Column<bool>(type: "boolean", nullable: false),
-                    Order = table.Column<int>(type: "integer", nullable: false),
-                    Text = table.Column<string>(type: "text", nullable: false),
-                    FileName = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Contents", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Courses",
                 columns: table => new
                 {
@@ -41,8 +23,7 @@ namespace LearnLink.WebApi.Migrations
                     Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     CreationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Title = table.Column<string>(type: "character varying(60)", maxLength: 60, nullable: false),
-                    SubscribersCount = table.Column<int>(type: "integer", nullable: false),
-                    ProgressPercentage = table.Column<int>(type: "integer", nullable: false)
+                    SubscribersCount = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -100,23 +81,25 @@ namespace LearnLink.WebApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "LessonContents",
+                name: "Sections",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     LessonId = table.Column<int>(type: "integer", nullable: false),
-                    ContentId = table.Column<int>(type: "integer", nullable: false)
+                    Title = table.Column<string>(type: "text", nullable: true),
+                    Order = table.Column<int>(type: "integer", nullable: false),
+                    IsText = table.Column<bool>(type: "boolean", nullable: false),
+                    IsCodeBlock = table.Column<bool>(type: "boolean", nullable: false),
+                    IsFile = table.Column<bool>(type: "boolean", nullable: false),
+                    Text = table.Column<string>(type: "text", nullable: true),
+                    FileName = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LessonContents", x => new { x.LessonId, x.ContentId });
+                    table.PrimaryKey("PK_Sections", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_LessonContents_Contents_ContentId",
-                        column: x => x.ContentId,
-                        principalTable: "Contents",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_LessonContents_Lessons_LessonId",
+                        name: "FK_Sections_Lessons_LessonId",
                         column: x => x.LessonId,
                         principalTable: "Lessons",
                         principalColumn: "Id",
@@ -413,11 +396,6 @@ namespace LearnLink.WebApi.Migrations
                 column: "ModuleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LessonContents_ContentId",
-                table: "LessonContents",
-                column: "ContentId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ModuleCompletions_CourseId",
                 table: "ModuleCompletions",
                 column: "CourseId");
@@ -437,6 +415,11 @@ namespace LearnLink.WebApi.Migrations
                 table: "Roles",
                 column: "Sign",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sections_LessonId",
+                table: "Sections",
+                column: "LessonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Subscriptions_CourseId",
@@ -486,13 +469,13 @@ namespace LearnLink.WebApi.Migrations
                 name: "LessonCompletions");
 
             migrationBuilder.DropTable(
-                name: "LessonContents");
-
-            migrationBuilder.DropTable(
                 name: "ModuleCompletions");
 
             migrationBuilder.DropTable(
                 name: "ModuleLessons");
+
+            migrationBuilder.DropTable(
+                name: "Sections");
 
             migrationBuilder.DropTable(
                 name: "Subscriptions");
@@ -504,13 +487,10 @@ namespace LearnLink.WebApi.Migrations
                 name: "UserCreatedCourses");
 
             migrationBuilder.DropTable(
-                name: "Contents");
+                name: "Modules");
 
             migrationBuilder.DropTable(
                 name: "Lessons");
-
-            migrationBuilder.DropTable(
-                name: "Modules");
 
             migrationBuilder.DropTable(
                 name: "Courses");

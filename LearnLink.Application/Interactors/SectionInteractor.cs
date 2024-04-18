@@ -1,8 +1,5 @@
-﻿using System.Runtime.CompilerServices;
-using LearnLink.Application.Helpers;
-using LearnLink.Application.Mappers;
+﻿using LearnLink.Application.Mappers;
 using LearnLink.Application.Transaction;
-using LearnLink.Core.Entities;
 using LearnLink.Core.Exceptions;
 using LearnLink.Shared.DataTransferObjects;
 using LearnLink.Shared.Responses;
@@ -15,35 +12,45 @@ namespace LearnLink.Application.Interactors
         private readonly IUnitOfWork unitOfWork = unitOfWork;
         private readonly ContentInteractor contentInteractor = contentInteractor;
 
-        public async Task<Response> CreateSectionAsync(SectionDto sectionDto)
+        public async Task<Response> CreateSectionAsync(int lessonId, SectionDto sectionDto)
         {
             try
             {
-                if(sectionDto.LessonId == 0)
+                var lesson = await unitOfWork.Lessons.FirstOrDefaultAsync(lesson => lesson.Id == lessonId);
+
+                if (lesson == null) throw new NotFoundException("Урок не был найден");
+
+                var content = sectionDto.ContentDto;
+                var section = sectionDto.ToEntity(lesson);
+
+                if(section.IsText)
                 {
-                    throw new ValidationException("Идентификатор урока не был заполнен");
+                    section.IsCodeBlock = false;
+                    section.IsFile = false;
+                }
+                else if (section.IsCodeBlock)
+                {
+                    section.IsText = false;
+                    section.IsFile = false;
+                }
+                else if (section.IsFile)
+                {
+                    section.IsText = false;
+                    section.IsCodeBlock = false;
                 }
 
-                var sectionEntity = sectionDto.ToEntity();
-
-                if(sectionEntity.Content == null)
-                {
-                    throw new ValidationException("Содержимое не было заполнено");
-                }
-
-                var content = await contentInteractor.CreateContentWithResult(sectionDto.Content);
-
-                sectionEntity.Content = content;
-
-                await unitOfWork.Sections.AddAsync(sectionEntity);
-                await UpdateSectionOrders(sectionEntity.LessonId);
-
+                await unitOfWork.Sections.AddAsync(section);
+                await UpdateSectionOrders(section.LessonId);
                 await unitOfWork.CommitAsync();
+
+                await contentInteractor.SaveLessonContentAsync(content, section.LessonId, section.Id);
+
 
                 return new Response()
                 {
                     Success = true,
                     StatusCode = 200,
+                    Message = "Раздел успешно создан",
                 };
             }
             catch (CustomException exception)
@@ -67,6 +74,34 @@ namespace LearnLink.Application.Interactors
             }
         }
 
+        public async Task RemoveSectionAsyncNoResponse(int sectionId, bool strictMode)
+        {
+            var section = await unitOfWork.Sections.FindAsync(sectionId);
+
+            if (section == null && strictMode) throw new NotFoundException("Раздел не найден");
+
+            if (section == null) return;
+
+
+            unitOfWork.Sections.Remove(section);
+            contentInteractor.RemoveLessonContent(section.LessonId, section.Id, section.FileName);
+        }
+
+        public async Task RemoveLessonSectionsAsyncNoResponse(int lessonId)
+        {
+            var sections = await unitOfWork.Sections
+                .Where(section => section.LessonId == lessonId)
+                .ToListAsync();
+
+            foreach (var section in sections)
+            {
+                contentInteractor.RemoveLessonContent(section.LessonId, section.Id, section.FileName);
+            }
+
+
+            unitOfWork.Sections.RemoveRange(sections);
+        }
+
         public async Task<Response<SectionDto[]>> GetLessonSections(int lessonId)
         {
             try
@@ -74,7 +109,6 @@ namespace LearnLink.Application.Interactors
                 var sections = 
                     await unitOfWork.Sections.Where(section => section.LessonId == lessonId)
                     .OrderBy(section => section.Order)
-                    .Include(section => section.Content)
                     .Select(section => section.ToDto())
                     .ToArrayAsync();
 

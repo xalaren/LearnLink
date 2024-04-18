@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Interactors
 {
-    public class LessonInteractor(IUnitOfWork unitOfWork, ContentInteractor contentInteractor)
+    public class LessonInteractor(IUnitOfWork unitOfWork, SectionInteractor sectionInteractor)
     {
         private readonly IUnitOfWork unitOfWork = unitOfWork;
-        private readonly ContentInteractor contentInteractor = contentInteractor;
+        private readonly SectionInteractor sectionInteractor = sectionInteractor;
 
         public async Task<Response<LessonDto[]>> GetAllLessonsAsync()
         {
@@ -212,7 +212,7 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                await RemoveLessonAsyncNoResponse(lessonId);
+                await RemoveLessonAsyncNoResponse(lessonId, true);
 
                 return new Response()
                 {
@@ -242,23 +242,17 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task RemoveLessonAsyncNoResponse(int lessonId)
+        public async Task RemoveLessonAsyncNoResponse(int lessonId, bool strictRemove)
         {
             var lesson = await unitOfWork.Lessons.FindAsync(lessonId);
 
+            if (lesson == null && strictRemove) throw new NotFoundException("Урок не найден");
+
             if (lesson == null) return;
-
-            var lessonContents = await unitOfWork.LessonContents
-                .Where(lessonContent => lessonContent.LessonId == lessonId)
-                .ToListAsync();
-
-            foreach(var lessonContent in lessonContents)
-            {
-                await contentInteractor.RemoveContentAsyncNoResponse(lessonContent.LessonId);
-            }
 
             var completions = unitOfWork.LessonCompletions.Where(lessonCompletion => lessonCompletion.LessonId == lessonId);
 
+            await sectionInteractor.RemoveLessonSectionsAsyncNoResponse(lessonId);
             unitOfWork.LessonCompletions.RemoveRange(completions);
             unitOfWork.Lessons.Remove(lesson);
         }
