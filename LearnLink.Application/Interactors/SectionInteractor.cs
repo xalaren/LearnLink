@@ -12,6 +12,85 @@ namespace LearnLink.Application.Interactors
         private readonly IUnitOfWork unitOfWork = unitOfWork;
         private readonly ContentInteractor contentInteractor = contentInteractor;
 
+        public async Task<Response<SectionDto[]>> GetSectionsFromLessonAsync(int lessonId)
+        {
+            try
+            {
+                var sections =
+                    await unitOfWork.Sections.Where(section => section.LessonId == lessonId)
+                    .OrderBy(section => section.Order)
+                    .Select(section => section.ToDto())
+                    .ToArrayAsync();
+
+                return new Response<SectionDto[]>()
+                {
+                    Success = true,
+                    StatusCode = 200,
+                    Value = sections
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new Response<SectionDto[]>()
+                {
+                    Success = false,
+                    StatusCode = exception.StatusCode,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new Response<SectionDto[]>()
+                {
+                    Success = false,
+                    StatusCode = 500,
+                    Message = "Не удалось получить разделы урока",
+                    InnerErrorMessages = new string[] { exception.Message },
+                };
+            }
+        }
+
+
+        public async Task<Response<SectionDto>> GetSectionByLessonAndOrder(int lessonId, int order)
+        {
+            try
+            {
+                var section = await unitOfWork.Sections.FirstOrDefaultAsync(section => section.LessonId == lessonId && section.Order == order);
+
+                if (section == null)
+                {
+                    throw new NotFoundException("Раздел не найден");
+                }
+
+                return new Response<SectionDto>()
+                {
+                    Success = true,
+                    StatusCode = 200,
+                    Message = "Раздел получен успешно",
+                    Value = section.ToDto()
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new Response<SectionDto>()
+                {
+                    Success = false,
+                    StatusCode = exception.StatusCode,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new Response<SectionDto>()
+                {
+                    Success = false,
+                    StatusCode = 500,
+                    Message = "Не удалось получить раздел",
+                    InnerErrorMessages = new string[] { exception.Message },
+                };
+            }
+        }
+
         public async Task<Response> CreateSectionAsync(int lessonId, SectionDto sectionDto)
         {
             try
@@ -23,7 +102,7 @@ namespace LearnLink.Application.Interactors
                 var content = sectionDto.ContentDto;
                 var section = sectionDto.ToEntity(lesson);
 
-                if(section.IsText)
+                if (section.IsText)
                 {
                     section.IsCodeBlock = false;
                     section.IsFile = false;
@@ -86,7 +165,7 @@ namespace LearnLink.Application.Interactors
             unitOfWork.Sections.Remove(section);
             contentInteractor.RemoveLessonContent(section.LessonId, section.Id, section.FileName);
         }
-
+       
         public async Task RemoveLessonSectionsAsyncNoResponse(int lessonId)
         {
             var sections = await unitOfWork.Sections
@@ -102,26 +181,49 @@ namespace LearnLink.Application.Interactors
             unitOfWork.Sections.RemoveRange(sections);
         }
 
-        public async Task<Response<SectionDto[]>> GetLessonSections(int lessonId)
+        public async Task<Response> ChangeOrder(int sectionId, int lessonId, bool increase)
         {
             try
             {
-                var sections = 
-                    await unitOfWork.Sections.Where(section => section.LessonId == lessonId)
-                    .OrderBy(section => section.Order)
-                    .Select(section => section.ToDto())
-                    .ToArrayAsync();
+                var foundSection = await unitOfWork.Sections.FindAsync(sectionId);
 
-                return new Response<SectionDto[]>()
+                if(foundSection == null)
+                {
+                    throw new NotFoundException("Раздел не найден");
+                }
+
+                int nextOrderModifier = 1;
+
+                if(increase)
+                {
+                    nextOrderModifier = -1;
+                }
+
+                var next = unitOfWork.Sections.FirstOrDefault(section => section.LessonId == lessonId && section.Order == foundSection.Order + nextOrderModifier);
+
+                if(next == null)
+                {
+                    throw new OrderRangeEndException($"Раздел находится в {(increase ? "начале списка" : "конце списка")}");
+                }
+
+                foundSection.Order += nextOrderModifier;
+                next.Order -= nextOrderModifier;
+
+                unitOfWork.Sections.Update(foundSection);
+                unitOfWork.Sections.Update(next);
+
+                await unitOfWork.CommitAsync();
+
+                return new Response()
                 {
                     Success = true,
                     StatusCode = 200,
-                    Value = sections
+                    Message = "Порядок разделов успешно изменен",
                 };
             }
             catch (CustomException exception)
             {
-                return new Response<SectionDto[]>()
+                return new Response()
                 {
                     Success = false,
                     StatusCode = exception.StatusCode,
@@ -130,21 +232,21 @@ namespace LearnLink.Application.Interactors
             }
             catch (Exception exception)
             {
-                return new Response<SectionDto[]>()
+                return new Response()
                 {
                     Success = false,
                     StatusCode = 500,
-                    Message = "Не удалось получить разделы урока",
+                    Message = "Не удалось изменить порядок раздела",
                     InnerErrorMessages = new string[] { exception.Message },
                 };
             }
         }
 
-        private async Task UpdateSectionOrders(int lessonId)
+        public async Task UpdateSectionOrders(int lessonId)
         {
             var lessonSections = await unitOfWork.Sections.Where(section => section.LessonId == lessonId).ToListAsync();
 
-            for(int i = 0; i < lessonSections.Count; i++) 
+            for (int i = 0; i < lessonSections.Count; i++)
             {
                 lessonSections[i].Order++;
                 unitOfWork.Sections.Update(lessonSections[i]);

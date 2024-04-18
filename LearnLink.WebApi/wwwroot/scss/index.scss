@@ -180,6 +180,11 @@ body {
     }
 }
 
+.fixed-button {
+    padding: 0;
+    @include static-size(40px);
+}
+
 .form {
     display: flex;
     flex-direction: column;

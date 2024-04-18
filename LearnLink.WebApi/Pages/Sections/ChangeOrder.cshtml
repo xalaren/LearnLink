@@ -1,0 +1,70 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Sections.ChangeOrderModel
+@{
+    ViewData["Title"] = "Change order of section";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Sections/SectionsActionsPage')">
+        Sections
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Sections/ChangeOrder')">
+        Change-Order
+    </h2>
+</div>
+
+<form class="form width-400" method="get">
+    <div class="form-input">
+        <p class="form-input__label">Lesson Id</p>
+        <input type="number" name="lessonId" min="0" placeholder="Lesson Id..." class="input" />
+    </div>
+
+    <div class="form-input">
+        <p class="form-input__label">Order</p>
+        <input type="number" name="order" min="1" placeholder="Order..." class="input" />
+    </div>
+
+    <div class="form__actions">
+        <button class="primary-button">Load</button>
+    </div>
+</form>
+
+@{
+    if (Model.QueryResult != null)
+    {
+        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+        <div class="response-container" id="register-response">
+            <h3>Response:</h3>
+            <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+            <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+            <p>Message: @Model.QueryResult.Message</p>
+        </div>
+    }
+}
+
+@if (Model.FoundSection != null)
+{
+    <div class="data-view">
+        <h3>View data</h3>
+
+        <div class="result-value">
+            <p>Id: <span class="white-selection">@Model.FoundSection.Id</span></p>
+            <p>Lesson Id: <span class="white-selection">@Model.FoundSection.LessonId</span></p>
+            @if (Model.FoundSection.Title != null)
+            {
+                <p>Title: <span class="white-selection">@Model.FoundSection.Title</span></p>
+            }
+            <p>Order: <span class="white-selection">@Model.FoundSection.Order</span></p>
+        </div>
+    </div>
+
+    <h3>Change order</h3>
+    <form class="form width-400" method="post">
+        <input type="hidden" name="sectionId" class="input" value="@Model.FoundSection.Id" />
+        <input type="hidden" name="lessonId" class="input" value="@Model.FoundSection.LessonId" />
+        <div class="line-container">
+            <button class="primary-button fixed-button" type="submit" asp-page-handler="Increase">+</button>
+            <button class="primary-button fixed-button" type="submit" asp-page-handler="Decrease">-</button>
+        </div>
+    </form>
+}

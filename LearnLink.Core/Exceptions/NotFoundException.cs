@@ -4,6 +4,6 @@
     {
         public NotFoundException(string message) : base(message) { }
 
-        public override int StatusCode => 400;
+        public override int StatusCode => 404;
     }
 }

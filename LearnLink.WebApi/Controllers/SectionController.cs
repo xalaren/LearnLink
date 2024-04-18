@@ -18,6 +18,13 @@ namespace LearnLink.WebApi.Controllers
         }
 
         [Authorize]
+        [HttpGet("get/fromlesson")]
+        public async Task<Response<SectionDto[]>> GetSectionsFromLessonAsync(int lessonId)
+        {
+            return await sectionInteractor.GetSectionsFromLessonAsync(lessonId);
+        }
+
+        [Authorize]
         [HttpPost("create")]
         public async Task<Response> CreateSectionAsync([FromForm] SectionDto sectionDto, [FromQuery] int lessonId)
         {
