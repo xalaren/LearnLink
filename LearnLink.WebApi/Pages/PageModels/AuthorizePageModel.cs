@@ -22,7 +22,7 @@ namespace LearnLink.WebApi.Pages.PageModels
         public IActionResult AuthRequired(Action? action = null)
         {
             RequireAuthorize();
-            /*if (!AdminAuthorized) return AccessDeniedPage();*/
+            if (!AdminAuthorized) return AccessDeniedPage();
 
             action?.Invoke();
 
@@ -32,7 +32,7 @@ namespace LearnLink.WebApi.Pages.PageModels
         public async Task<IActionResult> AuthRequiredAsync(Func<Task> action)
         {
             RequireAuthorize();
-            /*if (!AdminAuthorized) return AccessDeniedPage();*/
+            if (!AdminAuthorized) return AccessDeniedPage();
 
             if (action != null)
             {
