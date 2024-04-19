@@ -1,12 +1,13 @@
+using LearnLink.WebApi.Pages.PageModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace LearnLink.WebApi.Pages.Lessons
 {
-    public class LessonsActionsPageModel : PageModel
+    public class LessonsActionsPageModel : AuthorizePageModel
     {
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            return AuthRequired();
         }
     }
 }

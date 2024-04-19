@@ -1,12 +1,14 @@
+using LearnLink.WebApi.Pages.PageModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace LearnLink.WebApi.Pages.LocalRoles
 {
-    public class LocalRolesActionsPageModel : PageModel
+    public class LocalRolesActionsPageModel : AuthorizePageModel
     {
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            return AuthRequired();
         }
     }
 }
