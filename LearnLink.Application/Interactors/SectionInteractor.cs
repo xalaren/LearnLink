@@ -50,8 +50,7 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-
-        public async Task<Response<SectionDto>> GetSectionByLessonAndOrder(int lessonId, int order)
+        public async Task<Response<SectionDto>> GetSectionByLessonAndOrderAsync(int lessonId, int order)
         {
             try
             {
@@ -153,6 +152,115 @@ namespace LearnLink.Application.Interactors
             }
         }
 
+        public async Task<Response> UpdateSectionAsync(int lessonId, SectionDto sectionDto)
+        {
+            try
+            {
+                var lesson = await unitOfWork.Lessons.FirstOrDefaultAsync(lesson => lesson.Id == lessonId);
+
+                if (lesson == null) throw new NotFoundException("Урок не был найден");
+
+                var section = await unitOfWork.Sections.FindAsync(sectionDto.Id);
+
+                if (section == null) throw new NotFoundException("Раздел не был найден");
+
+                var content = sectionDto.ContentDto;
+                var prevSectionFileState = section.IsFile;
+                var prevSectionFileName = section.FileName;
+
+                section.Assign(sectionDto);
+
+                if((prevSectionFileState && !section.IsFile) || (prevSectionFileState && section.IsFile && sectionDto.ContentDto.FormFile != null))
+                {
+                    contentInteractor.RemoveLessonContent(section.LessonId, section.Id, prevSectionFileName);
+                }
+
+                if (section.IsText)
+                {
+                    section.IsCodeBlock = false;
+                    section.IsFile = false;
+                }
+                else if (section.IsCodeBlock)
+                {
+                    section.IsText = false;
+                    section.IsFile = false;
+                }
+                else if (section.IsFile)
+                {
+                    section.IsText = false;
+                    section.IsCodeBlock = false;
+                }
+
+                await unitOfWork.Sections.AddAsync(section);
+                await UpdateSectionOrders(section.LessonId);
+                await unitOfWork.CommitAsync();
+
+                await contentInteractor.SaveLessonContentAsync(content, section.LessonId, section.Id);
+
+
+                return new Response()
+                {
+                    Success = true,
+                    StatusCode = 200,
+                    Message = "Раздел успешно создан",
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new Response()
+                {
+                    Success = false,
+                    StatusCode = exception.StatusCode,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new Response()
+                {
+                    Success = false,
+                    StatusCode = 500,
+                    Message = "Не удалось создать раздел",
+                    InnerErrorMessages = new string[] { exception.Message },
+                };
+            }
+        }
+
+        public async Task<Response> RemoveSectionAsync(int sectionId)
+        {
+            try
+            {
+                await RemoveSectionAsyncNoResponse(sectionId, true);
+                await unitOfWork.CommitAsync();
+
+                return new Response()
+                {
+                    Success = true,
+                    StatusCode = 200,
+                    Message = "Раздел успешно удален"
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new Response()
+                {
+                    Success = false,
+                    StatusCode = exception.StatusCode,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new Response()
+                {
+                    Success = false,
+                    StatusCode = 500,
+                    Message = "Не удалось удалить раздел",
+                    InnerErrorMessages = new string[] { exception.Message },
+                };
+            }
+        }
+
         public async Task RemoveSectionAsyncNoResponse(int sectionId, bool strictMode)
         {
             var section = await unitOfWork.Sections.FindAsync(sectionId);
@@ -161,9 +269,9 @@ namespace LearnLink.Application.Interactors
 
             if (section == null) return;
 
-
             unitOfWork.Sections.Remove(section);
             contentInteractor.RemoveLessonContent(section.LessonId, section.Id, section.FileName);
+            await UpdateSectionOrders(section.LessonId, section.Order);
         }
        
         public async Task RemoveLessonSectionsAsyncNoResponse(int lessonId)
@@ -242,13 +350,13 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task UpdateSectionOrders(int lessonId)
+        public async Task UpdateSectionOrders(int lessonId, int order = 0)
         {
             var lessonSections = await unitOfWork.Sections.Where(section => section.LessonId == lessonId).ToListAsync();
 
-            for (int i = 0; i < lessonSections.Count; i++)
+            for (int i = order; i < lessonSections.Count; i++)
             {
-                lessonSections[i].Order++;
+                lessonSections[i].Order = i + 1;
                 unitOfWork.Sections.Update(lessonSections[i]);
             }
         }

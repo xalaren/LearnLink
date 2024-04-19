@@ -62,13 +62,16 @@ namespace LearnLink.Application.Mappers
 
         public static Section Assign(this Section sectionEntity, SectionDto sectionDto)
         {
-            sectionEntity.Title = sectionDto.Title ?? sectionEntity.Title;
-            sectionEntity.Order = sectionDto.Order;
+            sectionEntity.Title = sectionDto.Title;
             sectionEntity.IsText = sectionDto.ContentDto.IsText;
             sectionEntity.IsCodeBlock = sectionDto.ContentDto.IsCodeBlock;
             sectionEntity.IsFile = sectionDto.ContentDto.IsFile;
             sectionEntity.Text = sectionDto.ContentDto.Text;
-            sectionEntity.FileName = sectionDto.ContentDto.FileName;
+
+            if(sectionDto.ContentDto.IsFile && sectionDto.ContentDto.FormFile != null)
+            {
+                sectionEntity.FileName = sectionDto.ContentDto.FormFile.FileName;
+            }
 
             return sectionEntity;
         }

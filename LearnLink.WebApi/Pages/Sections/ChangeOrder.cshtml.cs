@@ -21,7 +21,7 @@ namespace LearnLink.WebApi.Pages.Sections
             {
                 if (lessonId == 0 || order == 0) return;
 
-                var result = await SectionInteractor.GetSectionByLessonAndOrder(lessonId, order);
+                var result = await SectionInteractor.GetSectionByLessonAndOrderAsync(lessonId, order);
 
                 if(result.Success && result.Value != null)
                 {
