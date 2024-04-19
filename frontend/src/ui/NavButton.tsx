@@ -8,7 +8,7 @@ interface INavButtonProps {
 
 export function NavButton({ link, children, className }: INavButtonProps) {
     const { toNext } = useHistoryNavigation();
-    const classes = className || 'white-tp-button';
+    const classes = className || 'button-white-tp';
 
     return (
         <button className={classes} onClick={() => toNext(link)}>{children}</button>

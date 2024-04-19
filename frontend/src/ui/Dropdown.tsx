@@ -6,9 +6,10 @@ interface IDropdownProps {
     children: React.ReactNode;
     content: React.ReactNode;
     itemStyles?: CSSProperties;
+    className?: string;
 }
 
-export function Dropdown({ onDeselect, active, children, content, itemStyles }: IDropdownProps) {
+export function Dropdown({ onDeselect, active, children, content, itemStyles, className }: IDropdownProps) {
     useEffect(() => {
         const closeDropdown = (event: MouseEvent) => {
             const target = event.target as HTMLElement;
@@ -27,12 +28,12 @@ export function Dropdown({ onDeselect, active, children, content, itemStyles }: 
 
 
     return (
-        <div className="dropdown">
+        <div className={"dropdown" + " " + className}>
             {children}
             {active &&
-                <ul className="dropdown__items" style={itemStyles}>
+                <div className="dropdown__items" style={itemStyles}>
                     {content}
-                </ul>
+                </div>
             }
         </div >
     )

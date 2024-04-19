@@ -3,16 +3,16 @@ import { Dropdown } from "../ui/Dropdown";
 import DropdownHead from "../ui/DropdownHead";
 import { DropdownContext } from "../contexts/DropdownContext";
 
-interface IDropdownButtonProps {
+interface IHeaderDropdownProps {
     title: string,
     children: React.ReactNode,
     itemStyles?: CSSProperties;
 }
 
-export function DropdownButton({ title, children, itemStyles }: IDropdownButtonProps) {
+export function HeaderDropdown({ title, children, itemStyles }: IHeaderDropdownProps) {
     const { active, toggle, deselect } = useContext(DropdownContext);
     return (
-        <Dropdown active={active} onDeselect={deselect} itemStyles={itemStyles} content={children}>
+        <Dropdown active={active} onDeselect={deselect} itemStyles={itemStyles} content={children} className="header__dropdown">
             <DropdownHead onClick={toggle}>
                 <div className="dropdown-button__head">
                     <p className="dropdown__title">

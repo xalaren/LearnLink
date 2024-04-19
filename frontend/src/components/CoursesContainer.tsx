@@ -12,10 +12,12 @@ export function CoursesContainer({ courses }: ICoursesContainerProps) {
     const { toNext } = useHistoryNavigation();
 
     return (
-        <section className="course-container">
-            {anyCourses && courses.map(course => <CourseItem course={course} key={course.id} onClick={() => {
-                toNext(Paths.courseViewPath + '/' + course.id);
-            }} />)}
+        <section className="courses">
+            {anyCourses && courses.map(course =>
+                <CourseItem className="courses__course-item" course={course} key={course.id} onClick={() => {
+                    toNext(Paths.courseViewPath + '/' + course.id);
+                }} />
+            )}
             {!anyCourses && <p>На данный момент курсы отсутствуют...</p>}
         </section>);
 }

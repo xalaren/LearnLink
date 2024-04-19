@@ -8,8 +8,6 @@
           DateTime? CreationDate = null,
           int SubscribersCount = 0,
           bool IsPublic = false,
-          bool IsUnavailable = false,
-          int? CompletionProgress = null,
-          bool? Competed = null
+          bool IsUnavailable = false
         );
 }

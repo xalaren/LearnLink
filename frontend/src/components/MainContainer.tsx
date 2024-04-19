@@ -2,15 +2,14 @@ interface IMainContainerProps {
     title?: string;
     children?: React.ReactNode;
     styles?: React.CSSProperties;
+    className?: string;
 }
 
-export function MainContainer({ title, children, styles }: IMainContainerProps) {
+export function MainContainer({ title, children, styles, className = "" }: IMainContainerProps) {
     return (
-        <main className="main container" style={styles}>
-            <div className="inner-container">
-                {title && <h2 className="main__title">{title}</h2>}
-                {children}
-            </div>
+        <main className={"main container common-page-wrapper" + className} style={styles}>
+            <h3>{title}</h3>
+            {children}
         </main>
     )
 }

@@ -342,10 +342,14 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                var coursesQuery = unitOfWork.Courses
-                                 .AsNoTracking()
-                                 .Where(course => course.Title.ToLower().Contains(searchTitle.ToLower()))
-                                 .OrderByDescending(course => course.CreationDate);
+                var coursesQuery = unitOfWork.Courses.AsNoTracking();
+
+                if (!string.IsNullOrWhiteSpace(searchTitle))
+                {
+                    coursesQuery = coursesQuery.Where(course => course.Title.ToLower().Contains(searchTitle.ToLower()));
+                };
+
+                coursesQuery = coursesQuery.OrderByDescending(course => course.CreationDate);
 
                 var total = await coursesQuery.CountAsync();
                 var courses = await coursesQuery
@@ -461,7 +465,7 @@ namespace LearnLink.Application.Interactors
             {
                 var viewPermission = await permissionService.GetPermissionAsync(userId: userId, courseId: courseId, toView: true);
 
-                if(!viewPermission)
+                if (!viewPermission)
                 {
                     throw new AccessLevelException("Доступ отклонен");
                 }
@@ -511,18 +515,18 @@ namespace LearnLink.Application.Interactors
                     Value = courseUserDtos
                 };
             }
-            catch(CustomException exception)
+            catch (CustomException exception)
             {
-                return new ()
+                return new()
                 {
                     Success = false,
                     Message = exception.Message,
                     StatusCode = exception.StatusCode
                 };
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
-                return new ()
+                return new()
                 {
                     Success = false,
                     Message = "Не удалось получить подписчиков курса",
@@ -661,7 +665,7 @@ namespace LearnLink.Application.Interactors
             {
                 var removePermission = await permissionService.GetPermissionAsync(userId: userId, courseId: courseId, toRemove: true);
 
-                if(!removePermission)
+                if (!removePermission)
                 {
                     throw new AccessLevelException("Доступ отклонен");
                 }
@@ -831,7 +835,7 @@ namespace LearnLink.Application.Interactors
                 .Where(courseModule => courseModule.CourseId == courseId)
                 .ToListAsync();
 
-            foreach(var module in modules)
+            foreach (var module in modules)
             {
                 await moduleInteractor.RemoveModuleAsyncNoResponse(module.ModuleId, false);
             }

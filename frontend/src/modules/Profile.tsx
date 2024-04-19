@@ -1,4 +1,3 @@
-import profileImage from "../assets/img/profile.svg";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
 import { Paths } from "../models/paths";
 import { useEffect, useState } from "react";

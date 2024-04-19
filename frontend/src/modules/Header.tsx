@@ -1,6 +1,6 @@
 import { HeaderNavButtons } from "../components/HeaderNavButtons";
 import { useAppSelector, useAppDispatch } from "../hooks/redux";
-import { DropdownButton } from "../components/DropdownButton";
+import { HeaderDropdown } from "../components/HeaderDropdown";
 import { logout } from "../store/actions/authActionCreators";
 import { ViewTypes } from "../models/enums";
 import { fetchUser } from "../store/actions/userActionCreators";
@@ -18,10 +18,10 @@ export function Header() {
 
     return (
         <header className="header">
-            <div className="container">
-                <section className="header__logo" onClick={() => toNext(Paths.homePath)}>
-                    <img className="main-logo" src={logo} alt="" />
-                    <h1 className="header__title">Learn Link</h1>
+            <div className="header__container container">
+                <section className="header__logo logo-pic" onClick={() => toNext(Paths.homePath)}>
+                    <img className="logo-pic__img" src={logo} alt="Learn Link" />
+                    <h1 className="logo-pic__title">Learn Link</h1>
                 </section>
 
 
@@ -39,7 +39,7 @@ export function Header() {
 
                 {isAuthenticated &&
                     <DropdownState>
-                        <DropdownButton title={nickname} itemStyles={{ width: '150%' }}>
+                        <HeaderDropdown title={nickname}>
                             <DropdownItem title="Профиль"
                                 className="icon-user"
                                 onClick={() => toNext(Paths.profilePath)}
@@ -56,7 +56,7 @@ export function Header() {
                                     toNext(Paths.homePath);
                                 }}
                             />
-                        </DropdownButton>
+                        </HeaderDropdown>
                     </DropdownState>
                 }
             </div>

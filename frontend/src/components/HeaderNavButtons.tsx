@@ -8,9 +8,11 @@ export function HeaderNavButtons({ links }: IHeaderNavButtonsProps) {
 
     return (
         <nav className="header__nav">
-            {
-                links.map(item => <NavButton link={item.path} key={links.indexOf(item)}>{item.title}</NavButton>)
-            }
-        </nav>
+            <div className="header__buttons">
+                {
+                    links.map(item => <NavButton link={item.path} key={links.indexOf(item)}>{item.title}</NavButton>)
+                }
+            </div>
+        </nav >
     );
 }
