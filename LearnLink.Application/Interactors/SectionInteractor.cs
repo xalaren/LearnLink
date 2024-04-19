@@ -269,9 +269,9 @@ namespace LearnLink.Application.Interactors
 
             if (section == null) return;
 
+            await UpdateSectionOrders(section.LessonId, section.Order);
             unitOfWork.Sections.Remove(section);
             contentInteractor.RemoveLessonContent(section.LessonId, section.Id, section.FileName);
-            await UpdateSectionOrders(section.LessonId, section.Order);
         }
        
         public async Task RemoveLessonSectionsAsyncNoResponse(int lessonId)
@@ -356,7 +356,7 @@ namespace LearnLink.Application.Interactors
 
             for (int i = order; i < lessonSections.Count; i++)
             {
-                lessonSections[i].Order = i + 1;
+                lessonSections[i].Order = i;
                 unitOfWork.Sections.Update(lessonSections[i]);
             }
         }

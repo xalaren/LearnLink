@@ -1,0 +1,37 @@
+﻿@page
+@model LearnLink.WebApi.Pages.Sections.DeleteModel
+@{
+    ViewData["Title"] = "Delete section";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('Sections/SectionsActionsPage')">
+        Sections
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('Sections/Delete')">
+        Delete
+    </h2>
+</div>
+
+<form class="form" method="post">
+    <div class="form-input">
+        <p class="form-input__label">Section Id</p>
+        <div class="line-container">
+            <input type="number" name="sectionId" placeholder="Section Id..." min="0" class="input" />
+            <button class="primary-button">Remove</button>
+        </div>
+    </div>
+</form>
+
+@{
+    if (Model.QueryResult != null)
+    {
+        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+        <div class="response-container" id="register-response">
+            <h3>Response:</h3>
+            <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+            <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+            <p>Message: @Model.QueryResult.Message</p>
+        </div>
+    }
+}
