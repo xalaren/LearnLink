@@ -98,7 +98,7 @@ namespace LearnLink.WebApi.Controllers
 
         [AllowAnonymous]
         [HttpGet("find/public")]
-        public async Task<Response<DataPage<CourseDto[]>>> FindPublicCourses(string title, int page, int size)
+        public async Task<Response<DataPage<CourseDto[]>>> FindPublicCourses(string? title, int page, int size)
         {
             return await courseInteractor.FindCoursesByTitle(title, new DataPageHeader(page, size));
         }
@@ -180,7 +180,7 @@ namespace LearnLink.WebApi.Controllers
 
             if (!verifyResponse.Success) return verifyResponse;
 
-            return await courseInteractor.RemoveCourseAsync(userId,courseId);
+            return await courseInteractor.RemoveCourseAsync(userId, courseId);
         }
     }
 }

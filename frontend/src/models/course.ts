@@ -2,7 +2,7 @@ export class Course {
     id: number;
     title: string;
     description?: string;
-    creationDate: Date;
+    creationDate: string;
     subscribersCount: number;
     isPublic: boolean;
     isUnavailable: boolean;
@@ -14,7 +14,7 @@ export class Course {
         isUnavailable: boolean,
         description?: string,
         subscribersCount: number = 0,
-        creationDate: Date = new Date()
+        creationDate: string = '',
     ) {
         this.id = id;
         this.title = title;

@@ -186,10 +186,12 @@ namespace LearnLink.Application.Interactors
             await unitOfWork.CourseCompletions.AddAsync(courseCompletion);
         }
 
-        public async Task CreateModuleCompletion(int userId, int moduleId)
+        public async Task CreateModuleCompletion(int userId, int courseId, int moduleId)
         {
             User? user = await unitOfWork.Users.FindAsync(userId) ?? throw new NotFoundException("Пользователь не найден");
+            Course? course = await unitOfWork.Courses.FindAsync(courseId) ?? throw new NotFoundException("Курс не найден");
             Module? module = await unitOfWork.Modules.FindAsync(moduleId) ?? throw new NotFoundException("Модуль не найден");
+
 
             ModuleCompletion? moduleCompletion = await unitOfWork.ModuleCompletions
                 .AsNoTracking()
@@ -201,6 +203,7 @@ namespace LearnLink.Application.Interactors
             {
                 User = user,
                 Module = module,
+                Course = course,
                 Completed = false,
                 CompletionProgress = 0,
             };
@@ -208,9 +211,10 @@ namespace LearnLink.Application.Interactors
             await unitOfWork.ModuleCompletions.AddAsync(moduleCompletion);
         }
 
-        public async Task CreateLessonCompletion(int userId, int lessonId)
+        public async Task CreateLessonCompletion(int userId, int moduleId, int lessonId)
         {
             User? user = await unitOfWork.Users.FindAsync(userId) ?? throw new NotFoundException("Пользователь не найден");
+            Module? module = await unitOfWork.Modules.FindAsync(moduleId) ?? throw new NotFoundException("Модуль не найден");
             Lesson? lesson = await unitOfWork.Lessons.FindAsync(lessonId) ?? throw new NotFoundException("Урок не найден");
 
             LessonCompletion? lessonCompletion = await unitOfWork.LessonCompletions
@@ -222,6 +226,7 @@ namespace LearnLink.Application.Interactors
             lessonCompletion = new LessonCompletion()
             {
                 User = user,
+                Module = module,
                 Lesson = lesson,
                 Completed = false,
                 CompletionProgress = 0

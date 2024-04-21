@@ -5,7 +5,7 @@
           int Id,
           string Title,
           string? Description = null,
-          DateTime? CreationDate = null,
+          string? CreationDate = null,
           int SubscribersCount = 0,
           bool IsPublic = false,
           bool IsUnavailable = false

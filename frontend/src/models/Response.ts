@@ -1,4 +1,5 @@
 export interface IVoidResponse {
+    statusCode: number;
     success: boolean;
     message?: string;
     innerErrorMessages?: string[];

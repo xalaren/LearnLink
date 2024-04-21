@@ -338,7 +338,7 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task<Response<DataPage<CourseDto[]>>> FindCoursesByTitle(string searchTitle, DataPageHeader pageHeader)
+        public async Task<Response<DataPage<CourseDto[]>>> FindCoursesByTitle(string? searchTitle, DataPageHeader pageHeader)
         {
             try
             {

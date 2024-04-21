@@ -524,26 +524,22 @@ h3 {
 .button-violet-light, .button-violet-light-rounded {
   background-color: #f6f4ff;
   color: #8C74FF;
-  outline: solid 4px transparent;
   transition: 0.4s ease-in-out;
 }
 .button-violet-light-selected {
   background-color: #8C74FF;
   color: #fff;
-  box-shadow: 0px 0px 20px 0px rgba(140, 116, 255, 0.5);
 }
 @media (hover: hover) {
   .button-violet-light:hover, .button-violet-light-rounded:hover {
     background-color: #8C74FF;
     color: #fff;
-    outline: solid 4px rgba(140, 116, 255, 0.4);
   }
 }
 @media (hover: none) {
   .button-violet-light:active, .button-violet-light-rounded:active {
     background-color: #8C74FF;
     color: #fff;
-    outline: solid 4px rgba(140, 116, 255, 0.4);
   }
 }
 
@@ -1717,9 +1713,8 @@ h3 {
 }
 .modal__content {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
   gap: 40px;
   width: 600px;
   padding: 40px;

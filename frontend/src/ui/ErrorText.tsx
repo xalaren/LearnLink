@@ -4,6 +4,6 @@ interface IErrorTextProps {
 
 export function ErrorText({ children }: IErrorTextProps) {
     return (
-        <p className="regular-red">{children}</p>
+        <p className="text-danger">{children}</p>
     );
 }

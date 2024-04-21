@@ -125,20 +125,17 @@ h3 {
     @extend .button-base;
     background-color: $veryLightViolet;
     color: $lightViolet;
-    outline: solid 4px transparent;
 
     transition: 0.4s ease-in-out;
 
     &-selected {
         background-color: $lightViolet;
         color: $white;
-        box-shadow: 0px 0px 20px 0px rgba($lightViolet, 0.5);
     }
 
     @include hover {
         background-color: $lightViolet;
         color: $white;
-        outline: solid 4px rgba($lightViolet, 0.4);
     }
 }
 

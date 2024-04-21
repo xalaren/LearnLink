@@ -119,13 +119,13 @@ namespace LearnLink.Application.Interactors
 
                     foreach (var courseModule in courseModules)
                     {
-                        await completionInteractor.CreateModuleCompletion(localUser.Id, courseModule.ModuleId);
+                        await completionInteractor.CreateModuleCompletion(localUser.Id, courseModule.CourseId, courseModule.ModuleId);
 
                         var moduleLessons = await unitOfWork.ModuleLessons.Where(moduleLesson => moduleLesson.ModuleId == courseModule.ModuleId).ToArrayAsync();
 
                         foreach (var moduleLesson in moduleLessons)
                         {
-                            await completionInteractor.CreateLessonCompletion(localUser.Id, moduleLesson.LessonId);
+                            await completionInteractor.CreateLessonCompletion(localUser.Id, moduleLesson.ModuleId, moduleLesson.LessonId);
                         }
                     }
                 }
@@ -217,13 +217,13 @@ namespace LearnLink.Application.Interactors
 
                 foreach (var courseModule in courseModules)
                 {
-                    await completionInteractor.CreateModuleCompletion(user.Id, courseModule.ModuleId);
+                    await completionInteractor.CreateModuleCompletion(user.Id, courseModule.CourseId, courseModule.ModuleId);
 
                     var moduleLessons = await unitOfWork.ModuleLessons.Where(moduleLesson => moduleLesson.ModuleId == courseModule.ModuleId).ToArrayAsync();
 
                     foreach(var moduleLesson in moduleLessons)
                     {
-                        await completionInteractor.CreateLessonCompletion(user.Id, moduleLesson.LessonId);
+                        await completionInteractor.CreateLessonCompletion(user.Id, moduleLesson.ModuleId, moduleLesson.LessonId);
                     }
                 }
 

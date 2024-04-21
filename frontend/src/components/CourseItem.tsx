@@ -14,7 +14,7 @@ function CourseItem({ course, onClick, className = "" }: ICourseItemProps) {
                     <p className="course-item__title">{course.title}</p>
                     <div className="course-item__categories">
                         <p>Дата создания: </p>
-                        <p className="linked-text">{course.creationDate.toLocaleDateString()} </p>
+                        <p className="linked-text">{course.creationDate.toString()} </p>
                     </div>
                 </div>
                 <div className="course-item__additional">

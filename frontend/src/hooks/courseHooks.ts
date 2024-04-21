@@ -4,24 +4,25 @@ import { AxiosError } from "axios";
 import { IValueResponse, IVoidResponse } from "../models/response";
 import { COURSE_ENDPOINTS_URL } from "../models/constants";
 import axiosInstance from "../axios_config/axiosConfig";
+import { ValueDataPage } from "../models/dataPage";
 
 export function usePublicCourses() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [courses, setCourses] = useState<Course[]>();
 
-    const publicCoursesQuery = async () => {
+    const publicCoursesQuery = async (searchText: string, page: number, size: number = 6) => {
         try {
             setLoading(true);
 
-            const response = (await axiosInstance.get<IValueResponse<Course[]>>(`${COURSE_ENDPOINTS_URL}get-public?page=1&size=4`));
+            const response = (await axiosInstance.get<IValueResponse<ValueDataPage<Course[]>>>(`${COURSE_ENDPOINTS_URL}find/public?title=${searchText}&page=${page}&size=${size}`));
 
             if (!response.data.success) {
                 throw new AxiosError(response.data.message!);
             }
 
             setLoading(false);
-            setCourses(response.data.value);
+
+            return response.data.value;
         }
         catch (err: unknown) {
             setLoading(false);
@@ -34,7 +35,7 @@ export function usePublicCourses() {
         setLoading(false);
     }
 
-    return { publicCoursesQuery, courses, loading, error, resetValues };
+    return { publicCoursesQuery, loading, error, resetValues };
 }
 
 export function useCreatedCourses() {
