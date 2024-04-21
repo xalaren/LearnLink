@@ -1,4 +1,4 @@
-import { HeaderNavButtons } from "../components/HeaderNavButtons";
+import { HeaderButtons, HeaderNavButtons } from "../components/HeaderNavButtons";
 import { useAppSelector, useAppDispatch } from "../hooks/redux";
 import { HeaderDropdown } from "../components/HeaderDropdown";
 import { logout } from "../store/actions/authActionCreators";
@@ -24,41 +24,41 @@ export function Header() {
                     <h1 className="logo-pic__title">Learn Link</h1>
                 </section>
 
+                <nav className="header__nav">
+                    {!user && <HeaderButtons links={[
+                        {
+                            path: Paths.loginPath,
+                            title: 'Войти',
+                        },
+                        {
+                            path: Paths.registerPath,
+                            title: 'Регистрация',
+                        }
+                    ]} />}
 
-
-                {!user && <HeaderNavButtons links={[
-                    {
-                        path: Paths.loginPath,
-                        title: 'Войти',
-                    },
-                    {
-                        path: Paths.registerPath,
-                        title: 'Регистрация',
+                    {user &&
+                        <DropdownState>
+                            <HeaderDropdown title={user.nickname} avatarUrl={user.avatarUrl}>
+                                <DropdownItem title="Профиль"
+                                    className="icon icon-user"
+                                    onClick={() => toNext(Paths.profilePath)}
+                                />
+                                <DropdownItem title="Мои курсы"
+                                    className="icon icon-star"
+                                    onClick={() => toNext(`${Paths.userCoursesPath}/${ViewTypes.created}`)}
+                                />
+                                <DropdownItem title="Выйти"
+                                    className="icon icon-power"
+                                    onClick={() => {
+                                        dispatch(logout());
+                                        dispatch(fetchUser());
+                                        toNext(Paths.homePath);
+                                    }}
+                                />
+                            </HeaderDropdown>
+                        </DropdownState>
                     }
-                ]} />}
-
-                {user &&
-                    <DropdownState>
-                        <HeaderDropdown title={user.nickname} avatarUrl={user.avatarUrl}>
-                            <DropdownItem title="Профиль"
-                                className="icon icon-user"
-                                onClick={() => toNext(Paths.profilePath)}
-                            />
-                            <DropdownItem title="Мои курсы"
-                                className="icon icon-star"
-                                onClick={() => toNext(`${Paths.userCoursesPath}/${ViewTypes.created}`)}
-                            />
-                            <DropdownItem title="Выйти"
-                                className="icon icon-power"
-                                onClick={() => {
-                                    dispatch(logout());
-                                    dispatch(fetchUser());
-                                    toNext(Paths.homePath);
-                                }}
-                            />
-                        </HeaderDropdown>
-                    </DropdownState>
-                }
+                </nav>
             </div>
         </header >
     )

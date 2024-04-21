@@ -1,18 +1,16 @@
 import { ILinkData } from "../models/interfaces";
 import { NavButton } from "../ui/NavButton";
-interface IHeaderNavButtonsProps {
+interface IHeaderButtonsProps {
     links: ILinkData[];
 }
 
-export function HeaderNavButtons({ links }: IHeaderNavButtonsProps) {
+export function HeaderButtons({ links }: IHeaderButtonsProps) {
 
     return (
-        <nav className="header__nav">
-            <div className="header__buttons">
-                {
-                    links.map(item => <NavButton link={item.path} key={links.indexOf(item)}>{item.title}</NavButton>)
-                }
-            </div>
-        </nav >
+        <div className="header__buttons">
+            {
+                links.map(item => <NavButton link={item.path} key={links.indexOf(item)}>{item.title}</NavButton>)
+            }
+        </div>
     );
 }

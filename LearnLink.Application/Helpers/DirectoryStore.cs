@@ -8,6 +8,7 @@
         public string ContentStorageDirectory { get; } = null!;
         public string LessonsStorageDirectory { get; } = null!;
 
+        public const string API_NAME = "api";
         public const string STORAGE_DIRNAME = "Storage";
         public const string USERS_DIRNAME = "Users";
         public const string IMAGES_DIRNAME = "Images";
@@ -25,17 +26,17 @@
 
         public static string GetRelativeDirectoryUrlToUserImages(int userId)
         {
-            return $"{STORAGE_DIRNAME}/{USERS_DIRNAME}/{userId}/{IMAGES_DIRNAME}/";
+            return $"{API_NAME}/{STORAGE_DIRNAME}/{USERS_DIRNAME}/{userId}/{IMAGES_DIRNAME}/";
         }
 
         public static string GetRelativeDirectoryUrlToLessonContent(int lessonId, int sectionId)
         {
-            return $"{STORAGE_DIRNAME}/{LESSONS_DIRNAME}/{lessonId}/{CONTENT_DIRNAME}/{sectionId}/";
+            return $"{API_NAME}/{STORAGE_DIRNAME}/{LESSONS_DIRNAME}/{lessonId}/{CONTENT_DIRNAME}/{sectionId}/";
         }
 
         public static string GetRelativeDirectoryUrlToContent(int contentId)
         {
-            return $"{STORAGE_DIRNAME}/{CONTENT_DIRNAME}/{contentId}/";
+            return $"{API_NAME}/{STORAGE_DIRNAME}/{CONTENT_DIRNAME}/{contentId}/";
         }
 
         public string GetDirectoryPathToUserImages(int userId)
@@ -47,7 +48,7 @@
         {
             return Path.Combine(LessonsStorageDirectory, lessonId.ToString(), CONTENT_DIRNAME, sectionId.ToString());
         }
-        
+
         public string GetDirectoryPathToContent(int contentId)
         {
             return Path.Combine(ContentStorageDirectory, contentId.ToString());
