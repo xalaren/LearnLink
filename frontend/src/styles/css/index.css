@@ -878,10 +878,11 @@ h3 {
   transition: 0.3s ease-in-out;
 }
 .header .dropdown__head .dropdown__profile-image {
-  min-width: 40px;
-  min-height: 40px;
-  width: 40px;
-  height: 40px;
+  min-width: 42px;
+  width: 42px;
+  height: 42px;
+  border-radius: 21px;
+  border: solid 2px #fff;
 }
 .header .dropdown__head, .header .dropdown__head > * {
   color: #fff;

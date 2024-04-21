@@ -6,30 +6,34 @@ interface IInputProps {
     width?: number,
     errorMessage?: string,
     placeholder?: string,
+    label?: string,
     value?: string,
     className?: string,
     styles?: React.CSSProperties,
     onChange: (event: React.ChangeEvent) => void
 }
 
-export function Input({ type, name, errorMessage, onChange, value, placeholder, className, styles }: IInputProps) {
+export function Input({ type, name, errorMessage, onChange, value, placeholder, label, className = '', styles }: IInputProps) {
 
     return (
-        <li className="form-input">
+        <div className={"form-input " + className}>
+            {label && !errorMessage &&
+                <p className="form-input__label">{label}</p>
+            }
             {errorMessage &&
-                <div className="regular-red required">{errorMessage}</div>
+                <p className="form-input__error required">{errorMessage}</p>
             }
             {type === InputType.rich ?
                 <textarea
-                    name="courseDescription"
+                    name={name}
                     onChange={onChange}
-                    placeholder="Введите описание курса (Необязательно)..."
+                    placeholder={placeholder}
                     style={styles}
-                    className="rich-text-violet"
+                    className={`form-input__input ${errorMessage ? 'input-danger' : 'input-gray'}`}
                     value={value}
                 /> :
                 <input
-                    className={`${errorMessage ? 'red-input' : 'violet-input'} ${className}`}
+                    className={`form-input__input ${errorMessage ? 'input-danger' : 'input-gray'}`}
                     type={type} name={name}
                     placeholder={placeholder}
                     style={styles}
@@ -37,6 +41,6 @@ export function Input({ type, name, errorMessage, onChange, value, placeholder, 
                     value={value}
                 />
             }
-        </li>
+        </div>
     );
 }

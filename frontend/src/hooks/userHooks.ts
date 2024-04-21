@@ -8,9 +8,8 @@ import axiosInstance from "../axios_config/axiosConfig";
 
 export function useLogin() {
     const [error, setError] = useState('');
-    const [authModel, setAuthModel] = useState<IAuthModel>();
 
-    const loginQuery = async (nickname: string, password: string) => {
+    const loginQuery = async (nickname: string, password: string): Promise<IAuthModel | undefined> => {
         try {
             const response = await axiosInstance.post<IValueResponse<string>>(`${USER_ENDPOINTS_URL}login?nickname=${nickname}&password=${password}`);
 
@@ -18,12 +17,10 @@ export function useLogin() {
                 throw new AxiosError(response.data.message);
             }
 
-            setAuthModel({
+            return ({
                 accessToken: response.data.value,
                 nickname: nickname,
-            });
-
-            setError('');
+            })
         }
         catch (err: unknown) {
             setError((err as AxiosError).message);
@@ -34,7 +31,7 @@ export function useLogin() {
         setError('');
     }
 
-    return { loginQuery, error, resetError, authModel };
+    return { loginQuery, error, resetError };
 }
 
 export function useRegister() {

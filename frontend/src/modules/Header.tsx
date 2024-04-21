@@ -13,7 +13,7 @@ import { DropdownState } from "../contexts/DropdownContext";
 
 export function Header() {
     const { toNext } = useHistoryNavigation();
-    const { isAuthenticated, nickname } = useAppSelector(state => state.authReducer);
+    const { user } = useAppSelector(state => state.userReducer);
     const dispatch = useAppDispatch();
 
     return (
@@ -26,7 +26,7 @@ export function Header() {
 
 
 
-                {!isAuthenticated && <HeaderNavButtons links={[
+                {!user && <HeaderNavButtons links={[
                     {
                         path: Paths.loginPath,
                         title: 'Войти',
@@ -37,19 +37,19 @@ export function Header() {
                     }
                 ]} />}
 
-                {isAuthenticated &&
+                {user &&
                     <DropdownState>
-                        <HeaderDropdown title={nickname}>
+                        <HeaderDropdown title={user.nickname} avatarUrl={user.avatarUrl}>
                             <DropdownItem title="Профиль"
-                                className="icon-user"
+                                className="icon icon-user"
                                 onClick={() => toNext(Paths.profilePath)}
                             />
                             <DropdownItem title="Мои курсы"
-                                className="icon-star"
+                                className="icon icon-star"
                                 onClick={() => toNext(`${Paths.userCoursesPath}/${ViewTypes.created}`)}
                             />
                             <DropdownItem title="Выйти"
-                                className="icon-power"
+                                className="icon icon-power"
                                 onClick={() => {
                                     dispatch(logout());
                                     dispatch(fetchUser());

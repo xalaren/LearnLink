@@ -7,7 +7,7 @@ interface IMainContainerProps {
 
 export function MainContainer({ title, children, styles, className = "" }: IMainContainerProps) {
     return (
-        <main className={"main container common-page-wrapper" + className} style={styles}>
+        <main className={"main container common-page-wrapper " + className} style={styles}>
             <h3>{title}</h3>
             {children}
         </main>

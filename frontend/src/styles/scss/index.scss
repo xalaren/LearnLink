@@ -40,11 +40,9 @@
         transition: 0.3s ease-in-out;
 
         .dropdown__profile-image {
-            min-width: 40px;
-            min-height: 40px;
-
-            width: 40px;
-            height: 40px;
+            @include static-size(42px);
+            border-radius: 21px;
+            border: solid 2px $white;
         }
 
         &,

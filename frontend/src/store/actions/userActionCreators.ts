@@ -18,7 +18,7 @@ export const fetchUser = () => {
         }
 
         try {
-            const response = await axiosInstance.get<IValueResponse<User>>(`${USER_ENDPOINTS_URL}get`, {
+            const response = await axiosInstance.get<IValueResponse<User>>(`${USER_ENDPOINTS_URL}get/auth`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

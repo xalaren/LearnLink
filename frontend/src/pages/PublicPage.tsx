@@ -46,7 +46,7 @@ export function PublicPage() {
 
     return (
         <MainContainer title="Общедоступные курсы">
-            <SearchForm onChange={onChange} onSubmit={onSubmit} />
+            <SearchForm placeholder="Название курсов..." onChange={onChange} onSubmit={onSubmit} />
 
             <Paginate currentPage={page} pageCount={pageCount} setPage={setPage} onPageChange={fetchCourses} />
 
