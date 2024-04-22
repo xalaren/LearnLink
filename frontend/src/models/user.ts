@@ -6,7 +6,7 @@ export class User {
     lastname: string;
     name: string;
     role?: Role;
-    avatarFormFile?: any;
+    avatarFormFile?: File;
     avatarFileName?: string;
     avatarUrl?: string;
 
@@ -15,9 +15,9 @@ export class User {
         nickname: string,
         lastname: string,
         name: string,
-        role?: Role,
         avatarFormFile?: any,
         avatarFileName?: string,
+        role?: Role,
         id = 0) {
         this.id = id;
         this.nickname = nickname;

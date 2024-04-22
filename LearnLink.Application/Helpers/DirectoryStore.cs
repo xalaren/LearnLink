@@ -41,7 +41,7 @@
 
         public string GetDirectoryPathToUserImages(int userId)
         {
-            return Path.Combine(UsersStorageDirectory, userId.ToString());
+            return Path.Combine(UsersStorageDirectory, userId.ToString(), IMAGES_DIRNAME);
         }
 
         public string GetDirectoryPathToLessonContents(int lessonId, int sectionId)

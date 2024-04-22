@@ -441,10 +441,11 @@
 }
 
 .image-uploader {
-    width: min-content;
-
     &__label {
         cursor: pointer;
+        display: flex;
+        gap: 40px;
+        align-items: center;
     }
 
     &__input {
@@ -470,6 +471,12 @@
             color: $secondaryGray;
         }
     }
+}
+
+.avatar-image {
+    @include static-size(100px);
+    object-fit: cover;
+    border-radius: 50px;
 }
 
 .account-page {

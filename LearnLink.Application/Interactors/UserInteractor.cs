@@ -314,9 +314,10 @@ namespace LearnLink.Application.Interactors
                 if (searchString != null)
                 {
                     usersQuery = usersQuery.Where(user =>
-                            user.Nickname.Contains(searchString) ||
+                            user.Id != 1 &&
+                            (user.Nickname.Contains(searchString) ||
                             user.Lastname.Contains(searchString) ||
-                            user.Name.Contains(searchString)
+                            user.Name.Contains(searchString))
                     );
                 }
 
@@ -387,11 +388,10 @@ namespace LearnLink.Application.Interactors
                     throw new AccessLevelException("Невозможно удалить, пользователь является системным");
                 }
 
+                RemoveAvatar(user.Id, user.AvatarFileName);
                 unitOfWork.Users.Remove(user);
-
                 await unitOfWork.CommitAsync();
 
-                RemoveAvatar(user.Id, user.AvatarFileName);
 
                 return new()
                 {
@@ -610,13 +610,14 @@ namespace LearnLink.Application.Interactors
                 var directory = directoryStore.GetDirectoryPathToUserImages(userId);
                 var avatarPath = Path.Combine(directory, fileName);
 
-                if (!File.Exists(avatarPath) || !Directory.Exists(directory))
+                if(!Directory.Exists(directory) || !File.Exists(avatarPath))
                 {
                     return;
                 }
 
                 File.Delete(avatarPath);
                 Directory.Delete(directory);
+
             }
             catch (Exception)
             {

@@ -38,10 +38,16 @@ export function useRegister() {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
-    const registerQuery = async (nickname: string, password: string, lastname: string, name: string) => {
+    const registerQuery = async (nickname: string, password: string, lastname: string, name: string, avatar?: File) => {
         try {
-            const user = new User(nickname, lastname, name);
-            const response = await axiosInstance.post<IVoidResponse>(`${USER_ENDPOINTS_URL}register?password=${password}`, user);
+            const user = new User(nickname, lastname, name, avatar);
+            console.log(user);
+
+            const response = await axiosInstance.post<IVoidResponse>(`${USER_ENDPOINTS_URL}register?password=${password}`, user, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
 
             if (!response.data.success) {
                 throw new AxiosError(response.data.message);
