@@ -26,17 +26,17 @@
 
         public static string GetRelativeDirectoryUrlToUserImages(int userId)
         {
-            return $"{API_NAME}/{STORAGE_DIRNAME}/{USERS_DIRNAME}/{userId}/{IMAGES_DIRNAME}/";
+            return $"/{API_NAME}/{STORAGE_DIRNAME}/{USERS_DIRNAME}/{userId}/{IMAGES_DIRNAME}/";
         }
 
         public static string GetRelativeDirectoryUrlToLessonContent(int lessonId, int sectionId)
         {
-            return $"{API_NAME}/{STORAGE_DIRNAME}/{LESSONS_DIRNAME}/{lessonId}/{CONTENT_DIRNAME}/{sectionId}/";
+            return $"/{API_NAME}/{STORAGE_DIRNAME}/{LESSONS_DIRNAME}/{lessonId}/{CONTENT_DIRNAME}/{sectionId}/";
         }
 
         public static string GetRelativeDirectoryUrlToContent(int contentId)
         {
-            return $"{API_NAME}/{STORAGE_DIRNAME}/{CONTENT_DIRNAME}/{contentId}/";
+            return $"/{API_NAME}/{STORAGE_DIRNAME}/{CONTENT_DIRNAME}/{contentId}/";
         }
 
         public string GetDirectoryPathToUserImages(int userId)

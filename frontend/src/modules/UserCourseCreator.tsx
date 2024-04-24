@@ -6,7 +6,7 @@ import { InputType, NotificationType, ViewTypes } from "../models/enums";
 import { validate } from "../helpers/validation";
 import Checkbox from "../ui/Checkbox";
 import PopupLoader from "../ui/PopupLoader";
-import Notification from "../ui/Notification";
+import Notification from "../ui/PopupNotification";
 import { useCreateCourse } from "../hooks/courseHooks";
 import { useAppSelector } from "../hooks/redux";
 import SelectionPanel from "../ui/SelectionPanel";

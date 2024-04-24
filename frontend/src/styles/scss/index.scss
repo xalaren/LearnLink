@@ -40,9 +40,9 @@
         transition: 0.3s ease-in-out;
 
         .dropdown__profile-image {
-            @include static-size(42px);
-            border-radius: 21px;
-            border: solid 2px $white;
+            @include static-size(40px);
+            border-radius: 20px;
+            border: solid 3px rgba($white, 0.5);
         }
 
         &,
@@ -539,9 +539,13 @@
                 grid-area: nav;
             }
         }
+
+        .password-change-form {
+            max-width: 400px;
+        }
     }
 
-    .account-remove-form {
+    .indented {
         > *:not(:last-child) {
             margin-bottom: 40px;
         }
@@ -590,7 +594,6 @@
         &-selected {
             background-color: $lightViolet;
             color: $white;
-            box-shadow: 0px 0px 20px 0px rgba($lightViolet, 0.5);
         }
 
         &:not(&-selected) {
@@ -838,7 +841,10 @@
         background-color: $lightViolet;
     }
 }
-
+.checkbox-container {
+    display: flex;
+    gap: 20px;
+}
 .checkbox {
     $width: 30px;
     min-width: $width;
@@ -846,7 +852,7 @@
     width: $width;
     height: $width;
     border: solid 2px $lightViolet;
-    border-radius: 50%;
+    border-radius: 10px;
     position: relative;
     outline: 3px solid transparent;
 
@@ -1208,6 +1214,46 @@
         100% {
             transform: rotate(360deg);
         }
+    }
+}
+
+.notification {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 20;
+    box-sizing: content-box;
+    width: max-content;
+    background-color: $darkGray;
+    color: $white;
+    padding: 20px 40px;
+    border-radius: 5px;
+    animation: popup 2s ease-in-out;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+
+    @keyframes popup {
+        0% {
+            opacity: 0;
+        }
+
+        10% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 1;
+        }
+
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @media screen and (max-width: $sm) {
+        left: 50%;
+        transform: translateX(-50%);
     }
 }
 

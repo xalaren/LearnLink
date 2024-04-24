@@ -41,7 +41,7 @@ export function Header() {
                             <HeaderDropdown title={user.nickname} avatarUrl={user.avatarUrl}>
                                 <DropdownItem title="Профиль"
                                     className="icon icon-user"
-                                    onClick={() => toNext(Paths.profilePath)}
+                                    onClick={() => toNext(Paths.editProfileMainPath)}
                                 />
                                 <DropdownItem title="Мои курсы"
                                     className="icon icon-star"

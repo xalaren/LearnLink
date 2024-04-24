@@ -16,6 +16,7 @@ import ModulePage from "./pages/ModulePage";
 import { useAppDispatch, useAppSelector } from "./hooks/redux";
 import { useEffect } from "react";
 import { fetchUser } from "./store/actions/userActionCreators";
+import EditProfileMainModule from "./modules/EditProfileMainModule";
 
 
 function App() {
@@ -36,10 +37,10 @@ function App() {
                 <Route path={Paths.homePath} element={<PublicPage />}></Route>
                 <Route path={Paths.loginPath} element={<LoginPage />}></Route>
                 <Route path={Paths.registerPath} element={<RegisterPage />}></Route>
-                <Route path={Paths.profilePath} element={<ProfilePage />}></Route>
-                <Route path={Paths.userCoursesPath + '/:type'} element={<UserCoursesPage />}></Route>
+                <Route path={Paths.profilePath + '/edit/:action'} element={<ProfilePage />}></Route>
+                {/* <Route path={Paths.userCoursesPath + '/:type'} element={<UserCoursesPage />}></Route>
                 <Route path={Paths.editUserPath} element={<EditUserPage action={EditActions.editUser} />}></Route>
-                <Route path={Paths.editPasswordPath} element={<EditUserPage action={EditActions.editPassword} />}></Route>
+                <Route path={Paths.editPasswordPath} element={<EditUserPage action={EditActions.editPassword} />}></Route> */}
                 <Route path={Paths.courseViewFullPath} element={<CoursePage />}></Route>
                 <Route path={Paths.moduleViewFullPath} element={<ModulePage />}></Route>
                 <Route path="*" element={<InvalidPage />}></Route>

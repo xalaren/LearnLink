@@ -358,6 +358,11 @@ h3 {
     font-weight: 400;
 }
 
+.medium-text {
+    @extend .ui-text;
+    font-weight: 500;
+}
+
 .big-text {
     @extend .ui-text;
     font-size: $big-fz;
@@ -373,6 +378,30 @@ h3 {
 .text-danger {
     @extend .ui-text;
     color: $red;
+}
+
+.error-text {
+    @extend .text-danger;
+    $ml: 3px;
+    animation: shake 0.2s;
+
+    @keyframes shake {
+        0% {
+            transform: translateX($ml);
+        }
+
+        25% {
+            transform: translateX($ml * (-1));
+        }
+
+        50% {
+            transform: translateX($ml);
+        }
+
+        100% {
+            transform: translateX($ml * (-1));
+        }
+    }
 }
 
 .text-violet {

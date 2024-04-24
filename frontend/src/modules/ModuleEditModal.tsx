@@ -5,7 +5,7 @@ import { validate } from "../helpers/validation";
 import { Input } from "../ui/Input";
 import { InputType, NotificationType } from "../models/enums";
 import PopupLoader from "../ui/PopupLoader";
-import Notification from "../ui/Notification";
+import Notification from "../ui/PopupNotification";
 import { useAppSelector } from "../hooks/redux";
 import { Module } from "../models/module";
 import { useUpdateModule } from "../hooks/moduleHooks";

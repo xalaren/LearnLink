@@ -3,9 +3,10 @@ export enum InputType {
     password = 'password',
     rich = 'rich',
 }
-export enum EditActions {
-    editUser = 'editUser',
-    editPassword = 'editPassword',
+export enum ProfileEditActions {
+    main = 'main',
+    password = 'password',
+    delete = 'delete'
 }
 
 export enum ViewTypes {

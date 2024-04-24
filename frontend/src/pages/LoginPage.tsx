@@ -28,6 +28,13 @@ export function LoginPage() {
         if (isAuthenticated) toPrev();
     }, [isAuthenticated])
 
+    useEffect(() => {
+        if (error) {
+            setNickname('');
+            setPassword('');
+        }
+    }, [error])
+
 
     async function onSubmit(event: React.FormEvent) {
         event.preventDefault();
@@ -52,6 +59,7 @@ export function LoginPage() {
         if (authModel) {
             dispatch(loginSave(authModel.accessToken, authModel.nickname));
             dispatch(fetchUser());
+            toPrev();
         }
     }
 
@@ -83,6 +91,7 @@ export function LoginPage() {
                         errorMessage={nicknameError}
                         placeholder="Введите никнейм..."
                         label="Никнейм"
+                        value={nickname}
                         onChange={onChange}
                     />
 
@@ -93,6 +102,7 @@ export function LoginPage() {
                         errorMessage={passwordError}
                         placeholder="Введите пароль..."
                         label="Пароль"
+                        value={password}
                         onChange={onChange}
                     />
                 </div>

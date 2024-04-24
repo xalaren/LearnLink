@@ -13,8 +13,7 @@ namespace LearnLink.Application.Mappers
                 Id = userDto.Id,
                 Nickname = userDto.Nickname,
                 Lastname = userDto.Lastname,
-                Name = userDto.Name,
-                AvatarFileName = userDto.AvatarFileName,
+                Name = userDto.Name
             };
         }
 
@@ -28,7 +27,7 @@ namespace LearnLink.Application.Mappers
                 Name = userEntity.Name,
                 Role = userEntity.Role?.ToDto(),
                 AvatarFileName = userEntity.AvatarFileName,
-                AvatarUrl = userEntity.AvatarFileName != null ? 
+                AvatarUrl = userEntity.AvatarFileName != null ?
                     DirectoryStore.GetRelativeDirectoryUrlToUserImages(userEntity.Id) + userEntity.AvatarFileName : null
             };
         }
@@ -50,7 +49,11 @@ namespace LearnLink.Application.Mappers
                 user.Lastname = userDto.Lastname;
             }
 
-            user.AvatarFileName = userDto.AvatarFileName;
+            if (!string.IsNullOrWhiteSpace(userDto.AvatarFileName))
+            {
+                user.AvatarFileName = userDto.AvatarFileName;
+            }
+
 
             return user;
         }

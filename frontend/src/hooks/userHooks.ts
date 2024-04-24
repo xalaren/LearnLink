@@ -103,10 +103,12 @@ export function useUpdateUserData() {
     const [success, setSuccess] = useState('');
     const [token, setToken] = useState('');
 
+
     const updateUserDataQuery = async (user: User, accessToken: string) => {
         try {
-            const response = (await axiosInstance.post<IValueResponse<string>>(`${USER_ENDPOINTS_URL}update-user`, user, {
+            const response = (await axiosInstance.post<IValueResponse<string>>(`${USER_ENDPOINTS_URL}update/user`, user, {
                 headers: {
+                    'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${accessToken}`
                 }
             }));
@@ -116,8 +118,8 @@ export function useUpdateUserData() {
             }
 
 
-            setToken(response.data.value);
             setSuccess(response.data.message!);
+            setToken(response.data.value);
         }
         catch (err: unknown) {
             setError((err as AxiosError).message);
@@ -138,7 +140,8 @@ export function useUpdatePassword() {
 
     const updatePasswordQuery = async (userId: number, accessToken: string, oldPassword: string, newPassword: string,) => {
         try {
-            const response = (await axiosInstance.post<IVoidResponse>(`${USER_ENDPOINTS_URL}update-pass?userId=${userId}&oldPassword=${oldPassword}&newPassword=${newPassword}`, {}, {
+            const response = (await axiosInstance.post<IVoidResponse>(`${USER_ENDPOINTS_URL}update/pass?userId=${userId}&
+oldPassword=${oldPassword}&newPassword=${newPassword}`, {}, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }

@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using System.Security.Cryptography.Xml;
 using LearnLink.Application.Helpers;
 using LearnLink.Application.Mappers;
 using LearnLink.Application.Security;
@@ -119,8 +120,6 @@ namespace LearnLink.Application.Interactors
                     throw new ValidationException("Данный пользователь уже зарегистрирован в системе");
                 }
 
-
-                userDto.AvatarFileName = userDto.AvatarFormFile != null ? GenerateAvatarFileName(userDto.Nickname, userDto.AvatarFormFile.FileName) : null;
                 var user = userDto.ToEntity();
 
                 var role = await unitOfWork.Roles.FindAsync(roleId);
@@ -133,8 +132,21 @@ namespace LearnLink.Application.Interactors
 
                 user.Role = role!;
 
+                if (userDto.AvatarFormFile != null)
+                {
+                    user.AvatarFileName = GenerateAvatarFileName(user.Nickname, userDto.AvatarFormFile.FileName);
+                }
+
                 await unitOfWork.Users.AddAsync(user);
                 await unitOfWork.CommitAsync();
+
+                if (userDto.AvatarFormFile != null)
+                {
+                    using (var avatarStream = userDto.AvatarFormFile.OpenReadStream())
+                    {
+                        await SaveAvatarAsync(avatarStream, user);
+                    }
+                }
 
 
                 string salt = encryptionService.GetRandomString(EncryptionConstants.SALT_LENGTH);
@@ -149,14 +161,6 @@ namespace LearnLink.Application.Interactors
 
                 await unitOfWork.Credentials.AddAsync(userCredentials);
                 await unitOfWork.CommitAsync();
-
-                if (userDto.AvatarFormFile != null)
-                {
-                    using (var avatarStream = userDto.AvatarFormFile.OpenReadStream())
-                    {
-                        await SaveAvatarAsync(avatarStream, user);
-                    }
-                }
 
                 return new Response()
                 {
@@ -434,22 +438,26 @@ namespace LearnLink.Application.Interactors
 
                 unitOfWork.Users.Entry(user).Reference(x => x.Role).Load();
 
-                userDto.AvatarFileName = userDto.AvatarFormFile != null ? GenerateAvatarFileName(userDto.Nickname, userDto.AvatarFormFile.FileName) : null;
+                if (!string.IsNullOrWhiteSpace(user.AvatarFileName) && userDto.AvatarFormFile != null)
+                {
+                    RemoveAvatar(user.Id, user.AvatarFileName);
+                }
 
                 var updatedEntity = user.Assign(userDto);
+
+                if (userDto.AvatarFormFile != null)
+                {
+                    updatedEntity.AvatarFileName = GenerateAvatarFileName(updatedEntity.Nickname, userDto.AvatarFormFile.FileName);
+                    using (var avatarStream = userDto.AvatarFormFile.OpenReadStream())
+                    {
+                        await SaveAvatarAsync(avatarStream, updatedEntity);
+                    }
+                }
 
                 unitOfWork.Users.Update(updatedEntity);
                 await unitOfWork.CommitAsync();
 
                 var token = authenticationService.GetToken(updatedEntity.Nickname, updatedEntity.Role.Sign);
-
-                if (userDto.AvatarFormFile != null)
-                {
-                    using (var avatarStream = userDto.AvatarFormFile.OpenReadStream())
-                    {
-                        await SaveAvatarAsync(avatarStream, user);
-                    }
-                }
 
                 return new()
                 {
@@ -557,7 +565,7 @@ namespace LearnLink.Application.Interactors
             }
 
             var directory = directoryStore.GetDirectoryPathToUserImages(user.Id);
-            var avatarPath = Path.Combine(directory, DirectoryStore.IMAGES_DIRNAME, user.AvatarFileName);
+            var avatarPath = Path.Combine(directory, user.AvatarFileName);
 
             Directory.CreateDirectory(Path.GetDirectoryName(avatarPath)!);
 
@@ -610,7 +618,7 @@ namespace LearnLink.Application.Interactors
                 var directory = directoryStore.GetDirectoryPathToUserImages(userId);
                 var avatarPath = Path.Combine(directory, fileName);
 
-                if(!Directory.Exists(directory) || !File.Exists(avatarPath))
+                if (!Directory.Exists(directory) || !File.Exists(avatarPath))
                 {
                     return;
                 }
@@ -627,7 +635,13 @@ namespace LearnLink.Application.Interactors
 
         private string GenerateAvatarFileName(string username, string fileName)
         {
-            return $"{DateTime.Now.ToString("yy-mm-ss-ffff")}-{username}{Path.GetExtension(fileName)}";
+            DateTime now = DateTime.Now;
+            int day = now.Day;
+            int month = now.Month;
+            int year = now.Year;
+            int hour = now.Hour;
+            int minute = now.Minute;
+            return $"{day}-{month}-{year}-{hour}h-{minute}m-{username}{Path.GetExtension(fileName)}";
         }
     }
 }

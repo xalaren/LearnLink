@@ -7,7 +7,7 @@ import Checkbox from "../ui/Checkbox";
 import { Course } from "../models/course";
 import { useUpdateCourse } from "../hooks/courseHooks";
 import PopupLoader from "../ui/PopupLoader";
-import Notification from "../ui/Notification";
+import Notification from "../ui/PopupNotification";
 import { useAppSelector } from "../hooks/redux";
 
 interface ICourseEditModuleProps {

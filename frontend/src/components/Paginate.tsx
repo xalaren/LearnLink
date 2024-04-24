@@ -13,13 +13,13 @@ function Paginate({ currentPage, pageCount, setPage }: IPaginateProps) {
 
     return (
         <div className="pagination-form">
-            <button className="pagination-form__button button-violet-light icon-arrow-left-dotted" onClick={() => {
+            <button className="pagination-form__button button-violet-light icon-arrow-left" onClick={() => {
                 setPage(calculatePage(currentPage, pageCount, false));
             }}></button>
 
             <PaginateMiddleButtons currentPage={currentPage} pages={pages} setPage={setPage} />
 
-            <button className="pagination-form__button button-violet-light icon-arrow-right-dotted" onClick={() => {
+            <button className="pagination-form__button button-violet-light icon-arrow-right" onClick={() => {
                 setPage(calculatePage(currentPage, pageCount, true));
             }}></button>
         </div>
