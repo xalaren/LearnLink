@@ -12,17 +12,24 @@ function Paginate({ currentPage, pageCount, setPage }: IPaginateProps) {
     }
 
     return (
-        <div className="pagination-form">
-            <button className="pagination-form__button button-violet-light icon-arrow-left" onClick={() => {
-                setPage(calculatePage(currentPage, pageCount, false));
-            }}></button>
+        <>
 
-            <PaginateMiddleButtons currentPage={currentPage} pages={pages} setPage={setPage} />
+            {pageCount > 0 &&
+                <div className="pagination-form">
+                    <button className="pagination-form__button button-violet-light icon-arrow-left" onClick={() => {
+                        setPage(calculatePage(currentPage, pageCount, false));
+                    }}></button>
 
-            <button className="pagination-form__button button-violet-light icon-arrow-right" onClick={() => {
-                setPage(calculatePage(currentPage, pageCount, true));
-            }}></button>
-        </div>
+                    <PaginateMiddleButtons currentPage={currentPage} pages={pages} setPage={setPage} />
+
+                    <button className="pagination-form__button button-violet-light icon-arrow-right" onClick={() => {
+                        setPage(calculatePage(currentPage, pageCount, true));
+                    }}></button>
+                </div>
+
+            }
+        </>
+
     );
 }
 

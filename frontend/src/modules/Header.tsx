@@ -1,4 +1,4 @@
-import { HeaderButtons, HeaderNavButtons } from "../components/HeaderNavButtons";
+import { HeaderButtons } from "../components/HeaderNavButtons";
 import { useAppSelector, useAppDispatch } from "../hooks/redux";
 import { HeaderDropdown } from "../components/HeaderDropdown";
 import { logout } from "../store/actions/authActionCreators";
@@ -40,15 +40,15 @@ export function Header() {
                         <DropdownState>
                             <HeaderDropdown title={user.nickname} avatarUrl={user.avatarUrl}>
                                 <DropdownItem title="Профиль"
-                                    className="icon icon-user"
+                                    className="icon icon-accent icon-user"
                                     onClick={() => toNext(Paths.editProfileMainPath)}
                                 />
                                 <DropdownItem title="Мои курсы"
-                                    className="icon icon-star"
+                                    className="icon icon-accent icon-star"
                                     onClick={() => toNext(`${Paths.userCoursesPath}/${ViewTypes.created}`)}
                                 />
                                 <DropdownItem title="Выйти"
-                                    className="icon icon-power"
+                                    className="icon icon-accent icon-power"
                                     onClick={() => {
                                         dispatch(logout());
                                         dispatch(fetchUser());

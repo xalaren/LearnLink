@@ -870,6 +870,13 @@ h3 {
   font-size: 20px;
 }
 
+.line-distributed-container {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .header {
   background: #8234ff;
   box-sizing: border-box;
@@ -1007,11 +1014,14 @@ h3 {
 .dropdown__item {
   display: flex;
   align-items: center;
-  padding: 10px 18px;
+  padding: 16px 80px 16px 20px;
 }
 .dropdown__item .icon {
   margin-right: 20px;
   font-size: calc(1em + 4px);
+}
+.dropdown__item .icon-accent {
+  color: #8c74ff;
 }
 @media (hover: hover) {
   .dropdown__item:hover {
@@ -1025,7 +1035,7 @@ h3 {
 }
 @media screen and (max-width: 576px) {
   .dropdown__item {
-    padding: 16px 24px;
+    padding: 20px 80px 16px 20px;
   }
 }
 
@@ -1132,6 +1142,16 @@ h3 {
   justify-content: flex-end;
 }
 .control-list__add-button {
+  font-size: 24px;
+  width: 50px;
+  height: 50px;
+}
+
+.control-nav {
+  display: flex;
+  gap: 20px;
+}
+.control-nav__add-button {
   font-size: 24px;
   width: 50px;
   height: 50px;

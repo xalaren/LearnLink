@@ -105,18 +105,18 @@ namespace LearnLink.WebApi.Controllers
 
         [Authorize]
         [HttpGet("find/user-courses")]
-        public async Task<Response<CourseDto[]>> FindInUserCourses(int userId, string title, bool findSubscription, bool findUnavailable)
+        public async Task<Response<DataPage<CourseDto[]>>> FindInUserCourses(int userId, string? title, bool findSubscription, bool findUnavailable, int page, int size)
         {
             var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
 
 
-            if (!verifyResponse.Success) return new Response<CourseDto[]>
+            if (!verifyResponse.Success) return new()
             {
                 Success = verifyResponse.Success,
                 Message = verifyResponse.Message,
             };
 
-            return await courseInteractor.FindCoursesByTitleInUserCourses(userId, title, findSubscription, findUnavailable);
+            return await courseInteractor.FindCoursesByTitleInUserCourses(userId, title, findSubscription, findUnavailable, new DataPageHeader(page, size));
         }
 
         [Authorize]

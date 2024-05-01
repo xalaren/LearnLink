@@ -8,8 +8,6 @@ import { validate } from "../helpers/validation";
 import { loginSave } from "../store/actions/authActionCreators";
 import { fetchUser } from "../store/actions/userActionCreators";
 import { User } from "../models/user";
-import { ErrorModal } from "../components/ErrorModal";
-import { SuccessModal } from "../components/SuccessModal";
 import PopupNotification from "../ui/PopupNotification";
 
 function EditProfileMainModule() {

@@ -41,6 +41,7 @@ function App() {
                 {/* <Route path={Paths.userCoursesPath + '/:type'} element={<UserCoursesPage />}></Route>
                 <Route path={Paths.editUserPath} element={<EditUserPage action={EditActions.editUser} />}></Route>
                 <Route path={Paths.editPasswordPath} element={<EditUserPage action={EditActions.editPassword} />}></Route> */}
+                <Route path={Paths.userCoursesPath + '/:type'} element={<UserCoursesPage />} />
                 <Route path={Paths.courseViewFullPath} element={<CoursePage />}></Route>
                 <Route path={Paths.moduleViewFullPath} element={<ModulePage />}></Route>
                 <Route path="*" element={<InvalidPage />}></Route>

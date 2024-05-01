@@ -1,19 +1,13 @@
 interface ISelectionPanelProps {
-    selectionItems: { title: string, active: boolean, onClick?: () => void }[];
+    children: React.ReactNode;
+    className?: string;
 }
 
-function SelectionPanel({ selectionItems }: ISelectionPanelProps) {
+function SelectionPanel({ children, className = '' }: ISelectionPanelProps) {
 
     return (
-        <nav className="selection-panel">
-            {selectionItems.map((item, index) =>
-                <div
-                    key={index}
-                    className={`selection-item ${item.active ? 'active' : ''}`}
-                    onClick={() => item.onClick?.()}>
-                    {item.title}
-                </div>
-            )}
+        <nav className={`selection-panel ${className}`}>
+            {children}
         </nav>
     );
 }

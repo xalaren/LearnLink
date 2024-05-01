@@ -6,11 +6,13 @@ import { COURSE_ENDPOINTS_URL } from "../models/constants";
 import axiosInstance from "../axios_config/axiosConfig";
 import { ValueDataPage } from "../models/dataPage";
 
+const defaultPageSize = 4;
+
 export function usePublicCourses() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const publicCoursesQuery = async (searchText: string, page: number, size: number = 6) => {
+    const publicCoursesQuery = async (searchText: string, page: number, size: number = defaultPageSize) => {
         try {
             setLoading(true);
 
@@ -38,16 +40,15 @@ export function usePublicCourses() {
     return { publicCoursesQuery, loading, error, resetValues };
 }
 
-export function useCreatedCourses() {
+export function useUserCourses() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [courses, setCourses] = useState<Course[]>();
 
-    const getCreatedCoursesQuery = async (userId: number, accessToken: string) => {
+    const userCoursesQuery = async (userId: number, accessToken: string, searchText: string, findSubscription: boolean, findUnavailable: boolean, page: number = 1, size: number = defaultPageSize) => {
         try {
             setLoading(true);
 
-            const response = (await axiosInstance.get<IValueResponse<Course[]>>(`${COURSE_ENDPOINTS_URL}get-user-courses?userId=${userId}`, {
+            const response = (await axiosInstance.get<IValueResponse<ValueDataPage<Course[]>>>(`${COURSE_ENDPOINTS_URL}find/user-courses?userId=${userId}&title=${searchText}&findSubscription=${findSubscription}&findUnavailable=${findUnavailable}&page=${page}&size=${size}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -58,7 +59,7 @@ export function useCreatedCourses() {
             }
 
             setLoading(false);
-            setCourses(response.data.value);
+            return response.data.value;
         }
         catch (err: unknown) {
             setLoading(false);
@@ -71,43 +72,7 @@ export function useCreatedCourses() {
         setLoading(false);
     }
 
-    return { getCreatedCoursesQuery, courses, loading, error, resetValues };
-}
-
-export function useSubscribedCourses() {
-    const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [courses, setCourses] = useState<Course[]>();
-
-    const getSubscribedCoursesQuery = async (userId: number, accessToken: string) => {
-        try {
-            setLoading(true);
-
-            const response = (await axiosInstance.get<IValueResponse<Course[]>>(`${COURSE_ENDPOINTS_URL}get-subscribed?userId=${userId}`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            }));
-
-            if (!response.data.success) {
-                throw new AxiosError(response.data.message!);
-            }
-
-            setLoading(false);
-            setCourses(response.data.value);
-        }
-        catch (err: unknown) {
-            setLoading(false);
-            setError((err as AxiosError).message);
-        }
-    }
-
-    const resetValues = () => {
-        setError('');
-        setLoading(false);
-    }
-
-    return { getSubscribedCoursesQuery, courses, loading, error, resetValues };
+    return { userCoursesQuery, loading, error, resetValues };
 }
 
 export function useGetCourse() {

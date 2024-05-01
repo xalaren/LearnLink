@@ -392,7 +392,7 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task<Response<CourseDto[]>> FindCoursesByTitleInUserCourses(int userId, string searchTitle, bool isSubscription, bool isUnavailable)
+        public async Task<Response<DataPage<CourseDto[]>>> FindCoursesByTitleInUserCourses(int userId, string? title, bool isSubscription, bool isUnavailable, DataPageHeader pageHeader)
         {
             try
             {
@@ -419,17 +419,20 @@ namespace LearnLink.Application.Interactors
                             course => course.Id,
                             (userCreatedCourse, course) => course
                         )
-                        .Where(course =>
-                            (isUnavailable && course.IsUnavailable) ||
-                            (!isUnavailable && !course.IsPublic && !course.IsUnavailable));
+                        .Where(course => (isUnavailable && course.IsUnavailable) || (!isUnavailable && !course.IsUnavailable));
 
-                var filteredCourses = coursesQuery
-                    .Where(course => course.Title.ToLower().Contains(searchTitle.ToLower()))
-                    .OrderByDescending(course => course.CreationDate);
+                if (!string.IsNullOrWhiteSpace(title))
+                {
+                    coursesQuery = coursesQuery.Where(course => course.Title.ToLower().Contains(title.ToLower()));
+                };
 
-                var total = await filteredCourses.CountAsync();
 
-                var courses = await filteredCourses
+                var total = await coursesQuery.CountAsync();
+
+                var courses = await coursesQuery
+                    .OrderByDescending(course => course.CreationDate)
+                    .Skip((pageHeader.PageNumber - 1) * pageHeader.PageSize)
+                    .Take(pageHeader.PageSize)
                     .Select(course => course.ToDto())
                     .ToArrayAsync();
 
@@ -437,7 +440,13 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = true,
                     Message = "Курсы успешно получены",
-                    Value = courses
+                    Value = new DataPage<CourseDto[]>()
+                    {
+                        ItemsCount = total,
+                        PageNumber = pageHeader.PageNumber,
+                        PageSize = pageHeader.PageSize,
+                        Values = courses
+                    }
                 };
             }
             catch (CustomException exception)

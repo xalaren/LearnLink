@@ -12,6 +12,7 @@ export enum ProfileEditActions {
 export enum ViewTypes {
     created = 'created',
     subscribed = 'subscribed',
+    unavailable = 'unavailable',
 }
 
 export enum NotificationType {

@@ -1,11 +1,12 @@
 interface ISearchFormProps {
     placeholder: string;
+    value: string;
     onChange: (event: React.ChangeEvent) => void;
     onSubmit: (event: React.FormEvent) => void;
     className?: string;
 }
 
-function SearchForm({ placeholder, onChange, onSubmit, className = "" }: ISearchFormProps) {
+function SearchForm({ placeholder, value, onChange, onSubmit, className = "" }: ISearchFormProps) {
     return (
         <form className={`search-form ${className}`} onSubmit={onSubmit}>
             <input
@@ -13,6 +14,7 @@ function SearchForm({ placeholder, onChange, onSubmit, className = "" }: ISearch
                 className="search-form__input"
                 placeholder={placeholder}
                 onChange={onChange}
+                value={value}
             />
             <button type="submit" className="search-form__button button-violet icon-search"></button>
         </form>

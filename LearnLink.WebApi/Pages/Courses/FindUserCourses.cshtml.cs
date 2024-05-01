@@ -11,24 +11,24 @@ namespace LearnLink.WebApi.Pages.Courses
     {
         public FindUserCoursesModel(CourseInteractor courseInteractor) : base(courseInteractor) { }
 
-        public Response<CourseDto[]>? QueryResult { get; set; }
+        public Response<DataPage<CourseDto[]>>? QueryResult { get; set; }
 
         public CourseDto[]? Courses { get; set; }
 
-        public async Task<IActionResult> OnGet(int userId, string searchText, string subscriptionString, string unavailableString)
+        public async Task<IActionResult> OnGet(int userId, string searchText, string subscriptionString, string unavailableString, int pageNumber, int pageSize)
         {
             return await AuthRequiredAsync(async () =>
             {
-                if (userId == 0 || string.IsNullOrWhiteSpace(searchText)) return;
+                if (userId == 0) return;
 
                 var isSubscription = string.IsNullOrWhiteSpace(subscriptionString) ? false : true;
                 var isUnavailable = string.IsNullOrWhiteSpace(unavailableString) ? false : true;
 
-                QueryResult = await CourseInteractor.FindCoursesByTitleInUserCourses(userId, searchText, isSubscription, isUnavailable);
+                QueryResult = await CourseInteractor.FindCoursesByTitleInUserCourses(userId, searchText, isSubscription, isUnavailable, new DataPageHeader(pageNumber, pageSize));
 
-                if(QueryResult.Success && QueryResult.Value != null)
+                if (QueryResult.Success && QueryResult.Value != null)
                 {
-                    Courses = QueryResult.Value;
+                    Courses = QueryResult.Value.Values;
                 }
             });
         }
