@@ -3,9 +3,9 @@ import { MainContainer } from "../components/MainContainer";
 import { useAppSelector } from "../hooks/redux";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
 import { Paths } from "../models/paths";
-import { Input } from "../ui/Input";
+import { Input } from "../components/Input";
 import { InputType } from "../models/enums";
-import ImageUploader from "../ui/ImageUploader";
+import ImageUploader from "../components/ImageUploader";
 import { validate } from "../helpers/validation";
 import { useRegister } from "../hooks/userHooks";
 import { ErrorModal } from "../components/ErrorModal";
@@ -97,20 +97,20 @@ export function RegisterPage() {
 
     return (
         <MainContainer className="auth-page">
-            <form className="auth-page__base-form base-form" onSubmit={onSubmit}>
-                <h3 className="base-form__title">Регистрация</h3>
+            <form className="auth-page__form form-bordered" onSubmit={onSubmit}>
+                <h3 className="form__title">Регистрация</h3>
 
                 <ImageUploader
                     name="avatar"
-                    className="base-form__image-uploader"
+                    className="form__image-uploader"
                     onChange={onChange}
                     image={uploadedImage}
                 />
 
-                <div className="base-form__inputs">
+                <div className="form__inputs">
                     <Input
                         type={InputType.text}
-                        className="base-form__form-input"
+                        className="form__form-input"
                         name="nickname"
                         errorMessage={nicknameError}
                         placeholder="Введите никнейм..."
@@ -120,7 +120,7 @@ export function RegisterPage() {
 
                     <Input
                         type={InputType.password}
-                        className="base-form__form-input"
+                        className="form__form-input"
                         name="password"
                         errorMessage={passwordError}
                         placeholder="Введите пароль..."
@@ -130,7 +130,7 @@ export function RegisterPage() {
 
                     <Input
                         type={InputType.text}
-                        className="base-form__form-input"
+                        className="form__form-input"
                         name="name"
                         errorMessage={nameError}
                         placeholder="Введите имя..."
@@ -140,7 +140,7 @@ export function RegisterPage() {
 
                     <Input
                         type={InputType.text}
-                        className="base-form__form-input"
+                        className="form__form-input"
                         name="lastname"
                         errorMessage={lastnameError}
                         placeholder="Введите фамилию..."
@@ -149,7 +149,7 @@ export function RegisterPage() {
                     />
                 </div>
 
-                <button type="submit" className="base-form__button button-violet">Зарегистрироваться</button>
+                <button type="submit" className="form__button button-violet">Зарегистрироваться</button>
             </form>
 
             <ErrorModal active={Boolean(error)} onClose={resetValues} error={error} />

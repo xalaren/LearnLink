@@ -1211,6 +1211,9 @@ h3 {
 .course-item__icon {
   font-size: 24px;
 }
+.course-item-disabled > * {
+  opacity: 0.5;
+}
 .course-item * {
   transition: inherit;
 }
@@ -1252,34 +1255,37 @@ h3 {
   padding-top: 100px;
   padding-bottom: 100px;
 }
-.auth-page__base-form {
+.auth-page__form {
   width: 100%;
 }
 
-.base-form {
+.form, .form-bordered {
   max-width: 600px;
+  padding: 0 10px;
+}
+.form__inputs > *:not(:last-child) {
+  margin-bottom: 40px;
+}
+.form__form-input .form-input__input {
+  width: 100%;
+}
+.form__title {
+  text-align: center;
+  margin-bottom: 80px;
+}
+.form__button {
+  margin-top: 60px;
+  width: 100%;
+  padding: 0 10px;
+}
+
+.form-bordered {
   padding: 40px 80px;
   border: solid 2px #f3f3f3;
   border-radius: 5px;
 }
-.base-form > *:not(:last-child) {
-  margin-bottom: 100px;
-}
-.base-form__title {
-  text-align: center;
-}
-.base-form__form-input {
-  margin-bottom: 40px;
-}
-.base-form__form-input .form-input__input {
-  width: 100%;
-}
-.base-form__button {
-  width: 100%;
-  padding: 0 10px;
-}
 @media screen and (max-width: 576px) {
-  .base-form {
+  .form-bordered {
     padding: 40px;
   }
 }
@@ -1348,7 +1354,7 @@ h3 {
 .account-page__content > *:first-child {
   margin-bottom: 40px;
 }
-.account-page__content .base-form {
+.account-page__content .form, .account-page__content .form-bordered {
   max-width: none;
   padding: 0;
   display: flex;
@@ -1357,16 +1363,16 @@ h3 {
   border: none;
   border-radius: none;
 }
-.account-page__content .base-form .profile-card {
+.account-page__content .form .profile-card, .account-page__content .form-bordered .profile-card {
   display: flex;
   flex-direction: column;
   align-items: center;
   grid-area: profile;
 }
-.account-page__content .base-form .profile-card__subtitle {
+.account-page__content .form .profile-card__subtitle, .account-page__content .form-bordered .profile-card__subtitle {
   font-weight: 500;
 }
-.account-page__content .base-form > * {
+.account-page__content .form > *, .account-page__content .form-bordered > * {
   max-width: 400px;
   width: 100%;
 }
@@ -1665,6 +1671,29 @@ h3 {
 .checkbox-container {
   display: flex;
   gap: 20px;
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .checkbox-container:hover .checkbox:not(.checkbox-checked) {
+    outline: 3px solid rgba(140, 116, 255, 0.2);
+  }
+  .checkbox-container:hover .checkbox:not(.checkbox-checked) > * {
+    color: #8c74ff;
+  }
+  .checkbox-container:hover .checkbox__label {
+    color: #8c74ff;
+  }
+}
+@media (hover: none) {
+  .checkbox-container:active .checkbox:not(.checkbox-checked) {
+    outline: 3px solid rgba(140, 116, 255, 0.2);
+  }
+  .checkbox-container:active .checkbox:not(.checkbox-checked) > * {
+    color: #8c74ff;
+  }
+  .checkbox-container:active .checkbox__label {
+    color: #8c74ff;
+  }
 }
 
 .checkbox {
@@ -1686,6 +1715,9 @@ h3 {
   transform: translate(-50%, -50%);
   transition: inherit;
   color: transparent;
+}
+.checkbox__label {
+  transition: 0.3s ease-in-out;
 }
 .checkbox-checked {
   background-color: #8c74ff;
@@ -1768,6 +1800,7 @@ h3 {
   align-items: center;
   z-index: 10;
   padding: 20px;
+  overflow: auto;
 }
 .modal__content {
   position: relative;
@@ -1784,6 +1817,10 @@ h3 {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.modal__body {
+  overflow: auto;
+  max-width: 600px;
 }
 .modal__close-button {
   background-color: #f3f3f3;
@@ -1822,6 +1859,11 @@ h3 {
     min-width: 100%;
     width: 100%;
     height: 100%;
+  }
+}
+@media screen and (max-height: 540px) {
+  .modal__body {
+    max-height: 400px;
   }
 }
 

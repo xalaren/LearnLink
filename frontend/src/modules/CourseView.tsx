@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useGetCourse, useRemoveCourse, useUserCourseStatus } from "../hooks/courseHooks";
 import { ErrorModal } from "../components/ErrorModal";
-import { Loader } from "../ui/Loader";
+import { Loader } from "../components/Loader";
 import { useAppSelector } from "../hooks/redux";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
 import { ViewTypes } from "../models/enums";
@@ -13,7 +13,7 @@ import CourseEditModule from "./CourseEditModule";
 import { Modal } from "../components/Modal";
 import { Paths } from "../models/paths";
 import { DropdownState } from "../contexts/DropdownContext";
-import DropdownItem from "../ui/DropdownItem";
+import DropdownItem from "../components/DropdownItem";
 
 interface ICourseViewProps {
     courseId: number;

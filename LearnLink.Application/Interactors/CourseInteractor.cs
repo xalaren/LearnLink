@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using System.Linq;
-using System.Reflection.PortableExecutable;
-using LearnLink.Application.Mappers;
+﻿using LearnLink.Application.Mappers;
 using LearnLink.Application.Transaction;
 using LearnLink.Core.Constants;
 using LearnLink.Core.Entities;
@@ -342,7 +339,7 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                var coursesQuery = unitOfWork.Courses.AsNoTracking();
+                var coursesQuery = unitOfWork.Courses.AsNoTracking().Where(course => course.IsPublic);
 
                 if (!string.IsNullOrWhiteSpace(searchTitle))
                 {

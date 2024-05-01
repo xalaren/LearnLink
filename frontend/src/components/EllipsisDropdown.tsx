@@ -1,4 +1,4 @@
-import { Dropdown } from "../ui/Dropdown";
+import { Dropdown } from "./Dropdown";
 import { DropdownContext } from "../contexts/DropdownContext";
 import { useContext } from "react";
 

@@ -3,7 +3,7 @@ import CourseSidebar from "../components/CourseSidebar";
 import { useSubscription } from "../hooks/subscriptionHooks";
 import { Course } from "../models/course";
 import { ErrorModal } from "../components/ErrorModal";
-import PopupLoader from "../ui/PopupLoader";
+import PopupLoader from "../components/PopupLoader";
 import { useAppSelector } from "../hooks/redux";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
 import { Paths } from "../models/paths";

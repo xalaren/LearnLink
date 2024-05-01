@@ -4,7 +4,7 @@ import { MainContainer } from "../components/MainContainer";
 import SearchForm from "../components/SearchForm";
 import { Course } from "../models/course";
 import { usePublicCourses } from "../hooks/courseHooks";
-import { Loader } from "../ui/Loader";
+import { Loader } from "../components/Loader";
 import { ErrorModal } from "../components/ErrorModal";
 import Paginate from "../components/Paginate";
 

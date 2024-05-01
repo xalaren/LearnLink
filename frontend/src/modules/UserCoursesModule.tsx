@@ -3,7 +3,7 @@ import SearchForm from "../components/SearchForm";
 import { Course } from "../models/course";
 import { useUserCourses } from "../hooks/courseHooks";
 import { useAppSelector } from "../hooks/redux";
-import { Loader } from "../ui/Loader";
+import { Loader } from "../components/Loader";
 import { ErrorModal } from "../components/ErrorModal";
 import { CoursesContainer } from "../components/CoursesContainer";
 import Paginate from "../components/Paginate";
@@ -11,9 +11,10 @@ import { ViewTypes } from "../models/enums";
 
 interface IUserCoursesModuleProps {
     type?: string;
+    shouldUpdate: any;
 }
 
-function UserCoursesModule({ type }: IUserCoursesModuleProps) {
+function UserCoursesModule({ type, shouldUpdate }: IUserCoursesModuleProps) {
     const [page, setPage] = useState(1);
     const [pageCount, setPageCount] = useState(1);
     const [searchText, setSearchText] = useState('');
@@ -30,7 +31,7 @@ function UserCoursesModule({ type }: IUserCoursesModuleProps) {
 
     useEffect(() => {
         fetchCourses();
-    }, [user, page]);
+    }, [user, page, shouldUpdate]);
 
     function onChange(event: React.ChangeEvent) {
         const inputElement = event.target as HTMLInputElement;

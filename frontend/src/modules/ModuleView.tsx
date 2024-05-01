@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useUserCourseStatus } from "../hooks/courseHooks";
 import { ErrorModal } from "../components/ErrorModal";
-import { Loader } from "../ui/Loader";
+import { Loader } from "../components/Loader";
 import { useAppSelector } from "../hooks/redux";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
 import EllipsisDropdown from "../components/EllipsisDropdown";
@@ -13,7 +13,7 @@ import { useGetModule, useRemoveModule } from "../hooks/moduleHooks";
 import ModuleEditModal from "./ModuleEditModal";
 import { Paths } from "../models/paths";
 import { DropdownState } from "../contexts/DropdownContext";
-import DropdownItem from "../ui/DropdownItem";
+import DropdownItem from "../components/DropdownItem";
 
 interface IModuleViewProps {
     courseId: number;

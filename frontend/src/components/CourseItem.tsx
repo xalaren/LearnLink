@@ -8,7 +8,7 @@ interface ICourseItemProps {
 
 function CourseItem({ course, onClick, className = "" }: ICourseItemProps) {
     return (
-        <div className={`${className} course-item`} onClick={onClick}>
+        <div className={`${className} course-item ${course.isUnavailable && 'course-item-disabled'}`} onClick={onClick}>
             <div className="course-item__info">
                 <div className="course-item__head">
                     <p className="course-item__title">{course.title}</p>
@@ -23,8 +23,8 @@ function CourseItem({ course, onClick, className = "" }: ICourseItemProps) {
                 </div>
             </div>
             <div className="course-item__properties">
-                {!course.isPublic && <span className="course-item__icon icon-invisible"></span>}
-                {course.isUnavailable && <span className="course-item__icon icon-user-lock"></span>}
+                {!course.isPublic && !course.isUnavailable && <span className="course-item__icon icon-user-lock"></span>}
+                {course.isUnavailable && <span className="course-item__icon icon-invisible"></span>}
             </div>
         </div>
     );

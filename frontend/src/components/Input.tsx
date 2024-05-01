@@ -29,7 +29,7 @@ export function Input({ type, name, errorMessage, onChange, value, placeholder, 
                     onChange={onChange}
                     placeholder={placeholder}
                     style={styles}
-                    className={`form-input__input ${errorMessage ? 'input-danger' : 'input-gray'}`}
+                    className={`form-input__input textarea ${errorMessage ? 'input-danger' : 'input-gray'}`}
                     value={value}
                 /> :
                 <input

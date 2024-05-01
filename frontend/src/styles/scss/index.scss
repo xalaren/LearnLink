@@ -363,6 +363,12 @@
         font-size: 24px;
     }
 
+    &-disabled {
+        > * {
+            opacity: 0.5;
+        }
+    }
+
     * {
         transition: inherit;
     }
@@ -402,37 +408,46 @@
     padding-top: 100px;
     padding-bottom: 100px;
 
-    &__base-form {
+    &__form {
         width: 100%;
     }
 }
 
-.base-form {
+.form {
     max-width: 600px;
-    padding: 40px 80px;
-    border: solid 2px $veryLightGray;
-    border-radius: 5px;
+    padding: 0 10px;
 
-    > *:not(:last-child) {
-        margin-bottom: 100px;
-    }
-
-    &__title {
-        text-align: center;
+    &__inputs {
+        @include child-not-last {
+            margin-bottom: 40px;
+        }
     }
 
     &__form-input {
-        margin-bottom: 40px;
-
         .form-input__input {
             width: 100%;
         }
     }
 
+    &__title {
+        text-align: center;
+        margin-bottom: 80px;
+    }
+
     &__button {
+        margin-top: 60px;
         width: 100%;
         padding: 0 10px;
     }
+}
+
+.form-bordered {
+    @extend .form;
+
+    padding: 40px 80px;
+
+    border: solid 2px $veryLightGray;
+    border-radius: 5px;
 
     @media screen and (max-width: $sm) {
         padding: 40px;
@@ -511,7 +526,7 @@
             margin-bottom: 40px;
         }
 
-        .base-form {
+        .form {
             max-width: none;
             padding: 0;
             display: flex;
@@ -858,7 +873,23 @@
 .checkbox-container {
     display: flex;
     gap: 20px;
+    cursor: pointer;
+
+    @include hover {
+        .checkbox:not(.checkbox-checked) {
+            outline: 3px solid rgba($lightViolet, 0.2);
+
+            > * {
+                color: $lightViolet;
+            }
+        }
+
+        .checkbox__label {
+            color: $lightViolet;
+        }
+    }
 }
+
 .checkbox {
     $width: 30px;
     min-width: $width;
@@ -880,6 +911,10 @@
         transform: translate(-50%, -50%);
         transition: inherit;
         color: transparent;
+    }
+
+    &__label {
+        transition: 0.3s ease-in-out;
     }
 
     &-checked {
@@ -953,6 +988,7 @@
     align-items: center;
     z-index: 10;
     padding: 20px;
+    overflow: auto;
 
     &__content {
         position: relative;
@@ -970,6 +1006,11 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+    }
+
+    &__body {
+        overflow: auto;
+        max-width: 600px;
     }
 
     &__close-button {
@@ -1002,6 +1043,12 @@
             padding: 20px;
             max-width: none;
             @include static-size(100%);
+        }
+    }
+
+    @media screen and (max-height: 540px) {
+        &__body {
+            max-height: 400px;
         }
     }
 }

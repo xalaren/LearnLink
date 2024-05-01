@@ -1,6 +1,6 @@
 import { CSSProperties, useContext } from "react";
-import { Dropdown } from "../ui/Dropdown";
-import DropdownHead from "../ui/DropdownHead";
+import { Dropdown } from "./Dropdown";
+import DropdownHead from "./DropdownHead";
 import { DropdownContext } from "../contexts/DropdownContext";
 import profile from '../assets/img/profile_placeholder.svg';
 

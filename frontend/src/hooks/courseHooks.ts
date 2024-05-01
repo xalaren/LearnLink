@@ -116,7 +116,7 @@ export function useCreateCourse() {
         try {
             setLoading(true);
 
-            const course = new Course(0, title, isPublic, description);
+            const course = new Course(0, title, isPublic, false, description);
             const response = (await axiosInstance.post<IVoidResponse>(`${COURSE_ENDPOINTS_URL}create?userId=${userId}`, course, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`

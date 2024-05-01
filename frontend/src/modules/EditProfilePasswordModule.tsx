@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { InputType, NotificationType } from "../models/enums";
-import { Input } from "../ui/Input";
+import { Input } from "../components/Input";
 import { validate } from "../helpers/validation";
 import { useUpdatePassword } from "../hooks/userHooks";
 import { useAppSelector } from "../hooks/redux";
-import PopupNotification from "../ui/PopupNotification";
+import PopupNotification from "../components/PopupNotification";
 
 function EditProfilePasswordModule() {
     const [oldPassword, setOldPassword] = useState('');
@@ -66,10 +66,10 @@ function EditProfilePasswordModule() {
 
             <form className="password-change-form" onSubmit={onSubmit}>
 
-                <div className="base-form__inputs">
+                <div className="form__inputs">
                     <Input
                         type={InputType.password}
-                        className="base-form__form-input"
+                        className="form__form-input"
                         name="oldPassword"
                         errorMessage={oldPasswordError}
                         placeholder="Введите старый пароль..."
@@ -80,7 +80,7 @@ function EditProfilePasswordModule() {
 
                     <Input
                         type={InputType.password}
-                        className="base-form__form-input"
+                        className="form__form-input"
                         name="newPassword"
                         errorMessage={newPasswordError}
                         placeholder="Введите новый пароль..."
@@ -89,8 +89,8 @@ function EditProfilePasswordModule() {
                         value={newPassword}
                     />
                 </div>
-                <nav className="base-form__nav">
-                    <button type="submit" className="base-form__button button-violet">Сохранить изменения</button>
+                <nav className="form__nav">
+                    <button type="submit" className="form__button button-violet">Сохранить изменения</button>
                 </nav>
             </form>
 

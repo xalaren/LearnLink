@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { InputType } from "../models/enums";
 import { validate } from "../helpers/validation";
-import { Input } from "../ui/Input";
+import { Input } from "../components/Input";
 import { useLogin } from "../hooks/userHooks";
 import { ErrorModal } from "../components/ErrorModal";
 import { useAppDispatch } from "../hooks/redux";
@@ -73,7 +73,7 @@ export function LoginForm() {
 
     return (
         <>
-            <form className='base-form' onSubmit={onSubmit}>
+            <form className='form-bordered' onSubmit={onSubmit}>
                 <ul className="form__inputs">
                     <p className="medium-little">Никнейм</p>
                     <Input

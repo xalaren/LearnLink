@@ -1,14 +1,14 @@
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
 import { useUpdateUserData } from "../hooks/userHooks";
 import ProfileCard from "../components/ProfileCard";
-import { Input } from "../ui/Input";
+import { Input } from "../components/Input";
 import { InputType, NotificationType } from "../models/enums";
 import { useEffect, useState } from "react";
 import { validate } from "../helpers/validation";
 import { loginSave } from "../store/actions/authActionCreators";
 import { fetchUser } from "../store/actions/userActionCreators";
 import { User } from "../models/user";
-import PopupNotification from "../ui/PopupNotification";
+import PopupNotification from "../components/PopupNotification";
 
 function EditProfileMainModule() {
     const { accessToken } = useAppSelector(state => state.authReducer);
@@ -98,20 +98,19 @@ function EditProfileMainModule() {
             <h3 className="account-page__title">Основные данные</h3>
 
             {user &&
-                <form className="base-form account-change-form" onSubmit={onSubmit}>
+                <form className="form-bordered account-change-form" onSubmit={onSubmit}>
 
                     <ProfileCard
                         inputName='avatar'
                         user={user}
-                        className="base-form__profile"
                         onImageChange={onChange}
                         profileImage={uploadedImage}
                     />
 
-                    <div className="base-form__inputs">
+                    <div className="form__inputs">
                         <Input
                             type={InputType.text}
-                            className="base-form__form-input"
+                            className="form__form-input"
                             name="nickname"
                             errorMessage={nicknameError}
                             placeholder="Введите никнейм..."
@@ -122,7 +121,7 @@ function EditProfileMainModule() {
 
                         <Input
                             type={InputType.text}
-                            className="base-form__form-input"
+                            className="form__form-input"
                             name="name"
                             errorMessage={nameError}
                             placeholder="Введите имя..."
@@ -133,7 +132,7 @@ function EditProfileMainModule() {
 
                         <Input
                             type={InputType.text}
-                            className="base-form__form-input"
+                            className="form__form-input"
                             name="lastname"
                             errorMessage={lastnameError}
                             placeholder="Введите фамилию..."
@@ -142,8 +141,9 @@ function EditProfileMainModule() {
                             value={lastname}
                         />
                     </div>
-                    <nav className="base-form__nav">
-                        <button type="submit" className="base-form__button button-violet">Сохранить изменения</button>
+
+                    <nav className="form__nav">
+                        <button type="submit" className="form__button button-violet">Сохранить изменения</button>
                     </nav>
                 </form>
 

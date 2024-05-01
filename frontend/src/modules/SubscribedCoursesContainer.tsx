@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { CoursesContainer } from "../components/CoursesContainer";
 import { useSubscribedCourses } from "../hooks/courseHooks";
-import { Loader } from "../ui/Loader";
+import { Loader } from "../components/Loader";
 import { ErrorModal } from "../components/ErrorModal";
 import { useAppSelector } from "../hooks/redux";
 

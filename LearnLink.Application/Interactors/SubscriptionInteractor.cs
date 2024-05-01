@@ -135,11 +135,9 @@ namespace LearnLink.Application.Interactors
                 await unitOfWork.UserCourseLocalRoles.AddRangeAsync(userLocalRoles);
 
                 var count = users.Count();
-                course.SubscribersCount += count;
-
-                unitOfWork.Courses.Update(course);
-
                 await unitOfWork.CommitAsync();
+
+                await UpdateCourseSubscriptions(course.Id);
 
                 return new Response()
                 {
@@ -193,8 +191,6 @@ namespace LearnLink.Application.Interactors
                     throw new NotFoundException("Локальная роль получена неверно, либо не найдена");
                 }
 
-                course.SubscribersCount++;
-
                 var subscriptionEntity = subscriptionDto.ToEntity();
 
                 var newUserCourseLocalRole = new UserCourseLocalRole()
@@ -210,7 +206,6 @@ namespace LearnLink.Application.Interactors
 
                 await unitOfWork.Subscriptions.AddAsync(subscriptionEntity);
                 await unitOfWork.UserCourseLocalRoles.AddAsync(newUserCourseLocalRole);
-
                 await completionInteractor.CreateCourseCompletion(user.Id, course.Id);
 
                 CourseModule[] courseModules = await unitOfWork.CourseModules.Where(courseModule => courseModule.CourseId == course.Id).ToArrayAsync();
@@ -227,9 +222,9 @@ namespace LearnLink.Application.Interactors
                     }
                 }
 
-                unitOfWork.Courses.Update(course);
-
                 await unitOfWork.CommitAsync();
+
+                await UpdateCourseSubscriptions(course.Id);
 
                 return new Response()
                 {
@@ -281,10 +276,6 @@ namespace LearnLink.Application.Interactors
                     throw new NotFoundException("Подписка не найдена");
                 }
 
-                course.SubscribersCount--;
-
-
-                unitOfWork.Courses.Update(course);
                 unitOfWork.Subscriptions.Remove(subscription);
                 unitOfWork.UserCourseLocalRoles.Remove(courseUserLocalRole);
                 await unitOfWork.CommitAsync();
@@ -366,12 +357,10 @@ namespace LearnLink.Application.Interactors
                     throw new NotFoundException("Подписка не найдена");
                 }
 
-
-                course.SubscribersCount--;
-                unitOfWork.Courses.Update(course);
                 unitOfWork.Subscriptions.Remove(subscription);
                 unitOfWork.UserCourseLocalRoles.Remove(targetCourseLocalRole);
                 await unitOfWork.CommitAsync();
+                await UpdateCourseSubscriptions(course.Id);
 
                 return new Response()
                 {
@@ -396,6 +385,23 @@ namespace LearnLink.Application.Interactors
                     InnerErrorMessages = [exception.Message],
                 };
             }
+        }
+
+        private async Task UpdateCourseSubscriptions(int courseId)
+        {
+            var course = await unitOfWork.Courses.FindAsync(courseId);
+
+            if(course == null)
+            {
+                return;
+            }
+
+            var subscriptionsCount = await unitOfWork.Subscriptions.Where(sub => sub.CourseId == courseId).CountAsync();
+
+            course.SubscribersCount = subscriptionsCount;
+
+            unitOfWork.Courses.Update(course);
+            await unitOfWork.CommitAsync();
         }
 
     }

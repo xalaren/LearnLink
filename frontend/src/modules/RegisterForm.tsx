@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ErrorModal } from "../components/ErrorModal";
 import { validate } from "../helpers/validation";
-import { Input } from "../ui/Input";
+import { Input } from "../components/Input";
 import { InputType } from "../models/enums";
 import { useRegister } from "../hooks/userHooks";
 import { SuccessModal } from "../components/SuccessModal";

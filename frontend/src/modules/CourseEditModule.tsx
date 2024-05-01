@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Modal } from "../components/Modal";
 import { validate } from "../helpers/validation";
-import { Input } from "../ui/Input";
+import { Input } from "../components/Input";
 import { InputType, NotificationType } from "../models/enums";
-import Checkbox from "../ui/Checkbox";
+import Checkbox from "../components/Checkbox";
 import { Course } from "../models/course";
 import { useUpdateCourse } from "../hooks/courseHooks";
-import PopupLoader from "../ui/PopupLoader";
-import Notification from "../ui/PopupNotification";
+import PopupLoader from "../components/PopupLoader";
+import Notification from "../components/PopupNotification";
 import { useAppSelector } from "../hooks/redux";
 
 interface ICourseEditModuleProps {

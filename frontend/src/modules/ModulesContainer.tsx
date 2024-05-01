@@ -1,14 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { Input } from "../ui/Input";
+import { Input } from "../components/Input";
 import { InputType } from "../models/enums";
 import CrossIcon from "../ui/CrossIcon";
 import CheckIcon from "../ui/CheckIcon";
 import { useCreateModules, useGetCourseModules } from "../hooks/moduleHooks";
 import { useAppSelector } from "../hooks/redux";
 import { ErrorModal } from "../components/ErrorModal";
-import { Loader } from "../ui/Loader";
-import ModuleItem from "../ui/ModuleItem";
+import { Loader } from "../components/Loader";
+import ModuleItem from "../components/ModuleItem";
 import { validate } from "../helpers/validation";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
 import { Paths } from "../models/paths";

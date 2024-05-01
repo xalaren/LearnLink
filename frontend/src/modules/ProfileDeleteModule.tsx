@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
 import { Modal } from "../components/Modal";
-import Checkbox from "../ui/Checkbox";
+import Checkbox from "../components/Checkbox";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
 import { NotificationType } from "../models/enums";
 import { useRemoveUser } from "../hooks/userHooks";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
 import { Paths } from "../models/paths";
-import PopupNotification from "../ui/PopupNotification";
+import PopupNotification from "../components/PopupNotification";
 import { logout } from "../store/actions/authActionCreators";
 import { resetUserState } from "../store/actions/userActionCreators";
+import ModalContent from "../components/ModalContent";
+import ModalFooter from "../components/ModalFooter";
+import ModalButton from "../components/ModalButton";
 
 function ProfileDeleteModule() {
     const [confirmModalActive, setConfirmModalActive] = useState(false);
@@ -60,21 +63,24 @@ function ProfileDeleteModule() {
             <Modal
                 active={confirmModalActive}
                 title="Подтвердите действие"
-                buttons={[{
-                    text: "Подтвердить",
-                    onClick: onSubmit,
-                }]}
                 onClose={closeModal}>
-                <div className="indented">
-                    {isSubmitted && !isConfirmed &&
-                        <p className="error-text required">Вы не подтвердили действие</p>
-                    }
-                    <Checkbox
-                        checkedChanger={() => { setConfirmed(prev => !prev) }}
-                        isChecked={isConfirmed}
-                        labelClassName="ui-text"
-                        label="Вы подтверждаете удаление вашего профиля и всех ваших данных внутри курсов, включая прогрессы прохождения курса, модулей, уроков и т.д." />
-                </div>
+
+                <ModalContent>
+                    <div className="indented">
+                        {isSubmitted && !isConfirmed &&
+                            <p className="error-text required">Вы не подтвердили действие</p>
+                        }
+                        <Checkbox
+                            checkedChanger={() => { setConfirmed(prev => !prev) }}
+                            isChecked={isConfirmed}
+                            labelClassName="ui-text"
+                            label="Вы подтверждаете удаление вашего профиля и всех ваших данных внутри курсов, включая прогрессы прохождения курса, модулей, уроков и т.д." />
+                    </div>
+                </ModalContent>
+
+                <ModalFooter>
+                    <ModalButton text="Подтвердить" onClick={onSubmit} />
+                </ModalFooter>
             </Modal>
 
             {error &&

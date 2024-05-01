@@ -7,7 +7,7 @@ import { fetchUser } from "../store/actions/userActionCreators";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
 import { Paths } from "../models/paths";
 import logo from "../assets/img/learnlinklogo.svg";
-import DropdownItem from "../ui/DropdownItem";
+import DropdownItem from "../components/DropdownItem";
 import { DropdownState } from "../contexts/DropdownContext";
 
 

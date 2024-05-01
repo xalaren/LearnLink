@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { CoursesContainer } from "../components/CoursesContainer";
 import { usePublicCourses } from "../hooks/courseHooks";
-import { Loader } from "../ui/Loader";
+import { Loader } from "../components/Loader";
 import { ErrorModal } from "../components/ErrorModal";
 
 function PublicCoursesContainer() {

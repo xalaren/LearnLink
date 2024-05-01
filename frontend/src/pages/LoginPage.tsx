@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
 import { MainContainer } from "../components/MainContainer";
-import { Input } from "../ui/Input";
+import { Input } from "../components/Input";
 import { InputType } from "../models/enums";
 import { validate } from "../helpers/validation";
 import { useLogin } from "../hooks/userHooks";
@@ -80,13 +80,13 @@ export function LoginPage() {
 
     return (
         <MainContainer className="auth-page">
-            <form className="auth-page__base-form base-form" onSubmit={onSubmit}>
-                <h3 className="base-form__title">Вход в систему</h3>
+            <form className="auth-page__form form-bordered" onSubmit={onSubmit}>
+                <h3 className="form__title">Вход в систему</h3>
 
-                <div className="base-form__inputs">
+                <div className="form__inputs">
                     <Input
                         type={InputType.text}
-                        className="base-form__form-input"
+                        className="form__form-input"
                         name="nickname"
                         errorMessage={nicknameError}
                         placeholder="Введите никнейм..."
@@ -97,7 +97,7 @@ export function LoginPage() {
 
                     <Input
                         type={InputType.password}
-                        className="base-form__form-input"
+                        className="form__form-input"
                         name="password"
                         errorMessage={passwordError}
                         placeholder="Введите пароль..."
@@ -107,7 +107,7 @@ export function LoginPage() {
                     />
                 </div>
 
-                <button type="submit" className="base-form__button button-violet">Войти</button>
+                <button type="submit" className="form__button button-violet">Войти</button>
             </form>
 
             <ErrorModal active={Boolean(error)} onClose={resetError} error={error} />
