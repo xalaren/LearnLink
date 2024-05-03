@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { ErrorModal } from "../components/ErrorModal";
+import { ErrorModal } from "../components/Modal/ErrorModal";
 import { validate } from "../helpers/validation";
 import { Input } from "../components/Input";
 import { InputType } from "../models/enums";
 import { useRegister } from "../hooks/userHooks";
-import { SuccessModal } from "../components/SuccessModal";
+import { SuccessModal } from "../components/Modal/SuccessModal";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
 import { Paths } from "../models/paths";
 

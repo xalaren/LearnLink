@@ -3,9 +3,9 @@ import SearchForm from "../components/SearchForm";
 import { Course } from "../models/course";
 import { useUserCourses } from "../hooks/courseHooks";
 import { useAppSelector } from "../hooks/redux";
-import { Loader } from "../components/Loader";
-import { ErrorModal } from "../components/ErrorModal";
-import { CoursesContainer } from "../components/CoursesContainer";
+import { Loader } from "../components/Loader/Loader";
+import { ErrorModal } from "../components/Modal/ErrorModal";
+import { CoursesContainer } from "../components/CoursesContainer/CoursesContainer";
 import Paginate from "../components/Paginate";
 import { ViewTypes } from "../models/enums";
 

@@ -51,7 +51,7 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task<Response<CourseDto?>> GetAnyCourseAsync(int userId, int courseId)
+        public async Task<Response<ClientCourseDto?>> GetAnyCourseAsync(int userId, int courseId)
         {
             try
             {
@@ -59,24 +59,41 @@ namespace LearnLink.Application.Interactors
                     await unitOfWork.Courses.FirstOrDefaultAsync(course => course.Id == courseId) ??
                     throw new NotFoundException("Курс не найден");
 
-                var userCreatedCourse = await unitOfWork.UserCreatedCourses
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(u => u.UserId == userId && u.CourseId == courseId);
+                var userCourseLocalRole = await unitOfWork.UserCourseLocalRoles.FirstOrDefaultAsync(u => u.CourseId == courseId && u.UserId == userId);
 
-                var subscription = await unitOfWork.Subscriptions
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(u => u.UserId == userId && u.CourseId == courseId);
+                if (userCourseLocalRole == null && course.IsPublic)
+                {
+                    return new()
+                    {
+                        Success = true,
+                        Message = "Курс успешно получен",
+                        Value = course.ToClientCourseDto(),
+                    };
+                }
 
-                if (!course.IsPublic && (userCreatedCourse == null || subscription == null))
+                if (userCourseLocalRole == null)
+                {
+                    throw new NotFoundException("Не удалось определить роль пользователя");
+                }
+
+                await unitOfWork.UserCourseLocalRoles.Entry(userCourseLocalRole)
+                        .Reference(u => u.LocalRole)
+                        .LoadAsync();
+
+                var localRole = userCourseLocalRole.LocalRole;
+
+                if (!localRole.IsAdmin && !localRole.ViewAccess)
                 {
                     throw new AccessLevelException("Курс недоступен пользователю");
                 }
+
+                var completion = await unitOfWork.CourseCompletions.FirstOrDefaultAsync(c => c.UserId == userId && c.CourseId == courseId);
 
                 return new()
                 {
                     Success = true,
                     Message = "Курс успешно получен",
-                    Value = course.ToDto(),
+                    Value = course.ToClientCourseDto(localRole.ToDto(), completion?.ToDto()),
                 };
             }
             catch (CustomException exception)

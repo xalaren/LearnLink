@@ -5,11 +5,11 @@ import { useHistoryNavigation } from "../hooks/historyNavigation";
 import { Paths } from "../models/paths";
 import { Input } from "../components/Input";
 import { InputType } from "../models/enums";
-import ImageUploader from "../components/ImageUploader";
+import ImageUploader from "../components/ImageUploader/ImageUploader";
 import { validate } from "../helpers/validation";
 import { useRegister } from "../hooks/userHooks";
-import { ErrorModal } from "../components/ErrorModal";
-import { SuccessModal } from "../components/SuccessModal";
+import { ErrorModal } from "../components/Modal/ErrorModal";
+import { SuccessModal } from "../components/Modal/SuccessModal";
 
 
 export function RegisterPage() {

@@ -216,7 +216,7 @@ namespace LearnLink.Application.Interactors
 
                     var moduleLessons = await unitOfWork.ModuleLessons.Where(moduleLesson => moduleLesson.ModuleId == courseModule.ModuleId).ToArrayAsync();
 
-                    foreach(var moduleLesson in moduleLessons)
+                    foreach (var moduleLesson in moduleLessons)
                     {
                         await completionInteractor.CreateLessonCompletion(user.Id, moduleLesson.ModuleId, moduleLesson.LessonId);
                     }
@@ -279,6 +279,8 @@ namespace LearnLink.Application.Interactors
                 unitOfWork.Subscriptions.Remove(subscription);
                 unitOfWork.UserCourseLocalRoles.Remove(courseUserLocalRole);
                 await unitOfWork.CommitAsync();
+
+                await UpdateCourseSubscriptions(courseId);
 
                 return new Response()
                 {
@@ -360,6 +362,7 @@ namespace LearnLink.Application.Interactors
                 unitOfWork.Subscriptions.Remove(subscription);
                 unitOfWork.UserCourseLocalRoles.Remove(targetCourseLocalRole);
                 await unitOfWork.CommitAsync();
+
                 await UpdateCourseSubscriptions(course.Id);
 
                 return new Response()
@@ -391,7 +394,7 @@ namespace LearnLink.Application.Interactors
         {
             var course = await unitOfWork.Courses.FindAsync(courseId);
 
-            if(course == null)
+            if (course == null)
             {
                 return;
             }

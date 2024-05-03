@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Modal } from "../components/Modal";
+import { Modal } from "../components/Modal/Modal";
 import Checkbox from "../components/Checkbox";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
 import { NotificationType } from "../models/enums";
@@ -9,9 +9,9 @@ import { Paths } from "../models/paths";
 import PopupNotification from "../components/PopupNotification";
 import { logout } from "../store/actions/authActionCreators";
 import { resetUserState } from "../store/actions/userActionCreators";
-import ModalContent from "../components/ModalContent";
-import ModalFooter from "../components/ModalFooter";
-import ModalButton from "../components/ModalButton";
+import ModalContent from "../components/Modal/ModalContent";
+import ModalFooter from "../components/Modal/ModalFooter";
+import ModalButton from "../components/Modal/ModalButton";
 
 function ProfileDeleteModule() {
     const [confirmModalActive, setConfirmModalActive] = useState(false);

@@ -6,7 +6,7 @@ import { Input } from "../components/Input";
 import { InputType } from "../models/enums";
 import { validate } from "../helpers/validation";
 import { useLogin } from "../hooks/userHooks";
-import { ErrorModal } from "../components/ErrorModal";
+import { ErrorModal } from "../components/Modal/ErrorModal";
 import { loginSave } from "../store/actions/authActionCreators";
 import { fetchUser } from "../store/actions/userActionCreators";
 

@@ -1,4 +1,4 @@
-import defaultImage from '../assets/img/profile_add.svg';
+import defaultImage from '../../assets/img/profile_add.svg';
 
 interface IImageUploaderProps {
     name: string;

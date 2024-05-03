@@ -1,4 +1,4 @@
-import { ErrorText } from "./ErrorText";
+import { ErrorText } from "../ErrorText";
 import { Modal } from "./Modal";
 
 interface IErrorModalProps {

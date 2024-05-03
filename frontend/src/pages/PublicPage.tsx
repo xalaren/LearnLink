@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { CoursesContainer } from "../components/CoursesContainer";
+import { CoursesContainer } from "../components/CoursesContainer/CoursesContainer";
 import { MainContainer } from "../components/MainContainer";
 import SearchForm from "../components/SearchForm";
 import { Course } from "../models/course";
 import { usePublicCourses } from "../hooks/courseHooks";
-import { Loader } from "../components/Loader";
-import { ErrorModal } from "../components/ErrorModal";
+import { Loader } from "../components/Loader/Loader";
+import { ErrorModal } from "../components/Modal/ErrorModal";
 import Paginate from "../components/Paginate";
 
 export function PublicPage() {

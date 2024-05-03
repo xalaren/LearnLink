@@ -1,5 +1,5 @@
-import { ILinkData } from "../models/interfaces";
-import { NavLink } from "./NavLink";
+import { ILinkData } from "../../models/interfaces";
+import { NavLink } from "../NavLinksAndButtons/NavLink";
 
 interface IHeaderNavLinksProps {
     links: ILinkData[];

@@ -52,10 +52,25 @@
             <p>Id: <span class="white-selection">@Model.FoundCourse.Id</span></p>
             <p>Title: <span class="white-selection">@Model.FoundCourse.Title</span></p>
             <p>Description: <span class="white-selection">@Model.FoundCourse.Description</span></p>
+            <p>CreationDate: <span class="white-selection">@Model.FoundCourse.CreationDate</span></p>
             <p>Subscribers: <span class="white-selection">@Model.FoundCourse.SubscribersCount</span></p>
             <p>IsPublic: <span class="white-selection">@Model.FoundCourse.IsPublic</span></p>
             <p>IsUnavailable: <span class="white-selection">@Model.FoundCourse.IsUnavailable</span></p>
+            @if (Model.FoundCourse.Completed != null)
+            {
+                <p>Completed: <span class="white-selection">@Model.FoundCourse.Completed.Value</span></p>
+            }
+
+            @if (Model.FoundCourse.CompletionProgress != null)
+            {
+                <p>CompletionProgress: <span class="white-selection">@Model.FoundCourse.CompletionProgress.Value</span></p>
+            }
+
+            @if (Model.FoundCourse.LocalRole != null)
+            {
+                <p>LocalRole: <span class="white-selection">@Model.FoundCourse.LocalRole.Name</span></p>
+            }
+
         </div>
     </div>
 }
-

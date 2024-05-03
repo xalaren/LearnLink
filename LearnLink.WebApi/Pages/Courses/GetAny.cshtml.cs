@@ -10,9 +10,9 @@ namespace LearnLink.WebApi.Pages.Courses
     {
         public GetAnyModel(CourseInteractor courseInteractor) : base(courseInteractor) { }
 
-        public Response<CourseDto?>? QueryResult { get; set; }
+        public Response<ClientCourseDto?>? QueryResult { get; set; }
 
-        public CourseDto? FoundCourse { get; set; }
+        public ClientCourseDto? FoundCourse { get; set; }
 
         public async Task<IActionResult> OnGet(int userId, int courseId)
         {

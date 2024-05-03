@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { CoursesContainer } from "../components/CoursesContainer";
+import { CoursesContainer } from "../components/CoursesContainer/CoursesContainer";
 import { useSubscribedCourses } from "../hooks/courseHooks";
-import { Loader } from "../components/Loader";
-import { ErrorModal } from "../components/ErrorModal";
+import { Loader } from "../components/Loader/Loader";
+import { ErrorModal } from "../components/Modal/ErrorModal";
 import { useAppSelector } from "../hooks/redux";
 
 function SubscribedCoursesContainer() {

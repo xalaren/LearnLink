@@ -3,7 +3,7 @@ import { InputType } from "../models/enums";
 import { validate } from "../helpers/validation";
 import { Input } from "../components/Input";
 import { useLogin } from "../hooks/userHooks";
-import { ErrorModal } from "../components/ErrorModal";
+import { ErrorModal } from "../components/Modal/ErrorModal";
 import { useAppDispatch } from "../hooks/redux";
 import { loginSave } from "../store/actions/authActionCreators";
 import { fetchUser } from "../store/actions/userActionCreators";

@@ -2,7 +2,6 @@ import { AxiosError } from "axios";
 import axiosInstance from "../axios_config/axiosConfig";
 import { SUBSCRIPTION_ENDPOINTS_URL } from "../models/constants";
 import { IVoidResponse } from "../models/response";
-import { Subscription } from "../models/subscription";
 import { useState } from "react";
 
 export function useSubscription() {
@@ -12,13 +11,15 @@ export function useSubscription() {
 
     const subscribeQuery = async (userId: number, courseId: number, accessToken: string) => {
         try {
+            console.log(accessToken);
+
             setLoading(true);
-            const subscription = new Subscription(userId, courseId);
-            const response = await axiosInstance.post<IVoidResponse>(`${SUBSCRIPTION_ENDPOINTS_URL}subscribe`, subscription, {
+            const response = await axiosInstance.post<IVoidResponse>(`${SUBSCRIPTION_ENDPOINTS_URL}subscribe?userId=${userId}&courseId=${courseId}`, {}, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
             });
+
             setLoading(false);
 
             if (!response.data.success) {

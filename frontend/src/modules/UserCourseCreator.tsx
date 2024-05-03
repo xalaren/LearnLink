@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
 import MainHeaderViaNav from "../components/ContainerHeaderViaNav";
-import { Modal } from "../components/Modal";
+import { Modal } from "../components/Modal/Modal";
 import { Input } from "../components/Input";
 import { InputType, NotificationType, ViewTypes } from "../models/enums";
 import { validate } from "../helpers/validation";
 import Checkbox from "../components/Checkbox";
-import PopupLoader from "../components/PopupLoader";
+import PopupLoader from "../components/Loader/PopupLoader";
 import Notification from "../components/PopupNotification";
 import { useCreateCourse } from "../hooks/courseHooks";
 import { useAppSelector } from "../hooks/redux";
-import SelectionPanel from "../components/SelectionPanel";
+import SelectionPanel from "../components/Selection/SelectionPanel";
 import { useParams } from "react-router-dom";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
 import CreatedCourseContainer from "./CreatedCoursesContainer";
 import SubscribedCoursesContainer from "./SubscribedCoursesContainer";
-import { ErrorModal } from "../components/ErrorModal";
+import { ErrorModal } from "../components/Modal/ErrorModal";
 import { Paths } from "../models/paths";
 
 

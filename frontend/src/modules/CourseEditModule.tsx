@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { Modal } from "../components/Modal";
+import { Modal } from "../components/Modal/Modal";
 import { validate } from "../helpers/validation";
 import { Input } from "../components/Input";
 import { InputType, NotificationType } from "../models/enums";
 import Checkbox from "../components/Checkbox";
 import { Course } from "../models/course";
 import { useUpdateCourse } from "../hooks/courseHooks";
-import PopupLoader from "../components/PopupLoader";
+import PopupLoader from "../components/Loader/PopupLoader";
 import Notification from "../components/PopupNotification";
 import { useAppSelector } from "../hooks/redux";
 

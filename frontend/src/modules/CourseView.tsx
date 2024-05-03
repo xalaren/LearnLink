@@ -1,184 +1,171 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
-import { useGetCourse, useRemoveCourse, useUserCourseStatus } from "../hooks/courseHooks";
-import { ErrorModal } from "../components/ErrorModal";
-import { Loader } from "../components/Loader";
-import { useAppSelector } from "../hooks/redux";
-import { useHistoryNavigation } from "../hooks/historyNavigation";
-import { ViewTypes } from "../models/enums";
-import CourseInfoSidebar from "./CourseInfoSidebar";
-import ModulesContainer from "./ModulesContainer";
-import EllipsisDropdown from "../components/EllipsisDropdown";
-import CourseEditModule from "./CourseEditModule";
-import { Modal } from "../components/Modal";
-import { Paths } from "../models/paths";
-import { DropdownState } from "../contexts/DropdownContext";
-import DropdownItem from "../components/DropdownItem";
+import ContentAbout from "../components/ContentAbout/ContentAbout";
+import ContentAboutListItem from "../components/ContentAbout/ContentAboutListItem";
+import ContentList from "../components/ContentList/ContentList";
+import ItemLink from "../components/ItemLink";
+import ProgressBar from "../components/ProgressBar";
+import { Course } from "../models/course";
 
 interface ICourseViewProps {
-    courseId: number;
+    course: Course;
+    isCreator: boolean;
+    isSubscriber: boolean;
+    onSubscribe: () => void;
+    onUnsubscribe: () => void;
 }
 
-function CourseView({ courseId }: ICourseViewProps) {
-    const { getCourseQuery, course, loading: courseLoading, error: courseError, resetValues: resetCourseValues } = useGetCourse();
-    const { getStatusesQuery, error: statusError, resetError: resetStatusError, isCreator, isSubscriber } = useUserCourseStatus();
-    const { removeCourseQuery, loading: removeLoading, error: removeError, success: removeSuccess, resetValues: resetRemoveValues } = useRemoveCourse();
-    const { toNext } = useHistoryNavigation();
+function CourseView({ course, isCreator, isSubscriber, onSubscribe, onUnsubscribe }: ICourseViewProps) {
+    return (
+        <>
+            <section className="view-page__header">
+                <p className="view-page__title big-text">{course.title}</p>
+            </section>
 
-    const { accessToken } = useAppSelector(state => state.authReducer);
-    const user = useAppSelector(state => state.userReducer.user);
+            <CourseContent
+                course={course}
+                onSubscribe={onSubscribe}
+                onUnsubscribe={onUnsubscribe}
+                isCreator={isCreator}
+                isSubscriber={isSubscriber} />
+        </>
+    );
+}
 
-    const [localError, setLocalError] = useState('');
-    const [isSubscriptionChanged, setSubscriptionChanged] = useState(false);
-
-    const [localLoading, setLocalLoading] = useState(false);
-
-    const [isEditModalActive, setEditModalActive] = useState(false);
-    const [removeModalActive, setRemoveModalActive] = useState(false);
-    const [updateRequest, setUpdateRequest] = useState(true);
-
-    useEffect(() => {
-        if (courseId === 0) {
-            return;
-        }
-
-        if (updateRequest) {
-            fetchCourse();
-            setUpdateRequest(false);
-        }
-
-        fetchUserStatus();
-
-    }, [courseId, user, accessToken, updateRequest]);
-
-    useEffect(() => {
-        if (isSubscriptionChanged) {
-            fetchCourse();
-            setSubscriptionChanged(false);
-        }
-    }, [isSubscriptionChanged]);
-
-
-    useEffect(() => {
-        if (courseError) setLocalError(courseError);
-        if (statusError) setLocalError(statusError);
-    }, [courseError, statusError]);
-
-    useEffect(() => {
-        setLocalLoading(courseLoading || removeLoading);
-    }, [courseLoading, removeLoading]);
-
-    useEffect(() => {
-        if (removeSuccess) {
-            if (isCreator || isSubscriber) {
-                toNext(Paths.userCoursesPath + '/' + ViewTypes.created);
-            }
-            else {
-                toNext(Paths.homePath);
-            }
-        }
-    }, [removeSuccess])
-
-    async function fetchCourse() {
-        if (courseId !== 0) {
-            await getCourseQuery(courseId, user?.id);
-            if (user && accessToken) await getStatusesQuery(user.id!, courseId, accessToken);
-        }
+function CourseContent(props: {
+    course: Course,
+    isCreator: boolean,
+    isSubscriber: boolean,
+    onUnsubscribe: () => void,
+    onSubscribe: () => void
+}) {
+    if (props.course.isUnavailable) {
+        return (<p>Контент недоступен, так как курс скрыт</p>)
     }
 
-    async function fetchUserStatus() {
-        if (user && accessToken) await getStatusesQuery(user.id!, courseId, accessToken);
-    }
-
-    async function removeCourse() {
-        if (user && course && accessToken) await (removeCourseQuery(user.id, course.id, accessToken));
-    }
-
-    function resetError() {
-        resetCourseValues();
-        resetStatusError();
-        setLocalError('');
+    if (props.course.localRole != undefined && !props.course.localRole.viewAccess) {
+        return (<p>Доступ отклонен...</p>)
     }
 
     return (
         <>
-            {localLoading && <Loader />}
+            <p className="view-page__description ui-text">
+                {props.course.description}
+            </p>
 
-            {!localError && !localLoading && course &&
-                <section className="course-view">
-                    <div className="course-view__header container__header">
-                        <h2 className="course-view__title medium-big">{course.title}</h2>
-                        {isCreator && <nav className="container__navigation">
-                            <DropdownState>
-                                <EllipsisDropdown>
-                                    <DropdownItem title="Редактировать" onClick={() => { setEditModalActive(true) }} className="icon-pen-circle" />
-                                    <DropdownItem title="Удалить" onClick={() => { setRemoveModalActive(true) }} className="icon-cross-circle" />
-                                </EllipsisDropdown>
-                            </DropdownState>
+            <section className="view-page__content content-side">
+                <ContentList
+                    className="content-side__main"
+                    title="Изучаемые модули"
+                    showButton={props.course.localRole?.manageInternalAccess || false}
+                    onHeadButtonClick={() => { }}>
+                    <ItemLink
+                        title="Модуль 1"
+                        checked={false}
+                        onClick={() => { }}
+                        iconClassName="icon-module icon-medium-size"
+                        className="content-list__item"
+                        key={1}
+                    />
+                </ContentList>
 
-                        </nav>}
-                    </div>
-                    <div className="course-view__description">
-                        <p className="description regular">
-                            {course.description}
-                        </p>
-                    </div>
+                <ContentAbout
+                    className="content-side__aside"
+                    title="О курсе">
 
-                    <div className="course-view__content">
-                        <ModulesContainer allowEdit={isCreator} courseId={course.id} />
-                    </div>
-
-                    <CourseInfoSidebar course={course} isSubscriber={isSubscriber} isCreator={isCreator} subscriptionChanged={() => setSubscriptionChanged(true)} />
-
-                    <div className="course-view__footer">
-                    </div>
-                </section >
-            }
-
-            {isCreator && course &&
-                <>
-                    < CourseEditModule
-                        active={isEditModalActive}
-                        onClose={() => setEditModalActive(false)}
-                        refreshRequest={() => setUpdateRequest(true)}
-                        defaultCourse={course}
+                    <SubscribeButton
+                        isCreator={props.isCreator}
+                        isSubscriber={props.isSubscriber}
+                        onUnsubscribe={props.onUnsubscribe}
+                        onSubscribe={props.onSubscribe}
                     />
 
-                    <Modal title="Удаление курса" active={removeModalActive} onClose={() => setRemoveModalActive(false)}>
-                        <p className="regular-red" style={{
-                            marginBottom: "40px",
-                        }}>Вы уверены, что хотите удалить курс?</p>
-                        <nav style={{
-                            display: "flex",
-                            justifyContent: "flex-end"
-                        }}>
-                            <button
-                                style={{ width: "80px", marginRight: "50px" }}
-                                className="button-red"
-                                onClick={removeCourse}>
-                                Да
-                            </button>
-                            <button
-                                style={{ width: "80px" }}
-                                className="button-violet"
-                                onClick={() => setRemoveModalActive(false)}>
-                                Нет
-                            </button>
-                        </nav>
-                    </Modal>
-                </>
-            }
+                    <ContentAboutListItem
+                        key={1}>
+                        Видимость курса: <span className="text-violet">
+                            {getCourseVisibilityText(props.course.isPublic, props.course.isUnavailable)}
+                        </span>
+                    </ContentAboutListItem>
 
-            {removeError && <ErrorModal active={Boolean(removeError)} onClose={() => {
-                resetRemoveValues();
-            }} error={removeError} />}
+                    <ContentAboutListItem
+                        key={2}>
+                        Подписчики: <span className="text-violet">{props.course.subscribersCount}</span>
+                    </ContentAboutListItem>
 
-            {localError && <ErrorModal active={Boolean(localError)} onClose={() => {
-                resetError();
-                toNext(Paths.homePath);
-            }} error={localError} />}
+                    <ContentAboutListItem
+                        key={3}>
+                        Дата создания: <span className="text-violet">{props.course.creationDate}</span>
+                    </ContentAboutListItem>
+
+                    <CourseProgressSection completionProgress={props.course.completionProgress} />
+
+
+                </ContentAbout>
+            </section>
+        </>);
+
+}
+
+function SubscribeButton(props: {
+    isSubscriber: boolean,
+    isCreator: boolean,
+    onSubscribe: () => void,
+    onUnsubscribe: () => void
+}) {
+
+    if (props.isCreator) {
+        return;
+    }
+
+    if (props.isSubscriber) {
+        return (
+            <button
+                className='content-about__button button-violet-outline'
+                onClick={props.onUnsubscribe}>
+                Отписаться
+            </button>
+        );
+    }
+
+    if (!props.isSubscriber) {
+        return (
+            <button
+                className='content-about__button button-violet-outline'
+                onClick={props.onSubscribe}>
+                Подписаться
+            </button>
+        );
+    }
+}
+
+function CourseProgressSection(props: { completionProgress?: number }) {
+    if (props.completionProgress == undefined) {
+        return;
+    }
+
+    return (
+        <>
+            <ContentAboutListItem
+                key={4}>
+                Прогресс выполнения: <span className="text-violet">{props.completionProgress}%</span>
+            </ContentAboutListItem>
+
+            <ContentAboutListItem
+                key={5}>
+                <ProgressBar progress={props.completionProgress} />
+            </ContentAboutListItem>
         </>
     );
+}
+
+function getCourseVisibilityText(isPublic: boolean, isUnavailable: boolean): string {
+    if (isPublic) {
+        return 'общий доступ';
+    }
+
+    if (isUnavailable) {
+        return 'скрытый';
+    }
+
+    return 'приватный';
 }
 
 export default CourseView;

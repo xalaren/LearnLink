@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { CoursesContainer } from "../components/CoursesContainer";
+import { CoursesContainer } from "../components/CoursesContainer/CoursesContainer";
 import { usePublicCourses } from "../hooks/courseHooks";
-import { Loader } from "../components/Loader";
-import { ErrorModal } from "../components/ErrorModal";
+import { Loader } from "../components/Loader/Loader";
+import { ErrorModal } from "../components/Modal/ErrorModal";
 
 function PublicCoursesContainer() {
     const { publicCoursesQuery, courses, loading, error, resetValues } = usePublicCourses();

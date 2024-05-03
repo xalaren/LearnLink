@@ -1,11 +1,16 @@
+import { LocalRole } from "./localRole";
+
 export class Course {
     id: number;
     title: string;
     description?: string;
-    creationDate: string;
     subscribersCount: number;
     isPublic: boolean;
     isUnavailable: boolean;
+    creationDate: string = '';
+    completionProgress?: number;
+    completed?: boolean;
+    localRole?: LocalRole;
 
     constructor(
         id: number,
@@ -13,8 +18,7 @@ export class Course {
         isPublic: boolean,
         isUnavailable: boolean,
         description?: string,
-        subscribersCount: number = 0,
-        creationDate: string = '',
+        subscribersCount: number = 0
     ) {
         this.id = id;
         this.title = title;
@@ -22,6 +26,5 @@ export class Course {
         this.isUnavailable = isUnavailable;
         this.description = description;
         this.subscribersCount = subscribersCount;
-        this.creationDate = creationDate;
     }
 }

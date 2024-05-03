@@ -1,4 +1,4 @@
-import { useHistoryNavigation } from "../hooks/historyNavigation";
+import { useHistoryNavigation } from "../../hooks/historyNavigation";
 
 interface INavButtonProps {
     link: string;

@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { Modal } from "../components/Modal";
+import { Modal } from "../components/Modal/Modal";
 import { validate } from "../helpers/validation";
 import { Input } from "../components/Input";
 import { InputType, NotificationType } from "../models/enums";
-import PopupLoader from "../components/PopupLoader";
+import PopupLoader from "../components/Loader/PopupLoader";
 import Notification from "../components/PopupNotification";
 import { useAppSelector } from "../hooks/redux";
 import { Module } from "../models/module";

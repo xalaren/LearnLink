@@ -1,5 +1,5 @@
 import { User } from "../models/user";
-import ProfileImageUploader from "./ProfileImageUploader";
+import ProfileImageUploader from "./ImageUploader/ProfileImageUploader";
 
 interface IProfileCardProps {
     user: User;

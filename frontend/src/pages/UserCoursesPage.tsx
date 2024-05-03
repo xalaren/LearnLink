@@ -4,20 +4,20 @@ import { useAppSelector } from "../hooks/redux";
 import { useEffect, useState } from "react";
 import { Paths } from "../models/paths";
 import { useParams } from "react-router-dom";
-import SelectionPanel from "../components/SelectionPanel";
-import SelectionItem from "../components/SelectionItem";
+import SelectionPanel from "../components/Selection/SelectionPanel";
+import SelectionItem from "../components/Selection/SelectionItem";
 import { InputType, NotificationType, ViewTypes } from "../models/enums";
 import ControlNav from "../components/ControlNav";
 import UserCoursesModule from "../modules/UserCoursesModule";
-import { Modal } from "../components/Modal";
-import ModalContent from "../components/ModalContent";
-import ModalFooter from "../components/ModalFooter";
-import ModalButton from "../components/ModalButton";
+import { Modal } from "../components/Modal/Modal";
+import ModalContent from "../components/Modal/ModalContent";
+import ModalFooter from "../components/Modal/ModalFooter";
+import ModalButton from "../components/Modal/ModalButton";
 import { Input } from "../components/Input";
 import { validate } from "../helpers/validation";
 import Checkbox from "../components/Checkbox";
 import { useCreateCourse } from "../hooks/courseHooks";
-import PopupLoader from "../components/PopupLoader";
+import PopupLoader from "../components/Loader/PopupLoader";
 import PopupNotification from "../components/PopupNotification";
 
 function UserCoursesPage() {
@@ -44,7 +44,7 @@ function UserCoursesPage() {
 
             <SelectionPanel>
                 <SelectionItem
-                    key={1}
+                    index={1}
                     className="selection-panel__selection-item"
                     title="Созданные"
                     active={param.type === ViewTypes.created}
@@ -52,7 +52,7 @@ function UserCoursesPage() {
                 />
 
                 <SelectionItem
-                    key={2}
+                    index={2}
                     className="selection-panel__selection-item"
                     title="Подписки"
                     active={param.type === ViewTypes.subscribed}
@@ -60,7 +60,7 @@ function UserCoursesPage() {
                 />
 
                 <SelectionItem
-                    key={3}
+                    index={3}
                     className="selection-panel__selection-item"
                     title="Скрытые"
                     active={param.type === ViewTypes.unavailable}

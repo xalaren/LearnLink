@@ -1,13 +1,13 @@
-import { HeaderButtons } from "../components/HeaderNavButtons";
+import { HeaderButtons } from "../components/HeaderNav/HeaderNavButtons";
 import { useAppSelector, useAppDispatch } from "../hooks/redux";
-import { HeaderDropdown } from "../components/HeaderDropdown";
+import { HeaderDropdown } from "../components/Dropdown/HeaderDropdown";
 import { logout } from "../store/actions/authActionCreators";
 import { ViewTypes } from "../models/enums";
 import { fetchUser } from "../store/actions/userActionCreators";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
 import { Paths } from "../models/paths";
 import logo from "../assets/img/learnlinklogo.svg";
-import DropdownItem from "../components/DropdownItem";
+import DropdownItem from "../components/Dropdown/DropdownItem";
 import { DropdownState } from "../contexts/DropdownContext";
 
 

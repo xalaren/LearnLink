@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { DropdownContext } from "../contexts/DropdownContext";
+import { DropdownContext } from "../../contexts/DropdownContext";
 
 interface IDropdownItemProps {
     title: string;
