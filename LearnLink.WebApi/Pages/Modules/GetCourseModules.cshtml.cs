@@ -11,9 +11,9 @@ namespace LearnLink.WebApi.Pages.Modules
     {
         public GetCourseModulesModel(ModuleInteractor moduleInteractor) : base(moduleInteractor) { }
 
-        public Response<ModuleDto[]>? QueryResult { get; set; }
+        public Response<ClientModuleDto[]>? QueryResult { get; set; }
 
-        public ModuleDto[]? Modules { get; set; }
+        public ClientModuleDto[]? Modules { get; set; }
 
         public async Task<IActionResult> OnGet(int courseId)
         {

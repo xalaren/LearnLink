@@ -1,9 +1,14 @@
+import { useEffect, useState } from "react";
 import ContentAbout from "../components/ContentAbout/ContentAbout";
 import ContentAboutListItem from "../components/ContentAbout/ContentAboutListItem";
 import ContentList from "../components/ContentList/ContentList";
 import ItemLink from "../components/ItemLink";
 import ProgressBar from "../components/ProgressBar";
+import { useGetCourseModules } from "../hooks/moduleHooks";
+import { useAppSelector } from "../hooks/redux";
 import { Course } from "../models/course";
+import { Module } from "../models/module";
+import ModulesList from "./ModulesList";
 
 interface ICourseViewProps {
     course: Course;
@@ -25,7 +30,8 @@ function CourseView({ course, isCreator, isSubscriber, onSubscribe, onUnsubscrib
                 onSubscribe={onSubscribe}
                 onUnsubscribe={onUnsubscribe}
                 isCreator={isCreator}
-                isSubscriber={isSubscriber} />
+                isSubscriber={isSubscriber}
+            />
         </>
     );
 }
@@ -52,20 +58,8 @@ function CourseContent(props: {
             </p>
 
             <section className="view-page__content content-side">
-                <ContentList
-                    className="content-side__main"
-                    title="Изучаемые модули"
-                    showButton={props.course.localRole?.manageInternalAccess || false}
-                    onHeadButtonClick={() => { }}>
-                    <ItemLink
-                        title="Модуль 1"
-                        checked={false}
-                        onClick={() => { }}
-                        iconClassName="icon-module icon-medium-size"
-                        className="content-list__item"
-                        key={1}
-                    />
-                </ContentList>
+
+                <ModulesList course={props.course} />
 
                 <ContentAbout
                     className="content-side__aside"

@@ -25,7 +25,7 @@ function CoursePage() {
     const getCreatorStatusHook = useGetCreatorStatus();
 
     useEffect(() => {
-        fetchData();
+        fetchData().then();
     }, [user])
 
 

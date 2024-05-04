@@ -25,6 +25,18 @@ namespace LearnLink.Application.Mappers
                 );
         }
 
+        public static ClientModuleDto ToClientModule(this Module moduleEntity, ModuleCompletion? moduleCompletion = null)
+        {
+            return new ClientModuleDto()
+            {
+                Id = moduleEntity.Id,
+                Title = moduleEntity.Title,
+                Description = moduleEntity.Description,
+                Completed = moduleCompletion == null ? false : moduleCompletion.Completed,
+                CompletionProgress = moduleCompletion?.CompletionProgress
+            };
+        }
+
         public static Module Assign(this Module module, ModuleDto moduleDto)
         {
             module.Title = moduleDto.Title;

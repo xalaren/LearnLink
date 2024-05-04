@@ -8,21 +8,18 @@ import { IValueResponse, IVoidResponse } from "../models/response";
 export function useGetCourseModules() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [modules, setModules] = useState<Module[]>();
 
-
-
-    const getModulesQuery = async (courseId: number) => {
+    const getModulesQuery = async (courseId: number, userId: number = 0) => {
         try {
             setLoading(true);
-            const response = await axiosInstance.get<IValueResponse<Module[]>>(`${MODULE_ENDPOINRS_URL}/get-course-modules?courseId=${courseId}`);
+            const response = await axiosInstance.get<IValueResponse<Module[]>>(`${MODULE_ENDPOINRS_URL}get/atCourse?courseId=${courseId}&userId=${userId}`);
 
             if (!response.data.success) {
                 throw new AxiosError(response.data.message);
             }
 
             setLoading(false);
-            setModules(response.data.value);
+            return (response.data.value);
         }
         catch (err: unknown) {
             setLoading(false);
@@ -35,15 +32,13 @@ export function useGetCourseModules() {
         setLoading(false);
     }
 
-    return { getModulesQuery, modules, error, loading, resetValues }
+    return { getModulesQuery, error, loading, resetValues }
 }
 
 export function useCreateModules() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [success, setSuccess] = useState(false);
-
-
+    const [success, setSuccess] = useState('');
 
     const createModulesQuery = async (courseId: number, title: string, accessToken: string, description?: string) => {
         try {
@@ -60,7 +55,7 @@ export function useCreateModules() {
             }
 
             setLoading(false);
-            setSuccess(true);
+            setSuccess(response.data.message || '');
         }
         catch (err: unknown) {
             setLoading(false);
@@ -71,7 +66,7 @@ export function useCreateModules() {
     const resetValues = () => {
         setError('');
         setLoading(false);
-        setSuccess(false);
+        setSuccess('');
     }
 
     return { createModulesQuery, success, error, loading, resetValues }

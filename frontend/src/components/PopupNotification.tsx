@@ -5,7 +5,7 @@ import failed from "../assets/img/failed.svg";
 
 interface IPopupNotificationProps {
     notificationType: NotificationType;
-    children: string;
+    children: React.ReactNode;
     onFade: () => void;
 }
 

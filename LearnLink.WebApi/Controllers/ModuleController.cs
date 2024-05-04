@@ -30,10 +30,10 @@ namespace LearnLink.WebApi.Controllers
             return await moduleInteractor.GetAllModulesAsync();
         }
 
-        [HttpGet("get/course-modules")]
-        public async Task<Response<ModuleDto[]>> GetCourseModulesAsync(int courseId)
+        [HttpGet("get/atCourse")]
+        public async Task<Response<ClientModuleDto[]>> GetCourseModulesAsync(int courseId, int userId)
         {
-            return await moduleInteractor.GetCourseModulesAsync(courseId);
+            return await moduleInteractor.GetCourseModulesAsync(courseId, userId);
         }
 
         [Authorize]

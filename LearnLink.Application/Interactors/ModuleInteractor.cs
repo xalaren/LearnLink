@@ -115,27 +115,51 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task<Response<ModuleDto[]>> GetCourseModulesAsync(int courseId)
+        public async Task<Response<ClientModuleDto[]>> GetCourseModulesAsync(int courseId, int userId = 0)
         {
             try
             {
-                var modules = await unitOfWork.CourseModules
-                    .AsNoTracking()
-                    .Where(m => m.CourseId == courseId)
-                    .Join(
-                        unitOfWork.Modules.AsNoTracking(),
-                        courseModule => courseModule.ModuleId,
-                        module => module.Id,
-                        (courseModule, module) => module
-                    )
-                    .Select(module => module.ToDto())
-                    .ToArrayAsync();
+                if (userId == 0)
+                {
+                    var modules = await unitOfWork.CourseModules
+                        .AsNoTracking()
+                        .Where(m => m.CourseId == courseId)
+                        .Join(
+                            unitOfWork.Modules.AsNoTracking(),
+                            courseModule => courseModule.ModuleId,
+                            module => module.Id,
+                            (courseModule, module) => module
+                        )
+                        .ToArrayAsync();
+
+                    return new()
+                    {
+                        Success = true,
+                        Message = "Модули успешно получены",
+                        Value = modules.Select(module => module.ToClientModule()).ToArray()
+                    };
+                }
+
+                var user = await unitOfWork.Users.FirstOrDefaultAsync(user => user.Id == userId);
+
+                if (user == null)
+                {
+                    throw new NotFoundException("Пользователь не найден");
+                }
+
+                var moduleCompletions = unitOfWork.ModuleCompletions
+                    .Where(mc => mc.UserId == userId && mc.CourseId == courseId)
+                    .Include(mc => mc.Module);
+
+                var moduleCompletionsArray = await moduleCompletions.ToArrayAsync();
+
+                var clientModules = moduleCompletionsArray.Select(mc => mc.Module.ToClientModule(mc)).ToArray();
 
                 return new()
                 {
                     Success = true,
                     Message = "Модули успешно получены",
-                    Value = modules,
+                    Value = clientModules,
                 };
             }
             catch (CustomException exception)
