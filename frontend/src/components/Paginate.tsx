@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 interface IPaginateProps {
     currentPage: number;
     pageCount: number;
@@ -10,6 +12,11 @@ function Paginate({ currentPage, pageCount, setPage }: IPaginateProps) {
     for (let i = 1; i < pageCount + 1; i++) {
         pages.push(i);
     }
+
+    useEffect(() => {
+        console.log(currentPage);
+
+    }, [])
 
     return (
         <>

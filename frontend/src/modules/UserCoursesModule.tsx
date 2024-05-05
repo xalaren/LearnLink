@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import SearchForm from "../components/SearchForm";
 import { Course } from "../models/course";
-import { useUserCourses } from "../hooks/courseHooks";
+import { useHideCourse, useUserCourses } from "../hooks/courseHooks";
 import { useAppSelector } from "../hooks/redux";
 import { Loader } from "../components/Loader/Loader";
 import { ErrorModal } from "../components/Modal/ErrorModal";
 import { CoursesContainer } from "../components/CoursesContainer/CoursesContainer";
 import Paginate from "../components/Paginate";
 import { ViewTypes } from "../models/enums";
+import { Paths } from "../models/paths";
+import { useParams } from "react-router-dom";
+import { useHistoryNavigation } from "../hooks/historyNavigation";
 
 interface IUserCoursesModuleProps {
     type?: string;
@@ -15,23 +18,25 @@ interface IUserCoursesModuleProps {
 }
 
 function UserCoursesModule({ type, shouldUpdate }: IUserCoursesModuleProps) {
-    const [page, setPage] = useState(1);
+    const param = useParams<'pageNumber'>();
+
+    const [page, setPage] = useState(Number(param.pageNumber));
     const [pageCount, setPageCount] = useState(1);
     const [searchText, setSearchText] = useState('');
     const [courses, setCourses] = useState<Course[]>();
     const { accessToken } = useAppSelector(state => state.authReducer);
     const { user } = useAppSelector(state => state.userReducer);
+    const { toNext } = useHistoryNavigation();
 
     const { userCoursesQuery, loading, error, resetValues } = useUserCourses();
 
     useEffect(() => {
-        setPage(1);
-        fetchCourses();
+        navigateToPage(1);
     }, [type])
 
     useEffect(() => {
         fetchCourses();
-    }, [user, page, shouldUpdate]);
+    }, [user, param, shouldUpdate]);
 
     function onChange(event: React.ChangeEvent) {
         const inputElement = event.target as HTMLInputElement;
@@ -40,9 +45,7 @@ function UserCoursesModule({ type, shouldUpdate }: IUserCoursesModuleProps) {
 
     async function onSubmit(event: React.FormEvent) {
         event.preventDefault();
-
-        setPage(1);
-        await fetchCourses();
+        navigateToPage(1);
     }
 
     async function fetchCourses() {
@@ -63,11 +66,16 @@ function UserCoursesModule({ type, shouldUpdate }: IUserCoursesModuleProps) {
             }
         }
     }
+
+    function navigateToPage(nextPage: number) {
+        setPage(nextPage);
+        toNext(`${Paths.userCoursesPath}/${type}/page/${nextPage}`);
+    }
     return (
         <>
             <SearchForm placeholder="Название курсов" value={searchText} onChange={onChange} onSubmit={onSubmit} />
 
-            <Paginate currentPage={page} pageCount={pageCount} setPage={setPage} />
+            <Paginate currentPage={page} pageCount={pageCount} setPage={navigateToPage} />
 
             <ResultCourseContainer
                 loading={loading}

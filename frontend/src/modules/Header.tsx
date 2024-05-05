@@ -45,7 +45,7 @@ export function Header() {
                                 />
                                 <DropdownItem title="Мои курсы"
                                     className="icon icon-accent icon-star"
-                                    onClick={() => toNext(`${Paths.userCoursesPath}/${ViewTypes.created}`)}
+                                    onClick={() => toNext(`${Paths.userCoursesPath}/${ViewTypes.created}/page/1`)}
                                 />
                                 <DropdownItem title="Выйти"
                                     className="icon icon-accent icon-power"

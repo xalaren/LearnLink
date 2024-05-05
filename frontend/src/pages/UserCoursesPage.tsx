@@ -48,7 +48,7 @@ function UserCoursesPage() {
                     className="selection-panel__selection-item"
                     title="Созданные"
                     active={param.type === ViewTypes.created}
-                    onClick={() => toNext(Paths.userCoursesPath + '/' + ViewTypes.created)}
+                    onClick={() => toNext(`${Paths.userCoursesPath}/${ViewTypes.created}/page/1`)}
                 />
 
                 <SelectionItem
@@ -56,7 +56,7 @@ function UserCoursesPage() {
                     className="selection-panel__selection-item"
                     title="Подписки"
                     active={param.type === ViewTypes.subscribed}
-                    onClick={() => toNext(Paths.userCoursesPath + '/' + ViewTypes.subscribed)}
+                    onClick={() => toNext(`${Paths.userCoursesPath}/${ViewTypes.subscribed}/page/1`)}
                 />
 
                 <SelectionItem
@@ -64,7 +64,7 @@ function UserCoursesPage() {
                     className="selection-panel__selection-item"
                     title="Скрытые"
                     active={param.type === ViewTypes.unavailable}
-                    onClick={() => toNext(Paths.userCoursesPath + '/' + ViewTypes.unavailable)}
+                    onClick={() => toNext(`${Paths.userCoursesPath}/${ViewTypes.unavailable}/page/1`)}
                 />
             </SelectionPanel>
 

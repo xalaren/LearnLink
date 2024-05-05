@@ -7,19 +7,25 @@ import { usePublicCourses } from "../hooks/courseHooks";
 import { Loader } from "../components/Loader/Loader";
 import { ErrorModal } from "../components/Modal/ErrorModal";
 import Paginate from "../components/Paginate";
+import { useParams } from "react-router-dom";
+import { useHistoryNavigation } from "../hooks/historyNavigation";
+import { Paths } from "../models/paths";
 
 export function PublicPage() {
-    const [page, setPage] = useState(1);
+    const param = useParams<'pageNumber'>();
+
+    const [page, setPage] = useState(Number(param.pageNumber));
     const [pageCount, setPageCount] = useState(1);
     const [searchText, setSearchText] = useState('');
     const [courses, setCourses] = useState<Course[]>();
 
-
     const { publicCoursesQuery, loading, error, resetValues } = usePublicCourses();
+
+    const { toNext } = useHistoryNavigation();
 
     useEffect(() => {
         fetchCourses();
-    }, [page])
+    }, [page, param])
 
     async function fetchCourses() {
         resetValues();
@@ -32,11 +38,14 @@ export function PublicPage() {
         }
     }
 
+    function navigateToPage(nextPage: number) {
+        setPage(nextPage);
+        toNext(Paths.homePath + '/' + nextPage);
+    }
+
     async function onSubmit(event: React.FormEvent) {
         event.preventDefault();
-
-        setPage(1);
-        fetchCourses();
+        navigateToPage(1);
     }
 
     function onChange(event: React.ChangeEvent) {
@@ -48,7 +57,7 @@ export function PublicPage() {
         <MainContainer title="Общедоступные курсы">
             <SearchForm value={searchText} placeholder="Название курсов..." onChange={onChange} onSubmit={onSubmit} />
 
-            <Paginate currentPage={page} pageCount={pageCount} setPage={setPage} />
+            <Paginate currentPage={page} pageCount={pageCount} setPage={navigateToPage} />
 
             <ResultCourseContainer
                 loading={loading}
