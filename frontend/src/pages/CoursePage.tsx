@@ -24,9 +24,15 @@ function CoursePage() {
     const getSubscriberStatusHook = useGetSubscriberStatus();
     const getCreatorStatusHook = useGetCreatorStatus();
 
+    const [updateModalActive, setUpdateModalActive] = useState(false);
+    const [deleteModalActive, setDeleteModalActive] = useState(false);
+
     useEffect(() => {
-        fetchData().then();
-    }, [user])
+        if (updateModalActive || deleteModalActive) {
+            return;
+        }
+        fetchData();
+    }, [user, updateModalActive, deleteModalActive])
 
 
     async function fetchData() {
@@ -97,7 +103,12 @@ function CoursePage() {
                         isSubscriber={subscriberStatus}
                         isCreator={creatorStatus}
                         onSubscribe={onSubscribe}
-                        onUnsubscribe={onUnsubscribe} />
+                        onUnsubscribe={onUnsubscribe}
+                        updateModalActive={updateModalActive}
+                        setUpdateModalActive={setUpdateModalActive}
+                        deleteModalActive={deleteModalActive}
+                        setDeleteModalActive={setDeleteModalActive}
+                    />
 
                 </BuildedPage>
                 :

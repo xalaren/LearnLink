@@ -157,13 +157,24 @@ h3 {
     @extend .button-base;
     background-color: $lightRed;
     color: $white;
-    outline: solid 4px transparent;
 
     transition: 0.4s ease-in-out;
 
     @include hover {
         background-color: $red;
-        outline: solid 4px rgba($lightRed, 0.4);
+    }
+}
+
+.button-danger-light {
+    @extend .button-base;
+    background-color: $veryLightRed;
+    color: $lightRed;
+
+    transition: 0.4s ease-in-out;
+
+    @include hover {
+        background-color: $lightRed;
+        color: $white;
     }
 }
 
@@ -384,6 +395,7 @@ h3 {
     @extend .text-danger;
     $ml: 3px;
     animation: shake 0.2s;
+    margin: 3px;
 
     @keyframes shake {
         0% {
@@ -443,4 +455,10 @@ h3 {
     gap: 20px;
     justify-content: space-between;
     align-items: center;
+}
+
+.indented {
+    @include child-not-last {
+        margin-bottom: 40px;
+    }
 }

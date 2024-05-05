@@ -202,17 +202,14 @@ export function useGetCreatorStatus() {
     return { getStatusesQuery, error, resetError };
 }
 
-
 export function useUpdateCourse() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
-    const updateCourseQuery = async (title: string, isPublic: boolean, userId: number, courseId: number, accessToken: string, description?: string,) => {
+    const updateCourseQuery = async (course: Course, userId: number, accessToken: string) => {
         try {
             setLoading(true);
-
-            const course = new Course(courseId, title, isPublic, description);
             const response = (await axiosInstance.post<IVoidResponse>(`${COURSE_ENDPOINTS_URL}update?userId=${userId}`, course, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
@@ -241,12 +238,48 @@ export function useUpdateCourse() {
     return { updateCourseQuery, loading, error, success, resetValues };
 }
 
+export function useHideCourse() {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+
+    const hideCourseQuery = async (courseId: number, userId: number, accessToken: string) => {
+        try {
+            setLoading(true);
+            const response = (await axiosInstance.post<IVoidResponse>(`${COURSE_ENDPOINTS_URL}setUnavailable?userId=${userId}&courseId=${courseId}`, {}, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            }));
+
+            setLoading(false);
+
+            if (!response.data.success) {
+                throw new AxiosError(response.data.message);
+            }
+
+            setSuccess(response.data.message!);
+        }
+        catch (err: unknown) {
+            setError((err as AxiosError).message);
+        }
+    }
+
+    const resetValues = () => {
+        setLoading(false);
+        setError('');
+        setSuccess('');
+    }
+
+    return { hideCourseQuery, loading, error, success, resetValues };
+}
+
 export function useRemoveCourse() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
-    const removeCourseQuery = async (userId: number, courseId: number, accessToken: string) => {
+    const removeCourseQuery = async (courseId: number, userId: number, accessToken: string) => {
         try {
             setLoading(true);
 

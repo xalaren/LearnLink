@@ -120,73 +120,76 @@ function CourseCreateModal({ active, onClose }: ICourseCreateModalProps) {
         }
     }
 
-    function closeModal() {
+    function resetDefault() {
         resetValues();
         setTitle('');
         setDescription('');
         setTitleError('');
         setPublic(false);
+    }
+
+    function closeModal() {
+        resetDefault();
         onClose();
     }
 
     return (
         <>
-            {!loading && !error && !success &&
-                <Modal
-                    active={active}
-                    onClose={closeModal}
-                    title="Создание курса">
 
-                    <ModalContent>
-                        <form className="form">
-                            <div className="form__inputs">
-                                <Input
-                                    type={InputType.text}
-                                    name="title"
-                                    label="Название курса"
-                                    placeholder="Введите название..."
-                                    errorMessage={titleError}
-                                    value={title}
-                                    onChange={onChange}
-                                />
+            <Modal
+                active={active}
+                onClose={closeModal}
+                title="Создание курса">
 
-                                <Input
-                                    type={InputType.rich}
-                                    name="description"
-                                    label="Описание курса"
-                                    placeholder="Введите описание (необязательно)..."
-                                    value={description}
-                                    onChange={onChange}
-                                />
+                <ModalContent>
+                    <form className="form">
+                        <div className="form__inputs">
+                            <Input
+                                type={InputType.text}
+                                name="title"
+                                label="Название курса"
+                                placeholder="Введите название..."
+                                errorMessage={titleError}
+                                value={title}
+                                onChange={onChange}
+                            />
 
-                                <Checkbox
-                                    isChecked={isPublic}
-                                    checkedChanger={() => setPublic(prev => !prev)}
-                                    label="Публикация в общий доступ"
-                                />
-                            </div>
-                        </form>
-                    </ModalContent>
+                            <Input
+                                type={InputType.rich}
+                                name="description"
+                                label="Описание курса"
+                                placeholder="Введите описание (необязательно)..."
+                                value={description}
+                                onChange={onChange}
+                            />
 
-                    <ModalFooter>
-                        <ModalButton text="Сохранить" onClick={createCourse} />
-                    </ModalFooter>
+                            <Checkbox
+                                isChecked={isPublic}
+                                checkedChanger={() => setPublic(prev => !prev)}
+                                label="Публикация в общий доступ"
+                            />
+                        </div>
+                    </form>
+                </ModalContent>
 
-                </Modal >
-            }
+                <ModalFooter>
+                    <ModalButton text="Сохранить" onClick={createCourse} />
+                </ModalFooter>
+
+            </Modal >
 
             {loading &&
                 <PopupLoader />
             }
 
             {success &&
-                <PopupNotification notificationType={NotificationType.success} onFade={closeModal}>
+                <PopupNotification notificationType={NotificationType.success} onFade={resetDefault}>
                     {success}
                 </PopupNotification>
             }
 
             {error &&
-                <PopupNotification notificationType={NotificationType.error} onFade={closeModal}>
+                <PopupNotification notificationType={NotificationType.error} onFade={resetDefault}>
                     {error}
                 </PopupNotification>
             }

@@ -4,8 +4,6 @@ import Checkbox from "../components/Checkbox";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
 import { NotificationType } from "../models/enums";
 import { useRemoveUser } from "../hooks/userHooks";
-import { useHistoryNavigation } from "../hooks/historyNavigation";
-import { Paths } from "../models/paths";
 import PopupNotification from "../components/PopupNotification";
 import { logout } from "../store/actions/authActionCreators";
 import { resetUserState } from "../store/actions/userActionCreators";

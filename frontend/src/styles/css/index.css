@@ -461,7 +461,7 @@ h3 {
   font-weight: 600;
 }
 
-.button-base, .section-create__large-button, .button-white-green, .button-white-red, .button-gray-violet, .button-gray, .button-danger, .button-violet-outline, .button-violet-outline-rounded, .button-violet-light, .button-violet-light-rounded, .button-violet, .button-violet-rounded, .button-white-tp, .button-round, .modal__close-button {
+.button-base, .section-create__large-button, .button-white-green, .button-white-red, .button-gray-violet, .button-gray, .button-danger-light, .button-danger, .button-violet-outline, .button-violet-outline-rounded, .button-violet-light, .button-violet-light-rounded, .button-violet, .button-violet-rounded, .button-white-tp, .button-round, .modal__close-button {
   border-radius: 5px;
   height: 50px;
   background-color: #fff;
@@ -473,7 +473,7 @@ h3 {
   justify-content: center;
   gap: 10px;
 }
-.button-base > *, .section-create__large-button > *, .button-white-green > *, .button-white-red > *, .button-gray-violet > *, .button-gray > *, .button-danger > *, .button-violet-outline > *, .button-violet-outline-rounded > *, .button-violet-light > *, .button-violet-light-rounded > *, .button-violet > *, .button-violet-rounded > *, .button-white-tp > *, .button-round > *, .modal__close-button > * {
+.button-base > *, .section-create__large-button > *, .button-white-green > *, .button-white-red > *, .button-gray-violet > *, .button-gray > *, .button-danger-light > *, .button-danger > *, .button-violet-outline > *, .button-violet-outline-rounded > *, .button-violet-light > *, .button-violet-light-rounded > *, .button-violet > *, .button-violet-rounded > *, .button-white-tp > *, .button-round > *, .modal__close-button > * {
   transition: inherit;
 }
 
@@ -565,19 +565,34 @@ h3 {
 .button-danger {
   background-color: #ff616e;
   color: #fff;
-  outline: solid 4px transparent;
   transition: 0.4s ease-in-out;
 }
 @media (hover: hover) {
   .button-danger:hover {
     background-color: #ff2732;
-    outline: solid 4px rgba(255, 97, 110, 0.4);
   }
 }
 @media (hover: none) {
   .button-danger:active {
     background-color: #ff2732;
-    outline: solid 4px rgba(255, 97, 110, 0.4);
+  }
+}
+
+.button-danger-light {
+  background-color: #ffebed;
+  color: #ff616e;
+  transition: 0.4s ease-in-out;
+}
+@media (hover: hover) {
+  .button-danger-light:hover {
+    background-color: #ff616e;
+    color: #fff;
+  }
+}
+@media (hover: none) {
+  .button-danger-light:active {
+    background-color: #ff616e;
+    color: #fff;
   }
 }
 
@@ -816,6 +831,7 @@ h3 {
 
 .error-text {
   animation: shake 0.2s;
+  margin: 3px;
 }
 @keyframes shake {
   0% {
@@ -875,6 +891,10 @@ h3 {
   gap: 20px;
   justify-content: space-between;
   align-items: center;
+}
+
+.indented > *:not(:last-child) {
+  margin-bottom: 40px;
 }
 
 .header {
@@ -1394,9 +1414,6 @@ h3 {
 }
 .account-page__content .password-change-form {
   max-width: 400px;
-}
-.account-page .indented > *:not(:last-child) {
-  margin-bottom: 40px;
 }
 @media screen and (max-width: 992px) {
   .account-page .account-change-form {

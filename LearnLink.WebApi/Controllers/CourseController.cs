@@ -173,6 +173,17 @@ namespace LearnLink.WebApi.Controllers
         }
 
         [Authorize]
+        [HttpPost("setUnavailable")]
+        public async Task<Response> SetCourseUnavailableAsync(int userId, int courseId)
+        {
+            var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
+
+            if (!verifyResponse.Success) return verifyResponse;
+
+            return await courseInteractor.SetCourseUnavailableAsync(userId, courseId);
+        }
+
+        [Authorize]
         [HttpDelete("remove")]
         public async Task<Response> RemoveCourseAsync(int userId, int courseId)
         {

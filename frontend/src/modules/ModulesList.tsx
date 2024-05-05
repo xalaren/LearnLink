@@ -144,11 +144,15 @@ function ModuleCreateModal({ courseId, active, onClose }: IModuleCreateModalProp
         }
     }
 
-    function closeModal() {
+    function resetDefault() {
         resetValues();
         setTitle('');
         setDescription('');
         setTitleError('');
+    }
+
+    function closeModal() {
+        resetDefault();
         onClose();
     }
 
@@ -197,13 +201,13 @@ function ModuleCreateModal({ courseId, active, onClose }: IModuleCreateModalProp
             }
 
             {success &&
-                <PopupNotification notificationType={NotificationType.success} onFade={closeModal}>
+                <PopupNotification notificationType={NotificationType.success} onFade={resetDefault}>
                     {success}
                 </PopupNotification>
             }
 
             {error &&
-                <PopupNotification notificationType={NotificationType.error} onFade={closeModal}>
+                <PopupNotification notificationType={NotificationType.error} onFade={resetDefault}>
                     {error}
                 </PopupNotification>
             }

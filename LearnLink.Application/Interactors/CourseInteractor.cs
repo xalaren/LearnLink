@@ -423,7 +423,8 @@ namespace LearnLink.Application.Interactors
                             sub => sub.CourseId,
                             course => course.Id,
                             (sub, course) => course
-                        ) :
+                        )
+                        .Where(course => !course.IsUnavailable) :
                     unitOfWork.UserCreatedCourses
                         .AsNoTracking()
                         .Where(u => u.UserId == userId)
@@ -677,6 +678,53 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось изменить курс",
+                    InnerErrorMessages = [exception.Message],
+                };
+            }
+        }
+
+        public async Task<Response> SetCourseUnavailableAsync(int userId, int courseId)
+        {
+            try
+            {
+
+                var course = await unitOfWork.Courses.FindAsync(courseId) ??
+                    throw new NotFoundException("Курс не найден");
+
+                var editPermission = await permissionService.GetPermissionAsync(userId: userId, courseId: courseId, toEdit: true);
+
+                if (!editPermission)
+                {
+                    throw new AccessLevelException("Доступ отклонен");
+                }
+
+                course.IsUnavailable = true;
+                course.IsPublic = false;
+
+                unitOfWork.Courses.Update(course);
+
+                await unitOfWork.CommitAsync();
+
+                return new Response()
+                {
+                    Success = true,
+                    Message = "Курс успешно скрыт",
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = "Не удалось скрыть курс",
                     InnerErrorMessages = [exception.Message],
                 };
             }
