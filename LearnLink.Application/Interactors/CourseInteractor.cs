@@ -1,4 +1,5 @@
-﻿using LearnLink.Application.Mappers;
+﻿using LearnLink.Application.Helpers;
+using LearnLink.Application.Mappers;
 using LearnLink.Application.Transaction;
 using LearnLink.Core.Constants;
 using LearnLink.Core.Entities;
@@ -483,7 +484,7 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task<Response<CourseUserDto[]>> GetSubscribers(int userId, int courseId)
+        public async Task<Response<DataPage<CourseUserDto[]>>> FindParticipantsAsync(int userId, int courseId, string? searchText, DataPageHeader pageHeader)
         {
             try
             {
@@ -494,49 +495,65 @@ namespace LearnLink.Application.Interactors
                     throw new AccessLevelException("Доступ отклонен");
                 }
 
-                var subscriptions = unitOfWork.Subscriptions
+                IEnumerable<UserCourseLocalRole> usersQuery = await unitOfWork.UserCourseLocalRoles
                     .AsNoTracking()
-                    .Where(sub => sub.CourseId == courseId);
+                    .Where(u => u.CourseId == courseId)
+                    .ToListAsync();
 
-                var users = subscriptions.Join(
-                        unitOfWork.Users.AsNoTracking(),
-                        sub => sub.UserId,
-                        user => user.Id,
-                        (sub, user) => user
-                    );
+                foreach (var userCourseLocalRole in usersQuery)
+                {
+                    await unitOfWork.UserCourseLocalRoles.Entry(userCourseLocalRole)
+                        .Reference(u => u.User)
+                        .LoadAsync();
 
-                var userRoles = subscriptions.Join(
-                    unitOfWork.UserCourseLocalRoles.AsNoTracking(),
-                    sub => sub.UserId,
-                    userRole => userRole.UserId,
-                    (sub, userRole) => userRole)
-                    .Include(userRole => userRole.LocalRole);
+                    await unitOfWork.UserCourseLocalRoles.Entry(userCourseLocalRole)
+                        .Reference(u => u.LocalRole)
+                        .LoadAsync();
+                }
 
-                var courseUserDtos = await subscriptions
-                        .Join(
-                            users,
-                            sub => sub.UserId,
-                            user => user.Id,
-                            (sub, user) => new { Subscription = sub, User = user })
-                        .Join(
-                            userRoles,
-                            combined => combined.Subscription.UserId,
-                            localRole => localRole.UserId,
-                            (combined, userRole) => new CourseUserDto(
-                                combined.User.Id,
-                                combined.User.Nickname,
-                                combined.User.Name,
-                                combined.User.Lastname,
-                                userRole.LocalRole.Name,
-                                combined.Subscription.StartDate))
-                        .ToArrayAsync();
+                if (!string.IsNullOrWhiteSpace(searchText))
+                {
+                    usersQuery = usersQuery.Where(u =>
+                        u.User.Nickname.Contains(searchText) ||
+                        u.User.Lastname.Contains(searchText) ||
+                        u.User.Name.Contains(searchText));
+                }
+
+                int total = usersQuery.Count();
+
+                usersQuery = usersQuery
+                    .OrderBy(u => u.User.Lastname)
+                    .ThenBy(u => u.User.Name)
+                    .ThenBy(u => u.User.Nickname)
+                    .Skip((pageHeader.PageNumber - 1) * pageHeader.PageSize)
+                    .Take(pageHeader.PageSize);
+
+                var courseUsers = usersQuery
+                    .Select(u => new CourseUserDto(
+                        Id: u.User.Id,
+                        Nickname: u.User.Nickname,
+                        Name: u.User.Name,
+                        Lastname: u.User.Lastname,
+                        AvatarUrl: u.User.AvatarFileName != null ?
+                            DirectoryStore.GetRelativeDirectoryUrlToUserImages(u.User.Id) + u.User.AvatarFileName :
+                            null,
+                        LocalRoleName: u.LocalRole.Name
+                        ));
+
+                var dataPage = new DataPage<CourseUserDto[]>()
+                {
+                    ItemsCount = total,
+                    PageNumber = pageHeader.PageNumber,
+                    PageSize = pageHeader.PageSize,
+                    Values = courseUsers.ToArray()
+                };
 
                 return new()
                 {
                     Success = true,
                     Message = "Подписчики успешно получены",
                     StatusCode = 200,
-                    Value = courseUserDtos
+                    Value = dataPage
                 };
             }
             catch (CustomException exception)

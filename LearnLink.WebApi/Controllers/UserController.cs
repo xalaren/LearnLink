@@ -31,12 +31,19 @@ namespace CoursePrototype.WebApi.Controllers
             return response;
         }
 
+        [Authorize]
         [HttpGet("get")]
         public async Task<Response<UserDto>> GetUserAsync(int userId)
         {
             var response = await userInteractor.GetUserAsync(userId);
-
             return response;
+        }
+
+        [Authorize]
+        [HttpGet("find")]
+        public async Task<Response<DataPage<UserDto[]>>> FindUsersAsync(string? searchText, int page, int size)
+        {
+            return await userInteractor.FindUsersAsync(searchText, new DataPageHeader(page, size));
         }
 
         [AllowAnonymous]

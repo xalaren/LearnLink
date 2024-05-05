@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using System.Security.Cryptography.Xml;
-using LearnLink.Application.Helpers;
+﻿using LearnLink.Application.Helpers;
 using LearnLink.Application.Mappers;
 using LearnLink.Application.Security;
 using LearnLink.Application.Transaction;
@@ -307,7 +305,7 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task<Response<DataPage<UserDto[]>>> FindUsers(string? searchString, DataPageHeader pageHeader)
+        public async Task<Response<DataPage<UserDto[]>>> FindUsersAsync(string? searchString, DataPageHeader pageHeader)
         {
             try
             {

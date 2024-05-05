@@ -14,6 +14,7 @@ import { useAppDispatch, useAppSelector } from "./hooks/redux";
 import { useEffect } from "react";
 import { fetchUser } from "./store/actions/userActionCreators";
 import HomePage from "./pages/HomePage";
+import CourseParticipantsPage from "./pages/CourseParticipantsPage";
 
 
 function App() {
@@ -31,14 +32,14 @@ function App() {
             <Header />
 
             <Routes>
-                <Route path={Paths.homePath} element={<HomePage />}></Route>
-                <Route path={Paths.homePath + '/:pageNumber'} element={<PublicPage />}></Route>
+                <Route path={'/'} element={<HomePage />}></Route>
+                <Route path={Paths.publicPath + '/:pageNumber'} element={<PublicPage />}></Route>
                 <Route path={Paths.loginPath} element={<LoginPage />}></Route>
                 <Route path={Paths.registerPath} element={<RegisterPage />}></Route>
                 <Route path={Paths.profilePath + '/edit/:action'} element={<ProfilePage />}></Route>
                 <Route path={Paths.userCoursesFullPath + '/:pageNumber'} element={<UserCoursesPage />} />
                 <Route path={Paths.courseViewFullPath} element={<CoursePage />}></Route>
-                {/* <Route path={Paths.moduleViewFullPath} element={<ModulePage />}></Route> */}
+                <Route path={Paths.courseParticipantsPath + '/:pageNumber'} element={<CourseParticipantsPage />}></Route>
                 <Route path="*" element={<InvalidPage />}></Route>
             </Routes >
 

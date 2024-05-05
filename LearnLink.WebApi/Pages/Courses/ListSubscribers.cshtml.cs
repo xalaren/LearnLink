@@ -11,21 +11,21 @@ namespace LearnLink.WebApi.Pages.Courses
     {
         public ListSubscribersModel(CourseInteractor courseInteractor) : base(courseInteractor) { }
 
-        public Response<CourseUserDto[]>? QueryResult { get; set; }
+        public Response<DataPage<CourseUserDto[]>>? QueryResult { get; set; }
 
         public CourseUserDto[]? CourseUsers { get; set; }
 
-        public async Task<IActionResult> OnGet(int userId, int courseId)
+        public async Task<IActionResult> OnGet(int userId, int courseId, string? searchText, int pageNumber, int pageSize)
         {
             return await AuthRequiredAsync(async () =>
             {
                 if (userId == 0 || courseId == 0) return;
 
-                QueryResult = await CourseInteractor.GetSubscribers(userId, courseId);
+                QueryResult = await CourseInteractor.FindParticipantsAsync(userId, courseId, searchText, new DataPageHeader(pageNumber, pageSize));
 
                 if(QueryResult.Success && QueryResult.Value != null)
                 {
-                    CourseUsers = QueryResult.Value;
+                    CourseUsers = QueryResult.Value.Values;
                 }
             });
         }

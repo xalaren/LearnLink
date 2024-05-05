@@ -24,6 +24,21 @@
         <input type="number" name="courseId" placeholder="Course Id..." class="input" min="0" />
     </div>
 
+    <div class="form-input">
+        <p class="form-input__label">Page number</p>
+        <input type="number" name="pageNumber" placeholder="Page number..." class="input" />
+    </div>
+
+    <div class="form-input">
+        <p class="form-input__label">Page size</p>
+        <input type="number" name="pageSize" placeholder="Page size..." class="input" />
+    </div>
+
+    <div class="form-input">
+        <p class="form-input__label">Search text</p>
+        <input type="text" name="searchText" placeholder="Course title..." class="input" />
+    </div>
+
     <div class="form__actions">
         <button class="primary-button">Get subscribers</button>
     </div>
@@ -38,6 +53,14 @@
             <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
             <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
             <p>Message: @Model.QueryResult.Message</p>
+
+            @if (Model.QueryResult.Value != null)
+            {
+                <p>Page: @Model.QueryResult.Value.PageNumber</p>
+                <p>PageSize: @Model.QueryResult.Value.PageSize</p>
+                <p>PageCount: @Model.QueryResult.Value.PageCount</p>
+                <p>Total: @Model.QueryResult.Value.ItemsCount</p>
+            }
         </div>
     }
 }
@@ -54,7 +77,7 @@
                 <p>Name: <span class="white-selection">@user.Name</span></p>
                 <p>Lastname: <span class="white-selection">@user.Lastname</span></p>
                 <p>LocalRole: <span class="white-selection">@user.LocalRoleName</span></p>
-                <p>Subscription Date: <span class="white-selection">@user.SubscriptionDate.ToShortDateString()</span></p>
+                <p>AvatarUrl: <span class="white-selection">@user.AvatarUrl</span></p>
             </div>
         }
     </div>

@@ -28,7 +28,7 @@ namespace LearnLink.WebApi.Pages.Subscriptions
             {
                 if (pageNumber == 0 || pageSize == 0) return;
 
-                var result = await userInteractor.FindUsers(searchText, new DataPageHeader(pageNumber, pageSize));
+                var result = await userInteractor.FindUsersAsync(searchText, new DataPageHeader(pageNumber, pageSize));
 
                 if(result.Success && result.Value != null && result.Value.Values != null)
                 {

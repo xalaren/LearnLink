@@ -12,9 +12,9 @@ export function CoursesContainer({ courses }: ICoursesContainerProps) {
     const { toNext } = useHistoryNavigation();
 
     return (
-        <section className="courses">
+        <section className="control-list">
             {anyCourses && courses.map(course =>
-                <CourseItem className="courses__course-item" course={course} key={course.id} onClick={() => {
+                <CourseItem course={course} key={course.id} onClick={() => {
                     toNext(Paths.courseViewPath + '/' + course.id);
                 }} />
             )}

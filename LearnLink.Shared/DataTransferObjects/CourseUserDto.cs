@@ -6,7 +6,7 @@
             string Nickname,
             string Name,
             string Lastname,
-            string LocalRoleName,
-            DateTime SubscriptionDate
+            string? AvatarUrl,
+            string LocalRoleName
         );
 }

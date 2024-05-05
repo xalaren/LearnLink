@@ -893,6 +893,13 @@ h3 {
   align-items: center;
 }
 
+.line-end-container {
+  display: flex;
+  gap: 20px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
 .indented > *:not(:last-child) {
   margin-bottom: 40px;
 }
@@ -1156,20 +1163,6 @@ h3 {
   }
 }
 
-.control-list > *:not(:last-child) {
-  margin-bottom: 20px;
-}
-.control-list__controls {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-}
-.control-list__add-button {
-  font-size: 24px;
-  width: 50px;
-  height: 50px;
-}
-
 .control-nav {
   display: flex;
   gap: 20px;
@@ -1180,7 +1173,7 @@ h3 {
   height: 50px;
 }
 
-.courses > *:not(:last-child) {
+.control-list > *:not(:last-child) {
   margin-bottom: 20px;
 }
 
@@ -1786,6 +1779,7 @@ h3 {
   min-width: 60px;
   width: 60px;
   height: 60px;
+  border-radius: 30px;
 }
 .user-item__properties {
   display: flex;

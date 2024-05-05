@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import SearchForm from "../components/SearchForm";
 import { Course } from "../models/course";
-import { useHideCourse, useUserCourses } from "../hooks/courseHooks";
 import { useAppSelector } from "../hooks/redux";
 import { Loader } from "../components/Loader/Loader";
 import { ErrorModal } from "../components/Modal/ErrorModal";
@@ -11,6 +10,7 @@ import { ViewTypes } from "../models/enums";
 import { Paths } from "../models/paths";
 import { useParams } from "react-router-dom";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
+import { useUserCourses } from "../hooks/courseHooks";
 
 interface IUserCoursesModuleProps {
     type?: string;

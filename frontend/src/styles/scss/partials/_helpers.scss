@@ -457,6 +457,13 @@ h3 {
     align-items: center;
 }
 
+.line-end-container {
+    display: flex;
+    gap: 20px;
+    justify-content: flex-end;
+    align-items: center;
+}
+
 .indented {
     @include child-not-last {
         margin-bottom: 40px;

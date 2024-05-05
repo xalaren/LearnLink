@@ -46,6 +46,8 @@ function CourseView({
     deleteModalActive,
     setDeleteModalActive
 }: ICourseViewProps) {
+    const { toNext } = useHistoryNavigation();
+
     return (
         <>
             <section className="view-page__header">
@@ -56,7 +58,10 @@ function CourseView({
                             {course.localRole.editAccess &&
                                 <DropdownItem title="Редактировать" className="icon icon-pen-circle" key={1} onClick={() => setUpdateModalActive(true)} />
                             }
-                            <DropdownItem title="Участники" className="icon icon-user-group-circle" key={2} />
+
+                            {course.localRole.viewAccess &&
+                                <DropdownItem title="Участники" className="icon icon-user-group-circle" key={2} onClick={() => toNext(`${Paths.getCourseParticipantsPath(course.id)}/1`)} />
+                            }
 
                             {course.localRole.removeAccess &&
                                 <DropdownItem title="Удалить" className="icon icon-cross-circle" key={3} onClick={() => setDeleteModalActive(true)} />

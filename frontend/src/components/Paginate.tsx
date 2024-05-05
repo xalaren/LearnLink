@@ -13,11 +13,6 @@ function Paginate({ currentPage, pageCount, setPage }: IPaginateProps) {
         pages.push(i);
     }
 
-    useEffect(() => {
-        console.log(currentPage);
-
-    }, [])
-
     return (
         <>
 

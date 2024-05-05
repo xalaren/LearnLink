@@ -6,7 +6,7 @@ import { MainContainer } from "../components/MainContainer";
 function HomePage() {
     const { toNext } = useHistoryNavigation();
     useEffect(() => {
-        toNext(Paths.homePath + '/' + 1);
+        toNext(Paths.publicPath + '/' + 1);
     }, []);
 
     return (
