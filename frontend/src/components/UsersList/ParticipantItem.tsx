@@ -1,32 +1,32 @@
 import { LocalRole } from "../../models/localRole";
-import { User } from "../../models/user";
 import profile from '../../assets/img/profile_placeholder.svg';
+import { Participant } from "../../models/participant";
 
 interface IUserItemProps {
-    user: User;
+    participant: Participant;
     localRole: LocalRole;
     onEditButtonClick: () => void;
     onKickButtonClick: () => void;
     className?: string;
 }
 
-function UserItem({
-    user,
+function ParticipantItem({
+    participant,
     localRole,
     onEditButtonClick,
     onKickButtonClick,
     className = '' }: IUserItemProps) {
 
-    let profileImage = user.avatarUrl || profile;
+    let profileImage = participant.avatarUrl || profile;
 
     return (
         <div className={`user-item ${className}`}>
             <div className="user-item__profile">
                 <img className="user-item__image" src={profileImage} alt="Профиль" />
                 <div className="user-item__info profile-card">
-                    <p className="profile-card__title">{user.name} {user.lastname}</p>
-                    <p className="profile-card__subtitle text-violet">@{user.nickname}</p>
-                    <p className="profile-card__subtitle">Роль: <span className="text-violet">{localRole.name}</span></p>
+                    <p className="profile-card__title">{participant.name} {participant.lastname}</p>
+                    <p className="profile-card__subtitle text-violet">@{participant.nickname}</p>
+                    <p className="profile-card__subtitle">Роль: <span className="text-violet">{participant.localRole.name}</span></p>
                 </div>
             </div>
             <div className="user-item__properties">
@@ -43,8 +43,8 @@ function UserItem({
                     </button>
                 }
             </div>
-        </div>
+        </div >
     );
 }
 
-export default UserItem;
+export default ParticipantItem;

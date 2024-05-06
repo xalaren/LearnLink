@@ -8,6 +8,7 @@ export class Course {
     isPublic: boolean;
     isUnavailable: boolean;
     creationDate: string = '';
+    subscribeDate: string = '';
     completionProgress?: number;
     completed?: boolean;
     localRole?: LocalRole;

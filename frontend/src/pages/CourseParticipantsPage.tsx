@@ -1,16 +1,19 @@
 import { useParams } from "react-router-dom";
 import { MainContainer } from "../components/MainContainer";
 import SearchForm from "../components/SearchForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
 import { Paths } from "../models/paths";
 import Paginate from "../components/Paginate";
-import { User } from "../models/user";
-import { Role } from "../models/role";
 import ControlNav from "../components/ControlNav";
-import UserItem from "../components/UsersList/UserItem";
+import UserItem from "../components/UsersList/ParticipantItem";
 import { LocalRole } from "../models/localRole";
 import { useAppSelector } from "../hooks/redux";
+import { useFindCourseParticipants } from "../hooks/courseHooks";
+import { Participant } from "../models/participant";
+import { Loader } from "../components/Loader/Loader";
+import { ErrorModal } from "../components/Modal/ErrorModal";
+import { useGetLocalRoleByUserAtCourse } from "../hooks/localRoleHooks";
 
 function CourseParticipantsPage() {
     const courseParam = useParams<'courseId'>();
@@ -20,14 +23,54 @@ function CourseParticipantsPage() {
     const [pageCount, setPageCount] = useState(1);
     const [searchText, setSearchText] = useState('');
     const { user } = useAppSelector(state => state.userReducer);
-    const users = [
-        new User('nickname', 'lastname', 'name', null, undefined, new Role(0, 'участник', 'member'), 0),
-        user
-    ];
+    const { accessToken } = useAppSelector(state => state.authReducer);
+
+    const [localRole, setLocalRole] = useState<LocalRole>();
+    const [participants, setParticipants] = useState<Participant[]>();
+
+    const findCourseParticipantsHook = useFindCourseParticipants();
+    const getLocalRoleHook = useGetLocalRoleByUserAtCourse();
 
     const { toNext } = useHistoryNavigation();
 
+    useEffect(() => {
+        fetchData();
+    }, [user, localRole, pageParam]);
+
+    async function fetchData() {
+        await fetchLocalRole();
+        await fetchParticipants();
+    }
+
+    async function fetchLocalRole() {
+        if (localRole) {
+            return;
+        }
+
+        resetValues();
+
+        if (user && accessToken) {
+            const localRole = await getLocalRoleHook.getLocalRoleQuery(Number(courseParam.courseId), user.id, accessToken);
+
+            if (localRole) {
+                setLocalRole(localRole);
+            }
+        }
+    }
+
     async function fetchParticipants() {
+        if (!localRole || !localRole.viewAccess) return;
+
+        resetValues();
+
+        if (user && accessToken) {
+            const dataPage = await findCourseParticipantsHook.findParticipantsQuery(user.id, accessToken, Number(courseParam.courseId), page, searchText);
+
+            if (dataPage) {
+                setParticipants(dataPage.values);
+                setPageCount(dataPage.pageCount);
+            }
+        }
 
     }
 
@@ -46,18 +89,10 @@ function CourseParticipantsPage() {
         toNext(`${Paths.getCourseParticipantsPath(Number(courseParam.courseId))}/${nextPage}`);
     }
 
-    let localRole: LocalRole = {
-        id: 0,
-        name: 'member',
-        sign: 'member',
-        viewAccess: true,
-        editAccess: true,
-        inviteAccess: true,
-        kickAccess: true,
-        manageInternalAccess: true,
-        removeAccess: true,
-        isAdmin: true,
-    };
+    function resetValues() {
+        getLocalRoleHook.resetValues();
+        findCourseParticipantsHook.resetValues();
+    }
 
     return (
         <MainContainer title="Участники курса">
@@ -69,27 +104,61 @@ function CourseParticipantsPage() {
 
             <Paginate currentPage={page} pageCount={pageCount} setPage={navigateToPage} />
 
-            <div className="line-end-container">
-                <ControlNav>
-                    <button className="control-nav__add-button button-gray icon-plus"></button>
-                </ControlNav>
-            </div>
+            {localRole && localRole.inviteAccess &&
+                <div className="line-end-container">
+                    <ControlNav>
+                        <button className="control-nav__add-button button-gray icon-plus"></button>
+                    </ControlNav>
+                </div>
+            }
 
-            <section className="control-list">
-                {users.map(user =>
-                    <UserItem
-                        localRole={localRole}
-                        user={user}
-                        onEditButtonClick={() => { }}
-                        onKickButtonClick={() => { }}
-                    />
-                )}
-            </section>
+            <BuildedParticipantsContainer
+                error={getLocalRoleHook.error || findCourseParticipantsHook.error}
+                onErrorModalClose={resetValues}
+                loading={getLocalRoleHook.loading || findCourseParticipantsHook.loading}>
+                {localRole && participants &&
+                    <section className="control-list">
+                        {participants.map(participant =>
+                            <UserItem
+                                localRole={localRole}
+                                participant={participant}
+                                onEditButtonClick={() => { }}
+                                onKickButtonClick={() => { }}
+                            />
+                        )}
+                    </section>
+                }
+            </BuildedParticipantsContainer>
 
 
 
-        </MainContainer>
+
+
+        </MainContainer >
     );
+}
+
+interface IBuildedParticipantsContainer {
+    error: string;
+    onErrorModalClose: () => void;
+    loading: boolean;
+    children: React.ReactNode;
+}
+
+function BuildedParticipantsContainer({ error, onErrorModalClose, loading, children }: IBuildedParticipantsContainer) {
+    if (loading) {
+        return (<Loader />)
+    }
+
+    if (error) {
+        return (<ErrorModal
+            active={Boolean(error)}
+            error={error}
+            onClose={onErrorModalClose}
+        />);
+    }
+
+    return children;
 }
 
 export default CourseParticipantsPage;

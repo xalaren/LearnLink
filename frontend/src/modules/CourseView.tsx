@@ -52,7 +52,7 @@ function CourseView({
         <>
             <section className="view-page__header">
                 <p className="view-page__title big-text">{course.title}</p>
-                {course.localRole?.inviteAccess &&
+                {course.localRole?.viewAccess &&
                     <DropdownState>
                         <EllipsisDropdown>
                             {course.localRole.editAccess &&
@@ -138,9 +138,26 @@ function CourseContent(props: {
                         Дата создания: <span className="text-violet">{props.course.creationDate}</span>
                     </ContentAboutListItem>
 
-                    <CourseProgressSection completionProgress={props.course.completionProgress} />
+                    {props.course.subscribeDate != undefined &&
+                        <ContentAboutListItem
+                            key={4}>
+                            Дата подписки: <span className="text-violet">{props.course.subscribeDate}</span>
+                        </ContentAboutListItem>
+                    }
 
+                    {props.course.completionProgress != undefined &&
+                        <>
+                            <ContentAboutListItem
+                                key={5}>
+                                Прогресс выполнения: <span className="text-violet">{props.course.completionProgress}%</span>
+                            </ContentAboutListItem>
 
+                            <ContentAboutListItem
+                                key={6}>
+                                <ProgressBar progress={props.course.completionProgress} />
+                            </ContentAboutListItem>
+                        </>
+                    }
                 </ContentAbout>
             </section>
         </>);
@@ -179,25 +196,6 @@ function SubscribeButton(props: {
     }
 }
 
-function CourseProgressSection(props: { completionProgress?: number }) {
-    if (props.completionProgress == undefined) {
-        return;
-    }
-
-    return (
-        <>
-            <ContentAboutListItem
-                key={4}>
-                Прогресс выполнения: <span className="text-violet">{props.completionProgress}%</span>
-            </ContentAboutListItem>
-
-            <ContentAboutListItem
-                key={5}>
-                <ProgressBar progress={props.completionProgress} />
-            </ContentAboutListItem>
-        </>
-    );
-}
 
 function getCourseVisibilityText(isPublic: boolean, isUnavailable: boolean): string {
     if (isPublic) {

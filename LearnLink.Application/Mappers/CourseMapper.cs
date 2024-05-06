@@ -43,7 +43,7 @@ namespace LearnLink.Application.Mappers
                 );
         }
 
-        public static ClientCourseDto ToClientCourseDto(this Course courseEntity, LocalRoleDto? localRoleDto = null, CourseCompletionDto? courseCompletionDto = null)
+        public static ClientCourseDto ToClientCourseDto(this Course courseEntity, LocalRole? localRole = null, CourseCompletion? courseCompletion = null, Subscription? subscription = null)
         {
             return new ClientCourseDto()
             {
@@ -54,9 +54,10 @@ namespace LearnLink.Application.Mappers
                 IsUnavailable = courseEntity.IsUnavailable,
                 SubscribersCount = courseEntity.SubscribersCount,
                 CreationDate = courseEntity.CreationDate.ToShortDateString(),
-                Completed = courseCompletionDto?.Completed,
-                CompletionProgress = courseCompletionDto?.CompletionProgress,
-                LocalRole = localRoleDto
+                SubscribeDate = subscription?.StartDate.ToShortDateString(),
+                Completed = courseCompletion?.Completed,
+                CompletionProgress = courseCompletion?.CompletionProgress,
+                LocalRole = localRole?.ToDto()
             };
         }
 

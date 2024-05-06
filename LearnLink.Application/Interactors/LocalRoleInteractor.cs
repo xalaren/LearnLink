@@ -54,7 +54,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     Message = "Не удалось добавить роль. Внутренняя ошибка.",
-                    InnerErrorMessages = [ exception.Message ]
+                    InnerErrorMessages = [exception.Message]
                 };
             }
         }
@@ -165,6 +165,49 @@ namespace LearnLink.Application.Interactors
                 var localRole = await unitOfWork.LocalRoles
                     .AsNoTracking()
                     .FirstOrDefaultAsync(localRole => localRole.Sign == sign);
+
+                return new()
+                {
+                    Success = true,
+                    Message = "Локальная роль успешно получена",
+                    Value = localRole?.ToDto(),
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = "Не удалось получить локальную роль. Внутренняя ошибка.",
+                    InnerErrorMessages = [exception.Message]
+                };
+            }
+        }
+
+        public async Task<Response<LocalRoleDto>> GetUserLocalRoleAtCourse(int courseId, int userId)
+        {
+            try
+            {
+                var userCourseLocalRole = await unitOfWork.UserCourseLocalRoles.FirstOrDefaultAsync(u => u.CourseId == courseId && u.UserId == userId);
+
+                if (userCourseLocalRole == null)
+                {
+                    throw new NotFoundException("Роль пользователя не найдена");
+                }
+
+                await unitOfWork.UserCourseLocalRoles.Entry(userCourseLocalRole)
+                    .Reference(u => u.LocalRole)
+                    .LoadAsync();
+
+                var localRole = userCourseLocalRole.LocalRole;
 
                 return new()
                 {

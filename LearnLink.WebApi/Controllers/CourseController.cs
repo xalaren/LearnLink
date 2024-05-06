@@ -151,7 +151,7 @@ namespace LearnLink.WebApi.Controllers
 
         [Authorize]
         [HttpGet("find/participants")]
-        public async Task<Response<DataPage<CourseUserDto[]>>> FindParticipantsAsync(int userId, int courseId, string? searchText, int page, int size)
+        public async Task<Response<DataPage<ParticipantDto[]>>> FindParticipantsAsync(int userId, int courseId, string? searchText, int page, int size)
         {
             var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
 

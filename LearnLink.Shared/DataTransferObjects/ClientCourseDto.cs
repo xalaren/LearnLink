@@ -6,6 +6,7 @@ public class ClientCourseDto
     public string Title { get; set; } = string.Empty;
     public string? Description { get; set; }
     public string CreationDate { get; set; } = string.Empty;
+    public string? SubscribeDate { get; set; }
     public bool IsPublic { get; set; }
     public bool IsUnavailable { get; set; }
     public int SubscribersCount { get; set; } = 0;

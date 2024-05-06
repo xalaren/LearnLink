@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using LearnLink.Application.Mappers;
+﻿using LearnLink.Application.Mappers;
 using LearnLink.Application.Transaction;
 using LearnLink.Core.Constants;
 using LearnLink.Core.Entities;
@@ -311,6 +310,11 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
+                if (requesterUserId == targetUserId)
+                {
+                    throw new AccessLevelException("Невозможно исключить себя");
+                }
+
                 User requester = await unitOfWork.Users.FindAsync(requesterUserId) ??
                     throw new NotFoundException("Пользователь, запросивший ислючение, не найден");
 

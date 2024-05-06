@@ -5,6 +5,7 @@ import { IValueResponse, IVoidResponse } from "../models/response";
 import { COURSE_ENDPOINTS_URL } from "../models/constants";
 import axiosInstance from "../axios_config/axiosConfig";
 import { ValueDataPage } from "../models/dataPage";
+import { CourseUser, Participant } from "../models/participant";
 
 const defaultPageSize = 4;
 
@@ -309,4 +310,47 @@ export function useRemoveCourse() {
     }
 
     return { removeCourseQuery, loading, error, success, resetValues };
+}
+
+export function useFindCourseParticipants() {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+
+    const findParticipantsQuery = async (
+        userId: number,
+        accessToken: string,
+        courseId: number,
+        page: number,
+        searchText?: string,
+        size: number = defaultPageSize,) => {
+        try {
+            setLoading(true);
+
+            const response = (await axiosInstance
+                .get<IValueResponse<ValueDataPage<Participant[]>>>(
+                    `${COURSE_ENDPOINTS_URL}find/participants?userId=${userId}&courseId=${courseId}&searchText=${searchText}&page=${page}&size=${size}`, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                }));
+
+            setLoading(false);
+
+            if (!response.data.success) {
+                throw new AxiosError(response.data.message);
+            }
+
+            return response.data.value;
+        }
+        catch (err: unknown) {
+            setError((err as AxiosError).message);
+        }
+    }
+
+    const resetValues = () => {
+        setLoading(false);
+        setError('');
+    }
+
+    return { findParticipantsQuery, loading, error, resetValues };
 }

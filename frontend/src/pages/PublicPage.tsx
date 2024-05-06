@@ -40,7 +40,7 @@ export function PublicPage() {
 
     function navigateToPage(nextPage: number) {
         setPage(nextPage);
-        toNext(Paths.homePath + '/' + nextPage);
+        toNext(Paths.publicPath + '/' + nextPage);
     }
 
     async function onSubmit(event: React.FormEvent) {

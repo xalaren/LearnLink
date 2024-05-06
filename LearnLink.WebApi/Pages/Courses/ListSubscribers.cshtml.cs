@@ -11,9 +11,9 @@ namespace LearnLink.WebApi.Pages.Courses
     {
         public ListSubscribersModel(CourseInteractor courseInteractor) : base(courseInteractor) { }
 
-        public Response<DataPage<CourseUserDto[]>>? QueryResult { get; set; }
+        public Response<DataPage<ParticipantDto[]>>? QueryResult { get; set; }
 
-        public CourseUserDto[]? CourseUsers { get; set; }
+        public ParticipantDto[]? CourseUsers { get; set; }
 
         public async Task<IActionResult> OnGet(int userId, int courseId, string? searchText, int pageNumber, int pageSize)
         {
@@ -23,7 +23,7 @@ namespace LearnLink.WebApi.Pages.Courses
 
                 QueryResult = await CourseInteractor.FindParticipantsAsync(userId, courseId, searchText, new DataPageHeader(pageNumber, pageSize));
 
-                if(QueryResult.Success && QueryResult.Value != null)
+                if (QueryResult.Success && QueryResult.Value != null)
                 {
                     CourseUsers = QueryResult.Value.Values;
                 }

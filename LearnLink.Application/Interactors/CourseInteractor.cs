@@ -77,6 +77,8 @@ namespace LearnLink.Application.Interactors
                     throw new NotFoundException("Не удалось определить роль пользователя");
                 }
 
+                var subscription = await unitOfWork.Subscriptions.FirstOrDefaultAsync(subscription => subscription.UserId == userId && subscription.CourseId == courseId);
+
                 await unitOfWork.UserCourseLocalRoles.Entry(userCourseLocalRole)
                         .Reference(u => u.LocalRole)
                         .LoadAsync();
@@ -94,7 +96,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = true,
                     Message = "Курс успешно получен",
-                    Value = course.ToClientCourseDto(localRole.ToDto(), completion?.ToDto()),
+                    Value = course.ToClientCourseDto(localRole, completion, subscription),
                 };
             }
             catch (CustomException exception)
@@ -484,7 +486,7 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task<Response<DataPage<CourseUserDto[]>>> FindParticipantsAsync(int userId, int courseId, string? searchText, DataPageHeader pageHeader)
+        public async Task<Response<DataPage<ParticipantDto[]>>> FindParticipantsAsync(int userId, int courseId, string? searchText, DataPageHeader pageHeader)
         {
             try
             {
@@ -529,7 +531,7 @@ namespace LearnLink.Application.Interactors
                     .Take(pageHeader.PageSize);
 
                 var courseUsers = usersQuery
-                    .Select(u => new CourseUserDto(
+                    .Select(u => new ParticipantDto(
                         Id: u.User.Id,
                         Nickname: u.User.Nickname,
                         Name: u.User.Name,
@@ -537,10 +539,10 @@ namespace LearnLink.Application.Interactors
                         AvatarUrl: u.User.AvatarFileName != null ?
                             DirectoryStore.GetRelativeDirectoryUrlToUserImages(u.User.Id) + u.User.AvatarFileName :
                             null,
-                        LocalRoleName: u.LocalRole.Name
+                        LocalRole: u.LocalRole.ToDto()
                         ));
 
-                var dataPage = new DataPage<CourseUserDto[]>()
+                var dataPage = new DataPage<ParticipantDto[]>()
                 {
                     ItemsCount = total,
                     PageNumber = pageHeader.PageNumber,

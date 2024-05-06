@@ -1,12 +1,12 @@
 ﻿namespace LearnLink.Shared.DataTransferObjects
 {
-    public record CourseUserDto
+    public record ParticipantDto
         (
             int Id,
             string Nickname,
             string Name,
             string Lastname,
             string? AvatarUrl,
-            string LocalRoleName
+            LocalRoleDto LocalRole
         );
 }
