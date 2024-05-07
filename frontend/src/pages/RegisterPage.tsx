@@ -100,14 +100,17 @@ export function RegisterPage() {
             <form className="auth-page__form form-bordered" onSubmit={onSubmit}>
                 <h3 className="form__title">Регистрация</h3>
 
-                <ImageUploader
-                    name="avatar"
-                    className="form__image-uploader"
-                    onChange={onChange}
-                    image={uploadedImage}
-                />
+
 
                 <div className="form__inputs">
+
+                    <ImageUploader
+                        name="avatar"
+                        className="form__image-uploader"
+                        onChange={onChange}
+                        image={uploadedImage}
+                    />
+
                     <Input
                         type={InputType.text}
                         className="form__form-input"

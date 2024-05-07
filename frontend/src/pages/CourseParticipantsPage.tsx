@@ -6,14 +6,13 @@ import { useHistoryNavigation } from "../hooks/historyNavigation";
 import { Paths } from "../models/paths";
 import Paginate from "../components/Paginate";
 import ControlNav from "../components/ControlNav";
-import UserItem from "../components/UsersList/ParticipantItem";
 import { LocalRole } from "../models/localRole";
 import { useAppSelector } from "../hooks/redux";
 import { useFindCourseParticipants } from "../hooks/courseHooks";
 import { Participant } from "../models/participant";
 import { Loader } from "../components/Loader/Loader";
 import { ErrorModal } from "../components/Modal/ErrorModal";
-import { useGetLocalRoleByUserAtCourse } from "../hooks/localRoleHooks";
+import { useGetLocalRoleByUserAtCourse, useListAllLocalRoles, useReassignUserLocalRole } from "../hooks/localRoleHooks";
 import { Modal } from "../components/Modal/Modal";
 import ParticipantItem from "../components/UsersList/ParticipantItem";
 import ModalFooter from "../components/Modal/ModalFooter";
@@ -22,6 +21,9 @@ import { useKick } from "../hooks/subscriptionHooks";
 import PopupNotification from "../components/PopupNotification";
 import { NotificationType } from "../models/enums";
 import PopupLoader from "../components/Loader/PopupLoader";
+import profile from '../assets/img/profile_placeholder.svg';
+import Select from "../components/Select/Select";
+import SelectItem from "../components/Select/SelectItem";
 
 function CourseParticipantsPage() {
     const courseParam = useParams<'courseId'>();
@@ -36,6 +38,7 @@ function CourseParticipantsPage() {
     const [localRole, setLocalRole] = useState<LocalRole>();
     const [participants, setParticipants] = useState<Participant[]>();
     const [kickModalActive, setKickModalActive] = useState(false);
+    const [localRoleModalActive, setLocalRoleModalActive] = useState(false);
     const [selectedParticipant, setSelectedParticipant] = useState<Participant | null>(null);
 
     const findCourseParticipantsHook = useFindCourseParticipants();
@@ -44,9 +47,9 @@ function CourseParticipantsPage() {
     const { toNext } = useHistoryNavigation();
 
     useEffect(() => {
-        if (kickModalActive) return;
+        if (kickModalActive || localRoleModalActive) return;
         fetchData();
-    }, [user, localRole, pageParam, kickModalActive]);
+    }, [user, localRole, pageParam, kickModalActive, localRoleModalActive]);
 
     async function fetchData() {
         await fetchLocalRole();
@@ -134,7 +137,10 @@ function CourseParticipantsPage() {
                             <ParticipantItem
                                 localRole={localRole}
                                 participant={participant}
-                                onEditButtonClick={() => { }}
+                                onEditButtonClick={() => {
+                                    setSelectedParticipant(participant);
+                                    setLocalRoleModalActive(true);
+                                }}
                                 onKickButtonClick={() => {
                                     setSelectedParticipant(participant);
                                     setKickModalActive(true);
@@ -145,13 +151,25 @@ function CourseParticipantsPage() {
                 }
 
                 {user && selectedParticipant &&
-                    <ParticipantKickModal
-                        active={kickModalActive}
-                        onClose={() => setKickModalActive(false)}
-                        participant={selectedParticipant}
-                        accessToken={accessToken}
-                        courseId={Number(courseParam.courseId)}
-                        requesterUserId={user.id} />
+                    <>
+                        <ParticipantKickModal
+                            active={kickModalActive}
+                            onClose={() => setKickModalActive(false)}
+                            participant={selectedParticipant}
+                            accessToken={accessToken}
+                            courseId={Number(courseParam.courseId)}
+                            requesterUserId={user.id} />
+
+                        <ParticipantsLocalRoleModal
+                            participant={selectedParticipant}
+                            active={localRoleModalActive}
+                            accessToken={accessToken}
+                            courseId={Number(courseParam.courseId)}
+                            onClose={() => setLocalRoleModalActive(false)}
+                            userId={user.id}
+                        />
+                    </>
+
                 }
             </BuildedParticipantsContainer>
 
@@ -245,6 +263,138 @@ function ParticipantKickModal({
         </>
 
     )
+}
+
+interface IParticipantsLocalRoleModalProps {
+    participant: Participant;
+    active: boolean;
+    userId: number;
+    accessToken: string;
+    courseId: number;
+    onClose: () => void;
+}
+
+function ParticipantsLocalRoleModal({
+    participant,
+    active,
+    userId,
+    accessToken,
+    courseId,
+    onClose
+}: IParticipantsLocalRoleModalProps) {
+    let profileImage = participant.avatarUrl || profile;
+
+    const [selectActive, setSelectActive] = useState(false);
+    const [selectedLocalRole, setSelectedLocalRole] = useState<LocalRole | null>(participant.localRole);
+    const [localRoles, setLocalRoles] = useState<LocalRole[]>();
+
+    const listAllLocalRolesHook = useListAllLocalRoles();
+    const reassignUserLocalRoleHook = useReassignUserLocalRole();
+
+    useEffect(() => {
+        fetchLocalRoles();
+    }, []);
+
+    async function fetchLocalRoles() {
+        listAllLocalRolesHook.resetValues();
+        const result = await listAllLocalRolesHook.listLocalRolesQuery(accessToken);
+
+        if (result) {
+            setLocalRoles(result);
+        }
+    }
+
+    async function onSubmit() {
+        if (selectedLocalRole == null) return;
+
+        reassignUserLocalRoleHook.resetValues();
+        await reassignUserLocalRoleHook.reassignUserLocalRoleQuery(userId, participant.id, courseId, selectedLocalRole.id, accessToken);
+    }
+
+    function resetDefaults() {
+        listAllLocalRolesHook.resetValues();
+        reassignUserLocalRoleHook.resetValues();
+        setSelectedLocalRole(participant.localRole);
+    }
+
+    function closeModal() {
+        resetDefaults();
+        onClose();
+    }
+
+    return (
+        <>
+            {!reassignUserLocalRoleHook.error && !reassignUserLocalRoleHook.loading && !reassignUserLocalRoleHook.success &&
+                <Modal active={active} title="Редактировать роль пользователя" onClose={closeModal}>
+                    <div className="user-item__profile">
+                        <img className="user-item__image" src={profileImage} alt="Профиль" />
+                        <div className="user-item__info profile-card">
+                            <p className="profile-card__title">
+                                {participant.name} {participant.lastname}
+                                <span className="profile-card__title text-violet"> (@{participant.nickname})</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    {!listAllLocalRolesHook.error && !listAllLocalRolesHook.loading &&
+                        <Select
+                            active={selectActive}
+                            onDeselect={() => setSelectActive(false)}
+                            toggle={() => setSelectActive(prev => !prev)}
+                            defaultTitle="Выберите локальную роль из списка..."
+                            selectedTitle={selectedLocalRole?.name}>
+
+                            <SelectItem
+                                key={0}
+                                title="Добавить локальные роли..."
+                                onSelect={() => { }}
+                            />
+                            {localRoles && localRoles.map(localRole =>
+
+                                <SelectItem
+                                    key={localRole.id}
+                                    title={localRole.name}
+                                    onSelect={() => {
+                                        setSelectedLocalRole(localRole);
+                                        setSelectActive(false);
+                                    }}
+                                />
+                            )}
+
+                        </Select>
+                    }
+
+                    {listAllLocalRolesHook.error &&
+                        <p className="text-danger">{listAllLocalRolesHook.error}</p>
+                    }
+
+                    {!listAllLocalRolesHook.error && listAllLocalRolesHook.loading &&
+                        <p>Загрузка...</p>
+                    }
+
+
+                    <ModalFooter>
+                        <ModalButton
+                            text="Сохранить"
+                            onClick={onSubmit}
+                        />
+                    </ModalFooter>
+                </Modal >
+            }
+
+            {reassignUserLocalRoleHook.error &&
+                <PopupNotification notificationType={NotificationType.error} onFade={closeModal}>
+                    {reassignUserLocalRoleHook.error}
+                </PopupNotification>
+            }
+
+            {reassignUserLocalRoleHook.success &&
+                <PopupNotification notificationType={NotificationType.success} onFade={closeModal}>
+                    {reassignUserLocalRoleHook.success}
+                </PopupNotification>
+            }
+        </>
+    );
 }
 
 export default CourseParticipantsPage;

@@ -1,0 +1,54 @@
+﻿@page
+@model LearnLink.WebApi.Pages.LocalRoles.ReassignModel
+@{
+    ViewData["Title"] = "Reassign user role at course";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('LocalRoles/LocalRolesActionsPage')">
+        Local-Roles
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('LocalRoles/Reassign')">
+        Reassign
+    </h2>
+</div>
+
+<form class="form width-400" method="post">
+
+    <div class="form-input">
+        <p class="form-input__label">User Id (requester)</p>
+        <input type="number" name="requesterUserId" placeholder="User Id..." min="0" class="input" />
+    </div>
+
+    <div class="form-input">
+        <p class="form-input__label">User Id (target)</p>
+        <input type="number" name="targetUserId" placeholder="Target Id..." min="0" class="input" />
+    </div>
+
+    <div class="form-input">
+        <p class="form-input__label">Course Id</p>
+        <input type="number" name="courseId" placeholder="Course Id..." min="0" class="input" />
+    </div>
+
+    <div class="form-input">
+        <p class="form-input__label">Local role Id</p>
+        <input type="number" name="localRoleId" placeholder="Local role Id..." min="0" class="input" />
+    </div>
+
+    <div class="form__actions">
+        <button class="primary-button">Reassign local role</button>
+    </div>
+</form>
+
+@{
+    if (Model.QueryResult != null)
+    {
+        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+        <div class="response-container" id="register-response">
+            <h3>Response:</h3>
+            <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+            <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+            <p>Message: @Model.QueryResult.Message</p>
+        </div>
+    }
+}

@@ -61,6 +61,13 @@ namespace LearnLink.WebApi.Controllers
         }
 
         [Authorize]
+        [HttpPost("reassign")]
+        public async Task<Response> ReassignLocalRoleAsync(int requesterUserId, int targetUserId, int courseId, int localRoleId)
+        {
+            return await localRoleInteractor.ReassignUserRoleAsync(requesterUserId, targetUserId, courseId, localRoleId);
+        }
+
+        [Authorize]
         [HttpDelete("remove")]
         public async Task<Response> RemoveLocalRoleAsync(int roleId)
         {
