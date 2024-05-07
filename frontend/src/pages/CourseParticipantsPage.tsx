@@ -14,6 +14,14 @@ import { Participant } from "../models/participant";
 import { Loader } from "../components/Loader/Loader";
 import { ErrorModal } from "../components/Modal/ErrorModal";
 import { useGetLocalRoleByUserAtCourse } from "../hooks/localRoleHooks";
+import { Modal } from "../components/Modal/Modal";
+import ParticipantItem from "../components/UsersList/ParticipantItem";
+import ModalFooter from "../components/Modal/ModalFooter";
+import ModalButton from "../components/Modal/ModalButton";
+import { useKick } from "../hooks/subscriptionHooks";
+import PopupNotification from "../components/PopupNotification";
+import { NotificationType } from "../models/enums";
+import PopupLoader from "../components/Loader/PopupLoader";
 
 function CourseParticipantsPage() {
     const courseParam = useParams<'courseId'>();
@@ -27,6 +35,8 @@ function CourseParticipantsPage() {
 
     const [localRole, setLocalRole] = useState<LocalRole>();
     const [participants, setParticipants] = useState<Participant[]>();
+    const [kickModalActive, setKickModalActive] = useState(false);
+    const [selectedParticipant, setSelectedParticipant] = useState<Participant | null>(null);
 
     const findCourseParticipantsHook = useFindCourseParticipants();
     const getLocalRoleHook = useGetLocalRoleByUserAtCourse();
@@ -34,8 +44,9 @@ function CourseParticipantsPage() {
     const { toNext } = useHistoryNavigation();
 
     useEffect(() => {
+        if (kickModalActive) return;
         fetchData();
-    }, [user, localRole, pageParam]);
+    }, [user, localRole, pageParam, kickModalActive]);
 
     async function fetchData() {
         await fetchLocalRole();
@@ -92,6 +103,7 @@ function CourseParticipantsPage() {
     function resetValues() {
         getLocalRoleHook.resetValues();
         findCourseParticipantsHook.resetValues();
+        setSelectedParticipant(null);
     }
 
     return (
@@ -119,19 +131,29 @@ function CourseParticipantsPage() {
                 {localRole && participants &&
                     <section className="control-list">
                         {participants.map(participant =>
-                            <UserItem
+                            <ParticipantItem
                                 localRole={localRole}
                                 participant={participant}
                                 onEditButtonClick={() => { }}
-                                onKickButtonClick={() => { }}
+                                onKickButtonClick={() => {
+                                    setSelectedParticipant(participant);
+                                    setKickModalActive(true);
+                                }}
                             />
                         )}
                     </section>
                 }
+
+                {user && selectedParticipant &&
+                    <ParticipantKickModal
+                        active={kickModalActive}
+                        onClose={() => setKickModalActive(false)}
+                        participant={selectedParticipant}
+                        accessToken={accessToken}
+                        courseId={Number(courseParam.courseId)}
+                        requesterUserId={user.id} />
+                }
             </BuildedParticipantsContainer>
-
-
-
 
 
         </MainContainer >
@@ -159,6 +181,70 @@ function BuildedParticipantsContainer({ error, onErrorModalClose, loading, child
     }
 
     return children;
+}
+
+
+interface IParticipantKickModalProps {
+    requesterUserId: number;
+    accessToken: string;
+    participant: Participant;
+    courseId: number;
+    active: boolean;
+    onClose: () => void;
+}
+
+function ParticipantKickModal({
+    requesterUserId,
+    accessToken,
+    participant,
+    courseId,
+    active,
+    onClose
+}: IParticipantKickModalProps) {
+
+    const { kickQuery, error, success, loading, resetValues } = useKick();
+
+    async function onSubmit() {
+        await kickQuery(requesterUserId, participant.id, courseId, accessToken);
+    }
+
+    function closeModal() {
+        resetValues();
+        onClose();
+    }
+
+    return (
+        <>
+            {!error && !loading && !success &&
+                <Modal active={active} onClose={closeModal} title="Исключить пользователя">
+                    <div className="indented">
+                        Подтвердить исключение пользователя <span className="text-violet">{participant.nickname}</span>
+                    </div>
+                    <ModalFooter>
+                        <ModalButton onClick={onSubmit} text="Исключить" />
+                    </ModalFooter>
+                </Modal>
+            }
+
+            {error &&
+                <PopupNotification notificationType={NotificationType.error} onFade={closeModal}>
+                    {error}
+                </PopupNotification>
+            }
+
+            {success &&
+                <PopupNotification notificationType={NotificationType.success} onFade={closeModal}>
+                    {success}
+                </PopupNotification>
+            }
+
+            {loading &&
+                <PopupLoader />
+            }
+
+        </>
+
+    )
 }
 
 export default CourseParticipantsPage;
