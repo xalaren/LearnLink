@@ -38,13 +38,6 @@ namespace LearnLink.WebApi.Controllers
             return await localRoleInteractor.GetLocalRoleByNameAsync(name);
         }
 
-        [Authorize]
-        [HttpGet("get/byUserAtCourse")]
-        public async Task<Response<LocalRoleDto>> GetLocalRoleByUserAtCourseAsync(int courseId, int userId)
-        {
-            return await localRoleInteractor.GetUserLocalRoleAtCourse(courseId, userId);
-        }
-
 
         [Authorize]
         [HttpPost("create")]
@@ -58,13 +51,6 @@ namespace LearnLink.WebApi.Controllers
         public async Task<Response> UpdateLocalRoleAsync(LocalRoleDto LocalRoleDto)
         {
             return await localRoleInteractor.UpdateLocalRoleAsync(LocalRoleDto);
-        }
-
-        [Authorize]
-        [HttpPost("reassign")]
-        public async Task<Response> ReassignLocalRoleAsync(int requesterUserId, int targetUserId, int courseId, int localRoleId)
-        {
-            return await localRoleInteractor.ReassignUserRoleAsync(requesterUserId, targetUserId, courseId, localRoleId);
         }
 
         [Authorize]

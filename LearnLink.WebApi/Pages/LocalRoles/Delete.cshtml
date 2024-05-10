@@ -23,9 +23,10 @@
     </div>
 </form>
 
-@{
-    {
-        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+@if (Model.QueryResult != null) 
+{
+    { 
+        string className = Model.QueryResult.Success ? "green-text" : "red-text"; 
         <div class="response-container" id="register-response">
             <h3>Response:</h3>
             <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>

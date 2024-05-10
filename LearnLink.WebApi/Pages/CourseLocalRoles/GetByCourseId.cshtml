@@ -1,0 +1,59 @@
+﻿@page
+@model LearnLink.WebApi.Pages.CourseLocalRoles.GetByCourseIdModel
+@{
+    ViewData["Title"] = "Get local roles by course";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('CourseLocalRoles/CourseLocalRolesActionsPage')">
+        Course-Local-Roles
+    </h2>
+    <h2 class="breadcrumb__item" onclick="redirect('CourseLocalRoles/GetByCourseId')">
+        Get-by-course-Id
+    </h2>
+</div>
+
+<form class="form" method="get">
+    <div class="form-input">
+        <p class="form-input__label">Course Id</p>
+        <div class="line-container">
+            <input type="number" name="courseId" placeholder="Course Id..." min="0" class="input" />
+            <button class="primary-button">Get</button>
+        </div>
+    </div>
+</form>
+
+@{
+    if (Model.QueryResult != null)
+    {
+        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+        <div class="response-container" id="register-response">
+            <h3>Response:</h3>
+            <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+            <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+            <p>Message: @Model.QueryResult.Message</p>
+        </div>
+    }
+}
+
+@if (Model.LocalRoles != null)
+{
+    <div class="data-view">
+        <h3>View data</h3>
+        @foreach (var localRole in Model.LocalRoles)
+        {
+            <div class="result-value">
+                <p>Id: <span class="white-selection">@localRole.Id</span></p>
+                <p>Name: <span class="white-selection">@localRole.Name</span></p>
+                <p>Sign: <span class="white-selection">@localRole.Sign</span></p>
+                <p>ViewAccess: <span class="white-selection">@localRole.ViewAccess</span></p>
+                <p>ManageAccess: <span class="white-selection">@localRole.ManageInternalAccess</span></p>
+                <p>EditAccess: <span class="white-selection">@localRole.EditAccess</span></p>
+                <p>RemoveAccess: <span class="white-selection">@localRole.RemoveAccess</span></p>
+                <p>InviteAccess: <span class="white-selection">@localRole.InviteAccess</span></p>
+                <p>KickAccess: <span class="white-selection">@localRole.KickAccess</span></p>
+                <p>EditRolesAccess: <span class="white-selection">@localRole.EditRolesAccess</span></p>
+            </div>
+        }
+    </div>
+}

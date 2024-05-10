@@ -3,38 +3,22 @@ using LearnLink.Shared.DataTransferObjects;
 using LearnLink.Shared.Responses;
 using LearnLink.WebApi.Pages.PageModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace LearnLink.WebApi.Pages.LocalRoles
+namespace LearnLink.WebApi.Pages.CourseLocalRoles
 {
-    public class UpdateModel : LocalRolesBasePageModel
+    public class CreateModel : CourseLocalRolesBasePageModel
     {
-        public UpdateModel(LocalRoleInteractor localRoleInteractor) : base(localRoleInteractor) { }
+        public CreateModel(CourseLocalRoleInteractor courseLocalRoleInteractor) : base(courseLocalRoleInteractor) { }
 
         public Response? QueryResult { get; set; }
 
-        public LocalRoleDto? FoundLocalRole { get; set; }
-
-        public async Task<IActionResult> OnGet(int localRoleId)
+        public IActionResult OnGet()
         {
-            return await AuthRequiredAsync(async () =>
-            {
-                if (localRoleId == 0) return;
-
-                var result =  await LocalRoleInteractor.GetLocalRoleByIdAsync(localRoleId);
-
-                if(result.Success && result.Value != null)
-                {
-                    FoundLocalRole = result.Value;
-                    return;
-                }
-
-                QueryResult = result;
-            });
+            return AuthRequired();
         }
 
         public async Task OnPost(
-            int localRoleId,
+            int courseId,
             string localRoleSign,
             string localRoleName,
             string viewAccess,
@@ -57,7 +41,7 @@ namespace LearnLink.WebApi.Pages.LocalRoles
 
             var localRoleDto = new LocalRoleDto()
             {
-                Id = localRoleId,
+                Id = 0,
                 Sign = localRoleSign,
                 Name = localRoleName,
                 ViewAccess = viewAccessValue,
@@ -69,7 +53,7 @@ namespace LearnLink.WebApi.Pages.LocalRoles
                 EditRolesAccess = editRolesAccessValue
             };
 
-            QueryResult = await LocalRoleInteractor.UpdateLocalRoleAsync(localRoleDto);
+            QueryResult = await CourseLocalRoleInteractor.CreateAsync(courseId, localRoleDto);
         }
     }
 }

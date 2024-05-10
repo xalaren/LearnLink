@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 interface IPaginateProps {
     currentPage: number;
     pageCount: number;
@@ -7,7 +5,7 @@ interface IPaginateProps {
 }
 
 function Paginate({ currentPage, pageCount, setPage }: IPaginateProps) {
-    let pages: number[] = [];
+    const pages: number[] = [];
 
     for (let i = 1; i < pageCount + 1; i++) {
         pages.push(i);
@@ -40,7 +38,7 @@ function PaginateMiddleButtons(props: { currentPage: number, pages: number[], se
         <>
             {
                 props.pages.map(page => {
-                    let selectedClassName = page === props.currentPage ? 'button-violet-light-selected' : '';
+                    const selectedClassName = page === props.currentPage ? 'button-violet-light-selected' : '';
                     return (
                         <button
                             className={`pagination-form__button button-violet-light ${selectedClassName}`}
@@ -65,7 +63,7 @@ function calculatePage(page: number, count: number, next: boolean): number {
 
     if (!next && page - 1 < 1) return page;
 
-    let modifier = next ? 1 : -1;
+    const modifier = next ? 1 : -1;
 
     return page + modifier;
 }

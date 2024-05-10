@@ -36,16 +36,14 @@ namespace LearnLink.Application.Interactors
                 return true;
             }
 
-            var userCourseRole = await unitOfWork.UserCourseLocalRoles.FirstOrDefaultAsync(u => u.UserId == userId && u.CourseId == courseId);
+            var userCourseRole = await unitOfWork.UserCourseLocalRoles
+                .Include(u => u.LocalRole)
+                .FirstOrDefaultAsync(u => u.UserId == userId && u.CourseId == courseId);
 
             if (userCourseRole == null)
             {
                 return false;
             }
-
-            await unitOfWork.UserCourseLocalRoles.Entry(userCourseRole)
-                .Reference(u => u.LocalRole)
-                .LoadAsync();
 
             return
                 (userCourseRole.LocalRole.ViewAccess && toView) ||

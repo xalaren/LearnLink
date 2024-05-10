@@ -13,6 +13,7 @@ namespace LearnLink.Application.Transaction
         public DbSet<Course> Courses { get; }
         public DbSet<Subscription> Subscriptions { get; }
         public DbSet<UserCreatedCourse> UserCreatedCourses { get; }
+        public DbSet<CourseLocalRole> CourseLocalRoles { get; }
         public DbSet<UserCourseLocalRole> UserCourseLocalRoles { get; }
 
         public DbSet<Module> Modules { get; }

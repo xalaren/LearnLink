@@ -1,0 +1,23 @@
+﻿@page
+@model LearnLink.WebApi.Pages.UserCourseLocalRoles.UserCourseLocalRolesActionsPageModel
+@{
+    ViewData["Title"] = "User course local roles";
+}
+
+<div class="breadcrumb">
+    <h2 class="breadcrumb__item" onclick="redirect('UserCourseLocalRoles/UserCourseLocalRolesActionsPage')">
+        User-Course-Local-Roles
+    </h2>
+</div>
+
+<div class="endpoints-list">
+
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('UserCourseLocalRoles/RequestReassign')">
+        <div class="endpoint-item__method">
+            post
+        </div>
+        <div class="endpoint-item__name">Request reassign user local role</div>
+        <i class="endpoint-item__arrow icon-arrow-right"> </i>
+    </div>
+
+</div>

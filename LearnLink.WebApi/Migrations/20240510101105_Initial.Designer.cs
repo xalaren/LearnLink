@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LearnLink.WebApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240418050249_Initial")]
+    [Migration("20240510101105_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -78,6 +78,21 @@ namespace LearnLink.WebApi.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("CourseCompletions");
+                });
+
+            modelBuilder.Entity("LearnLink.Core.Entities.CourseLocalRole", b =>
+                {
+                    b.Property<int>("CourseId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("LocalRoleId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("CourseId", "LocalRoleId");
+
+                    b.HasIndex("LocalRoleId");
+
+                    b.ToTable("CourseLocalRoles");
                 });
 
             modelBuilder.Entity("LearnLink.Core.Entities.CourseModule", b =>
@@ -404,6 +419,9 @@ namespace LearnLink.WebApi.Migrations
                     b.Property<bool>("EditAcess")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("EditRolesAccess")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("InviteAccess")
                         .HasColumnType("boolean");
 
@@ -442,6 +460,25 @@ namespace LearnLink.WebApi.Migrations
                     b.Navigation("Course");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LearnLink.Core.Entities.CourseLocalRole", b =>
+                {
+                    b.HasOne("LearnLink.Core.Entities.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LearnLink.Core.Entities.LocalRole", "LocalRole")
+                        .WithMany()
+                        .HasForeignKey("LocalRoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("LocalRole");
                 });
 
             modelBuilder.Entity("LearnLink.Core.Entities.CourseModule", b =>

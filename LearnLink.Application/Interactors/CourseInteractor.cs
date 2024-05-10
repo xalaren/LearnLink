@@ -10,11 +10,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Interactors
 {
-    public class CourseInteractor(IUnitOfWork unitOfWork, PermissionService permissionService, ModuleInteractor moduleInteractor)
+    public class CourseInteractor(
+        IUnitOfWork unitOfWork, 
+        PermissionService permissionService, 
+        ModuleInteractor moduleInteractor,
+        CourseLocalRoleInteractor courseLocalRoleInteractor,
+        UserCourseLocalRolesInteractor userCourseLocalRoleInteractor)
     {
         private readonly IUnitOfWork unitOfWork = unitOfWork;
         private readonly PermissionService permissionService = permissionService;
         private readonly ModuleInteractor moduleInteractor = moduleInteractor;
+        private readonly CourseLocalRoleInteractor courseLocalRoleInteractor = courseLocalRoleInteractor;
+        private readonly UserCourseLocalRolesInteractor userCourseLocalRoleInteractor = userCourseLocalRoleInteractor;
+        
 
         //Get, Find methods
 
@@ -60,7 +68,9 @@ namespace LearnLink.Application.Interactors
                     await unitOfWork.Courses.FirstOrDefaultAsync(course => course.Id == courseId) ??
                     throw new NotFoundException("Курс не найден");
 
-                var userCourseLocalRole = await unitOfWork.UserCourseLocalRoles.FirstOrDefaultAsync(u => u.CourseId == courseId && u.UserId == userId);
+                var userCourseLocalRole = await unitOfWork.UserCourseLocalRoles
+                    .Include(userCourseLocalRole => userCourseLocalRole.LocalRole)
+                    .FirstOrDefaultAsync(u => u.CourseId == courseId && u.UserId == userId);
 
                 if (userCourseLocalRole == null && course.IsPublic)
                 {
@@ -79,9 +89,6 @@ namespace LearnLink.Application.Interactors
 
                 var subscription = await unitOfWork.Subscriptions.FirstOrDefaultAsync(subscription => subscription.UserId == userId && subscription.CourseId == courseId);
 
-                await unitOfWork.UserCourseLocalRoles.Entry(userCourseLocalRole)
-                        .Reference(u => u.LocalRole)
-                        .LoadAsync();
 
                 var localRole = userCourseLocalRole.LocalRole;
 
@@ -497,21 +504,11 @@ namespace LearnLink.Application.Interactors
                     throw new AccessLevelException("Доступ отклонен");
                 }
 
-                IEnumerable<UserCourseLocalRole> usersQuery = await unitOfWork.UserCourseLocalRoles
+                IEnumerable<UserCourseLocalRole> usersQuery = unitOfWork.UserCourseLocalRoles
                     .AsNoTracking()
-                    .Where(u => u.CourseId == courseId)
-                    .ToListAsync();
-
-                foreach (var userCourseLocalRole in usersQuery)
-                {
-                    await unitOfWork.UserCourseLocalRoles.Entry(userCourseLocalRole)
-                        .Reference(u => u.User)
-                        .LoadAsync();
-
-                    await unitOfWork.UserCourseLocalRoles.Entry(userCourseLocalRole)
-                        .Reference(u => u.LocalRole)
-                        .LoadAsync();
-                }
+                    .Include(userCourseLocalRole => userCourseLocalRole.User)
+                    .Include(userCourseLocalRole => userCourseLocalRole.LocalRole)
+                    .Where(u => u.CourseId == courseId);
 
                 if (!string.IsNullOrWhiteSpace(searchText))
                 {
@@ -611,26 +608,13 @@ namespace LearnLink.Application.Interactors
                     CompletionProgress = 0,
                 };
 
-                var role = await unitOfWork.LocalRoles.FirstOrDefaultAsync(x => x.Sign == RoleSignConstants.MODERATOR);
-
-                if (role == null)
-                {
-                    throw new NotFoundException("Не найдена роль модератора. Обратитесь к администратору или разработчику.");
-                }
-
-                var userCourseRole = new UserCourseLocalRole()
-                {
-                    Course = course,
-                    LocalRole = role,
-                    User = user,
-                };
-
                 await unitOfWork.Courses.AddAsync(course);
                 await unitOfWork.UserCreatedCourses.AddAsync(userCreatedCourse);
-                await unitOfWork.UserCourseLocalRoles.AddAsync(userCourseRole);
                 await unitOfWork.CourseCompletions.AddAsync(courseCompletion);
-
                 await unitOfWork.CommitAsync();
+
+                await courseLocalRoleInteractor.CreateDefaultLocalRoles(course.Id, RoleSignConstants.MODERATOR, RoleSignConstants.MEMBER);
+                await AssignModeratorAsync(userId, course.Id);
 
                 return new Response()
                 {
@@ -879,16 +863,16 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                var userLocalRole = await unitOfWork.UserCourseLocalRoles.FirstOrDefaultAsync(x => x.UserId == userId && x.CourseId == courseId);
+                var userLocalRole = await unitOfWork.UserCourseLocalRoles
+                    .Include(userCourseLocalRole => userCourseLocalRole.LocalRole)
+                    .FirstOrDefaultAsync(userCourseLocalRole => 
+                        userCourseLocalRole.UserId == userId && 
+                        userCourseLocalRole.CourseId == courseId);
 
                 if (userLocalRole == null)
                 {
                     throw new NotFoundException("Локальная роль пользователя в данном курсе не найдена");
                 }
-
-                await unitOfWork.UserCourseLocalRoles.Entry(userLocalRole)
-                    .Reference(u => u.LocalRole)
-                    .LoadAsync();
 
                 return new()
                 {
@@ -931,6 +915,18 @@ namespace LearnLink.Application.Interactors
             }
 
             unitOfWork.Courses.Remove(course);
+        }
+
+        private async Task AssignModeratorAsync(int userId, int courseId)
+        {
+            var moderatorLocalRole = await unitOfWork.LocalRoles.FirstOrDefaultAsync(localRole => localRole.Sign == RoleSignConstants.MODERATOR);
+
+            if(moderatorLocalRole == null)
+            {
+                throw new NotFoundException("Локальная роль модератора не найдена");
+            }
+
+            await userCourseLocalRoleInteractor.CreateAsyncNoResponse(userId, courseId, moderatorLocalRole.Id);
         }
     }
 }

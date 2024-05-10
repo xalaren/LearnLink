@@ -73,7 +73,8 @@ namespace LearnLink.WebApi.Migrations
                     RemoveAccess = table.Column<bool>(type: "boolean", nullable: true),
                     ManageInternalAccess = table.Column<bool>(type: "boolean", nullable: true),
                     InviteAccess = table.Column<bool>(type: "boolean", nullable: true),
-                    KickAccess = table.Column<bool>(type: "boolean", nullable: true)
+                    KickAccess = table.Column<bool>(type: "boolean", nullable: true),
+                    EditRolesAccess = table.Column<bool>(type: "boolean", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -150,6 +151,30 @@ namespace LearnLink.WebApi.Migrations
                         name: "FK_ModuleLessons_Modules_ModuleId",
                         column: x => x.ModuleId,
                         principalTable: "Modules",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CourseLocalRoles",
+                columns: table => new
+                {
+                    CourseId = table.Column<int>(type: "integer", nullable: false),
+                    LocalRoleId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CourseLocalRoles", x => new { x.CourseId, x.LocalRoleId });
+                    table.ForeignKey(
+                        name: "FK_CourseLocalRoles_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CourseLocalRoles_Roles_LocalRoleId",
+                        column: x => x.LocalRoleId,
+                        principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -320,8 +345,8 @@ namespace LearnLink.WebApi.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "integer", nullable: false),
-                    LocalRoleId = table.Column<int>(type: "integer", nullable: false),
-                    CourseId = table.Column<int>(type: "integer", nullable: false)
+                    CourseId = table.Column<int>(type: "integer", nullable: false),
+                    LocalRoleId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -374,6 +399,11 @@ namespace LearnLink.WebApi.Migrations
                 name: "IX_CourseCompletions_CourseId",
                 table: "CourseCompletions",
                 column: "CourseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CourseLocalRoles_LocalRoleId",
+                table: "CourseLocalRoles",
+                column: "LocalRoleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CourseModules_ModuleId",
@@ -458,6 +488,9 @@ namespace LearnLink.WebApi.Migrations
         {
             migrationBuilder.DropTable(
                 name: "CourseCompletions");
+
+            migrationBuilder.DropTable(
+                name: "CourseLocalRoles");
 
             migrationBuilder.DropTable(
                 name: "CourseModules");

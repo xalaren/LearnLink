@@ -17,27 +17,31 @@ namespace LearnLink.Application.Mappers
                 RemoveAccess = roleDto.RemoveAccess,
                 ManageInternalAccess = roleDto.ManageInternalAccess,
                 InviteAccess = roleDto.InviteAccess,
-                KickAccess = roleDto.KickAccess
+                KickAccess = roleDto.KickAccess,
+                EditRolesAccess = roleDto.EditRolesAccess
             };
         }
 
         public static LocalRoleDto ToDto(this LocalRole roleEntity)
         {
-            return new LocalRoleDto(
-                Id: roleEntity.Id,
-                Name: roleEntity.Name,
-                Sign: roleEntity.Sign,
-                ViewAccess: roleEntity.ViewAccess,
-                EditAccess: roleEntity.EditAcess,
-                RemoveAccess: roleEntity.RemoveAccess,
-                ManageInternalAccess: roleEntity.ManageInternalAccess,
-                InviteAccess: roleEntity.InviteAccess,
-                KickAccess: roleEntity.KickAccess
-            );
+            return new LocalRoleDto()
+            {
+                Id = roleEntity.Id,
+                Name = roleEntity.Name,
+                Sign = roleEntity.Sign,
+                ViewAccess = roleEntity.ViewAccess,
+                EditAccess = roleEntity.EditAcess,
+                RemoveAccess = roleEntity.RemoveAccess,
+                ManageInternalAccess = roleEntity.ManageInternalAccess,
+                InviteAccess = roleEntity.InviteAccess,
+                KickAccess = roleEntity.KickAccess,
+                EditRolesAccess = roleEntity.EditRolesAccess
+            };
         }
 
         public static LocalRole Assign(this LocalRole role, LocalRoleDto roleDto)
         {
+
             if (!string.Equals(role.Name, roleDto.Name) && !string.IsNullOrWhiteSpace(roleDto.Name))
             {
                 role.Name = roleDto.Name;
@@ -54,6 +58,7 @@ namespace LearnLink.Application.Mappers
             role.ManageInternalAccess = roleDto.ManageInternalAccess;
             role.InviteAccess = roleDto.InviteAccess;
             role.KickAccess = roleDto.KickAccess;
+            role.EditRolesAccess = roleDto.EditRolesAccess;
 
             return role;
         }

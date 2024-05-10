@@ -3,37 +3,38 @@ using LearnLink.Shared.DataTransferObjects;
 using LearnLink.Shared.Responses;
 using LearnLink.WebApi.Pages.PageModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace LearnLink.WebApi.Pages.LocalRoles
+namespace LearnLink.WebApi.Pages.CourseLocalRoles
 {
-    public class UpdateModel : LocalRolesBasePageModel
+    public class RequestUpdateModel : CourseLocalRolesBasePageModel
     {
-        public UpdateModel(LocalRoleInteractor localRoleInteractor) : base(localRoleInteractor) { }
+        public RequestUpdateModel(CourseLocalRoleInteractor courseLocalRoleInteractor) : base(courseLocalRoleInteractor) { }
 
         public Response? QueryResult { get; set; }
-
         public LocalRoleDto? FoundLocalRole { get; set; }
+        public int CourseId { get; set; }
 
-        public async Task<IActionResult> OnGet(int localRoleId)
+        public async Task<IActionResult> OnGet(int courseId, int localRoleId)
         {
             return await AuthRequiredAsync(async () =>
             {
-                if (localRoleId == 0) return;
+                if (courseId == 0 || localRoleId == 0) return;
 
-                var result =  await LocalRoleInteractor.GetLocalRoleByIdAsync(localRoleId);
+                var response = await CourseLocalRoleInteractor.GetByCourseAndLocalIdAsync(courseId, localRoleId);
 
-                if(result.Success && result.Value != null)
+                if(response.Success && response.Value != null)
                 {
-                    FoundLocalRole = result.Value;
-                    return;
+                    FoundLocalRole = response.Value;
+                    CourseId = courseId;
                 }
 
-                QueryResult = result;
+                QueryResult = response;
             });
         }
 
         public async Task OnPost(
+            int requesterUserId,
+            int courseId,
             int localRoleId,
             string localRoleSign,
             string localRoleName,
@@ -54,7 +55,6 @@ namespace LearnLink.WebApi.Pages.LocalRoles
             bool kickAccessValue = string.IsNullOrWhiteSpace(kickAccess) ? false : true;
             bool editRolesAccessValue = string.IsNullOrWhiteSpace(editRolesAccess) ? false : true;
 
-
             var localRoleDto = new LocalRoleDto()
             {
                 Id = localRoleId,
@@ -69,7 +69,7 @@ namespace LearnLink.WebApi.Pages.LocalRoles
                 EditRolesAccess = editRolesAccessValue
             };
 
-            QueryResult = await LocalRoleInteractor.UpdateLocalRoleAsync(localRoleDto);
+            QueryResult = await CourseLocalRoleInteractor.RequestUpdateLocalRoleAsync(requesterUserId, courseId, localRoleDto);
         }
     }
 }

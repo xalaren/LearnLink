@@ -8,12 +8,13 @@
         public bool ManageInternalAccess { get; set; }
         public bool InviteAccess { get; set; }
         public bool KickAccess { get; set; }
+        public bool EditRolesAccess { get; set; }
 
         public override bool IsAdmin
         {
             get
             {
-                return ViewAccess && EditAcess && RemoveAccess && ManageInternalAccess && InviteAccess && KickAccess;
+                return ViewAccess && EditAcess && RemoveAccess && ManageInternalAccess && InviteAccess && KickAccess && EditRolesAccess;
             }
         }
 
@@ -31,12 +32,9 @@
 
             if (EditAcess && RemoveAccess) priority++;
 
-            return priority;
-        }
+            if (EditRolesAccess) priority++;
 
-        public bool GetOnlyViewAccess()
-        {
-            return ViewAccess && !(EditAcess || RemoveAccess || ManageInternalAccess || InviteAccess);
+            return priority;
         }
     }
 }

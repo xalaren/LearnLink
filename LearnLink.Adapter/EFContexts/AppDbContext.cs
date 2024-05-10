@@ -14,6 +14,7 @@ namespace LearnLink.Adapter.EFContexts
         public DbSet<Course> Courses { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<UserCreatedCourse> UserCreatedCourses { get; set; }
+        public DbSet<CourseLocalRole> CourseLocalRoles { get; set; }
         public DbSet<UserCourseLocalRole> UserCourseLocalRoles { get; set; }
 
         public DbSet<Module> Modules { get; set; }
@@ -41,6 +42,7 @@ namespace LearnLink.Adapter.EFContexts
             modelBuilder.ApplyConfiguration(new LessonsEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ModuleLessonsEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new LocalRoleEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new CourseLocalRoleEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new UserCourseLocalRoleEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new CourseCompletionEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ModuleComletionEntityTypeConfiguration());

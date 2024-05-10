@@ -53,7 +53,7 @@ namespace LearnLink.WebApi.Controllers
 
         [Authorize]
         [HttpPost("invite")]
-        public async Task<Response> InviteAsync(int userId, int courseId, string localRoleSign, [FromBody] int[] userIdentifiers)
+        public async Task<Response> InviteAsync(int userId, int courseId, int localRoleId, [FromBody] int[] userIdentifiers)
         {
             var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
 
@@ -63,7 +63,7 @@ namespace LearnLink.WebApi.Controllers
                 Message = verifyResponse.Message,
             };
 
-            return await subscriptionInteractor.InviteAsync(userId, courseId, localRoleSign, userIdentifiers);
+            return await subscriptionInteractor.InviteAsync(userId, courseId, localRoleId, userIdentifiers);
         }
 
         [Authorize]

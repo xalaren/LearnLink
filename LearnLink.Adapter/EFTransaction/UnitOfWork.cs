@@ -28,11 +28,13 @@ namespace LearnLink.Adapter.EFTransaction
         public DbSet<Section> Sections => context.Sections;
 
         public DbSet<LocalRole> LocalRoles => context.LocalRoles;
+        public DbSet<CourseLocalRole> CourseLocalRoles => context.CourseLocalRoles;
         public DbSet<UserCourseLocalRole> UserCourseLocalRoles => context.UserCourseLocalRoles;
 
         public DbSet<CourseCompletion> CourseCompletions => context.CourseCompletions;
         public DbSet<ModuleCompletion> ModuleCompletions => context.ModuleCompletions;
         public DbSet<LessonCompletion> LessonCompletions => context.LessonCompletions;
+
 
         public ValueTask DisposeAsync()
         {

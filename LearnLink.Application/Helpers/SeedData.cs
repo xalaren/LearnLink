@@ -1,5 +1,4 @@
-﻿using System.IO;
-using LearnLink.Application.Interactors;
+﻿using LearnLink.Application.Interactors;
 using LearnLink.Application.Transaction;
 using LearnLink.Core.Constants;
 using LearnLink.Shared.DataTransferObjects;
@@ -100,17 +99,19 @@ namespace LearnLink.Application.Helpers
 
                 if (existRole.Value != null) return;
 
-                var userRole = new LocalRoleDto(
-                    Id: 3,
-                    Name: "Модератор",
-                    Sign: RoleSignConstants.MODERATOR,
-                    ViewAccess: true,
-                    EditAccess: true,
-                    RemoveAccess: true,
-                    ManageInternalAccess: true,
-                    InviteAccess: true,
-                    KickAccess: true
-                );
+                var userRole = new LocalRoleDto()
+                {
+                    Id = 3,
+                    Name = "Модератор",
+                    Sign = RoleSignConstants.MODERATOR,
+                    ViewAccess = true,
+                    EditAccess = true,
+                    RemoveAccess = true,
+                    ManageInternalAccess = true,
+                    InviteAccess = true,
+                    KickAccess = true,
+                    EditRolesAccess = true,
+                };
 
                 await localRoleInteractor.CreateLocalRoleAsync(userRole);
             }
@@ -128,17 +129,19 @@ namespace LearnLink.Application.Helpers
 
                 if (existRole.Value != null) return;
 
-                var userRole = new LocalRoleDto(
-                    Id: 4,
-                    Name: "Участник",
-                    Sign: RoleSignConstants.MEMBER,
-                    ViewAccess: true,
-                    EditAccess: false,
-                    RemoveAccess: false,
-                    ManageInternalAccess: false,
-                    InviteAccess: false,
-                    KickAccess: false
-                );
+                var userRole = new LocalRoleDto()
+                {
+                    Id = 4,
+                    Name = "Участник",
+                    Sign = RoleSignConstants.MEMBER,
+                    ViewAccess = true,
+                    EditAccess = false,
+                    RemoveAccess = false,
+                    ManageInternalAccess = false,
+                    InviteAccess = false,
+                    KickAccess = false,
+                    EditRolesAccess = false,
+                };
 
                 await localRoleInteractor.CreateLocalRoleAsync(userRole);
             }

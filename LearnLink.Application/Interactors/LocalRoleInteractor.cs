@@ -21,19 +21,7 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                var existingRole = await unitOfWork.LocalRoles
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(localRole => localRole.Sign == localRoleDto.Sign);
-
-                if (existingRole != null)
-                {
-                    throw new ValidationException("Данная локальная роль уже добавлена в систему");
-                }
-
-                var localRoleEntity = localRoleDto.ToEntity();
-
-                await unitOfWork.Roles.AddAsync(localRoleEntity);
-                await unitOfWork.CommitAsync();
+                await CreateLocalRoleAsyncNoResponse(localRoleDto);
 
                 return new Response()
                 {
@@ -163,52 +151,7 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                var localRole = await unitOfWork.LocalRoles
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(localRole => localRole.Sign == sign);
-
-                return new()
-                {
-                    Success = true,
-                    Message = "Локальная роль успешно получена",
-                    Value = localRole?.ToDto(),
-                };
-            }
-            catch (CustomException exception)
-            {
-                return new()
-                {
-                    Success = false,
-                    Message = exception.Message,
-                };
-            }
-            catch (Exception exception)
-            {
-                return new()
-                {
-                    Success = false,
-                    Message = "Не удалось получить локальную роль. Внутренняя ошибка.",
-                    InnerErrorMessages = [exception.Message]
-                };
-            }
-        }
-
-        public async Task<Response<LocalRoleDto>> GetUserLocalRoleAtCourse(int courseId, int userId)
-        {
-            try
-            {
-                var userCourseLocalRole = await unitOfWork.UserCourseLocalRoles.FirstOrDefaultAsync(u => u.CourseId == courseId && u.UserId == userId);
-
-                if (userCourseLocalRole == null)
-                {
-                    throw new NotFoundException("Роль пользователя не найдена");
-                }
-
-                await unitOfWork.UserCourseLocalRoles.Entry(userCourseLocalRole)
-                    .Reference(u => u.LocalRole)
-                    .LoadAsync();
-
-                var localRole = userCourseLocalRole.LocalRole;
+                var localRole = await GetLocalRoleBySignAsyncNoResponse(sign);
 
                 return new()
                 {
@@ -316,98 +259,27 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task<Response> ReassignUserRoleAsync(int requesterUserId, int targetUserId, int courseId, int localRoleId)
+        public async Task CreateLocalRoleAsyncNoResponse(LocalRoleDto localRoleDto)
         {
-            try
+            var existingRole = await unitOfWork.LocalRoles
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(localRole => localRole.Sign == localRoleDto.Sign);
+
+            if (existingRole != null)
             {
-                var requesterUserLocalRole = await unitOfWork.UserCourseLocalRoles.FirstOrDefaultAsync(
-                    u => u.CourseId == courseId &&
-                    u.UserId == requesterUserId);
-
-                var targetUserLocalRole = await unitOfWork.UserCourseLocalRoles.FirstOrDefaultAsync(
-                    u => u.CourseId == courseId &&
-                    u.UserId == targetUserId
-                    );
-
-                if(requesterUserLocalRole == null || targetUserLocalRole == null)
-                {
-                    throw new NotFoundException("Локальная роль пользовтателя не найдена");
-                }
-
-                await unitOfWork.UserCourseLocalRoles.Entry(requesterUserLocalRole)
-                   .Reference(u => u.LocalRole)
-                   .LoadAsync();
-
-                await unitOfWork.UserCourseLocalRoles.Entry(targetUserLocalRole)
-                   .Reference(u => u.LocalRole)
-                   .LoadAsync();
-
-                await unitOfWork.UserCourseLocalRoles.Entry(targetUserLocalRole)
-                  .Reference(u => u.User)
-                  .LoadAsync();
-
-                if (requesterUserLocalRole.LocalRole.GetRolePriority() < targetUserLocalRole.LocalRole.GetRolePriority())
-                {
-                    throw new AccessLevelException("Приоритет вашей роли низкий для изменения роли");
-                }
-                var localRole = await unitOfWork.LocalRoles.FirstOrDefaultAsync(l => l.Id == localRoleId);
-
-                if (localRole == null)
-                {
-                    throw new NotFoundException("Локальная роль не найдена");
-                }
-
-                if (requesterUserLocalRole.LocalRole.GetRolePriority() < localRole.GetRolePriority())
-                {
-                    throw new AccessLevelException("Приоритет присваемой роли высокий");
-                }
-
-                var course = await unitOfWork.Courses.FindAsync(courseId);
-                
-                if(course == null)
-                {
-                    throw new NotFoundException("Курс не найден");
-                }
-
-                var userCourseLocalRole = new UserCourseLocalRole()
-                {
-                    User = targetUserLocalRole.User,
-                    Course = course,
-                    LocalRole = localRole
-                };
-
-                unitOfWork.UserCourseLocalRoles.Remove(targetUserLocalRole);
-                await unitOfWork.CommitAsync();
-
-                await unitOfWork.UserCourseLocalRoles.AddAsync(userCourseLocalRole);
-                await unitOfWork.CommitAsync();
-
-                return new Response()
-                {
-                    Success = true,
-                    StatusCode = 200,
-                    Message = "Локальная роль пользователя успешно обновлена"
-                };
+                throw new ValidationException("Данная локальная роль уже добавлена в систему");
             }
-            catch (CustomException exception)
-            {
-                return new Response()
-                {
-                    Success = false,
-                    StatusCode = exception.StatusCode,
-                    Message = exception.Message,
-                };
-            }
-            catch (Exception exception)
-            {
-                return new Response()
-                {
-                    Success = false,
-                    StatusCode = 500,
-                    Message = "Не удалось обновить локальную роль пользователя",
-                    InnerErrorMessages = new string[] { exception.Message },
-                };
-            }
+
+            var localRoleEntity = localRoleDto.ToEntity();
+
+            await unitOfWork.LocalRoles.AddAsync(localRoleEntity);
+            await unitOfWork.CommitAsync();
+        }
+
+        public async Task<LocalRole?> GetLocalRoleBySignAsyncNoResponse(string sign)
+        {
+            return await unitOfWork.LocalRoles
+                    .FirstOrDefaultAsync(localRole => localRole.Sign == sign);
         }
     }
 }

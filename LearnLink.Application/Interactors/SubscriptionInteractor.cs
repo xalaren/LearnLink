@@ -13,11 +13,13 @@ namespace LearnLink.Application.Interactors
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly CompletionInteractor completionInteractor;
+        private readonly UserCourseLocalRolesInteractor userCourseLocalRolesInteractor;
 
-        public SubscriptionInteractor(IUnitOfWork unitOfWork, CompletionInteractor completionInteractor)
+        public SubscriptionInteractor(IUnitOfWork unitOfWork, CompletionInteractor completionInteractor, UserCourseLocalRolesInteractor userCourseLocalRolesInteractor)
         {
             this.unitOfWork = unitOfWork;
             this.completionInteractor = completionInteractor;
+            this.userCourseLocalRolesInteractor = userCourseLocalRolesInteractor;
         }
 
         public async Task<Response<SubscriptionDto[]>> GetAllAsync()
@@ -55,7 +57,7 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task<Response> InviteAsync(int userId, int courseId, string? localRoleSign, params int[] userIdentifiers)
+        public async Task<Response> InviteAsync(int userId, int courseId, int localRoleId, params int[] userIdentifiers)
         {
             try
             {
@@ -65,12 +67,10 @@ namespace LearnLink.Application.Interactors
                 var user = await unitOfWork.Users.FindAsync(userId) ?? throw new NotFoundException("Пользователь не найден");
 
                 var userCourseLocalRole = await unitOfWork.UserCourseLocalRoles
+                    .Include(userCourseLocalRole => userCourseLocalRole.LocalRole)
                     .FirstOrDefaultAsync(u => u.UserId == userId && u.CourseId == courseId) ??
                         throw new NotFoundException("Не удалось определить локальную роль пользователя");
 
-                await unitOfWork.UserCourseLocalRoles.Entry(userCourseLocalRole)
-                    .Reference(u => u.LocalRole)
-                    .LoadAsync();
 
                 if (!userCourseLocalRole.LocalRole.InviteAccess)
                 {
@@ -84,26 +84,6 @@ namespace LearnLink.Application.Interactors
                     User = user,
                     Course = course,
                     StartDate = DateTime.Now.ToUniversalTime(),
-                });
-
-
-                var role = await unitOfWork.LocalRoles.FirstOrDefaultAsync(l => (localRoleSign != null && l.Sign == localRoleSign) || l.Sign == RoleSignConstants.MEMBER);
-
-                if (role == null)
-                {
-                    throw new NotFoundException("Локальная роль получена неверно, либо не найдена");
-                }
-
-                if (userCourseLocalRole.LocalRole.GetRolePriority() < role.GetRolePriority())
-                {
-                    throw new AccessLevelException("Приоритет вашей роли недопустим для назначения данной роли пользователям");
-                }
-
-                var userLocalRoles = users.Select(user => new UserCourseLocalRole()
-                {
-                    User = user,
-                    Course = course,
-                    LocalRole = role
                 });
 
                 //Add course and module completions for every invited user
@@ -129,19 +109,17 @@ namespace LearnLink.Application.Interactors
                     }
                 }
 
-
                 await unitOfWork.Subscriptions.AddRangeAsync(subscriptions);
-                await unitOfWork.UserCourseLocalRoles.AddRangeAsync(userLocalRoles);
 
                 var count = users.Count();
                 await unitOfWork.CommitAsync();
-
                 await UpdateCourseSubscriptions(course.Id);
+                await userCourseLocalRolesInteractor.RequestCreateAsyncNoResponse(userId, courseId, localRoleId, localUsers);
 
                 return new Response()
                 {
                     Success = true,
-                    Message = $"Успешно записано {count} пользователей под ролью {role.Name}",
+                    Message = $"Успешно записано {count} пользователей",
                 };
             }
             catch (CustomException exception)
@@ -175,14 +153,6 @@ namespace LearnLink.Application.Interactors
                 var course = await unitOfWork.Courses.FindAsync(subscriptionDto.CourseId) ??
                     throw new NotFoundException("Курс не найден");
 
-                var userCourseLocalRole = await unitOfWork.UserCourseLocalRoles
-                   .FirstOrDefaultAsync(u => u.UserId == user.Id && u.CourseId == course.Id);
-
-                if (userCourseLocalRole != null)
-                {
-                    throw new AccessLevelException("Пользователь уже является участником этого курса");
-                }
-
                 var role = await unitOfWork.LocalRoles.FirstOrDefaultAsync(role => string.Equals(role.Sign, RoleSignConstants.MEMBER));
 
                 if (role == null)
@@ -192,19 +162,10 @@ namespace LearnLink.Application.Interactors
 
                 var subscriptionEntity = subscriptionDto.ToEntity();
 
-                var newUserCourseLocalRole = new UserCourseLocalRole()
-                {
-                    Course = course,
-                    User = user,
-                    LocalRole = role,
-                };
-
-
                 subscriptionEntity.User = user;
                 subscriptionEntity.Course = course;
 
                 await unitOfWork.Subscriptions.AddAsync(subscriptionEntity);
-                await unitOfWork.UserCourseLocalRoles.AddAsync(newUserCourseLocalRole);
                 await completionInteractor.CreateCourseCompletion(user.Id, course.Id);
 
                 CourseModule[] courseModules = await unitOfWork.CourseModules.Where(courseModule => courseModule.CourseId == course.Id).ToArrayAsync();
@@ -222,8 +183,8 @@ namespace LearnLink.Application.Interactors
                 }
 
                 await unitOfWork.CommitAsync();
-
                 await UpdateCourseSubscriptions(course.Id);
+                await AssignMembersAsync(user.Id, course.Id);
 
                 return new Response()
                 {
@@ -256,30 +217,16 @@ namespace LearnLink.Application.Interactors
             {
                 var subscription = await unitOfWork.Subscriptions.FirstOrDefaultAsync(s => s.UserId == userId && s.CourseId == courseId);
 
-                var course = await unitOfWork.Courses.FindAsync(courseId);
-
-                if (course == null)
-                {
-                    throw new NotFoundException("Курс не найден");
-                }
-
-                var courseUserLocalRole = await unitOfWork.UserCourseLocalRoles.FirstOrDefaultAsync(userRole => userRole.UserId == userId && userRole.CourseId == courseId);
-
-                if (courseUserLocalRole == null)
-                {
-                    throw new NotFoundException("Локальная роль пользователя не найдена");
-                }
-
                 if (subscription == null)
                 {
                     throw new NotFoundException("Подписка не найдена");
                 }
 
                 unitOfWork.Subscriptions.Remove(subscription);
-                unitOfWork.UserCourseLocalRoles.Remove(courseUserLocalRole);
                 await unitOfWork.CommitAsync();
 
                 await UpdateCourseSubscriptions(courseId);
+                await userCourseLocalRolesInteractor.RemoveAsyncNoResponse(userId, courseId);
 
                 return new Response()
                 {
@@ -315,59 +262,13 @@ namespace LearnLink.Application.Interactors
                     throw new AccessLevelException("Невозможно исключить себя");
                 }
 
-                User requester = await unitOfWork.Users.FindAsync(requesterUserId) ??
-                    throw new NotFoundException("Пользователь, запросивший ислючение, не найден");
-
-                User target = await unitOfWork.Users.FindAsync(targetUserId) ??
-                    throw new NotFoundException("Исключаемый пользователь не найден");
-
                 Subscription subscription = await unitOfWork.Subscriptions.FirstOrDefaultAsync(s => s.UserId == targetUserId && s.CourseId == courseId) ??
                     throw new NotFoundException("Подписка не найдена");
 
-                Course course = await unitOfWork.Courses.FindAsync(courseId) ??
-                    throw new NotFoundException("Курс не найден");
-
-                await unitOfWork.Users.Entry(requester)
-                    .Reference(u => u.Role)
-                    .LoadAsync();
-
-                await unitOfWork.Users.Entry(target)
-                    .Reference(u => u.Role)
-                    .LoadAsync();
-
-                UserCourseLocalRole requesterCourseLocalRole = await unitOfWork.UserCourseLocalRoles
-                    .FirstOrDefaultAsync(x => x.UserId == requesterUserId && x.CourseId == courseId) ??
-                        throw new NotFoundException("Роль пользователя-запросителя не определена");
-
-                UserCourseLocalRole targetCourseLocalRole = await unitOfWork.UserCourseLocalRoles
-                    .FirstOrDefaultAsync(x => x.UserId == targetUserId && x.CourseId == courseId) ??
-                        throw new NotFoundException("Роль исключаемого пользователя не определена");
-
-                await unitOfWork.UserCourseLocalRoles.Entry(requesterCourseLocalRole)
-                    .Reference(u => u.LocalRole)
-                    .LoadAsync();
-
-                unitOfWork.UserCourseLocalRoles.Entry(targetCourseLocalRole)
-                    .Reference(u => u.LocalRole)
-                    .Load();
-
-                if (!requester.Role.IsAdmin &&
-                   (!requesterCourseLocalRole.LocalRole.KickAccess ||
-                     requesterCourseLocalRole.LocalRole.GetRolePriority() < targetCourseLocalRole.LocalRole.GetRolePriority()))
-                {
-                    throw new AccessLevelException("Невозможно исключить данного пользователя");
-                }
-
-                if (subscription == null)
-                {
-                    throw new NotFoundException("Подписка не найдена");
-                }
-
                 unitOfWork.Subscriptions.Remove(subscription);
-                unitOfWork.UserCourseLocalRoles.Remove(targetCourseLocalRole);
                 await unitOfWork.CommitAsync();
-
-                await UpdateCourseSubscriptions(course.Id);
+                await UpdateCourseSubscriptions(courseId);
+                await userCourseLocalRolesInteractor.RequestRemoveAsyncNoResponse(requesterUserId, targetUserId, courseId);
 
                 return new Response()
                 {
@@ -388,7 +289,7 @@ namespace LearnLink.Application.Interactors
                 return new()
                 {
                     Success = false,
-                    Message = "Не удалось отписаться от курса",
+                    Message = "Не удалось исключить пользователей от курса",
                     InnerErrorMessages = [exception.Message],
                 };
             }
@@ -410,6 +311,17 @@ namespace LearnLink.Application.Interactors
             unitOfWork.Courses.Update(course);
             await unitOfWork.CommitAsync();
         }
+        
+        private async Task AssignMembersAsync(int userId, int courseId)
+        {
+            var memberRole = await unitOfWork.LocalRoles.FirstOrDefaultAsync(localRole => localRole.Sign == RoleSignConstants.MEMBER);
 
+            if(memberRole == null)
+            {
+                throw new NotFoundException("Роль участника не найдена");
+            }
+
+            await userCourseLocalRolesInteractor.CreateAsyncNoResponse(userId, courseId, memberRole.Id);
+        }
     }
 }

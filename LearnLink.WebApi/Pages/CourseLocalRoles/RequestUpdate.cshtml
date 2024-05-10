@@ -1,32 +1,45 @@
 ﻿@page
-@model LearnLink.WebApi.Pages.LocalRoles.UpdateModel
+@model LearnLink.WebApi.Pages.CourseLocalRoles.RequestUpdateModel
 @{
-    ViewData["Title"] = "Update local role";
+    ViewData["Title"] = "Request update";
 }
 
 <div class="breadcrumb">
-    <h2 class="breadcrumb__item" onclick="redirect('LocalRoles/LocalRolesActionsPage')">
-        Local-Roles
+    <h2 class="breadcrumb__item" onclick="redirect('CourseLocalRoles/CourseLocalRolesActionsPage')">
+        Course-Local-Roles
     </h2>
-    <h2 class="breadcrumb__item" onclick="redirect('LocalRoles/Update')">
-        Update
+    <h2 class="breadcrumb__item" onclick="redirect('CourseLocalRoles/RequestUpdate')">
+        Request-Update
     </h2>
 </div>
 
-<form class="form" method="get">
+<form class="form adaptive-width" method="get">
+    <div class="form-input">
+        <p class="form-input__label">Course Id</p>
+        <input type="number" name="courseId" placeholder="Course Id..." min="0" class="input" />
+    </div>
     <div class="form-input">
         <p class="form-input__label">Local Role Id</p>
-        <div class="line-container">
-            <input type="number" name="localRoleId" placeholder="Role Id..." min="0" class="input" />
-            <button class="primary-button">Load</button>
-        </div>
+        <input type="number" name="localRoleId" placeholder="Role Id..." min="0" class="input" />
+    </div>
+    <div class="form__actions">
+        <button class="primary-button">Load</button>
     </div>
 </form>
-
 
 @if (Model.FoundLocalRole != null)
 {
     <form class="form width-400" method="post">
+        <div class="form-input">
+            <p class="form-input__label">Requester User Id</p>
+            <input type="number" name="requesterUserId" placeholder="Requester User Id..." min="0" class="input" />
+        </div>
+
+        <div class="form-input">
+            <p class="form-input__label">Course Id</p>
+            <input type="number" name="courseId" placeholder="Course Id..." min="0" class="input" value="@Model.CourseId" />
+        </div>
+
         <div class="form-input">
             <p class="form-input__label">Local Role Id</p>
             <input type="number" name="localRoleId" placeholder="Role Id..." min="0" class="input" value="@Model.FoundLocalRole.Id" />
@@ -76,14 +89,13 @@
 
         <div class="line-container">
             <input type="checkbox" class="checkbox" id="editRolesAccess" name="editRolesAccess" checked="@Model.FoundLocalRole.EditRolesAccess" />
-            <label for="kickAccess">Edit Roles Access</label>
+            <label for="editRolesAccess">Edit Roles Access</label>
         </div>
 
         <div class="form__actions">
             <button class="primary-button">Update</button>
         </div>
     </form>
-
 }
 
 @{
@@ -98,3 +110,4 @@
         </div>
     }
 }
+

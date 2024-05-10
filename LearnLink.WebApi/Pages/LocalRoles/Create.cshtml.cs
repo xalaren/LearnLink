@@ -26,7 +26,9 @@ namespace LearnLink.WebApi.Pages.LocalRoles
             string editAccess, 
             string removeAccess,
             string inviteAccess, 
-            string kickAccess)
+            string kickAccess,
+            string editRolesAccess
+            )
         {
             bool viewAccessValue = string.IsNullOrWhiteSpace(viewAccess) ? false : true;
             bool manageAccessValue = string.IsNullOrWhiteSpace(manageAccess) ? false : true;
@@ -34,19 +36,22 @@ namespace LearnLink.WebApi.Pages.LocalRoles
             bool removeAccessValue = string.IsNullOrWhiteSpace(removeAccess) ? false : true;
             bool inviteAccessValue = string.IsNullOrWhiteSpace(inviteAccess) ? false : true;
             bool kickAccessValue = string.IsNullOrWhiteSpace(kickAccess) ? false : true;
+            bool editRolesAccessValue = string.IsNullOrWhiteSpace(editRolesAccess) ? false : true;
 
 
-            var localRoleDto = new LocalRoleDto(
-                Id: 0,
-                Sign: localRoleSign,
-                Name: localRoleName,
-                ViewAccess: viewAccessValue,
-                ManageInternalAccess: manageAccessValue,
-                EditAccess: editAccessValue,
-                RemoveAccess: removeAccessValue,
-                InviteAccess: inviteAccessValue,
-                KickAccess: kickAccessValue
-            );
+            var localRoleDto = new LocalRoleDto()
+            {
+                Id = 0,
+                Sign = localRoleSign,
+                Name = localRoleName,
+                ViewAccess = viewAccessValue,
+                ManageInternalAccess = manageAccessValue,
+                EditAccess = editAccessValue,
+                RemoveAccess = removeAccessValue,
+                InviteAccess = inviteAccessValue,
+                KickAccess = kickAccessValue,
+                EditRolesAccess = editRolesAccessValue
+            };
 
             QueryResult = await LocalRoleInteractor.CreateLocalRoleAsync(localRoleDto);
         }

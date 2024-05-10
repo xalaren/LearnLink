@@ -39,6 +39,8 @@ builder.Services.AddScoped<LessonInteractor>();
 builder.Services.AddScoped<UserVerifierService>();
 builder.Services.AddScoped<RoleInteractor>();
 builder.Services.AddScoped<LocalRoleInteractor>();
+builder.Services.AddScoped<CourseLocalRoleInteractor>();
+builder.Services.AddScoped<UserCourseLocalRolesInteractor>();
 builder.Services.AddScoped<PermissionService>();
 builder.Services.AddScoped<CompletionInteractor>();
 builder.Services.AddScoped<ContentInteractor>();
@@ -166,11 +168,6 @@ app.UseStaticFiles(new StaticFileOptions
     FileProvider = new PhysicalFileProvider(Path.Combine(new DirectoryStore(rootDirectory).InternalStorageDirectory)),
     RequestPath = "/api/" + DirectoryStore.STORAGE_DIRNAME
 });
-
-//app.UseAntiforgery();
-
-//app.MapRazorComponents<App>()
-//    .AddInteractiveServerRenderMode();
 
 app.UseSeedData();
 

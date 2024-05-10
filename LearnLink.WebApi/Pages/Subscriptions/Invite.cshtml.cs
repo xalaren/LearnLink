@@ -40,11 +40,11 @@ namespace LearnLink.WebApi.Pages.Subscriptions
             });
         }
 
-        public async Task OnPost(int userId, int courseId, string? localRoleSign, string[] selectedUsersStrings)
+        public async Task OnPost(int userId, int courseId, int localRoleId, string[] selectedUsersStrings)
         {
             int[] idenitifiers = selectedUsersStrings.Select(int.Parse).ToArray();
 
-            QueryResult = await SubscriptionInteractor.InviteAsync(userId, courseId, localRoleSign, idenitifiers);
+            QueryResult = await SubscriptionInteractor.InviteAsync(userId, courseId, localRoleId, idenitifiers);
         }
     }
 }
