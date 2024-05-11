@@ -28,7 +28,7 @@ namespace LearnLink.WebApi.Controllers
         }
 
         [Authorize]
-        [HttpPost("get/atCourse")]
+        [HttpGet("get/atCourse")]
         public async Task<Response<LocalRoleDto[]>> GetLocalRolesAtCourseAsync(int courseId)
         {
             return await courseLocalRoleInteractor.GetLocalRolesAtCourseAsync(courseId);

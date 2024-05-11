@@ -6,31 +6,44 @@
 
 <div class="breadcrumb">
     <h2 class="breadcrumb__item" onclick="redirect('UserCourseLocalRoles/UserCourseLocalRolesActionsPage')">
-       User-Course-Local-Roles
+        User-Course-Local-Roles
     </h2>
     <h2 class="breadcrumb__item" onclick="redirect('UserCourseLocalRoles/RequestReassign')">
         Request-Reassign
     </h2>
 </div>
 
-<form class="form adaptive-width" method="get">
+<form class="form adaptive-width" method="post">
     <div class="form-input">
         <p class="form-input__label">Requester User Id</p>
-        <input type="number" name="requesterUserId" placeholder="Requester User Id..." min="0" class="input" />
+        <input type="number" name="requesterUserId" placeholder="Requester User Id..." min="0" class="input"/>
     </div>
     <div class="form-input">
         <p class="form-input__label">Target User Id</p>
-        <input type="number" name="targetUserId" placeholder="Target User Id..." min="0" class="input" />
+        <input type="number" name="targetUserId" placeholder="Target User Id..." min="0" class="input"/>
     </div>
     <div class="form-input">
         <p class="form-input__label">Course Id</p>
-        <input type="number" name="courseId" placeholder="Course Id..." min="0" class="input" />
+        <input type="number" name="courseId" placeholder="Course Id..." min="0" class="input"/>
     </div>
     <div class="form-input">
         <p class="form-input__label">Local Role Id</p>
-        <input type="number" name="localRoleId" placeholder="Role Id..." min="0" class="input" />
+        <input type="number" name="localRoleId" placeholder="Role Id..." min="0" class="input"/>
     </div>
     <div class="form__actions">
-        <button class="primary-button">Load</button>
+        <button class="primary-button">Request reassign</button>
     </div>
 </form>
+
+@{
+    if (Model.QueryResult != null)
+    {
+        string className = Model.QueryResult.Success ? "green-text" : "red-text";
+        <div class="response-container" id="register-response">
+            <h3>Response:</h3>
+            <p>Success: <span class="@className">@Model.QueryResult.Success.ToString()</span></p>
+            <p>Code: @Model.QueryResult.StatusCode.ToString()</p>
+            <p>Message: @Model.QueryResult.Message</p>
+        </div>
+    }
+}

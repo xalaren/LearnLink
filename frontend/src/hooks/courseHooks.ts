@@ -5,7 +5,7 @@ import { IValueResponse, IVoidResponse } from "../models/response";
 import { COURSE_ENDPOINTS_URL } from "../models/constants";
 import axiosInstance from "../axios_config/axiosConfig";
 import { ValueDataPage } from "../models/dataPage";
-import { CourseUser, Participant } from "../models/participant";
+import { Participant } from "../models/participant";
 
 const defaultPageSize = 4;
 

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Module } from "../models/module";
 import { AxiosError } from "axios";
 import axiosInstance from "../axios_config/axiosConfig";
-import { MODULE_ENDPOINRS_URL } from "../models/constants";
+import { MODULE_ENDPOINTS_URL } from "../models/constants";
 import { IValueResponse, IVoidResponse } from "../models/response";
 
 export function useGetCourseModules() {
@@ -12,7 +12,7 @@ export function useGetCourseModules() {
     const getModulesQuery = async (courseId: number, userId: number = 0) => {
         try {
             setLoading(true);
-            const response = await axiosInstance.get<IValueResponse<Module[]>>(`${MODULE_ENDPOINRS_URL}get/atCourse?courseId=${courseId}&userId=${userId}`);
+            const response = await axiosInstance.get<IValueResponse<Module[]>>(`${MODULE_ENDPOINTS_URL}get/atCourse?courseId=${courseId}&userId=${userId}`);
 
             if (!response.data.success) {
                 throw new AxiosError(response.data.message);
@@ -44,7 +44,7 @@ export function useCreateModules() {
         try {
             setLoading(true);
             const module = new Module(title, description);
-            const response = await axiosInstance.post<IVoidResponse>(`${MODULE_ENDPOINRS_URL}/create?courseId=${courseId}`, module, {
+            const response = await axiosInstance.post<IVoidResponse>(`${MODULE_ENDPOINTS_URL}/create?courseId=${courseId}`, module, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -85,7 +85,7 @@ export function useGetModule() {
                 throw new AxiosError('Пользователь не авторизован');
             }
 
-            const response = (await axiosInstance.get<IValueResponse<Module>>(`${MODULE_ENDPOINRS_URL}get?moduleId=${moduleId}`, {
+            const response = (await axiosInstance.get<IValueResponse<Module>>(`${MODULE_ENDPOINTS_URL}get?moduleId=${moduleId}`, {
                 headers: {
                     Authorization: 'Bearer ' + accessToken
                 }
@@ -121,7 +121,7 @@ export function useUpdateModule() {
         try {
             setLoading(true);
             const module = new Module(title, description, moduleId);
-            const response = await axiosInstance.post<IVoidResponse>(`${MODULE_ENDPOINRS_URL}/update`, module, {
+            const response = await axiosInstance.post<IVoidResponse>(`${MODULE_ENDPOINTS_URL}/update`, module, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -158,7 +158,7 @@ export function useRemoveModule() {
         try {
             setLoading(true);
 
-            const response = (await axiosInstance.delete<IVoidResponse>(`${MODULE_ENDPOINRS_URL}remove?moduleId=${moduleId}`, {
+            const response = (await axiosInstance.delete<IVoidResponse>(`${MODULE_ENDPOINTS_URL}remove?moduleId=${moduleId}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }

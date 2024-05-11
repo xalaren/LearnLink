@@ -9,6 +9,7 @@ export class LocalRole {
     manageInternalAccess: boolean;
     inviteAccess: boolean;
     kickAccess: boolean;
+    editRolesAccess: boolean;
 
     constructor(
         name: string,
@@ -19,6 +20,7 @@ export class LocalRole {
         manageInternalAccess: boolean,
         inviteAccess: boolean,
         kickAccess: boolean,
+        editRolesAccess: boolean,
         isAdmin: boolean) {
 
         this.id = 0;
@@ -30,6 +32,7 @@ export class LocalRole {
         this.manageInternalAccess = manageInternalAccess;
         this.inviteAccess = inviteAccess;
         this.kickAccess = kickAccess;
+        this.editRolesAccess = editRolesAccess;
         this.isAdmin = isAdmin;
     }
 

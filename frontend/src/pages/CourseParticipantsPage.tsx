@@ -12,7 +12,7 @@ import { useFindCourseParticipants } from "../hooks/courseHooks";
 import { Participant } from "../models/participant";
 import { Loader } from "../components/Loader/Loader";
 import { ErrorModal } from "../components/Modal/ErrorModal";
-import { useGetLocalRoleByUserAtCourse, useListAllLocalRoles, useReassignUserLocalRole } from "../hooks/localRoleHooks";
+import { useListAllLocalRoles, useReassignUserLocalRole } from "../hooks/localRoleHooks";
 import { Modal } from "../components/Modal/Modal";
 import ParticipantItem from "../components/UsersList/ParticipantItem";
 import ModalFooter from "../components/Modal/ModalFooter";
@@ -24,6 +24,8 @@ import PopupLoader from "../components/Loader/PopupLoader";
 import profile from '../assets/img/profile_placeholder.svg';
 import Select from "../components/Select/Select";
 import SelectItem from "../components/Select/SelectItem";
+import {useGetLocalRoleByUserAtCourse, useRequestReassignUserLocalRole} from "../hooks/userCourseLocalRoleHooks.ts";
+import {useGetAtCourse} from "../hooks/courseLocalRoleHooks.ts";
 
 function CourseParticipantsPage() {
     const courseParam = useParams<'courseId'>();
@@ -282,22 +284,22 @@ function ParticipantsLocalRoleModal({
     courseId,
     onClose
 }: IParticipantsLocalRoleModalProps) {
-    let profileImage = participant.avatarUrl || profile;
+    const profileImage = participant.avatarUrl || profile;
 
     const [selectActive, setSelectActive] = useState(false);
     const [selectedLocalRole, setSelectedLocalRole] = useState<LocalRole | null>(participant.localRole);
     const [localRoles, setLocalRoles] = useState<LocalRole[]>();
 
-    const listAllLocalRolesHook = useListAllLocalRoles();
-    const reassignUserLocalRoleHook = useReassignUserLocalRole();
+    const getAtCourseHook = useGetAtCourse();
+    const requestReassignUserLocalRoleHook = useRequestReassignUserLocalRole();
 
     useEffect(() => {
         fetchLocalRoles();
     }, []);
 
     async function fetchLocalRoles() {
-        listAllLocalRolesHook.resetValues();
-        const result = await listAllLocalRolesHook.listLocalRolesQuery(accessToken);
+        getAtCourseHook.resetValues();
+        const result = await getAtCourseHook.listLocalRolesQuery(courseId, accessToken);
 
         if (result) {
             setLocalRoles(result);
@@ -307,13 +309,13 @@ function ParticipantsLocalRoleModal({
     async function onSubmit() {
         if (selectedLocalRole == null) return;
 
-        reassignUserLocalRoleHook.resetValues();
-        await reassignUserLocalRoleHook.reassignUserLocalRoleQuery(userId, participant.id, courseId, selectedLocalRole.id, accessToken);
+        requestReassignUserLocalRoleHook.resetValues();
+        await requestReassignUserLocalRoleHook.requestReassignUserLocalRoleQuery(userId, participant.id, courseId, selectedLocalRole.id, accessToken);
     }
 
     function resetDefaults() {
-        listAllLocalRolesHook.resetValues();
-        reassignUserLocalRoleHook.resetValues();
+        getAtCourseHook.resetValues();
+        requestReassignUserLocalRoleHook.resetValues();
         setSelectedLocalRole(participant.localRole);
     }
 
@@ -324,7 +326,7 @@ function ParticipantsLocalRoleModal({
 
     return (
         <>
-            {!reassignUserLocalRoleHook.error && !reassignUserLocalRoleHook.loading && !reassignUserLocalRoleHook.success &&
+            {!requestReassignUserLocalRoleHook.error && !requestReassignUserLocalRoleHook.loading && !requestReassignUserLocalRoleHook.success &&
                 <Modal active={active} title="Редактировать роль пользователя" onClose={closeModal}>
                     <div className="user-item__profile">
                         <img className="user-item__image" src={profileImage} alt="Профиль" />
@@ -336,7 +338,7 @@ function ParticipantsLocalRoleModal({
                         </div>
                     </div>
 
-                    {!listAllLocalRolesHook.error && !listAllLocalRolesHook.loading &&
+                    {!getAtCourseHook.error && !getAtCourseHook.loading &&
                         <Select
                             active={selectActive}
                             onDeselect={() => setSelectActive(false)}
@@ -364,11 +366,11 @@ function ParticipantsLocalRoleModal({
                         </Select>
                     }
 
-                    {listAllLocalRolesHook.error &&
-                        <p className="text-danger">{listAllLocalRolesHook.error}</p>
+                    {getAtCourseHook.error &&
+                        <p className="text-danger">{getAtCourseHook.error}</p>
                     }
 
-                    {!listAllLocalRolesHook.error && listAllLocalRolesHook.loading &&
+                    {!getAtCourseHook.error && getAtCourseHook.loading &&
                         <p>Загрузка...</p>
                     }
 
@@ -382,15 +384,15 @@ function ParticipantsLocalRoleModal({
                 </Modal >
             }
 
-            {reassignUserLocalRoleHook.error &&
+            {requestReassignUserLocalRoleHook.error &&
                 <PopupNotification notificationType={NotificationType.error} onFade={closeModal}>
-                    {reassignUserLocalRoleHook.error}
+                    {requestReassignUserLocalRoleHook.error}
                 </PopupNotification>
             }
 
-            {reassignUserLocalRoleHook.success &&
+            {requestReassignUserLocalRoleHook.success &&
                 <PopupNotification notificationType={NotificationType.success} onFade={closeModal}>
-                    {reassignUserLocalRoleHook.success}
+                    {requestReassignUserLocalRoleHook.success}
                 </PopupNotification>
             }
         </>
