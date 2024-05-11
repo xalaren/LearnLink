@@ -40,10 +40,10 @@ namespace CoursePrototype.WebApi.Controllers
         }
 
         [Authorize]
-        [HttpGet("find")]
-        public async Task<Response<DataPage<UserDto[]>>> FindUsersAsync(string? searchText, int page, int size)
+        [HttpGet("find/exceptCourseUsers")]
+        public async Task<Response<DataPage<UserDto[]>>> FindUsersExcludeCourseAsync(int courseId, string? searchText, int page, int size)
         {
-            return await userInteractor.FindUsersAsync(searchText, new DataPageHeader(page, size));
+            return await userInteractor.FindUsersExceptCourseUsersAsync(courseId, searchText, new DataPageHeader(page, size));
         }
 
         [AllowAnonymous]

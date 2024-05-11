@@ -1463,3 +1463,45 @@
         transition: 0.3s ease-in-out;
     }
 }
+
+.invite-list {
+    @include child-not-last {
+        margin-bottom: 40px;
+    }
+
+    &__item {
+        display: flex;
+        max-height: 60px;
+        padding: 5px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    &__button {
+        padding: 0;
+        @include static-size(40px);
+    }
+}
+
+.user-mini {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+
+    &__image {
+        @include static-size(40px);
+        border-radius: 20px;
+    }
+
+    &__name {
+        font-size: $inputs-fz;
+        margin-bottom: 10px;
+        font-weight: 500;
+    }
+
+    &__nickname {
+        font-size: $reg-fz;
+        color: $lightViolet;
+    }
+}

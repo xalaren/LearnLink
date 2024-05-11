@@ -62,11 +62,16 @@ namespace LearnLink.Application.Interactors
             try
             {
                 var requesterUserLocalRole = await unitOfWork.UserCourseLocalRoles
+                    .Include(role => role.LocalRole)
+                    .Include(role => role.User)
+                    .ThenInclude(role => role.Role)
                     .FirstOrDefaultAsync(userCourseLocalRole =>
                         userCourseLocalRole.CourseId == courseId &&
                         userCourseLocalRole.UserId == requesterUserId);
 
                 var targetUserLocalRole = await unitOfWork.UserCourseLocalRoles
+                    .Include(role => role.LocalRole)
+                    .Include(role => role.User)
                     .FirstOrDefaultAsync(userCourseLocalRole =>
                         userCourseLocalRole.CourseId == courseId &&
                         userCourseLocalRole.UserId == targetUserId);
@@ -76,11 +81,7 @@ namespace LearnLink.Application.Interactors
                     throw new NotFoundException("Локальная роль пользователя не найдена");
                 }
 
-                await unitOfWork.UserCourseLocalRoles.Entry(requesterUserLocalRole)
-                    .Reference(role => role.LocalRole)
-                    .LoadAsync();
-
-                if (!requesterUserLocalRole.LocalRole.IsAdmin)
+                if (!(requesterUserLocalRole.User.Role.IsAdmin || requesterUserLocalRole.LocalRole.IsAdmin))
                 {
                     throw new AccessLevelException("Недостаточный уровень прав");
                 }
@@ -102,25 +103,16 @@ namespace LearnLink.Application.Interactors
                     throw new NotFoundException("Локальная роль внутри курса не найдена");
                 }
 
-                await unitOfWork.UserCourseLocalRoles.Entry(requesterUserLocalRole)
-                    .Reference(role => role.User)
-                    .LoadAsync();
-
-                await unitOfWork.UserCourseLocalRoles.Entry(targetUserLocalRole)
-                    .Reference(role => role.User)
-                    .LoadAsync();
-
-                await unitOfWork.UserCourseLocalRoles.Entry(targetUserLocalRole)
-                    .Reference(role => role.LocalRole)
-                    .LoadAsync();
-
                 await unitOfWork.CourseLocalRoles.Entry(courseLocalRole)
-                    .Reference(courseLocalRole => courseLocalRole.Course)
+                    .Reference(role => role.Course)
                     .LoadAsync();
 
-                await unitOfWork.CourseLocalRoles.Entry(courseLocalRole)
-                    .Reference(courseLocalRole => courseLocalRole.LocalRole)
-                    .LoadAsync();
+                if (!requesterUserLocalRole.User.Role.IsAdmin &&
+                    requesterUserLocalRole.LocalRole.GetRolePriority() <
+                    targetUserLocalRole.LocalRole.GetRolePriority())
+                {
+                    throw new AccessLevelException("Недостаточный уровень прав");
+                }
 
                 var userCourseLocalRole = new UserCourseLocalRole()
                 {

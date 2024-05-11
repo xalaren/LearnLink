@@ -22,13 +22,13 @@ namespace LearnLink.WebApi.Pages.Subscriptions
 
         public UserDto[]? Users { get; set; }
 
-        public async Task<IActionResult> OnGet(string? searchText, int pageNumber, int pageSize)
+        public async Task<IActionResult> OnGet(int courseId, string? searchText, int pageNumber, int pageSize)
         {
             return await AuthRequiredAsync(async () =>
             {
                 if (pageNumber == 0 || pageSize == 0) return;
 
-                var result = await userInteractor.FindUsersAsync(searchText, new DataPageHeader(pageNumber, pageSize));
+                var result = await userInteractor.FindUsersExceptCourseUsersAsync(courseId, searchText, new DataPageHeader(pageNumber, pageSize));
 
                 if(result.Success && result.Value != null && result.Value.Values != null)
                 {

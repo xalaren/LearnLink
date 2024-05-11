@@ -1,14 +1,14 @@
-import { useAppDispatch, useAppSelector } from "../hooks/redux";
-import { useUpdateUserData } from "../hooks/userHooks";
-import ProfileCard from "../components/ProfileCard";
-import { Input } from "../components/Input";
-import { InputType, NotificationType } from "../models/enums";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux.ts";
+import { useUpdateUserData } from "../../hooks/userHooks.ts";
+import ProfileCard from "../../components/ProfileCard.tsx";
+import { Input } from "../../components/Input.tsx";
+import { InputType, NotificationType } from "../../models/enums.ts";
 import { useEffect, useState } from "react";
-import { validate } from "../helpers/validation";
-import { loginSave } from "../store/actions/authActionCreators";
-import { fetchUser } from "../store/actions/userActionCreators";
-import { User } from "../models/user";
-import PopupNotification from "../components/PopupNotification";
+import { validate } from "../../helpers/validation.ts";
+import { loginSave } from "../../store/actions/authActionCreators.ts";
+import { fetchUser } from "../../store/actions/userActionCreators.ts";
+import { User } from "../../models/user.ts";
+import PopupNotification from "../../components/PopupNotification.tsx";
 
 function EditProfileMainModule() {
     const { accessToken } = useAppSelector(state => state.authReducer);

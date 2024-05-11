@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { MainContainer } from "../components/MainContainer";
 import SearchForm from "../components/SearchForm";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
 import { Paths } from "../models/paths";
 import Paginate from "../components/Paginate";
@@ -12,20 +12,11 @@ import { useFindCourseParticipants } from "../hooks/courseHooks";
 import { Participant } from "../models/participant";
 import { Loader } from "../components/Loader/Loader";
 import { ErrorModal } from "../components/Modal/ErrorModal";
-import { useListAllLocalRoles, useReassignUserLocalRole } from "../hooks/localRoleHooks";
-import { Modal } from "../components/Modal/Modal";
 import ParticipantItem from "../components/UsersList/ParticipantItem";
-import ModalFooter from "../components/Modal/ModalFooter";
-import ModalButton from "../components/Modal/ModalButton";
-import { useKick } from "../hooks/subscriptionHooks";
-import PopupNotification from "../components/PopupNotification";
-import { NotificationType } from "../models/enums";
-import PopupLoader from "../components/Loader/PopupLoader";
-import profile from '../assets/img/profile_placeholder.svg';
-import Select from "../components/Select/Select";
-import SelectItem from "../components/Select/SelectItem";
-import {useGetLocalRoleByUserAtCourse, useRequestReassignUserLocalRole} from "../hooks/userCourseLocalRoleHooks.ts";
-import {useGetAtCourse} from "../hooks/courseLocalRoleHooks.ts";
+import { useGetLocalRoleByUserAtCourse } from "../hooks/userCourseLocalRoleHooks.ts";
+import ParticipantsLocalRoleModal from "../modules/Participants/ParticipantsLocalRoleModal.tsx";
+import ParticipantKickModal from "../modules/Participants/ParticipantKickModal.tsx";
+import ParticipantsInviteModal from "../modules/Participants/ParticipantsInviteModal.tsx";
 
 function CourseParticipantsPage() {
     const courseParam = useParams<'courseId'>();
@@ -41,6 +32,7 @@ function CourseParticipantsPage() {
     const [participants, setParticipants] = useState<Participant[]>();
     const [kickModalActive, setKickModalActive] = useState(false);
     const [localRoleModalActive, setLocalRoleModalActive] = useState(false);
+    const [inviteModalActive, setInviteModalActive] = useState(false);
     const [selectedParticipant, setSelectedParticipant] = useState<Participant | null>(null);
 
     const findCourseParticipantsHook = useFindCourseParticipants();
@@ -49,9 +41,9 @@ function CourseParticipantsPage() {
     const { toNext } = useHistoryNavigation();
 
     useEffect(() => {
-        if (kickModalActive || localRoleModalActive) return;
+        if (kickModalActive || localRoleModalActive || inviteModalActive) return;
         fetchData();
-    }, [user, localRole, pageParam, kickModalActive, localRoleModalActive]);
+    }, [user, localRole, pageParam, kickModalActive, localRoleModalActive, inviteModalActive]);
 
     async function fetchData() {
         await fetchLocalRole();
@@ -124,7 +116,8 @@ function CourseParticipantsPage() {
             {localRole && localRole.inviteAccess &&
                 <div className="line-end-container">
                     <ControlNav>
-                        <button className="control-nav__add-button button-gray icon-plus"></button>
+                        <button className="control-nav__add-button button-gray icon-plus"
+                            onClick={() => setInviteModalActive(true)}></button>
                     </ControlNav>
                 </div>
             }
@@ -150,6 +143,16 @@ function CourseParticipantsPage() {
                             />
                         )}
                     </section>
+                }
+
+                {user && localRole && localRole.inviteAccess &&
+                    <ParticipantsInviteModal
+                        active={inviteModalActive}
+                        accessToken={accessToken}
+                        courseId={Number(courseParam.courseId)}
+                        onClose={() => setInviteModalActive(false)}
+                        userId={user.id}
+                    />
                 }
 
                 {user && selectedParticipant &&
@@ -201,202 +204,6 @@ function BuildedParticipantsContainer({ error, onErrorModalClose, loading, child
     }
 
     return children;
-}
-
-
-interface IParticipantKickModalProps {
-    requesterUserId: number;
-    accessToken: string;
-    participant: Participant;
-    courseId: number;
-    active: boolean;
-    onClose: () => void;
-}
-
-function ParticipantKickModal({
-    requesterUserId,
-    accessToken,
-    participant,
-    courseId,
-    active,
-    onClose
-}: IParticipantKickModalProps) {
-
-    const { kickQuery, error, success, loading, resetValues } = useKick();
-
-    async function onSubmit() {
-        await kickQuery(requesterUserId, participant.id, courseId, accessToken);
-    }
-
-    function closeModal() {
-        resetValues();
-        onClose();
-    }
-
-    return (
-        <>
-            {!error && !loading && !success &&
-                <Modal active={active} onClose={closeModal} title="Исключить пользователя">
-                    <div className="indented">
-                        Подтвердить исключение пользователя <span className="text-violet">{participant.nickname}</span>
-                    </div>
-                    <ModalFooter>
-                        <ModalButton onClick={onSubmit} text="Исключить" />
-                    </ModalFooter>
-                </Modal>
-            }
-
-            {error &&
-                <PopupNotification notificationType={NotificationType.error} onFade={closeModal}>
-                    {error}
-                </PopupNotification>
-            }
-
-            {success &&
-                <PopupNotification notificationType={NotificationType.success} onFade={closeModal}>
-                    {success}
-                </PopupNotification>
-            }
-
-            {loading &&
-                <PopupLoader />
-            }
-
-        </>
-
-    )
-}
-
-interface IParticipantsLocalRoleModalProps {
-    participant: Participant;
-    active: boolean;
-    userId: number;
-    accessToken: string;
-    courseId: number;
-    onClose: () => void;
-}
-
-function ParticipantsLocalRoleModal({
-    participant,
-    active,
-    userId,
-    accessToken,
-    courseId,
-    onClose
-}: IParticipantsLocalRoleModalProps) {
-    const profileImage = participant.avatarUrl || profile;
-
-    const [selectActive, setSelectActive] = useState(false);
-    const [selectedLocalRole, setSelectedLocalRole] = useState<LocalRole | null>(participant.localRole);
-    const [localRoles, setLocalRoles] = useState<LocalRole[]>();
-
-    const getAtCourseHook = useGetAtCourse();
-    const requestReassignUserLocalRoleHook = useRequestReassignUserLocalRole();
-
-    useEffect(() => {
-        fetchLocalRoles();
-    }, []);
-
-    async function fetchLocalRoles() {
-        getAtCourseHook.resetValues();
-        const result = await getAtCourseHook.listLocalRolesQuery(courseId, accessToken);
-
-        if (result) {
-            setLocalRoles(result);
-        }
-    }
-
-    async function onSubmit() {
-        if (selectedLocalRole == null) return;
-
-        requestReassignUserLocalRoleHook.resetValues();
-        await requestReassignUserLocalRoleHook.requestReassignUserLocalRoleQuery(userId, participant.id, courseId, selectedLocalRole.id, accessToken);
-    }
-
-    function resetDefaults() {
-        getAtCourseHook.resetValues();
-        requestReassignUserLocalRoleHook.resetValues();
-        setSelectedLocalRole(participant.localRole);
-    }
-
-    function closeModal() {
-        resetDefaults();
-        onClose();
-    }
-
-    return (
-        <>
-            {!requestReassignUserLocalRoleHook.error && !requestReassignUserLocalRoleHook.loading && !requestReassignUserLocalRoleHook.success &&
-                <Modal active={active} title="Редактировать роль пользователя" onClose={closeModal}>
-                    <div className="user-item__profile">
-                        <img className="user-item__image" src={profileImage} alt="Профиль" />
-                        <div className="user-item__info profile-card">
-                            <p className="profile-card__title">
-                                {participant.name} {participant.lastname}
-                                <span className="profile-card__title text-violet"> (@{participant.nickname})</span>
-                            </p>
-                        </div>
-                    </div>
-
-                    {!getAtCourseHook.error && !getAtCourseHook.loading &&
-                        <Select
-                            active={selectActive}
-                            onDeselect={() => setSelectActive(false)}
-                            toggle={() => setSelectActive(prev => !prev)}
-                            defaultTitle="Выберите локальную роль из списка..."
-                            selectedTitle={selectedLocalRole?.name}>
-
-                            <SelectItem
-                                key={0}
-                                title="Добавить локальные роли..."
-                                onSelect={() => { }}
-                            />
-                            {localRoles && localRoles.map(localRole =>
-
-                                <SelectItem
-                                    key={localRole.id}
-                                    title={localRole.name}
-                                    onSelect={() => {
-                                        setSelectedLocalRole(localRole);
-                                        setSelectActive(false);
-                                    }}
-                                />
-                            )}
-
-                        </Select>
-                    }
-
-                    {getAtCourseHook.error &&
-                        <p className="text-danger">{getAtCourseHook.error}</p>
-                    }
-
-                    {!getAtCourseHook.error && getAtCourseHook.loading &&
-                        <p>Загрузка...</p>
-                    }
-
-
-                    <ModalFooter>
-                        <ModalButton
-                            text="Сохранить"
-                            onClick={onSubmit}
-                        />
-                    </ModalFooter>
-                </Modal >
-            }
-
-            {requestReassignUserLocalRoleHook.error &&
-                <PopupNotification notificationType={NotificationType.error} onFade={closeModal}>
-                    {requestReassignUserLocalRoleHook.error}
-                </PopupNotification>
-            }
-
-            {requestReassignUserLocalRoleHook.success &&
-                <PopupNotification notificationType={NotificationType.success} onFade={closeModal}>
-                    {requestReassignUserLocalRoleHook.success}
-                </PopupNotification>
-            }
-        </>
-    );
 }
 
 export default CourseParticipantsPage;

@@ -183,13 +183,13 @@ function CourseCreateModal({ active, onClose }: ICourseCreateModalProps) {
             }
 
             {success &&
-                <PopupNotification notificationType={NotificationType.success} onFade={resetDefault}>
+                <PopupNotification notificationType={NotificationType.success} onFade={closeModal}>
                     {success}
                 </PopupNotification>
             }
 
             {error &&
-                <PopupNotification notificationType={NotificationType.error} onFade={resetDefault}>
+                <PopupNotification notificationType={NotificationType.error} onFade={closeModal}>
                     {error}
                 </PopupNotification>
             }

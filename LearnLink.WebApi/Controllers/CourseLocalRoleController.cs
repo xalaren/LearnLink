@@ -9,22 +9,16 @@ namespace LearnLink.WebApi.Controllers
 
     [ApiController]
     [Route("api/roles/courseLocal")]
-    public class CourseLocalRoleController : Controller
+    public class CourseLocalRoleController(
+        CourseLocalRoleInteractor courseLocalRoleInteractor,
+        UserVerifierService userVerifierService)
+        : Controller
     {
-        private readonly CourseLocalRoleInteractor courseLocalRoleInteractor;
-        private readonly UserVerifierService userVerifierService;
-
-        public CourseLocalRoleController(CourseLocalRoleInteractor courseLocalRoleInteractor, UserVerifierService userVerifierService)
-        {
-            this.courseLocalRoleInteractor = courseLocalRoleInteractor;
-            this.userVerifierService = userVerifierService;
-        }
-
         [Authorize]
-        [HttpPost("create")]
-        public async Task<Response> CreateAsync(int courseId, LocalRoleDto localRoleDto)
+        [HttpPost("request/create")]
+        public async Task<Response> CreateAsync(int requesterUserId, int courseId, LocalRoleDto localRoleDto)
         {
-            return await courseLocalRoleInteractor.CreateAsync(courseId, localRoleDto);
+            return await courseLocalRoleInteractor.RequestCreateAsync(requesterUserId, courseId, localRoleDto);
         }
 
         [Authorize]

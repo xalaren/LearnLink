@@ -18,6 +18,7 @@ namespace LearnLink.WebApi.Pages.CourseLocalRoles
         }
 
         public async Task OnPost(
+            int requesterUserId,
             int courseId,
             string localRoleSign,
             string localRoleName,
@@ -30,13 +31,13 @@ namespace LearnLink.WebApi.Pages.CourseLocalRoles
             string editRolesAccess
             )
         {
-            bool viewAccessValue = string.IsNullOrWhiteSpace(viewAccess) ? false : true;
-            bool manageAccessValue = string.IsNullOrWhiteSpace(manageAccess) ? false : true;
-            bool editAccessValue = string.IsNullOrWhiteSpace(editAccess) ? false : true;
-            bool removeAccessValue = string.IsNullOrWhiteSpace(removeAccess) ? false : true;
-            bool inviteAccessValue = string.IsNullOrWhiteSpace(inviteAccess) ? false : true;
-            bool kickAccessValue = string.IsNullOrWhiteSpace(kickAccess) ? false : true;
-            bool editRolesAccessValue = string.IsNullOrWhiteSpace(editRolesAccess) ? false : true;
+            bool viewAccessValue = !string.IsNullOrWhiteSpace(viewAccess);
+            bool manageAccessValue = !string.IsNullOrWhiteSpace(manageAccess);
+            bool editAccessValue = !string.IsNullOrWhiteSpace(editAccess);
+            bool removeAccessValue = !string.IsNullOrWhiteSpace(removeAccess);
+            bool inviteAccessValue = !string.IsNullOrWhiteSpace(inviteAccess);
+            bool kickAccessValue = !string.IsNullOrWhiteSpace(kickAccess);
+            bool editRolesAccessValue = !string.IsNullOrWhiteSpace(editRolesAccess);
 
 
             var localRoleDto = new LocalRoleDto()
@@ -53,7 +54,7 @@ namespace LearnLink.WebApi.Pages.CourseLocalRoles
                 EditRolesAccess = editRolesAccessValue
             };
 
-            QueryResult = await CourseLocalRoleInteractor.CreateAsync(courseId, localRoleDto);
+            QueryResult = await CourseLocalRoleInteractor.RequestCreateAsync(requesterUserId, courseId, localRoleDto);
         }
     }
 }

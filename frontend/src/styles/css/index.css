@@ -2288,4 +2288,43 @@ h3 {
 }
 .select .icon {
   transition: 0.3s ease-in-out;
+}
+
+.invite-list > *:not(:last-child) {
+  margin-bottom: 40px;
+}
+.invite-list__item {
+  display: flex;
+  max-height: 60px;
+  padding: 5px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.invite-list__button {
+  padding: 0;
+  min-width: 40px;
+  width: 40px;
+  height: 40px;
+}
+
+.user-mini {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+.user-mini__image {
+  min-width: 40px;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+}
+.user-mini__name {
+  font-size: 20px;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+.user-mini__nickname {
+  font-size: 16px;
+  color: #8c74ff;
 }/*# sourceMappingURL=index.css.map */

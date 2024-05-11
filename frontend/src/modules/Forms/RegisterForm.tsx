@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { ErrorModal } from "../components/Modal/ErrorModal";
-import { validate } from "../helpers/validation";
-import { Input } from "../components/Input";
-import { InputType } from "../models/enums";
-import { useRegister } from "../hooks/userHooks";
-import { SuccessModal } from "../components/Modal/SuccessModal";
-import { useHistoryNavigation } from "../hooks/historyNavigation";
-import { Paths } from "../models/paths";
+import { ErrorModal } from "../../components/Modal/ErrorModal.tsx";
+import { validate } from "../../helpers/validation.ts";
+import { Input } from "../../components/Input.tsx";
+import { InputType } from "../../models/enums.ts";
+import { useRegister } from "../../hooks/userHooks.ts";
+import { SuccessModal } from "../../components/Modal/SuccessModal.tsx";
+import { useHistoryNavigation } from "../../hooks/historyNavigation.ts";
+import { Paths } from "../../models/paths.ts";
 
 export function RegisterForm() {
     const [nickname, setNickname] = useState('');

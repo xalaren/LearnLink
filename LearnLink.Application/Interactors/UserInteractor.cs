@@ -11,25 +11,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Interactors
 {
-    public class UserInteractor
+    public class UserInteractor(
+        IUnitOfWork unitOfWork,
+        IEncryptionService encryptionService,
+        IAuthenticationService authenticationService,
+        DirectoryStore directoryStore)
     {
-        private readonly IUnitOfWork unitOfWork;
-        private readonly IEncryptionService encryptionService;
-        private readonly IAuthenticationService authenticationService;
-        private readonly DirectoryStore directoryStore;
-
-        public UserInteractor(
-            IUnitOfWork unitOfWork,
-            IEncryptionService encryptionService,
-            IAuthenticationService authenticationService,
-            DirectoryStore directoryStore)
-        {
-            this.unitOfWork = unitOfWork;
-            this.encryptionService = encryptionService;
-            this.authenticationService = authenticationService;
-            this.directoryStore = directoryStore;
-        }
-
         public async Task<Response<string>> AuthenticateAsync(string nickname, string password, bool authenticateAdmin = false)
         {
             try
@@ -305,14 +292,19 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task<Response<DataPage<UserDto[]>>> FindUsersAsync(string? searchString, DataPageHeader pageHeader)
+        public async Task<Response<DataPage<UserDto[]>>> FindUsersExceptCourseUsersAsync(int courseId, string? searchString, DataPageHeader pageHeader)
         {
             try
             {
+                var subscriptions = unitOfWork.UserCourseLocalRoles
+                    .Where(role => role.CourseId == courseId)
+                    .Include(role => role.User)
+                    .Select(role => role.User);
+                
                 var usersQuery = unitOfWork.Users
+                    .Except(subscriptions)
                     .AsNoTracking();
-
-
+                
                 if (searchString != null)
                 {
                     usersQuery = usersQuery.Where(user =>

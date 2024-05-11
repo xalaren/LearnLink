@@ -7,9 +7,9 @@ import SideNav from "../components/SideNav/SideNav";
 import SideNavLink from "../components/SideNav/SideNavLink";
 import { useParams } from "react-router-dom";
 import { ProfileEditActions } from "../models/enums";
-import EditProfileMainModule from "../modules/EditProfileMainModule";
-import EditProfilePasswordModule from "../modules/EditProfilePasswordModule";
-import ProfileDeleteModule from "../modules/ProfileDeleteModule";
+import EditProfileMainModule from "../modules/EditProfileModules/EditProfileMainModule.tsx";
+import EditProfilePasswordModule from "../modules/EditProfileModules/EditProfilePasswordModule.tsx";
+import ProfileDeleteModule from "../modules/EditProfileModules/ProfileDeleteModule.tsx";
 
 function ProfilePage() {
     const { isAuthenticated } = useAppSelector(state => state.authReducer);

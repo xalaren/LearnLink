@@ -9,19 +9,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Interactors
 {
-    public class SubscriptionInteractor
+    public class SubscriptionInteractor(
+        IUnitOfWork unitOfWork,
+        CompletionInteractor completionInteractor,
+        UserCourseLocalRolesInteractor userCourseLocalRolesInteractor)
     {
-        private readonly IUnitOfWork unitOfWork;
-        private readonly CompletionInteractor completionInteractor;
-        private readonly UserCourseLocalRolesInteractor userCourseLocalRolesInteractor;
-
-        public SubscriptionInteractor(IUnitOfWork unitOfWork, CompletionInteractor completionInteractor, UserCourseLocalRolesInteractor userCourseLocalRolesInteractor)
-        {
-            this.unitOfWork = unitOfWork;
-            this.completionInteractor = completionInteractor;
-            this.userCourseLocalRolesInteractor = userCourseLocalRolesInteractor;
-        }
-
         public async Task<Response<SubscriptionDto[]>> GetAllAsync()
         {
             try

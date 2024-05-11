@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import { Modal } from "../components/Modal/Modal";
-import Checkbox from "../components/Checkbox";
-import { useAppDispatch, useAppSelector } from "../hooks/redux";
-import { NotificationType } from "../models/enums";
-import { useRemoveUser } from "../hooks/userHooks";
-import PopupNotification from "../components/PopupNotification";
-import { logout } from "../store/actions/authActionCreators";
-import { resetUserState } from "../store/actions/userActionCreators";
-import ModalContent from "../components/Modal/ModalContent";
-import ModalFooter from "../components/Modal/ModalFooter";
-import ModalButton from "../components/Modal/ModalButton";
+import { Modal } from "../../components/Modal/Modal.tsx";
+import Checkbox from "../../components/Checkbox.tsx";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux.ts";
+import { NotificationType } from "../../models/enums.ts";
+import { useRemoveUser } from "../../hooks/userHooks.ts";
+import PopupNotification from "../../components/PopupNotification.tsx";
+import { logout } from "../../store/actions/authActionCreators.ts";
+import { resetUserState } from "../../store/actions/userActionCreators.ts";
+import ModalContent from "../../components/Modal/ModalContent.tsx";
+import ModalFooter from "../../components/Modal/ModalFooter.tsx";
+import ModalButton from "../../components/Modal/ModalButton.tsx";
 
 function ProfileDeleteModule() {
     const [confirmModalActive, setConfirmModalActive] = useState(false);

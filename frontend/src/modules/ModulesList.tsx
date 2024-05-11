@@ -201,13 +201,13 @@ function ModuleCreateModal({ courseId, active, onClose }: IModuleCreateModalProp
             }
 
             {success &&
-                <PopupNotification notificationType={NotificationType.success} onFade={resetDefault}>
+                <PopupNotification notificationType={NotificationType.success} onFade={closeModal}>
                     {success}
                 </PopupNotification>
             }
 
             {error &&
-                <PopupNotification notificationType={NotificationType.error} onFade={resetDefault}>
+                <PopupNotification notificationType={NotificationType.error} onFade={closeModal}>
                     {error}
                 </PopupNotification>
             }

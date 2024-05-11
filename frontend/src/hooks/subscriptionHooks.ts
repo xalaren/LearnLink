@@ -105,14 +105,14 @@ export function useKick() {
 export function useInvite() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [success, setSuccess] = useState(false);
+    const [success, setSuccess] = useState('');
 
-    const inviteQuery = async (userId: number, accessToken: string, courseId: number, localRoleSign: string, inviteUserIdentifiers: number[]) => {
+    const inviteQuery = async (userId: number, accessToken: string, courseId: number, localRoleId: number, invitedUserId: number) => {
         try {
-            console.log(accessToken);
+            const invitedUserIdentifiers: number[] = [invitedUserId];
 
             setLoading(true);
-            const response = await axiosInstance.post<IVoidResponse>(`${SUBSCRIPTION_ENDPOINTS_URL}invite?userId=${userId}&courseId=${courseId}&localRoleSign=${localRoleSign}`, { inviteUserIdentifiers }, {
+            const response = await axiosInstance.post<IVoidResponse>(`${SUBSCRIPTION_ENDPOINTS_URL}invite?userId=${userId}&courseId=${courseId}&localRoleId=${localRoleId}`, invitedUserIdentifiers, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -123,7 +123,7 @@ export function useInvite() {
             if (!response.data.success) {
                 throw new AxiosError(response.data.message);
             }
-            setSuccess(true);
+            setSuccess(response.data.message || '');
         }
         catch (err: unknown) {
             setLoading(false);
@@ -134,7 +134,7 @@ export function useInvite() {
     const resetValues = () => {
         setLoading(false);
         setError('');
-        setSuccess(false);
+        setSuccess('');
     }
 
     return { inviteQuery, error, success, loading, resetValues };

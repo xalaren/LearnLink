@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { InputType } from "../models/enums";
-import { validate } from "../helpers/validation";
-import { Input } from "../components/Input";
-import { useLogin } from "../hooks/userHooks";
-import { ErrorModal } from "../components/Modal/ErrorModal";
-import { useAppDispatch } from "../hooks/redux";
-import { loginSave } from "../store/actions/authActionCreators";
-import { fetchUser } from "../store/actions/userActionCreators";
+import { InputType } from "../../models/enums.ts";
+import { validate } from "../../helpers/validation.ts";
+import { Input } from "../../components/Input.tsx";
+import { useLogin } from "../../hooks/userHooks.ts";
+import { ErrorModal } from "../../components/Modal/ErrorModal.tsx";
+import { useAppDispatch } from "../../hooks/redux.ts";
+import { loginSave } from "../../store/actions/authActionCreators.ts";
+import { fetchUser } from "../../store/actions/userActionCreators.ts";
 
 export function LoginForm() {
     const [nickname, setNickname] = useState('');

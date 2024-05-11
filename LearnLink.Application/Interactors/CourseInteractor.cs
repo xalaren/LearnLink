@@ -17,12 +17,6 @@ namespace LearnLink.Application.Interactors
         CourseLocalRoleInteractor courseLocalRoleInteractor,
         UserCourseLocalRolesInteractor userCourseLocalRoleInteractor)
     {
-        private readonly IUnitOfWork unitOfWork = unitOfWork;
-        private readonly PermissionService permissionService = permissionService;
-        private readonly ModuleInteractor moduleInteractor = moduleInteractor;
-        private readonly CourseLocalRoleInteractor courseLocalRoleInteractor = courseLocalRoleInteractor;
-        private readonly UserCourseLocalRolesInteractor userCourseLocalRoleInteractor = userCourseLocalRoleInteractor;
-        
 
         //Get, Find methods
 
@@ -858,49 +852,7 @@ namespace LearnLink.Application.Interactors
                 };
             }
         }
-
-        public async Task<Response<LocalRoleDto?>> GetUserLocalRole(int userId, int courseId)
-        {
-            try
-            {
-                var userLocalRole = await unitOfWork.UserCourseLocalRoles
-                    .Include(userCourseLocalRole => userCourseLocalRole.LocalRole)
-                    .FirstOrDefaultAsync(userCourseLocalRole => 
-                        userCourseLocalRole.UserId == userId && 
-                        userCourseLocalRole.CourseId == courseId);
-
-                if (userLocalRole == null)
-                {
-                    throw new NotFoundException("Локальная роль пользователя в данном курсе не найдена");
-                }
-
-                return new()
-                {
-                    Success = true,
-                    Message = "Локальная роль пользователя получена успешно",
-                    Value = userLocalRole.LocalRole.ToDto()
-                };
-            }
-            catch (CustomException exception)
-            {
-                return new()
-                {
-                    Success = false,
-                    Message = exception.Message,
-                };
-            }
-            catch (Exception exception)
-            {
-                return new()
-                {
-                    Success = false,
-                    Message = "Не удалось получить роль пользователя",
-                    InnerErrorMessages = [exception.Message],
-                };
-            }
-        }
-
-        public async Task RemoveCourseAsyncNoResponse(int courseId, bool strictRemove)
+        private async Task RemoveCourseAsyncNoResponse(int courseId, bool strictRemove)
         {
             var course = await unitOfWork.Courses.FindAsync(courseId) ??
                     throw new NotFoundException("Курс не найден");

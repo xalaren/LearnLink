@@ -5,6 +5,7 @@ import { IAuthModel } from "../models/authModel";
 import { IValueResponse, IVoidResponse } from "../models/response";
 import { User } from "../models/user";
 import axiosInstance from "../axios_config/axiosConfig";
+import { ValueDataPage } from "../models/dataPage";
 
 export function useLogin() {
     const [error, setError] = useState('');
@@ -197,4 +198,38 @@ export function useRemoveUser() {
     }
 
     return { removeUserQuery, error, success, resetValues }
+}
+
+export function useFindUsers() {
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const findUsersQuery = async (courseId: number, page: number, size: number, accessToken: string, searchText?: string) => {
+        try {
+            setLoading(true);
+            const response = (await axiosInstance.get<IValueResponse<ValueDataPage<User[]>>>(`${USER_ENDPOINTS_URL}find/exceptCourseUsers?courseId=${courseId}&searchText=${searchText}&page=${page}&size=${size}&accessToken=${accessToken}`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            }));
+            setLoading(false);
+
+            if (!response.data.success) {
+                throw new AxiosError(response.data.message);
+            }
+
+            return response.data.value;
+        }
+        catch (err: unknown) {
+            setLoading(false);
+            setError((err as AxiosError).message);
+        }
+    }
+
+    const resetValues = () => {
+        setError('');
+        setLoading(false);
+    }
+
+    return { findUsersQuery, error, loading, resetValues }
 }

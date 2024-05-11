@@ -9,18 +9,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Interactors
 {
-    public class CourseLocalRoleInteractor
+    public class CourseLocalRoleInteractor(IUnitOfWork unitOfWork, LocalRoleInteractor localRoleInteractor)
     {
-        private readonly IUnitOfWork unitOfWork;
-        private readonly LocalRoleInteractor localRoleInteractor;
-
-        public CourseLocalRoleInteractor(IUnitOfWork unitOfWork, LocalRoleInteractor localRoleInteractor)
-        {
-            this.unitOfWork = unitOfWork;
-            this.localRoleInteractor = localRoleInteractor;
-        }
-
-
         public async Task<Response<LocalRoleDto>> GetByCourseAndLocalIdAsync(int courseId, int localRoleId)
         {
             try
@@ -68,10 +58,26 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task<Response> CreateAsync(int courseId, LocalRoleDto localRoleDto)
+        public async Task<Response> RequestCreateAsync(int requesterUserId, int courseId, LocalRoleDto localRoleDto)
         {
             try
             {
+                var requesterCourseLocalRole = await unitOfWork.UserCourseLocalRoles
+                    .Include(userCourseLocalRole => userCourseLocalRole.LocalRole)
+                    .FirstOrDefaultAsync(userCourseLocalRole =>
+                        userCourseLocalRole.UserId == requesterUserId &&
+                        userCourseLocalRole.CourseId == courseId);
+                
+                if(requesterCourseLocalRole == null)
+                {
+                    throw new NotFoundException("Ваша локальная роль не найдена");
+                }
+
+                if(!requesterCourseLocalRole.LocalRole.EditRolesAccess)
+                {
+                    throw new AccessLevelException("Приоритет вашей роли низкий");
+                }
+                
                 var course = await unitOfWork.Courses.FindAsync(courseId);
 
                 if(course == null)
@@ -140,7 +146,7 @@ namespace LearnLink.Application.Interactors
                     throw new NotFoundException("Ваша локальная роль не найдена");
                 }
 
-                if(!requesterCourseLocalRole.LocalRole.IsAdmin)
+                if(!requesterCourseLocalRole.LocalRole.EditRolesAccess)
                 {
                     throw new AccessLevelException("Приоритет вашей роли низкий");
                 }

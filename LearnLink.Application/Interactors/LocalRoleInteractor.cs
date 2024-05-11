@@ -8,15 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Interactors
 {
-    public class LocalRoleInteractor
+    public class LocalRoleInteractor(IUnitOfWork unitOfWork)
     {
-        private readonly IUnitOfWork unitOfWork;
-
-        public LocalRoleInteractor(IUnitOfWork unitOfWork)
-        {
-            this.unitOfWork = unitOfWork;
-        }
-
         public async Task<Response> CreateLocalRoleAsync(LocalRoleDto localRoleDto)
         {
             try

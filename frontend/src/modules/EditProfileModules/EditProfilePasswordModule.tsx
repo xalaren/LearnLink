@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { InputType, NotificationType } from "../models/enums";
-import { Input } from "../components/Input";
-import { validate } from "../helpers/validation";
-import { useUpdatePassword } from "../hooks/userHooks";
-import { useAppSelector } from "../hooks/redux";
-import PopupNotification from "../components/PopupNotification";
+import { InputType, NotificationType } from "../../models/enums.ts";
+import { Input } from "../../components/Input.tsx";
+import { validate } from "../../helpers/validation.ts";
+import { useUpdatePassword } from "../../hooks/userHooks.ts";
+import { useAppSelector } from "../../hooks/redux.ts";
+import PopupNotification from "../../components/PopupNotification.tsx";
 
 function EditProfilePasswordModule() {
     const [oldPassword, setOldPassword] = useState('');
