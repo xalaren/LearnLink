@@ -242,6 +242,11 @@ h3 {
     @extend .button-round;
 }
 
+.button-red-light-rounded {
+    @extend .button-danger-light;
+    @extend .button-round;
+}
+
 .button-violet-rounded {
     @extend .button-violet;
     @extend .button-round;
@@ -440,6 +445,10 @@ h3 {
 
 .icon-large-size {
     font-size: 40px;
+}
+
+.icon-big-size {
+    font-size: 32px;
 }
 
 .icon-medium-size {

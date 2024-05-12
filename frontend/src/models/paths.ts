@@ -14,7 +14,9 @@ export class Paths {
     static readonly courseParticipantsPath = `${this.courseViewPath}/:courseId/participants/page`;
     static readonly moduleViewPath = '/modules';
     static readonly moduleViewFullPath = `${this.courseViewFullPath}${this.moduleViewPath}/:moduleId`;
+    static readonly courseRolesPath = `${this.courseViewFullPath}/roles`;
 
     static getCourseViewFullPath = (courseId: number) => `${this.courseViewPath}/${courseId}`;
     static getCourseParticipantsPath = (courseId: number) => `${this.courseViewPath}/${courseId}/participants/page`;
+    static getCourseRolesPath = (courseId: number) => `${this.courseViewPath}/${courseId}/roles`;
 }

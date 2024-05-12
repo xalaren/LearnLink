@@ -8,14 +8,16 @@ import { useFindUsers } from "../../hooks/userHooks.ts";
 import { Loader } from "../../components/Loader/Loader.tsx";
 import { InviteItem } from "../../models/inviteItem.ts";
 import ModalFooter from "../../components/Modal/ModalFooter.tsx";
-import ModalButton from "../../components/Modal/ModalButton.tsx";
 import { useInvite } from "../../hooks/subscriptionHooks.ts";
 import { LocalRole } from "../../models/localRole.ts";
-import { useGetAtCourse } from "../../hooks/courseLocalRoleHooks.ts";
+import { useListAllLocalRolesAtCourse } from "../../hooks/courseLocalRoleHooks.ts";
 import Select from "../../components/Select/Select.tsx";
 import SelectItem from "../../components/Select/SelectItem.tsx";
 import PopupNotification from "../../components/PopupNotification.tsx";
 import { NotificationType } from "../../models/enums.ts";
+import {useHistoryNavigation} from "../../hooks/historyNavigation.ts";
+import {Paths} from "../../models/paths.ts";
+import ModalContent from "../../components/Modal/ModalContent.tsx";
 
 
 interface IParticipantsInviteModalProps {
@@ -38,9 +40,11 @@ function ParticipantsInviteModal(
     const [selectedLocalRole, setSelectedLocalRole] = useState<LocalRole | null>();
     const [localRoles, setLocalRoles] = useState<LocalRole[]>();
 
+    const {toNext} = useHistoryNavigation();
+
     const findUsersHook = useFindUsers();
     const inviteUserHook = useInvite();
-    const getAtCourseHook = useGetAtCourse();
+    const getAtCourseHook = useListAllLocalRolesAtCourse();
 
     useEffect(() => {
         fetchData();
@@ -103,59 +107,61 @@ function ParticipantsInviteModal(
     return (
         <>
             <Modal active={active} onClose={closeModal} title="Приглашение участников">
-                <SearchForm
-                    placeholder="Найти по имени, фамилии или никнейму..."
-                    onChange={onChange}
-                    onSubmit={onSearchFormSubmit}
-                    value={searchText} />
-
-                <Paginate currentPage={page} pageCount={pageCount} setPage={setPage} />
-
-                {!findUsersHook.error && !findUsersHook.loading && foundUsers &&
-                    <InviteList>
-                        {foundUsers.map<InviteItem>(item => new InviteItem(item, () => onInvite(item.id)))}
-                    </InviteList>
-                }
-
-                {foundUsers?.length == 0 &&
-                    <p>Нет доступных пользователей</p>
-                }
-
-                {!getAtCourseHook.error && !getAtCourseHook.loading &&
-                    <Select
-                        active={selectActive}
-                        onDeselect={() => setSelectActive(false)}
-                        toggle={() => setSelectActive(prev => !prev)}
-                        defaultTitle="Выберите локальную роль из списка..."
-                        selectedTitle={selectedLocalRole?.name}>
-
-                        <SelectItem
-                            key={0}
-                            title="Добавить локальные роли..."
-                            onSelect={() => { }}
-                        />
-                        {localRoles && localRoles.map(localRole =>
+                <ModalContent className="indented">
+                    {!getAtCourseHook.error && !getAtCourseHook.loading &&
+                        <Select
+                            active={selectActive}
+                            onDeselect={() => setSelectActive(false)}
+                            toggle={() => setSelectActive(prev => !prev)}
+                            defaultTitle="Выберите локальную роль из списка..."
+                            selectedTitle={selectedLocalRole?.name}>
 
                             <SelectItem
-                                key={localRole.id}
-                                title={localRole.name}
-                                onSelect={() => {
-                                    setSelectedLocalRole(localRole);
-                                    setSelectActive(false);
-                                }}
+                                key={0}
+                                title="Добавить локальные роли..."
+                                onSelect={() => toNext(Paths.getCourseRolesPath(courseId))}
                             />
-                        )}
+                            {localRoles && localRoles.map(localRole =>
 
-                    </Select>
-                }
+                                <SelectItem
+                                    key={localRole.id}
+                                    title={localRole.name}
+                                    onSelect={() => {
+                                        setSelectedLocalRole(localRole);
+                                        setSelectActive(false);
+                                    }}
+                                />
+                            )}
 
-                {findUsersHook.error || getAtCourseHook.error &&
-                    <p className="text-danger">{findUsersHook.error || getAtCourseHook.error}</p>
-                }
+                        </Select>
+                    }
 
-                {!(findUsersHook.error || getAtCourseHook.error) && findUsersHook.loading || getAtCourseHook.loading &&
-                    <Loader />
-                }
+                    <SearchForm
+                        placeholder="Найти по имени, фамилии или никнейму..."
+                        onChange={onChange}
+                        onSubmit={onSearchFormSubmit}
+                        value={searchText} />
+
+                    <Paginate currentPage={page} pageCount={pageCount} setPage={setPage} />
+
+                    {!findUsersHook.error && !findUsersHook.loading && foundUsers &&
+                        <InviteList>
+                            {foundUsers.map<InviteItem>(item => new InviteItem(item, () => onInvite(item.id)))}
+                        </InviteList>
+                    }
+
+                    {foundUsers?.length == 0 &&
+                        <p>Нет доступных пользователей</p>
+                    }
+
+                    {findUsersHook.error || getAtCourseHook.error &&
+                        <p className="text-danger">{findUsersHook.error || getAtCourseHook.error}</p>
+                    }
+
+                    {!(findUsersHook.error || getAtCourseHook.error) && findUsersHook.loading || getAtCourseHook.loading &&
+                        <Loader />
+                    }
+                </ModalContent>
 
                 <ModalFooter>
                     <></>

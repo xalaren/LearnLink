@@ -2,7 +2,7 @@ import { AxiosError } from "axios";
 import { USER_ENDPOINTS_URL } from "../models/constants";
 import { useState } from "react";
 import { IAuthModel } from "../models/authModel";
-import { IValueResponse, IVoidResponse } from "../models/response";
+import { IValueResponse, VoidResponse } from "../models/response";
 import { User } from "../models/user";
 import axiosInstance from "../axios_config/axiosConfig";
 import { ValueDataPage } from "../models/dataPage";
@@ -44,7 +44,7 @@ export function useRegister() {
             const user = new User(nickname, lastname, name, avatar);
             console.log(user);
 
-            const response = await axiosInstance.post<IVoidResponse>(`${USER_ENDPOINTS_URL}register?password=${password}`, user, {
+            const response = await axiosInstance.post<VoidResponse>(`${USER_ENDPOINTS_URL}register?password=${password}`, user, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -141,7 +141,7 @@ export function useUpdatePassword() {
 
     const updatePasswordQuery = async (userId: number, accessToken: string, oldPassword: string, newPassword: string,) => {
         try {
-            const response = (await axiosInstance.post<IVoidResponse>(`${USER_ENDPOINTS_URL}update/pass?userId=${userId}&
+            const response = (await axiosInstance.post<VoidResponse>(`${USER_ENDPOINTS_URL}update/pass?userId=${userId}&
 oldPassword=${oldPassword}&newPassword=${newPassword}`, {}, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
@@ -174,7 +174,7 @@ export function useRemoveUser() {
 
     const removeUserQuery = async (userId: number, accessToken: string) => {
         try {
-            const response = (await axiosInstance.delete<IVoidResponse>(`${USER_ENDPOINTS_URL}remove?userId=${userId}`, {
+            const response = (await axiosInstance.delete<VoidResponse>(`${USER_ENDPOINTS_URL}remove?userId=${userId}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }

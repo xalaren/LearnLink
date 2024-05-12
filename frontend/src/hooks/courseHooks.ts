@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Course } from "../models/course";
 import { AxiosError } from "axios";
-import { IValueResponse, IVoidResponse } from "../models/response";
+import { IValueResponse, VoidResponse } from "../models/response";
 import { COURSE_ENDPOINTS_URL } from "../models/constants";
 import axiosInstance from "../axios_config/axiosConfig";
 import { ValueDataPage } from "../models/dataPage";
@@ -117,7 +117,7 @@ export function useCreateCourse() {
             setLoading(true);
 
             const course = new Course(0, title, isPublic, false, description);
-            const response = (await axiosInstance.post<IVoidResponse>(`${COURSE_ENDPOINTS_URL}create?userId=${userId}`, course, {
+            const response = (await axiosInstance.post<VoidResponse>(`${COURSE_ENDPOINTS_URL}create?userId=${userId}`, course, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -211,7 +211,7 @@ export function useUpdateCourse() {
     const updateCourseQuery = async (course: Course, userId: number, accessToken: string) => {
         try {
             setLoading(true);
-            const response = (await axiosInstance.post<IVoidResponse>(`${COURSE_ENDPOINTS_URL}update?userId=${userId}`, course, {
+            const response = (await axiosInstance.post<VoidResponse>(`${COURSE_ENDPOINTS_URL}update?userId=${userId}`, course, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -247,7 +247,7 @@ export function useHideCourse() {
     const hideCourseQuery = async (courseId: number, userId: number, accessToken: string) => {
         try {
             setLoading(true);
-            const response = (await axiosInstance.post<IVoidResponse>(`${COURSE_ENDPOINTS_URL}setUnavailable?userId=${userId}&courseId=${courseId}`, {}, {
+            const response = (await axiosInstance.post<VoidResponse>(`${COURSE_ENDPOINTS_URL}setUnavailable?userId=${userId}&courseId=${courseId}`, {}, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -284,7 +284,7 @@ export function useRemoveCourse() {
         try {
             setLoading(true);
 
-            const response = (await axiosInstance.delete<IVoidResponse>(`${COURSE_ENDPOINTS_URL}remove?userId=${userId}&courseId=${courseId}`, {
+            const response = (await axiosInstance.delete<VoidResponse>(`${COURSE_ENDPOINTS_URL}remove?userId=${userId}&courseId=${courseId}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }

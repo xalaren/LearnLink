@@ -1,11 +1,11 @@
 import { useState } from "react";
 import axiosInstance from "../axios_config/axiosConfig";
 import {COURSE_LOCAL_ROLE_ENDPOINTS_URL} from "../models/constants";
-import { IValueResponse } from "../models/response";
+import {IValueResponse, VoidResponse} from "../models/response";
 import { LocalRole } from "../models/localRole";
 import { AxiosError } from "axios";
 
-export function useGetAtCourse() {
+export function useListAllLocalRolesAtCourse() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -38,4 +38,41 @@ export function useGetAtCourse() {
     }
 
     return { listLocalRolesQuery, loading, error, resetValues };
+}
+
+export function useRequestCreateCourseLocalRole() {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+
+    const requestCreateCourseLocalRoleQuery = async (requesterUserId: number, courseId: number, localRole: LocalRole, accessToken: string) => {
+        try {
+            setLoading(true);
+            const response = await axiosInstance.post<VoidResponse>(
+                `${COURSE_LOCAL_ROLE_ENDPOINTS_URL}request/create?requesterUserId=${requesterUserId}&courseId=${courseId}`, localRole, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                });
+
+            setLoading(false);
+
+            if (!response.data.success) {
+                throw new AxiosError(response.data.message);
+            }
+
+            setSuccess(response.data.message || '');
+
+        } catch (err: unknown) {
+            setError((err as AxiosError).message);
+        }
+    }
+
+    const resetValues = () => {
+        setLoading(false);
+        setError('');
+        setSuccess('');
+    }
+
+    return { requestCreateCourseLocalRoleQuery, loading, error, success, resetValues };
 }

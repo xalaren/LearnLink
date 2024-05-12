@@ -17,7 +17,7 @@ function ParticipantItem({
     onKickButtonClick,
     className = '' }: IUserItemProps) {
 
-    let profileImage = participant.avatarUrl || profile;
+    const profileImage = participant.avatarUrl || profile;
 
     return (
         <div className={`user-item ${className}`}>

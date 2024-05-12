@@ -63,6 +63,10 @@ function CourseView({
                                 <DropdownItem title="Участники" className="icon icon-user-group-circle" key={2} onClick={() => toNext(`${Paths.getCourseParticipantsPath(course.id)}/1`)} />
                             }
 
+                            {course.localRole.editRolesAccess &&
+                                <DropdownItem title="Роли" className="icon icon-star" key={2} onClick={() => toNext(`${Paths.getCourseRolesPath(course.id)}`)} />
+                            }
+
                             {course.localRole.removeAccess &&
                                 <DropdownItem title="Удалить" className="icon icon-cross-circle" key={3} onClick={() => setDeleteModalActive(true)} />
                             }

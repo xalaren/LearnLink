@@ -15,6 +15,7 @@ import { useEffect } from "react";
 import { fetchUser } from "./store/actions/userActionCreators";
 import HomePage from "./pages/HomePage";
 import CourseParticipantsPage from "./pages/CourseParticipantsPage";
+import CourseRolesPage from "./pages/CourseRolesPage.tsx";
 
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
                 <Route path={Paths.userCoursesFullPath + '/:pageNumber'} element={<UserCoursesPage />} />
                 <Route path={Paths.courseViewFullPath} element={<CoursePage />}></Route>
                 <Route path={Paths.courseParticipantsPath + '/:pageNumber'} element={<CourseParticipantsPage />}></Route>
+                <Route path={Paths.courseRolesPath} element={<CourseRolesPage />}></Route>
                 <Route path="*" element={<InvalidPage />}></Route>
             </Routes >
 

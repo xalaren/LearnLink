@@ -3,7 +3,7 @@ import { Module } from "../models/module";
 import { AxiosError } from "axios";
 import axiosInstance from "../axios_config/axiosConfig";
 import { MODULE_ENDPOINTS_URL } from "../models/constants";
-import { IValueResponse, IVoidResponse } from "../models/response";
+import { IValueResponse, VoidResponse } from "../models/response";
 
 export function useGetCourseModules() {
     const [error, setError] = useState('');
@@ -44,7 +44,7 @@ export function useCreateModules() {
         try {
             setLoading(true);
             const module = new Module(title, description);
-            const response = await axiosInstance.post<IVoidResponse>(`${MODULE_ENDPOINTS_URL}/create?courseId=${courseId}`, module, {
+            const response = await axiosInstance.post<VoidResponse>(`${MODULE_ENDPOINTS_URL}/create?courseId=${courseId}`, module, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -121,7 +121,7 @@ export function useUpdateModule() {
         try {
             setLoading(true);
             const module = new Module(title, description, moduleId);
-            const response = await axiosInstance.post<IVoidResponse>(`${MODULE_ENDPOINTS_URL}/update`, module, {
+            const response = await axiosInstance.post<VoidResponse>(`${MODULE_ENDPOINTS_URL}/update`, module, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -158,7 +158,7 @@ export function useRemoveModule() {
         try {
             setLoading(true);
 
-            const response = (await axiosInstance.delete<IVoidResponse>(`${MODULE_ENDPOINTS_URL}remove?moduleId=${moduleId}`, {
+            const response = (await axiosInstance.delete<VoidResponse>(`${MODULE_ENDPOINTS_URL}remove?moduleId=${moduleId}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }

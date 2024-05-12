@@ -991,11 +991,6 @@
         align-items: center;
     }
 
-    &__body {
-        overflow: auto;
-        max-height: 600px;
-    }
-
     &__close-button {
         background-color: $veryLightGray;
         transition: 0.4s ease-in-out;
@@ -1026,12 +1021,7 @@
             padding: 20px;
             max-width: none;
             @include static-size(100%);
-        }
-    }
-
-    @media screen and (max-height: 540px) {
-        &__body {
-            max-height: 400px;
+            height: 100dvh;
         }
     }
 }
@@ -1173,9 +1163,25 @@
     }
 }
 
+.switch-container {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    cursor: pointer;
+
+    @include hover() {
+        .switch__button {
+            background-color: $lightViolet;
+        }
+        .switch__label {
+            color: $lightViolet;
+        }
+    }
+}
+
 .switch {
     @include static-height(30px);
-    @include static-width(50px);
+    @include static-width(40px);
     border: solid 2px $lightGray;
     padding: 4px;
     border-radius: 20px;
@@ -1200,13 +1206,18 @@
         transition: all 0.3s cubic-bezier(0.82, 0.235, 0.18, 0.91);
     }
 
+    &__label {
+        transition: 0.3s ease-in-out;
+        user-select: none;
+    }
+
     &-checked {
         border-color: $lightViolet;
         background-color: $white;
 
         .switch__button {
             background-color: $lightViolet;
-            transform: translateX(calc(100% + 6px));
+            transform: translateX(calc(100% - 4px));
         }
     }
 }
@@ -1433,10 +1444,10 @@
 
     &__items {
         display: none;
+        position: absolute;
         background-color: $veryLightGray;
         border-bottom-left-radius: 5px;
         border-bottom-right-radius: 5px;
-        position: absolute;
         width: 100%;
         max-height: 400px;
         overflow: auto;
@@ -1461,6 +1472,12 @@
 
     .icon {
         transition: 0.3s ease-in-out;
+    }
+
+    @media screen and (max-width: $sm) {
+        &__items {
+            position: static;
+        }
     }
 }
 
@@ -1505,3 +1522,48 @@
         color: $lightViolet;
     }
 }
+
+.roles-list {
+    @include  child-not-last {
+        margin-bottom: 40px;
+    }
+}
+
+.role-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    gap: 20px;
+    border: solid 2px $veryLightGray;
+    border-radius: 5px;
+    padding: 20px;
+
+    &__info {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+    }
+
+    &__name {
+        font-size: $inputs-fz;
+        font-weight: 500;
+    }
+
+    &__properties {
+        display: flex;
+        gap: 20px;
+    }
+
+    &__button {
+        @include static-size(40px);
+    }
+}
+
+.checkbox-list {
+    @include  child-not-last {
+        margin-bottom: 20px;
+    }
+}
+
+

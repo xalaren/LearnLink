@@ -21,7 +21,7 @@ export class LocalRole {
         inviteAccess: boolean,
         kickAccess: boolean,
         editRolesAccess: boolean,
-        isAdmin: boolean) {
+        isAdmin: boolean = false) {
 
         this.id = 0;
         this.name = name;

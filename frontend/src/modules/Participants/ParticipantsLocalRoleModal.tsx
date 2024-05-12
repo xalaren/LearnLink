@@ -2,7 +2,7 @@ import {Participant} from "../../models/participant.ts";
 import profile from "../../assets/img/profile_placeholder.svg";
 import {useEffect, useState} from "react";
 import {LocalRole} from "../../models/localRole.ts";
-import {useGetAtCourse} from "../../hooks/courseLocalRoleHooks.ts";
+import {useListAllLocalRolesAtCourse} from "../../hooks/courseLocalRoleHooks.ts";
 import {useRequestReassignUserLocalRole} from "../../hooks/userCourseLocalRoleHooks.ts";
 import {Modal} from "../../components/Modal/Modal.tsx";
 import Select from "../../components/Select/Select.tsx";
@@ -11,6 +11,9 @@ import ModalFooter from "../../components/Modal/ModalFooter.tsx";
 import ModalButton from "../../components/Modal/ModalButton.tsx";
 import PopupNotification from "../../components/PopupNotification.tsx";
 import {NotificationType} from "../../models/enums.ts";
+import {useHistoryNavigation} from "../../hooks/historyNavigation.ts";
+import {Paths} from "../../models/paths.ts";
+import ModalContent from "../../components/Modal/ModalContent.tsx";
 
 interface IParticipantsLocalRoleModalProps {
     participant: Participant;
@@ -34,8 +37,10 @@ function ParticipantsLocalRoleModal({
     const [selectedLocalRole, setSelectedLocalRole] = useState<LocalRole | null>(participant.localRole);
     const [localRoles, setLocalRoles] = useState<LocalRole[]>();
 
-    const getAtCourseHook = useGetAtCourse();
+    const getAtCourseHook = useListAllLocalRolesAtCourse();
     const requestReassignUserLocalRoleHook = useRequestReassignUserLocalRole();
+
+    const {toNext} = useHistoryNavigation();
 
     useEffect(() => {
         fetchLocalRoles();
@@ -72,51 +77,53 @@ function ParticipantsLocalRoleModal({
         <>
             {!requestReassignUserLocalRoleHook.error && !requestReassignUserLocalRoleHook.loading && !requestReassignUserLocalRoleHook.success &&
                 <Modal active={active} title="Редактировать роль пользователя" onClose={closeModal}>
-                    <div className="user-item__profile">
-                        <img className="user-item__image" src={profileImage} alt="Профиль" />
-                        <div className="user-item__info profile-card">
-                            <p className="profile-card__title">
-                                {participant.name} {participant.lastname}
-                                <span className="profile-card__title text-violet"> (@{participant.nickname})</span>
-                            </p>
-                        </div>
-                    </div>
+                    <ModalContent className="indented">
+                            <div className="user-item__profile">
+                                <img className="user-item__image" src={profileImage} alt="Профиль" />
+                                <div className="user-item__info profile-card">
+                                    <p className="profile-card__title">
+                                        {participant.name} {participant.lastname}
+                                        <span className="profile-card__title text-violet"> (@{participant.nickname})</span>
+                                    </p>
+                                </div>
+                            </div>
 
-                    {!getAtCourseHook.error && !getAtCourseHook.loading &&
-                        <Select
-                            active={selectActive}
-                            onDeselect={() => setSelectActive(false)}
-                            toggle={() => setSelectActive(prev => !prev)}
-                            defaultTitle="Выберите локальную роль из списка..."
-                            selectedTitle={selectedLocalRole?.name}>
+                            {!getAtCourseHook.error && !getAtCourseHook.loading &&
+                                <Select
+                                    active={selectActive}
+                                    onDeselect={() => setSelectActive(false)}
+                                    toggle={() => setSelectActive(prev => !prev)}
+                                    defaultTitle="Выберите локальную роль из списка..."
+                                    selectedTitle={selectedLocalRole?.name}>
 
-                            <SelectItem
-                                key={0}
-                                title="Добавить локальные роли..."
-                                onSelect={() => { }}
-                            />
-                            {localRoles && localRoles.map(localRole =>
+                                    <SelectItem
+                                        key={0}
+                                        title="Добавить локальные роли..."
+                                        onSelect={() => toNext(Paths.getCourseRolesPath(courseId))}
+                                    />
+                                    {localRoles && localRoles.map(localRole =>
 
-                                <SelectItem
-                                    key={localRole.id}
-                                    title={localRole.name}
-                                    onSelect={() => {
-                                        setSelectedLocalRole(localRole);
-                                        setSelectActive(false);
-                                    }}
-                                />
-                            )}
+                                        <SelectItem
+                                            key={localRole.id}
+                                            title={localRole.name}
+                                            onSelect={() => {
+                                                setSelectedLocalRole(localRole);
+                                                setSelectActive(false);
+                                            }}
+                                        />
+                                    )}
 
-                        </Select>
-                    }
+                                </Select>
+                            }
 
-                    {getAtCourseHook.error &&
-                        <p className="text-danger">{getAtCourseHook.error}</p>
-                    }
+                            {getAtCourseHook.error &&
+                                <p className="text-danger">{getAtCourseHook.error}</p>
+                            }
 
-                    {!getAtCourseHook.error && getAtCourseHook.loading &&
-                        <p>Загрузка...</p>
-                    }
+                            {!getAtCourseHook.error && getAtCourseHook.loading &&
+                                <p>Загрузка...</p>
+                            }
+                    </ModalContent>
 
 
                     <ModalFooter>

@@ -6,6 +6,7 @@ import ModalButton from "../../components/Modal/ModalButton.tsx";
 import PopupNotification from "../../components/PopupNotification.tsx";
 import {NotificationType} from "../../models/enums.ts";
 import PopupLoader from "../../components/Loader/PopupLoader.tsx";
+import ModalContent from "../../components/Modal/ModalContent.tsx";
 
 interface IParticipantKickModalProps {
     requesterUserId: number;
@@ -39,11 +40,14 @@ function ParticipantKickModal({
         <>
             {!error && !loading && !success &&
                 <Modal active={active} onClose={closeModal} title="Исключить пользователя">
-                    <div className="indented">
-                        Подтвердить исключение пользователя <span className="text-violet">{participant.nickname}</span>
-                    </div>
+                    <ModalContent>
+                        <div className="indented">
+                            Подтвердить исключение пользователя <span
+                            className="text-violet">{participant.nickname}</span>
+                        </div>
+                    </ModalContent>
                     <ModalFooter>
-                        <ModalButton onClick={onSubmit} text="Исключить" />
+                        <ModalButton onClick={onSubmit} text="Исключить"/>
                     </ModalFooter>
                 </Modal>
             }

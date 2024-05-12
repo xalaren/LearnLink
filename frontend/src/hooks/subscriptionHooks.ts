@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import axiosInstance from "../axios_config/axiosConfig";
 import { SUBSCRIPTION_ENDPOINTS_URL } from "../models/constants";
-import { IVoidResponse } from "../models/response";
+import { VoidResponse } from "../models/response";
 import { useState } from "react";
 
 export function useSubscription() {
@@ -14,7 +14,7 @@ export function useSubscription() {
             console.log(accessToken);
 
             setLoading(true);
-            const response = await axiosInstance.post<IVoidResponse>(`${SUBSCRIPTION_ENDPOINTS_URL}subscribe?userId=${userId}&courseId=${courseId}`, {}, {
+            const response = await axiosInstance.post<VoidResponse>(`${SUBSCRIPTION_ENDPOINTS_URL}subscribe?userId=${userId}&courseId=${courseId}`, {}, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -36,7 +36,7 @@ export function useSubscription() {
     const unsubscribeQuery = async (userId: number, courseId: number, accessToken: string) => {
         try {
             setLoading(true);
-            const response = await axiosInstance.delete<IVoidResponse>(`${SUBSCRIPTION_ENDPOINTS_URL}unsubscribe?userId=${userId}&courseId=${courseId}`, {
+            const response = await axiosInstance.delete<VoidResponse>(`${SUBSCRIPTION_ENDPOINTS_URL}unsubscribe?userId=${userId}&courseId=${courseId}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -73,7 +73,7 @@ export function useKick() {
             console.log(accessToken);
 
             setLoading(true);
-            const response = await axiosInstance.delete<IVoidResponse>(`${SUBSCRIPTION_ENDPOINTS_URL}kick?requesterUserId=${requesterUserId}&targetUserId=${targetUserId}&courseId=${courseId}`, {
+            const response = await axiosInstance.delete<VoidResponse>(`${SUBSCRIPTION_ENDPOINTS_URL}kick?requesterUserId=${requesterUserId}&targetUserId=${targetUserId}&courseId=${courseId}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -112,7 +112,7 @@ export function useInvite() {
             const invitedUserIdentifiers: number[] = [invitedUserId];
 
             setLoading(true);
-            const response = await axiosInstance.post<IVoidResponse>(`${SUBSCRIPTION_ENDPOINTS_URL}invite?userId=${userId}&courseId=${courseId}&localRoleId=${localRoleId}`, invitedUserIdentifiers, {
+            const response = await axiosInstance.post<VoidResponse>(`${SUBSCRIPTION_ENDPOINTS_URL}invite?userId=${userId}&courseId=${courseId}&localRoleId=${localRoleId}`, invitedUserIdentifiers, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }

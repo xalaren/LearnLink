@@ -1,6 +1,6 @@
 import {useState} from "react";
 import axiosInstance from "../axios_config/axiosConfig.ts";
-import {IValueResponse, IVoidResponse} from "../models/response.ts";
+import {IValueResponse, VoidResponse} from "../models/response.ts";
 import {LocalRole} from "../models/localRole.ts";
 import {USER_COURSE_LOCAL_ROLE_ENDPOINTS_URL} from "../models/constants.ts";
 import {AxiosError} from "axios";
@@ -53,7 +53,7 @@ export function useRequestReassignUserLocalRole() {
         accessToken: string) => {
         try {
             setLoading(true);
-            const response = await axiosInstance.post<IVoidResponse>(
+            const response = await axiosInstance.post<VoidResponse>(
                 `${USER_COURSE_LOCAL_ROLE_ENDPOINTS_URL}request/reassign?requesterUserId=${requesterUserId}&targetUserId=${targetUserId}&courseId=${courseId}&localRoleId=${localRoleId}`, {}, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`
