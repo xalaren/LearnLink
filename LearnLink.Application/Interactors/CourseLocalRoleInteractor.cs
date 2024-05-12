@@ -11,6 +11,49 @@ namespace LearnLink.Application.Interactors
 {
     public class CourseLocalRoleInteractor(IUnitOfWork unitOfWork, LocalRoleInteractor localRoleInteractor)
     {
+        public async Task<Response<LocalRoleDto[]>> GetLocalRolesAtCourseAsync(int courseId)
+        {
+            try
+            {
+                var courseLocalRoles = await unitOfWork.CourseLocalRoles
+                    .Where(courseLocalRole => courseLocalRole.CourseId == courseId)
+                    .Include(courseLocalRole => courseLocalRole.LocalRole)
+                    .ToArrayAsync();
+                    
+                    var courseLocalRolesDto = courseLocalRoles
+                    .OrderByDescending(courseLocalRole => courseLocalRole.LocalRole.GetRolePriority())
+                    .Select(courseLocalRole => courseLocalRole.LocalRole.ToDto())
+                    .ToArray();
+
+                return new Response<LocalRoleDto[]>()
+                {
+                    Success = true,
+                    StatusCode = 200,
+                    Message = "Локальные роли курса успешно получены",
+                    Value = courseLocalRolesDto
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new Response<LocalRoleDto[]>()
+                {
+                    Success = false,
+                    StatusCode = exception.StatusCode,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new Response<LocalRoleDto[]>()
+                {
+                    Success = false,
+                    StatusCode = 500,
+                    Message = "Не удалось получить локальные роли курса",
+                    InnerErrorMessages = new string[] { exception.Message },
+                };
+            }
+        }
+        
         public async Task<Response<LocalRoleDto>> GetByCourseAndLocalIdAsync(int courseId, int localRoleId)
         {
             try
@@ -57,7 +100,7 @@ namespace LearnLink.Application.Interactors
                 };
             }
         }
-
+        
         public async Task<Response> RequestCreateAsync(int requesterUserId, int courseId, LocalRoleDto localRoleDto)
         {
             try
@@ -67,29 +110,37 @@ namespace LearnLink.Application.Interactors
                     .FirstOrDefaultAsync(userCourseLocalRole =>
                         userCourseLocalRole.UserId == requesterUserId &&
                         userCourseLocalRole.CourseId == courseId);
-                
-                if(requesterCourseLocalRole == null)
+
+                if (requesterCourseLocalRole == null)
                 {
                     throw new NotFoundException("Ваша локальная роль не найдена");
                 }
 
-                if(!requesterCourseLocalRole.LocalRole.EditRolesAccess)
+                if (!requesterCourseLocalRole.LocalRole.EditRolesAccess)
                 {
                     throw new AccessLevelException("Приоритет вашей роли низкий");
                 }
                 
+
                 var course = await unitOfWork.Courses.FindAsync(courseId);
 
-                if(course == null)
+                if (course == null)
                 {
                     throw new NotFoundException("Курс не найден");
                 }
 
-                await localRoleInteractor.CreateLocalRoleAsyncNoResponse(localRoleDto);
+                try
+                {
+                    await localRoleInteractor.CreateLocalRoleAsyncNoResponse(localRoleDto);
+                }
+                catch (ValidationException)
+                {
+
+                }
 
                 var localRole = await localRoleInteractor.GetLocalRoleBySignAsyncNoResponse(localRoleDto.Sign);
 
-                if(localRole == null)
+                if (localRole == null)
                 {
                     throw new NotFoundException("Не удалось получить созданную роль");
                 }
@@ -130,7 +181,7 @@ namespace LearnLink.Application.Interactors
                 };
             }
         }
-
+        
         public async Task<Response> RequestUpdateLocalRoleAsync(int requesterUserId, int courseId, LocalRoleDto localRoleDto)
         {
             try
@@ -243,45 +294,6 @@ namespace LearnLink.Application.Interactors
                     Success = false,
                     StatusCode = 500,
                     Message = "Не удалось удалить локальную роль внутри курса",
-                    InnerErrorMessages = new string[] { exception.Message },
-                };
-            }
-        }
-
-        public async Task<Response<LocalRoleDto[]>> GetLocalRolesAtCourseAsync(int courseId)
-        {
-            try
-            {
-                var courseLocalRoles = await unitOfWork.CourseLocalRoles
-                    .Where(courseLocalRole => courseLocalRole.CourseId == courseId)
-                    .Include(courseLocalRole => courseLocalRole.LocalRole)
-                    .Select(courseLocalRole => courseLocalRole.LocalRole.ToDto())
-                    .ToArrayAsync();
-
-                return new Response<LocalRoleDto[]>()
-                {
-                    Success = true,
-                    StatusCode = 200,
-                    Message = "Локальные роли курса успешно получены",
-                    Value = courseLocalRoles
-                };
-            }
-            catch (CustomException exception)
-            {
-                return new Response<LocalRoleDto[]>()
-                {
-                    Success = false,
-                    StatusCode = exception.StatusCode,
-                    Message = exception.Message,
-                };
-            }
-            catch (Exception exception)
-            {
-                return new Response<LocalRoleDto[]>()
-                {
-                    Success = false,
-                    StatusCode = 500,
-                    Message = "Не удалось получить локальные роли курса",
                     InnerErrorMessages = new string[] { exception.Message },
                 };
             }
