@@ -12,6 +12,7 @@ export class LocalRole {
     editRolesAccess: boolean;
 
     constructor(
+        id: number,
         name: string,
         sign: string,
         viewAccess: boolean,
@@ -23,7 +24,7 @@ export class LocalRole {
         editRolesAccess: boolean,
         isAdmin: boolean = false) {
 
-        this.id = 0;
+        this.id = id;
         this.name = name;
         this.sign = sign;
         this.viewAccess = viewAccess;

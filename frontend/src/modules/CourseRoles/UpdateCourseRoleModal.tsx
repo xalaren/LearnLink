@@ -7,40 +7,43 @@ import { InputType } from "../../models/enums.ts";
 import ModalContent from "../../components/Modal/ModalContent.tsx";
 import ModalButton from "../../components/Modal/ModalButton.tsx";
 import Switch from "../../components/Switch.tsx";
-import { useRequestCreateCourseLocalRole } from "../../hooks/courseLocalRoleHooks.ts";
+import { useRequestCreateCourseLocalRole, useRequestUpdateCourseLocalRole } from "../../hooks/courseLocalRoleHooks.ts";
 import PopupLoader from "../../components/Loader/PopupLoader.tsx";
 import { ErrorModal } from "../../components/Modal/ErrorModal.tsx";
 import { SuccessModal } from "../../components/Modal/SuccessModal.tsx";
+import ModalFooter from "../../components/Modal/ModalFooter.tsx";
 
-interface ICourseRoleModalProps {
+interface IUpdateLocalRoleModal {
     active: boolean;
     userId: number;
     courseId: number;
     accessToken: string;
+    localRole: LocalRole;
     onClose: () => void;
 }
 
-function CreateCourseRoleModal({
+function UpdateLocalRoleModal({
     active,
     userId,
     courseId,
     accessToken,
+    localRole,
     onClose
-}: ICourseRoleModalProps) {
-    const [name, setName] = useState('');
-    const [sign, setSign] = useState('');
+}: IUpdateLocalRoleModal) {
+    const [name, setName] = useState(localRole.name);
+    const [sign, setSign] = useState(localRole.sign);
     const [nameError, setNameError] = useState('');
     const [signError, setSignError] = useState('');
 
-    const [viewAccess, setViewAccess] = useState(false);
-    const [editAccess, setEditAccess] = useState(false);
-    const [removeAccess, setRemoveAccess] = useState(false);
-    const [manageInternalAccess, setManageInternalAccess] = useState(false);
-    const [kickAccess, setKickAccess] = useState(false);
-    const [inviteAccess, setInviteAccess] = useState(false);
-    const [editRolesAccess, setEditRolesAccess] = useState(false);
+    const [viewAccess, setViewAccess] = useState(localRole.viewAccess);
+    const [editAccess, setEditAccess] = useState(localRole.editAccess);
+    const [removeAccess, setRemoveAccess] = useState(localRole.removeAccess);
+    const [manageInternalAccess, setManageInternalAccess] = useState(localRole.manageInternalAccess);
+    const [kickAccess, setKickAccess] = useState(localRole.kickAccess);
+    const [inviteAccess, setInviteAccess] = useState(localRole.inviteAccess);
+    const [editRolesAccess, setEditRolesAccess] = useState(localRole.editRolesAccess);
 
-    const { requestCreateCourseLocalRoleQuery, loading, error, success, resetValues } = useRequestCreateCourseLocalRole();
+    const { requestUpdateCourseLocalRoleQuery, loading, error, success, resetValues } = useRequestUpdateCourseLocalRole();
 
     function onChange(event: React.ChangeEvent) {
         const inputElement = event.target as HTMLInputElement;
@@ -65,7 +68,7 @@ function CreateCourseRoleModal({
             isValidated = false;
         }
 
-        const regex: RegExp = /^[a-z]+$/gm;;
+        const regex: RegExp = /^[a-z]+$/gm;
         if (!regex.test(sign)) {
             setSignError('Сигнатура должна состоять из латинских символов нижнего регистра');
             isValidated = false;
@@ -73,8 +76,8 @@ function CreateCourseRoleModal({
 
         if (!isValidated) return;
 
-        const localRole = new LocalRole(
-            0,
+        const newLocalRole = new LocalRole(
+            localRole.id,
             name,
             sign,
             viewAccess,
@@ -85,7 +88,7 @@ function CreateCourseRoleModal({
             kickAccess,
             editRolesAccess);
 
-        await requestCreateCourseLocalRoleQuery(userId, courseId, localRole, accessToken);
+        await requestUpdateCourseLocalRoleQuery(userId, courseId, newLocalRole, accessToken);
     }
 
     function closeModal() {
@@ -163,7 +166,10 @@ function CreateCourseRoleModal({
                             </div>
                         </form>
                     </ModalContent>
-                    <ModalButton text="Создать" onClick={onSubmit} />
+                    <ModalFooter>
+                        <ModalButton text="Сохранить" onClick={onSubmit} />
+                        <ModalButton text="Отмена" onClick={closeModal} />
+                    </ModalFooter>
                 </Modal>
             }
 
@@ -182,4 +188,4 @@ function CreateCourseRoleModal({
     );
 }
 
-export default CreateCourseRoleModal;
+export default UpdateLocalRoleModal;

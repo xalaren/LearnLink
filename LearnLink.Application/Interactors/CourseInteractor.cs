@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore;
 namespace LearnLink.Application.Interactors
 {
     public class CourseInteractor(
-        IUnitOfWork unitOfWork, 
-        PermissionService permissionService, 
+        IUnitOfWork unitOfWork,
+        PermissionService permissionService,
         ModuleInteractor moduleInteractor,
         CourseLocalRoleInteractor courseLocalRoleInteractor,
         UserCourseLocalRolesInteractor userCourseLocalRoleInteractor)
@@ -506,10 +506,13 @@ namespace LearnLink.Application.Interactors
 
                 if (!string.IsNullOrWhiteSpace(searchText))
                 {
+                    searchText = searchText.ToLower();
                     usersQuery = usersQuery.Where(u =>
-                        u.User.Nickname.Contains(searchText) ||
-                        u.User.Lastname.Contains(searchText) ||
-                        u.User.Name.Contains(searchText));
+                        u.User.Nickname.ToLower().Contains(searchText) ||
+                        u.User.Lastname.ToLower().Contains(searchText) ||
+                        u.User.Name.ToLower().Contains(searchText) ||
+                        u.LocalRole.Name.ToLower().Contains(searchText) ||
+                        u.LocalRole.Sign.ToLower().Contains(searchText));
                 }
 
                 int total = usersQuery.Count();
@@ -873,7 +876,7 @@ namespace LearnLink.Application.Interactors
         {
             var moderatorLocalRole = await unitOfWork.LocalRoles.FirstOrDefaultAsync(localRole => localRole.Sign == RoleSignConstants.MODERATOR);
 
-            if(moderatorLocalRole == null)
+            if (moderatorLocalRole == null)
             {
                 throw new NotFoundException("Локальная роль модератора не найдена");
             }

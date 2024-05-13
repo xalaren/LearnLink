@@ -266,10 +266,36 @@ namespace LearnLink.Application.Interactors
                     throw new NotFoundException("Локальная роль не найдена");
                 }
 
+                var memberLocalRole =
+                    await unitOfWork.LocalRoles.FirstOrDefaultAsync(role => role.Sign == RoleSignConstants.MEMBER);
+
+                if (memberLocalRole == null)
+                {
+                    throw new NotFoundException("Не удалось найти стандартные роли");
+                }
+
+                var userCourseLocalRoles = await unitOfWork.UserCourseLocalRoles
+                    .Where(role => role.LocalRoleId == courseLocalRole.LocalRoleId)
+                    .Include(role => role.User)
+                    .Select(role =>
+                        new UserCourseLocalRole()
+                        {
+                            UserId = role.UserId,
+                            CourseId = courseId,
+                            LocalRoleId = memberLocalRole.Id
+                        })
+                    .ToArrayAsync();
+
                 unitOfWork.CourseLocalRoles.Remove(courseLocalRole);
                 unitOfWork.LocalRoles.Remove(localRole);
 
                 await unitOfWork.CommitAsync();
+
+                if (userCourseLocalRoles.Length > 0)
+                {
+                    await unitOfWork.UserCourseLocalRoles.AddRangeAsync(userCourseLocalRoles);
+                    await unitOfWork.CommitAsync();
+                }
 
                 return new Response()
                 {

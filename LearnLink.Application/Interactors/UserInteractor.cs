@@ -300,18 +300,19 @@ namespace LearnLink.Application.Interactors
                     .Where(role => role.CourseId == courseId)
                     .Include(role => role.User)
                     .Select(role => role.User);
-                
+
                 var usersQuery = unitOfWork.Users
+                    .Where(user => user.RoleId != 1)
                     .Except(subscriptions)
                     .AsNoTracking();
-                
+
                 if (searchString != null)
                 {
+                    searchString = searchString.ToLower();
                     usersQuery = usersQuery.Where(user =>
-                            user.Id != 1 &&
-                            (user.Nickname.Contains(searchString) ||
-                            user.Lastname.Contains(searchString) ||
-                            user.Name.Contains(searchString))
+                            user.Nickname.ToLower().Contains(searchString) ||
+                            user.Lastname.ToLower().Contains(searchString) ||
+                            user.Name.ToLower().Contains(searchString)
                     );
                 }
 
