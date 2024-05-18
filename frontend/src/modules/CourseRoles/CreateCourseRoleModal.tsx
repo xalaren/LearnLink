@@ -107,6 +107,7 @@ function CreateCourseRoleModal({
                                     name="name"
                                     label="Название роли"
                                     placeholder="Введите название..."
+                                    required={true}
                                     errorMessage={nameError}
                                     value={name}
                                     onChange={onChange}
@@ -116,7 +117,8 @@ function CreateCourseRoleModal({
                                     type={InputType.text}
                                     name="sign"
                                     label="Сигнатура роли"
-                                    placeholder="Введите сигнатуру..."
+                                    placeholder="Введите сигнатуру (только латинские буквы)..."
+                                    required={true}
                                     errorMessage={signError}
                                     value={sign}
                                     onChange={onChange}

@@ -7,7 +7,7 @@ import { InputType } from "../../models/enums.ts";
 import ModalContent from "../../components/Modal/ModalContent.tsx";
 import ModalButton from "../../components/Modal/ModalButton.tsx";
 import Switch from "../../components/Switch.tsx";
-import { useRequestCreateCourseLocalRole, useRequestUpdateCourseLocalRole } from "../../hooks/courseLocalRoleHooks.ts";
+import { useRequestUpdateCourseLocalRole } from "../../hooks/courseLocalRoleHooks.ts";
 import PopupLoader from "../../components/Loader/PopupLoader.tsx";
 import { ErrorModal } from "../../components/Modal/ErrorModal.tsx";
 import { SuccessModal } from "../../components/Modal/SuccessModal.tsx";
@@ -111,6 +111,7 @@ function UpdateLocalRoleModal({
                                     label="Название роли"
                                     placeholder="Введите название..."
                                     errorMessage={nameError}
+                                    required={true}
                                     value={name}
                                     onChange={onChange}
                                 />
@@ -119,7 +120,8 @@ function UpdateLocalRoleModal({
                                     type={InputType.text}
                                     name="sign"
                                     label="Сигнатура роли"
-                                    placeholder="Введите сигнатуру..."
+                                    placeholder="Введите сигнатуру (только латинские буквы)..."
+                                    required={true}
                                     errorMessage={signError}
                                     value={sign}
                                     onChange={onChange}

@@ -38,7 +38,7 @@ function ParticipantItem({
                 }
                 {localRole.kickAccess &&
                     <button
-                        className="user-item__button button-violet-light-rounded icon-cross icon-medium-size"
+                        className="user-item__button button-red-light-rounded icon-cross icon-medium-size"
                         onClick={onKickButtonClick}>
                     </button>
                 }

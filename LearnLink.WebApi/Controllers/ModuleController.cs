@@ -8,54 +8,87 @@ namespace LearnLink.WebApi.Controllers
 {
     [ApiController]
     [Route("api/modules")]
-    public class ModuleController
+    public class ModuleController(ModuleInteractor moduleInteractor, UserVerifierService verifierService) : Controller
     {
-        private readonly ModuleInteractor moduleInteractor;
-
-        public ModuleController(ModuleInteractor moduleInteractor)
-        {
-            this.moduleInteractor = moduleInteractor;
-        }
-
-
         [HttpGet("get")]
-        public async Task<Response<ModuleDto?>> GetModule(int moduleId)
+        public async Task<Response<ClientModuleDto?>> RequestGetModuleAsync(int userId, int courseId, int moduleId)
         {
-            return await moduleInteractor.GetModuleAsync(moduleId);
-        }
+            var response = await verifierService.VerifyUserAsync(User.Identity?.Name, userId);
 
-        [HttpGet("get/all")]
-        public async Task<Response<ModuleDto[]>> GetAllModules()
-        {
-            return await moduleInteractor.GetAllModulesAsync();
+            if (!response.Success)
+            {
+                return new()
+                {
+                    Success = false,
+                    StatusCode = response.StatusCode,
+                    Message = response.Message,
+                };
+            }
+
+            return await moduleInteractor.RequestGetModuleAsync(userId, courseId, moduleId);
         }
 
         [HttpGet("get/atCourse")]
-        public async Task<Response<ClientModuleDto[]>> GetCourseModulesAsync(int courseId, int userId)
+        public async Task<Response<ClientModuleDto[]>> RequestGetCourseModulesAsync(int userId, int courseId)
         {
-            return await moduleInteractor.GetCourseModulesAsync(courseId, userId);
+            return await moduleInteractor.RequestGetCourseModulesAsync(courseId, userId);
         }
 
         [Authorize]
         [HttpPost("create")]
-        public async Task<Response> CreateModuleAsync(int courseId, ModuleDto moduleDto)
+        public async Task<Response> RequestCreateModuleAsync(int userId, int courseId, ModuleDto moduleDto)
         {
-            return await moduleInteractor.CreateModuleAsync(courseId, moduleDto);
+            var response = await verifierService.VerifyUserAsync(User.Identity?.Name, userId);
+
+            if (!response.Success)
+            {
+                return new()
+                {
+                    Success = false,
+                    StatusCode = response.StatusCode,
+                    Message = response.Message,
+                };
+            }
+
+            return await moduleInteractor.RequestCreateModuleAsync(userId, courseId, moduleDto);
         }
 
 
         [Authorize]
         [HttpPost("update")]
-        public async Task<Response> UpdateModuleAsync(ModuleDto moduleDto)
+        public async Task<Response> RequestUpdateModuleAsync(int userId, int courseId, ModuleDto moduleDto)
         {
-            return await moduleInteractor.UpdateModuleAsync(moduleDto);
+            var response = await verifierService.VerifyUserAsync(User.Identity?.Name, userId);
+
+            if (!response.Success)
+            {
+                return new()
+                {
+                    Success = false,
+                    StatusCode = response.StatusCode,
+                    Message = response.Message,
+                };
+            }
+            return await moduleInteractor.RequestUpdateModuleAsync(userId, courseId, moduleDto);
         }
 
         [Authorize]
         [HttpDelete("remove")]
-        public async Task<Response> RemoveModuleAsync(int moduleId)
+        public async Task<Response> RequestRemoveModuleAsync(int userId, int courseId, int moduleId)
         {
-            return await moduleInteractor.RemoveModuleAsync(moduleId);
+            var response = await verifierService.VerifyUserAsync(User.Identity?.Name, userId);
+
+            if (!response.Success)
+            {
+                return new()
+                {
+                    Success = false,
+                    StatusCode = response.StatusCode,
+                    Message = response.Message,
+                };
+            }
+
+            return await moduleInteractor.RequestRemoveModuleAsync(userId, courseId, moduleId);
         }
 
     }

@@ -9,7 +9,7 @@ import { ErrorModal } from "../components/Modal/ErrorModal";
 import Paginate from "../components/Paginate";
 import { useParams } from "react-router-dom";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
-import { Paths } from "../models/paths";
+import { paths } from "../models/paths";
 
 export function PublicPage() {
     const param = useParams<'pageNumber'>();
@@ -40,7 +40,7 @@ export function PublicPage() {
 
     function navigateToPage(nextPage: number) {
         setPage(nextPage);
-        toNext(Paths.publicPath + '/' + nextPage);
+        toNext(paths.public(nextPage.toString()));
     }
 
     async function onSubmit(event: React.FormEvent) {
@@ -55,6 +55,7 @@ export function PublicPage() {
 
     return (
         <MainContainer title="Общедоступные курсы">
+
             <SearchForm value={searchText} placeholder="Название курсов..." onChange={onChange} onSubmit={onSubmit} />
 
             <Paginate currentPage={page} pageCount={pageCount} setPage={navigateToPage} />

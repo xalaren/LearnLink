@@ -1,13 +1,8 @@
 import { Modal } from "../../components/Modal/Modal.tsx";
-import { useState } from "react";
 import { LocalRole } from "../../models/localRole.ts";
-import { validate } from "../../helpers/validation.ts";
-import { Input } from "../../components/Input.tsx";
-import { InputType } from "../../models/enums.ts";
 import ModalContent from "../../components/Modal/ModalContent.tsx";
 import ModalButton from "../../components/Modal/ModalButton.tsx";
-import Switch from "../../components/Switch.tsx";
-import { useRequestDeleteCourseLocalRole, useRequestUpdateCourseLocalRole } from "../../hooks/courseLocalRoleHooks.ts";
+import { useRequestDeleteCourseLocalRole } from "../../hooks/courseLocalRoleHooks.ts";
 import PopupLoader from "../../components/Loader/PopupLoader.tsx";
 import { ErrorModal } from "../../components/Modal/ErrorModal.tsx";
 import { SuccessModal } from "../../components/Modal/SuccessModal.tsx";

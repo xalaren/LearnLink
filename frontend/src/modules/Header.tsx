@@ -2,13 +2,13 @@ import { HeaderButtons } from "../components/HeaderNav/HeaderNavButtons";
 import { useAppSelector, useAppDispatch } from "../hooks/redux";
 import { HeaderDropdown } from "../components/Dropdown/HeaderDropdown";
 import { logout } from "../store/actions/authActionCreators";
-import { ViewTypes } from "../models/enums";
+import { ProfileEditActions, ViewTypes } from "../models/enums";
 import { fetchUser } from "../store/actions/userActionCreators";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
-import { Paths } from "../models/paths";
 import logo from "../assets/img/learnlinklogo.svg";
 import DropdownItem from "../components/Dropdown/DropdownItem";
 import { DropdownState } from "../contexts/DropdownContext";
+import { paths } from "../models/paths";
 
 
 export function Header() {
@@ -19,7 +19,7 @@ export function Header() {
     return (
         <header className="header">
             <div className="header__container container">
-                <section className="header__logo logo-pic" onClick={() => toNext(Paths.homePath)}>
+                <section className="header__logo logo-pic" onClick={() => toNext(paths.public())}>
                     <img className="logo-pic__img" src={logo} alt="Learn Link" />
                     <h1 className="logo-pic__title">Learn Link</h1>
                 </section>
@@ -27,11 +27,11 @@ export function Header() {
                 <nav className="header__nav">
                     {!user && <HeaderButtons links={[
                         {
-                            path: Paths.loginPath,
+                            path: paths.login,
                             title: 'Войти',
                         },
                         {
-                            path: Paths.registerPath,
+                            path: paths.register,
                             title: 'Регистрация',
                         }
                     ]} />}
@@ -41,18 +41,18 @@ export function Header() {
                             <HeaderDropdown title={user.nickname} avatarUrl={user.avatarUrl}>
                                 <DropdownItem title="Профиль"
                                     className="icon icon-accent icon-user"
-                                    onClick={() => toNext(Paths.editProfileMainPath)}
+                                    onClick={() => toNext(paths.profile.edit(ProfileEditActions.main))}
                                 />
                                 <DropdownItem title="Мои курсы"
                                     className="icon icon-accent icon-star"
-                                    onClick={() => toNext(`${Paths.userCoursesPath}/${ViewTypes.created}/page/1`)}
+                                    onClick={() => toNext(paths.profile.courses(ViewTypes.created))}
                                 />
                                 <DropdownItem title="Выйти"
                                     className="icon icon-accent icon-power"
                                     onClick={() => {
                                         dispatch(logout());
                                         dispatch(fetchUser());
-                                        toNext(Paths.homePath);
+                                        toNext(paths.public());
                                     }}
                                 />
                             </HeaderDropdown>

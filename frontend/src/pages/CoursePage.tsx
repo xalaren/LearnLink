@@ -1,18 +1,26 @@
-import { useParams } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 import { MainContainer } from "../components/MainContainer";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
 import { useAppSelector } from "../hooks/redux";
 import { useGetCourse, useGetCreatorStatus, useGetSubscriberStatus } from "../hooks/courseHooks";
 import { Course } from "../models/course";
 import { ErrorModal } from "../components/Modal/ErrorModal";
 import { Loader } from "../components/Loader/Loader";
-import CourseView from "../modules/CourseView";
+import CourseView from "../modules/Courses/CourseView";
 import { useSubscription } from "../hooks/subscriptionHooks";
+import BreadcrumbContainer from "../components/Breadcrumb/Breadcrumb";
+import BreadcrumbItem from "../components/Breadcrumb/BreadcrumbItem";
+import { paths } from "../models/paths";
+import { ViewTypes } from "../models/enums";
+import { CourseContext } from "../contexts/CourseContext";
 function CoursePage() {
     const param = useParams<'courseId'>();
+
     const { user } = useAppSelector(state => state.userReducer);
     const { accessToken } = useAppSelector(state => state.authReducer);
+    const { setCourseContextData } = useContext(CourseContext);
+
     const { toPrev } = useHistoryNavigation();
 
     const [course, setCourse] = useState<Course>();
@@ -41,12 +49,12 @@ function CoursePage() {
     }
 
     async function fetchUserStatus() {
-        if (!user || !accessToken) {
+        if (!user || !accessToken || !course) {
             return;
         }
 
-        const isSubscriber = await getSubscriberStatusHook.getStatusesQuery(user.id, Number(param.courseId), accessToken);
-        const isCreator = await getCreatorStatusHook.getStatusesQuery(user.id, Number(param.courseId), accessToken);
+        const isSubscriber = await getSubscriberStatusHook.getStatusesQuery(user.id, course.id, accessToken);
+        const isCreator = await getCreatorStatusHook.getStatusesQuery(user.id, course.id, accessToken);
 
         if (isCreator != undefined) {
             setCreatorStatus(isCreator);
@@ -66,20 +74,21 @@ function CoursePage() {
 
         if (foundCourse) {
             setCourse(foundCourse);
+            setCourseContextData(foundCourse);
         }
     }
 
     async function onSubscribe() {
-        if (user && accessToken) {
-            await subscribeHook.subscribeQuery(user.id, Number(param.courseId), accessToken);
+        if (user && accessToken && course) {
+            await subscribeHook.subscribeQuery(user.id, course.id, accessToken);
         }
 
         await fetchData();
     }
 
     async function onUnsubscribe() {
-        if (user && accessToken) {
-            await subscribeHook.unsubscribeQuery(user.id, Number(param.courseId), accessToken);
+        if (user && accessToken && course) {
+            await subscribeHook.unsubscribeQuery(user.id, course.id, accessToken);
         }
 
         await fetchData();
@@ -93,28 +102,39 @@ function CoursePage() {
     return (
         <MainContainer className="view-page">
             {course ?
-                <BuildedPage
-                    courseError={courseHook.error}
-                    courseLoading={courseHook.loading}
-                    onCourseError={onCourseLoadingError}>
+                <>
 
-                    <CourseView
-                        course={course}
-                        isSubscriber={subscriberStatus}
-                        isCreator={creatorStatus}
-                        onSubscribe={onSubscribe}
-                        onUnsubscribe={onUnsubscribe}
-                        updateModalActive={updateModalActive}
-                        setUpdateModalActive={setUpdateModalActive}
-                        deleteModalActive={deleteModalActive}
-                        setDeleteModalActive={setDeleteModalActive}
-                    />
+                    <BreadcrumbContainer>
+                        <BreadcrumbItem text="В начало" path={paths.public()} />
+                        {!course.isPublic &&
+                            <BreadcrumbItem text="Мои курсы" path={paths.profile.courses(ViewTypes.created)} />
+                        }
+                        <BreadcrumbItem text={course.title} path={paths.course.view(course.id)} />
+                    </BreadcrumbContainer>
+                    <BuildedPage
+                        courseError={courseHook.error}
+                        courseLoading={courseHook.loading}
+                        onCourseError={onCourseLoadingError}>
 
-                </BuildedPage>
+                        <CourseView
+                            course={course}
+                            isSubscriber={subscriberStatus}
+                            isCreator={creatorStatus}
+                            onSubscribe={onSubscribe}
+                            onUnsubscribe={onUnsubscribe}
+                            updateModalActive={updateModalActive}
+                            setUpdateModalActive={setUpdateModalActive}
+                            deleteModalActive={deleteModalActive}
+                            setDeleteModalActive={setDeleteModalActive}
+                        />
+                    </BuildedPage>
+                </>
                 :
                 <p>Ошибка загрузки курса...</p>
+
             }
         </MainContainer>
+
     );
 }
 

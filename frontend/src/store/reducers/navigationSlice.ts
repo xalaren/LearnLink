@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { Paths } from "../../models/paths";
+import { paths } from "../../models/paths";
 
 interface INavigationState {
     nextPath: string;
@@ -12,8 +12,8 @@ interface INavigationPayload {
 
 
 const initialState: INavigationState = {
-    nextPath: Paths.homePath,
-    prevPath: Paths.homePath,
+    nextPath: paths.home,
+    prevPath: paths.home,
 }
 
 export const navigationSlice = createSlice({

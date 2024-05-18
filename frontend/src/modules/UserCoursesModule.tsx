@@ -7,13 +7,13 @@ import { ErrorModal } from "../components/Modal/ErrorModal";
 import { CoursesContainer } from "../components/CoursesContainer/CoursesContainer";
 import Paginate from "../components/Paginate";
 import { ViewTypes } from "../models/enums";
-import { Paths } from "../models/paths";
+import { paths } from "../models/paths";
 import { useParams } from "react-router-dom";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
 import { useUserCourses } from "../hooks/courseHooks";
 
 interface IUserCoursesModuleProps {
-    type?: string;
+    type: string;
     shouldUpdate: any;
 }
 
@@ -36,7 +36,7 @@ function UserCoursesModule({ type, shouldUpdate }: IUserCoursesModuleProps) {
 
     useEffect(() => {
         fetchCourses();
-    }, [user, param, shouldUpdate]);
+    }, [user, param, page, shouldUpdate]);
 
     function onChange(event: React.ChangeEvent) {
         const inputElement = event.target as HTMLInputElement;
@@ -69,8 +69,9 @@ function UserCoursesModule({ type, shouldUpdate }: IUserCoursesModuleProps) {
 
     function navigateToPage(nextPage: number) {
         setPage(nextPage);
-        toNext(`${Paths.userCoursesPath}/${type}/page/${nextPage}`);
+        toNext(paths.profile.courses(type, nextPage));
     }
+
     return (
         <>
             <SearchForm placeholder="Название курсов" value={searchText} onChange={onChange} onSubmit={onSubmit} />

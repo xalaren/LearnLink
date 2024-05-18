@@ -21,7 +21,7 @@ namespace LearnLink.WebApi.Pages.Modules
             {
                 if (courseId == 0) return;
 
-                QueryResult = await ModuleInteractor.GetCourseModulesAsync(courseId);
+                QueryResult = await ModuleInteractor.RequestGetCourseModulesAsync(courseId);
 
                 if(QueryResult.Success && QueryResult.Value != null)
                 {

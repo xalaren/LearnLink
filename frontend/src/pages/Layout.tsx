@@ -1,13 +1,14 @@
-import { useEffect } from "react";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
-import { Paths } from "../models/paths";
+import { paths } from "../models/paths";
+import { useEffect } from "react";
 import { MainContainer } from "../components/MainContainer";
 
-function HomePage() {
+function Layout() {
     const { toNext } = useHistoryNavigation();
+
     useEffect(() => {
-        toNext(Paths.publicPath + '/' + 1);
-    }, []);
+        toNext(paths.public());
+    }, [])
 
     return (
         <MainContainer>
@@ -16,4 +17,4 @@ function HomePage() {
     );
 }
 
-export default HomePage;
+export default Layout;

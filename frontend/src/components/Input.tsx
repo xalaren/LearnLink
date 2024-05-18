@@ -8,17 +8,17 @@ interface IInputProps {
     placeholder?: string,
     label?: string,
     value?: string,
+    required?: boolean,
     className?: string,
-    styles?: React.CSSProperties,
     onChange: (event: React.ChangeEvent) => void
 }
 
-export function Input({ type, name, errorMessage, onChange, value, placeholder, label, className = '', styles }: IInputProps) {
+export function Input({ type, name, errorMessage, onChange, value, placeholder, label, required = false, className = '' }: IInputProps) {
 
     return (
         <div className={"form-input " + className}>
             {label && !errorMessage &&
-                <p className="form-input__label">{label}</p>
+                <p className={`form-input__label ${required ? 'form-input__label-required' : ''}`}>{label}</p>
             }
             {errorMessage &&
                 <p className="form-input__error required">{errorMessage}</p>
@@ -28,7 +28,6 @@ export function Input({ type, name, errorMessage, onChange, value, placeholder, 
                     name={name}
                     onChange={onChange}
                     placeholder={placeholder}
-                    style={styles}
                     className={`form-input__input textarea ${errorMessage ? 'input-danger' : 'input-gray'}`}
                     value={value}
                 /> :
@@ -36,7 +35,6 @@ export function Input({ type, name, errorMessage, onChange, value, placeholder, 
                     className={`form-input__input ${errorMessage ? 'input-danger' : 'input-gray'}`}
                     type={type} name={name}
                     placeholder={placeholder}
-                    style={styles}
                     onChange={onChange}
                     value={value}
                 />

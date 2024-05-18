@@ -15,8 +15,8 @@ import Select from "../../components/Select/Select.tsx";
 import SelectItem from "../../components/Select/SelectItem.tsx";
 import PopupNotification from "../../components/PopupNotification.tsx";
 import { NotificationType } from "../../models/enums.ts";
-import {useHistoryNavigation} from "../../hooks/historyNavigation.ts";
-import {Paths} from "../../models/paths.ts";
+import { useHistoryNavigation } from "../../hooks/historyNavigation.ts";
+import { paths } from "../../models/paths.ts";
 import ModalContent from "../../components/Modal/ModalContent.tsx";
 
 
@@ -40,7 +40,7 @@ function ParticipantsInviteModal(
     const [selectedLocalRole, setSelectedLocalRole] = useState<LocalRole | null>();
     const [localRoles, setLocalRoles] = useState<LocalRole[]>();
 
-    const {toNext} = useHistoryNavigation();
+    const { toNext } = useHistoryNavigation();
 
     const findUsersHook = useFindUsers();
     const inviteUserHook = useInvite();
@@ -119,7 +119,7 @@ function ParticipantsInviteModal(
                             <SelectItem
                                 key={0}
                                 title="Добавить локальные роли..."
-                                onSelect={() => toNext(Paths.getCourseRolesPath(courseId))}
+                                onSelect={() => toNext(paths.course.roles(courseId))}
                             />
                             {localRoles && localRoles.map(localRole =>
 

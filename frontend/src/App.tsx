@@ -9,13 +9,14 @@ import ProfilePage from "./pages/ProfilePage";
 import Footer from "./components/Footer";
 import CoursePage from "./pages/CoursePage";
 import UserCoursesPage from "./pages/UserCoursesPage";
-import { Paths } from "./models/paths";
+import { paths } from "./models/paths";
 import { useAppDispatch, useAppSelector } from "./hooks/redux";
 import { useEffect } from "react";
 import { fetchUser } from "./store/actions/userActionCreators";
-import HomePage from "./pages/HomePage";
 import CourseParticipantsPage from "./pages/CourseParticipantsPage";
 import CourseRolesPage from "./pages/CourseRolesPage.tsx";
+import Layout from "./pages/Layout.tsx";
+import { CourseContext, CourseState } from "./contexts/CourseContext.tsx";
 
 
 function App() {
@@ -33,20 +34,21 @@ function App() {
             <Header />
 
             <Routes>
-                <Route path={'/'} element={<HomePage />}></Route>
-                <Route path={Paths.publicPath + '/:pageNumber'} element={<PublicPage />}></Route>
-                <Route path={Paths.loginPath} element={<LoginPage />}></Route>
-                <Route path={Paths.registerPath} element={<RegisterPage />}></Route>
-                <Route path={Paths.profilePath + '/edit/:action'} element={<ProfilePage />}></Route>
-                <Route path={Paths.userCoursesFullPath + '/:pageNumber'} element={<UserCoursesPage />} />
-                <Route path={Paths.courseViewFullPath} element={<CoursePage />}></Route>
-                <Route path={Paths.courseParticipantsPath + '/:pageNumber'} element={<CourseParticipantsPage />}></Route>
-                <Route path={Paths.courseRolesPath} element={<CourseRolesPage />}></Route>
+                <Route path={'/'} element={<Layout />}></Route>
+                <Route path={paths.public(':pageNumber')} element={<PublicPage />}></Route>
+                <Route path={paths.login} element={<LoginPage />}></Route>
+                <Route path={paths.register} element={<RegisterPage />}></Route>
+                <Route path={paths.profile.edit(':action')} element={<ProfilePage />}></Route>
+                <Route path={paths.profile.courses(':type', ':pageNumber')} element={<UserCoursesPage />} />
+                <Route path={paths.course.view(':courseId')} element={<CoursePage />}></Route>
+                <Route path={paths.course.participants(':courseId', ':pageNumber')} element={<CourseParticipantsPage />} />
+                <Route path={paths.course.roles(':courseId')} element={<CourseRolesPage />}></Route>
                 <Route path="*" element={<InvalidPage />}></Route>
-            </Routes >
+            </Routes>
 
             <Footer />
         </>
+
     );
 }
 

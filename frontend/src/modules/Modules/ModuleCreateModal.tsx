@@ -1,103 +1,15 @@
 import { useEffect, useState } from "react";
-import { Course } from "../models/course";
-import { useAppSelector } from "../hooks/redux";
-import { Module } from "../models/module";
-import ItemLink from "../components/ItemLink";
-import ContentList from "../components/ContentList/ContentList";
-import { useCreateModules, useGetCourseModules } from "../hooks/moduleHooks";
-import { Loader } from "../components/Loader/Loader";
-import { ErrorModal } from "../components/Modal/ErrorModal";
-import { useHistoryNavigation } from "../hooks/historyNavigation";
-import { Paths } from "../models/paths";
-import { validate } from "../helpers/validation";
-import { Modal } from "../components/Modal/Modal";
-import ModalContent from "../components/Modal/ModalContent";
-import { Input } from "../components/Input";
-import { InputType, NotificationType } from "../models/enums";
-import ModalFooter from "../components/Modal/ModalFooter";
-import ModalButton from "../components/Modal/ModalButton";
-import PopupLoader from "../components/Loader/PopupLoader";
-import PopupNotification from "../components/PopupNotification";
-
-interface IModuleListProps {
-    course: Course;
-}
-
-function ModulesList({ course }: IModuleListProps) {
-    const { user } = useAppSelector(state => state.userReducer);
-    const [modules, setModules] = useState<Module[]>();
-    const { getModulesQuery, error, loading, resetValues } = useGetCourseModules();
-
-    const [createModalActive, setCreateModalActive] = useState(false);
-
-    useEffect(() => {
-        fetchModules();
-    }, [user, createModalActive]);
-
-    async function fetchModules() {
-        if (!user) return;
-
-        const foundModules = await getModulesQuery(course.id, user.id);
-
-        if (foundModules) {
-            setModules(foundModules);
-        }
-    }
-
-    return (
-        <>
-            <ContentList
-                className="content-side__main"
-                title="Изучаемые модули"
-                showButton={course.localRole?.manageInternalAccess || false}
-                onHeadButtonClick={() => setCreateModalActive(true)}>
-
-                <BuildedModulesList error={error} onError={resetValues} loading={loading} modules={modules} />
-            </ContentList>
-
-            <ModuleCreateModal active={createModalActive} courseId={course.id} onClose={() => setCreateModalActive(false)} />
-        </>
-
-    );
-}
-
-function BuildedModulesList(props: {
-    error: string,
-    onError: () => void,
-    loading: boolean,
-    modules?: Module[]
-}) {
-    const { toNext } = useHistoryNavigation();
-
-    if (props.loading) {
-        return (<Loader />);
-    }
-
-    if (props.error) {
-        return (
-            <ErrorModal active={Boolean(props.error)} onClose={props.onError} error={props.error} />
-        );
-    }
-
-    return (
-        <>
-            {props.modules && props.modules.length > 0 ?
-                props.modules.map(module =>
-                    <ItemLink
-                        title={module.title}
-                        checked={module.completed}
-                        onClick={() => toNext(Paths.moduleViewPath + '/' + module.id)}
-                        iconClassName="icon-module icon-medium-size"
-                        className="content-list__item"
-                        key={module.id}
-                    />) :
-                <p>Нет доступных модулей</p>
-            }
-        </>
-
-    );
-
-}
+import { Input } from "../../components/Input";
+import PopupLoader from "../../components/Loader/PopupLoader";
+import { Modal } from "../../components/Modal/Modal";
+import ModalButton from "../../components/Modal/ModalButton";
+import ModalContent from "../../components/Modal/ModalContent";
+import ModalFooter from "../../components/Modal/ModalFooter";
+import PopupNotification from "../../components/PopupNotification";
+import { validate } from "../../helpers/validation";
+import { InputType, NotificationType } from "../../models/enums";
+import { useAppSelector } from "../../hooks/redux";
+import { useCreateModules } from "../../hooks/moduleHooks";
 
 interface IModuleCreateModalProps {
     courseId: number;
@@ -111,6 +23,7 @@ function ModuleCreateModal({ courseId, active, onClose }: IModuleCreateModalProp
     const [description, setDescription] = useState('');
     const [titleError, setTitleError] = useState('');
 
+    const { user } = useAppSelector(state => state.userReducer);
     const { accessToken } = useAppSelector(state => state.authReducer);
     const { createModulesQuery, success, error, loading, resetValues } = useCreateModules();
 
@@ -139,8 +52,8 @@ function ModuleCreateModal({ courseId, active, onClose }: IModuleCreateModalProp
             isValidated = false;
         }
 
-        if (isValidated && accessToken) {
-            await createModulesQuery(courseId, title, accessToken, description);
+        if (isValidated && user && accessToken) {
+            await createModulesQuery(user.id, courseId, title, accessToken, description);
         }
     }
 
@@ -173,6 +86,7 @@ function ModuleCreateModal({ courseId, active, onClose }: IModuleCreateModalProp
                                     label="Название модуля"
                                     placeholder="Введите название..."
                                     errorMessage={titleError}
+                                    required={true}
                                     value={title}
                                     onChange={onChange}
                                 />
@@ -215,4 +129,4 @@ function ModuleCreateModal({ courseId, active, onClose }: IModuleCreateModalProp
     );
 }
 
-export default ModulesList;
+export default ModuleCreateModal;

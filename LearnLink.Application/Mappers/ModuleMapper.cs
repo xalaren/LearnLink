@@ -32,7 +32,7 @@ namespace LearnLink.Application.Mappers
                 Id = moduleEntity.Id,
                 Title = moduleEntity.Title,
                 Description = moduleEntity.Description,
-                Completed = moduleCompletion == null ? false : moduleCompletion.Completed,
+                Completed = moduleCompletion?.Completed ?? false,
                 CompletionProgress = moduleCompletion?.CompletionProgress
             };
         }

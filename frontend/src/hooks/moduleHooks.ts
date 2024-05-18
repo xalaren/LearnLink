@@ -12,7 +12,7 @@ export function useGetCourseModules() {
     const getModulesQuery = async (courseId: number, userId: number = 0) => {
         try {
             setLoading(true);
-            const response = await axiosInstance.get<IValueResponse<Module[]>>(`${MODULE_ENDPOINTS_URL}get/atCourse?courseId=${courseId}&userId=${userId}`);
+            const response = await axiosInstance.get<IValueResponse<Module[]>>(`${MODULE_ENDPOINTS_URL}get/atCourse?userId=${userId}&courseId=${courseId}`);
 
             if (!response.data.success) {
                 throw new AxiosError(response.data.message);
@@ -40,11 +40,11 @@ export function useCreateModules() {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState('');
 
-    const createModulesQuery = async (courseId: number, title: string, accessToken: string, description?: string) => {
+    const createModulesQuery = async (userId: number, courseId: number, title: string, accessToken: string, description?: string) => {
         try {
             setLoading(true);
             const module = new Module(title, description);
-            const response = await axiosInstance.post<VoidResponse>(`${MODULE_ENDPOINTS_URL}/create?courseId=${courseId}`, module, {
+            const response = await axiosInstance.post<VoidResponse>(`${MODULE_ENDPOINTS_URL}create?userId=${userId}&courseId=${courseId}`, module, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }

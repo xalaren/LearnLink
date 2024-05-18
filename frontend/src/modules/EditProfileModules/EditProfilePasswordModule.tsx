@@ -76,6 +76,7 @@ function EditProfilePasswordModule() {
                         label="Старый пароль"
                         onChange={onChange}
                         value={oldPassword}
+                        required={true}
                     />
 
                     <Input
@@ -87,6 +88,7 @@ function EditProfilePasswordModule() {
                         label="Новый пароль"
                         onChange={onChange}
                         value={newPassword}
+                        required={true}
                     />
                 </div>
                 <nav className="form__nav">

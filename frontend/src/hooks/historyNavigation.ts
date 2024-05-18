@@ -5,7 +5,7 @@ import { saveNavigation } from "../store/actions/navigationActionCreators";
 export function useHistoryNavigation() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const path = useAppSelector(state => state.navigationReducer.prevPath);
+    const prevPath = useAppSelector(state => state.navigationReducer.prevPath);
 
     const toNext = (toPath: string) => {
         dispatch(saveNavigation(toPath));
@@ -13,8 +13,8 @@ export function useHistoryNavigation() {
     }
 
     const toPrev = () => {
-        navigate(path);
+        navigate(prevPath);
     }
 
-    return { toNext, toPrev };
+    return { toNext, toPrev, prevPath };
 }

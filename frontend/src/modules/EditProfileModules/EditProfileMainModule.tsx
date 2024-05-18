@@ -117,6 +117,7 @@ function EditProfileMainModule() {
                             label="Никнейм"
                             onChange={onChange}
                             value={nickname}
+                            required={true}
                         />
 
                         <Input
@@ -128,6 +129,7 @@ function EditProfileMainModule() {
                             label="Имя"
                             onChange={onChange}
                             value={name}
+                            required={true}
                         />
 
                         <Input
@@ -139,6 +141,7 @@ function EditProfileMainModule() {
                             label="Фамилия"
                             onChange={onChange}
                             value={lastname}
+                            required={true}
                         />
                     </div>
 

@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 interface IModalProps {
     children?: React.ReactNode;
     title: string;
@@ -6,6 +8,16 @@ interface IModalProps {
 }
 
 export function Modal({ active, title, children, onClose }: IModalProps) {
+    useEffect(() => {
+        addKeyboardEventListeners();
+    }, []);
+
+    function addKeyboardEventListeners() {
+        document.addEventListener('keydown', event => {
+            if (event.key === "Escape") onClose();
+        })
+    }
+
     return (
         <>
             {active &&

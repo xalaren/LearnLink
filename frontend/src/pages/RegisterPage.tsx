@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { MainContainer } from "../components/MainContainer";
 import { useAppSelector } from "../hooks/redux";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
-import { Paths } from "../models/paths";
+import { paths } from "../models/paths";
 import { Input } from "../components/Input";
 import { InputType } from "../models/enums";
 import ImageUploader from "../components/ImageUploader/ImageUploader";
@@ -29,7 +29,7 @@ export function RegisterPage() {
     const { registerQuery, error, success, resetValues } = useRegister();
 
     useEffect(() => {
-        if (isAuthenticated) toNext(Paths.homePath);
+        if (isAuthenticated) toNext(paths.public());
     }, [isAuthenticated, toNext]);
 
     async function onSubmit(event: React.FormEvent) {
@@ -63,7 +63,7 @@ export function RegisterPage() {
         await registerQuery(nickname, password, lastname, name, uploadedImage);
 
         if (success) {
-            toNext(Paths.loginPath);
+            toNext(paths.login);
         }
     }
 
@@ -119,6 +119,7 @@ export function RegisterPage() {
                         placeholder="Введите никнейм..."
                         label="Никнейм"
                         onChange={onChange}
+                        required={true}
                     />
 
                     <Input
@@ -129,6 +130,7 @@ export function RegisterPage() {
                         placeholder="Введите пароль..."
                         label="Пароль"
                         onChange={onChange}
+                        required={true}
                     />
 
                     <Input
@@ -139,6 +141,7 @@ export function RegisterPage() {
                         placeholder="Введите имя..."
                         label="Имя"
                         onChange={onChange}
+                        required={true}
                     />
 
                     <Input
@@ -149,6 +152,7 @@ export function RegisterPage() {
                         placeholder="Введите фамилию..."
                         label="Фамилия"
                         onChange={onChange}
+                        required={true}
                     />
                 </div>
 
@@ -156,7 +160,7 @@ export function RegisterPage() {
             </form>
 
             <ErrorModal active={Boolean(error)} onClose={resetValues} error={error} />
-            <SuccessModal active={Boolean(success)} onClose={() => { toNext(Paths.loginPath) }} message={success} />
+            <SuccessModal active={Boolean(success)} onClose={() => { toNext(paths.login) }} message={success} />
         </MainContainer>
     )
 }

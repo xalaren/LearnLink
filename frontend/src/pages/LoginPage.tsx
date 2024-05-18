@@ -3,17 +3,18 @@ import { useAppDispatch, useAppSelector } from "../hooks/redux";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
 import { MainContainer } from "../components/MainContainer";
 import { Input } from "../components/Input";
-import { InputType } from "../models/enums";
+import { InputType, ProfileEditActions } from "../models/enums";
 import { validate } from "../helpers/validation";
 import { useLogin } from "../hooks/userHooks";
 import { ErrorModal } from "../components/Modal/ErrorModal";
 import { loginSave } from "../store/actions/authActionCreators";
 import { fetchUser } from "../store/actions/userActionCreators";
+import { paths } from "../models/paths";
 
 
 export function LoginPage() {
     const isAuthenticated = useAppSelector(state => state.authReducer.isAuthenticated);
-    const { toPrev } = useHistoryNavigation();
+    const { toNext } = useHistoryNavigation();
 
     const [nickname, setNickname] = useState('');
     const [password, setPassword] = useState('');
@@ -25,7 +26,7 @@ export function LoginPage() {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        if (isAuthenticated) toPrev();
+        if (isAuthenticated) toNext(paths.profile.edit(ProfileEditActions.main));
     }, [isAuthenticated])
 
     useEffect(() => {
@@ -59,7 +60,7 @@ export function LoginPage() {
         if (authModel) {
             dispatch(loginSave(authModel.accessToken, authModel.nickname));
             dispatch(fetchUser());
-            toPrev();
+            toNext(paths.profile.edit(ProfileEditActions.main));
         }
     }
 
@@ -93,6 +94,7 @@ export function LoginPage() {
                         label="Никнейм"
                         value={nickname}
                         onChange={onChange}
+                        required={true}
                     />
 
                     <Input
@@ -104,6 +106,7 @@ export function LoginPage() {
                         label="Пароль"
                         value={password}
                         onChange={onChange}
+                        required={true}
                     />
                 </div>
 

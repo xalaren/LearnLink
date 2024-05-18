@@ -1,14 +1,13 @@
-import { useParams } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 import { MainContainer } from "../components/MainContainer";
 import SearchForm from "../components/SearchForm";
 import React, { useEffect, useState } from "react";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
-import { Paths } from "../models/paths";
 import Paginate from "../components/Paginate";
 import ControlNav from "../components/ControlNav";
 import { LocalRole } from "../models/localRole";
 import { useAppSelector } from "../hooks/redux";
-import { useFindCourseParticipants } from "../hooks/courseHooks";
+import { useFindCourseParticipants, useGetCourse } from "../hooks/courseHooks";
 import { Participant } from "../models/participant";
 import { Loader } from "../components/Loader/Loader";
 import { ErrorModal } from "../components/Modal/ErrorModal";
@@ -17,6 +16,11 @@ import { useGetLocalRoleByUserAtCourse } from "../hooks/userCourseLocalRoleHooks
 import ParticipantsLocalRoleModal from "../modules/Participants/ParticipantsLocalRoleModal.tsx";
 import ParticipantKickModal from "../modules/Participants/ParticipantKickModal.tsx";
 import ParticipantsInviteModal from "../modules/Participants/ParticipantsInviteModal.tsx";
+import Breadcrumb from "../components/Breadcrumb/Breadcrumb.tsx";
+import BreadcrumbItem from "../components/Breadcrumb/BreadcrumbItem.tsx";
+import { Course } from "../models/course.ts";
+import { paths } from "../models/paths.ts";
+import { ViewTypes } from "../models/enums.ts";
 
 function CourseParticipantsPage() {
     const courseParam = useParams<'courseId'>();
@@ -25,6 +29,7 @@ function CourseParticipantsPage() {
     const [page, setPage] = useState(Number(pageParam.pageNumber));
     const [pageCount, setPageCount] = useState(1);
     const [searchText, setSearchText] = useState('');
+    const [course, setCourse] = useState<Course>();
     const { user } = useAppSelector(state => state.userReducer);
     const { accessToken } = useAppSelector(state => state.authReducer);
 
@@ -37,17 +42,34 @@ function CourseParticipantsPage() {
 
     const findCourseParticipantsHook = useFindCourseParticipants();
     const getLocalRoleHook = useGetLocalRoleByUserAtCourse();
+    const getCourseHook = useGetCourse();
 
     const { toNext } = useHistoryNavigation();
 
     useEffect(() => {
         if (kickModalActive || localRoleModalActive || inviteModalActive) return;
         fetchData();
-    }, [user, localRole, pageParam, kickModalActive, localRoleModalActive, inviteModalActive]);
+    }, [user, localRole, pageParam, course, kickModalActive, localRoleModalActive, inviteModalActive]);
 
     async function fetchData() {
+        await fetchCourse();
         await fetchLocalRole();
         await fetchParticipants();
+    }
+
+    async function fetchCourse() {
+        if (course) return;
+
+        resetValues();
+
+        if (user) {
+            const result = await getCourseHook.getCourseQuery(Number(courseParam.courseId), user.id);
+
+            if (result) {
+                setCourse(result);
+            }
+        }
+
     }
 
     async function fetchLocalRole() {
@@ -57,8 +79,8 @@ function CourseParticipantsPage() {
 
         resetValues();
 
-        if (user && accessToken) {
-            const localRole = await getLocalRoleHook.getLocalRoleQuery(Number(courseParam.courseId), user.id, accessToken);
+        if (user && accessToken && course) {
+            const localRole = await getLocalRoleHook.getLocalRoleQuery(course.id, user.id, accessToken);
 
             if (localRole) {
                 setLocalRole(localRole);
@@ -71,8 +93,8 @@ function CourseParticipantsPage() {
 
         resetValues();
 
-        if (user && accessToken) {
-            const dataPage = await findCourseParticipantsHook.findParticipantsQuery(user.id, accessToken, Number(courseParam.courseId), page, searchText);
+        if (user && accessToken && course) {
+            const dataPage = await findCourseParticipantsHook.findParticipantsQuery(user.id, accessToken, course.id, page, searchText);
 
             if (dataPage) {
                 setParticipants(dataPage.values);
@@ -94,7 +116,7 @@ function CourseParticipantsPage() {
 
     function navigateToPage(nextPage: number) {
         setPage(nextPage);
-        toNext(`${Paths.getCourseParticipantsPath(Number(courseParam.courseId))}/${nextPage}`);
+        toNext(paths.course.participants(nextPage));
     }
 
     function resetValues() {
@@ -104,82 +126,106 @@ function CourseParticipantsPage() {
     }
 
     return (
-        <MainContainer title="Участники курса">
-            <SearchForm
-                placeholder="Найти по имени, фамилии или никнейму..."
-                onChange={onChange}
-                onSubmit={onSubmit}
-                value={searchText} />
-
-            <Paginate currentPage={page} pageCount={pageCount} setPage={navigateToPage} />
-
-            {localRole && localRole.inviteAccess &&
-                <div className="line-end-container">
-                    <ControlNav>
-                        <button className="control-nav__add-button button-gray icon-plus"
-                            onClick={() => setInviteModalActive(true)}></button>
-                    </ControlNav>
-                </div>
-            }
-
-            <BuildedParticipantsContainer
-                error={getLocalRoleHook.error || findCourseParticipantsHook.error}
-                onErrorModalClose={resetValues}
-                loading={getLocalRoleHook.loading || findCourseParticipantsHook.loading}>
-                {localRole && participants &&
-                    <section className="control-list">
-                        {participants.map(participant =>
-                            <ParticipantItem
-                                localRole={localRole}
-                                participant={participant}
-                                onEditButtonClick={() => {
-                                    setSelectedParticipant(participant);
-                                    setLocalRoleModalActive(true);
-                                }}
-                                onKickButtonClick={() => {
-                                    setSelectedParticipant(participant);
-                                    setKickModalActive(true);
-                                }}
-                            />
-                        )}
-                    </section>
-                }
-
-                {user && localRole && localRole.inviteAccess &&
-                    <ParticipantsInviteModal
-                        active={inviteModalActive}
-                        accessToken={accessToken}
-                        courseId={Number(courseParam.courseId)}
-                        onClose={() => setInviteModalActive(false)}
-                        userId={user.id}
-                    />
-                }
-
-                {user && selectedParticipant &&
+        <>
+            <MainContainer>
+                {course ?
                     <>
-                        <ParticipantKickModal
-                            active={kickModalActive}
-                            onClose={() => setKickModalActive(false)}
-                            participant={selectedParticipant}
-                            accessToken={accessToken}
-                            courseId={Number(courseParam.courseId)}
-                            requesterUserId={user.id} />
+                        <Breadcrumb>
+                            <BreadcrumbItem text="В начало" path={paths.home} />
+                            {!course.isPublic &&
+                                <BreadcrumbItem text="Мои курсы" path={paths.profile.courses(ViewTypes.created)} />
+                            }
+                            <BreadcrumbItem text={course.title} path={paths.course.view(course.id)} />
+                            <BreadcrumbItem text="Участники курса" path={paths.course.participants(course.id)} />
+                        </Breadcrumb>
 
-                        <ParticipantsLocalRoleModal
-                            participant={selectedParticipant}
-                            active={localRoleModalActive}
-                            accessToken={accessToken}
-                            courseId={Number(courseParam.courseId)}
-                            onClose={() => setLocalRoleModalActive(false)}
-                            userId={user.id}
-                        />
-                    </>
+                        <div className="line-distributed-container">
+                            <h3>Участники курса</h3>
+                            {localRole && localRole.inviteAccess &&
+                                <ControlNav>
+                                    <button className="control-nav__add-button button-gray icon-plus"
+                                        onClick={() => setInviteModalActive(true)}></button>
+                                </ControlNav>
+                            }
+                        </div>
 
+
+                        <SearchForm
+                            placeholder="Найти по имени, фамилии, никнейму или локальной роли..."
+                            onChange={onChange}
+                            onSubmit={onSubmit}
+                            value={searchText} />
+
+                        <Paginate currentPage={page} pageCount={pageCount} setPage={navigateToPage} />
+
+
+
+                        <BuildedParticipantsContainer
+                            error={getLocalRoleHook.error || findCourseParticipantsHook.error}
+                            onErrorModalClose={resetValues}
+                            loading={getLocalRoleHook.loading || findCourseParticipantsHook.loading}>
+                            {localRole && participants && participants.length > 0 ?
+                                <section className="control-list">
+                                    {participants.map(participant =>
+                                        <ParticipantItem
+                                            localRole={localRole}
+                                            participant={participant}
+                                            onEditButtonClick={() => {
+                                                setSelectedParticipant(participant);
+                                                setLocalRoleModalActive(true);
+                                            }}
+                                            onKickButtonClick={() => {
+                                                setSelectedParticipant(participant);
+                                                setKickModalActive(true);
+                                            }}
+                                        />
+                                    )}
+                                </section> :
+                                <p>Участников пока нет...</p>
+                            }
+
+                            {user && localRole && localRole.inviteAccess &&
+                                <ParticipantsInviteModal
+                                    active={inviteModalActive}
+                                    accessToken={accessToken}
+                                    courseId={Number(courseParam.courseId)}
+                                    onClose={() => setInviteModalActive(false)}
+                                    userId={user.id}
+                                />
+                            }
+
+                            {user && selectedParticipant &&
+                                <>
+                                    <ParticipantKickModal
+                                        active={kickModalActive}
+                                        onClose={() => setKickModalActive(false)}
+                                        participant={selectedParticipant}
+                                        accessToken={accessToken}
+                                        courseId={Number(courseParam.courseId)}
+                                        requesterUserId={user.id} />
+
+                                    <ParticipantsLocalRoleModal
+                                        participant={selectedParticipant}
+                                        active={localRoleModalActive}
+                                        accessToken={accessToken}
+                                        courseId={Number(courseParam.courseId)}
+                                        onClose={() => setLocalRoleModalActive(false)}
+                                        userId={user.id}
+                                    />
+                                </>
+
+                            }
+                        </BuildedParticipantsContainer>
+                    </> :
+                    <p>Не удалось получить доступ к курсу...</p>
                 }
-            </BuildedParticipantsContainer>
 
 
-        </MainContainer >
+            </MainContainer>
+
+            <Outlet />
+        </>
+
     );
 }
 
