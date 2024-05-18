@@ -79,10 +79,10 @@ function CourseRolesPage() {
                         <BreadcrumbItem text="Локальные роли курса" path={paths.course.roles(course.id)} />
                     </Breadcrumb>
 
-                    <h3>Локальные роли курса</h3>
                     {!error && !loading &&
                         <>
-                            <div className="line-end-container">
+                            <div className="line-distributed-container">
+                                <h3>Локальные роли курса</h3>
                                 <ControlNav>
                                     <button className="control-nav__add-button button-gray icon-plus"
                                         onClick={() => setCreateModalActive(true)}></button>

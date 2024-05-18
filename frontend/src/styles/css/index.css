@@ -2422,6 +2422,7 @@ h3 {
 .breadcrumb__item:last-child a {
   color: #8c74ff;
   background-color: #f6f4ff;
+  font-weight: 600;
 }
 .breadcrumb__item a {
   padding: 6px;
