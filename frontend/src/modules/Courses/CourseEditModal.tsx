@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Course } from "../../models/course";
 import { useAppSelector } from "../../hooks/redux";
 import { useUpdateCourse } from "../../hooks/courseHooks";
@@ -12,18 +12,20 @@ import ModalFooter from "../../components/Modal/ModalFooter";
 import ModalButton from "../../components/Modal/ModalButton";
 import PopupLoader from "../../components/Loader/PopupLoader";
 import PopupNotification from "../../components/PopupNotification";
+import { CourseContext } from "../../contexts/CourseContext";
 
 interface ICourseUpdateModalProps {
     active: boolean;
-    course: Course;
     onClose: () => void;
 }
 
-function CourseEditModal({ active, course, onClose }: ICourseUpdateModalProps) {
-    const [title, setTitle] = useState(course.title);
-    const [description, setDescription] = useState(course.description);
-    const [isPublic, setPublic] = useState(course.isPublic);
-    const [isUnavailable, setUnavailable] = useState(course.isUnavailable);
+function CourseEditModal({ active, onClose }: ICourseUpdateModalProps) {
+    const { course, signalUpdate } = useContext(CourseContext);
+
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [isPublic, setPublic] = useState(false);
+    const [isUnavailable, setUnavailable] = useState(false);
     const [titleError, setTitleError] = useState('');
 
     const { accessToken } = useAppSelector(state => state.authReducer);
@@ -31,14 +33,17 @@ function CourseEditModal({ active, course, onClose }: ICourseUpdateModalProps) {
     const { updateCourseQuery, loading, error, success, resetValues } = useUpdateCourse();
 
     useEffect(() => {
+        if (course) {
+            setTitle(course.title);
+            setDescription(course.description || '');
+            setPublic(course.isPublic);
+            setUnavailable(course.isUnavailable);
+        }
     }, [user])
 
     function closeModal() {
+        signalUpdate();
         resetValues();
-        setTitle(course.title);
-        setDescription(course.description);
-        setTitleError('');
-        setPublic(course.isPublic);
         onClose();
     }
 
@@ -64,7 +69,7 @@ function CourseEditModal({ active, course, onClose }: ICourseUpdateModalProps) {
             isValidated = false;
         }
 
-        if (isValidated && user && accessToken) {
+        if (isValidated && user && accessToken && course) {
             const newCourse = new Course(course.id, title, isPublic, isUnavailable, description);
             await updateCourseQuery(newCourse, user.id, accessToken);
         }
@@ -72,72 +77,74 @@ function CourseEditModal({ active, course, onClose }: ICourseUpdateModalProps) {
 
     return (
         <>
-            <Modal
-                active={active}
-                onClose={closeModal}
-                title="Редактирование курса">
+            {!error && !loading && !success &&
+                <Modal
+                    active={active}
+                    onClose={closeModal}
+                    title="Редактирование курса">
 
-                <ModalContent>
-                    <form className="form">
-                        <div className="form__inputs">
-                            <Input
-                                type={InputType.text}
-                                name="title"
-                                label="Название курса"
-                                placeholder="Введите название..."
-                                errorMessage={titleError}
-                                value={title}
-                                onChange={onChange}
-                            />
+                    <ModalContent>
+                        <form className="form">
+                            <div className="form__inputs">
+                                <Input
+                                    type={InputType.text}
+                                    name="title"
+                                    label="Название курса"
+                                    placeholder="Введите название..."
+                                    errorMessage={titleError}
+                                    value={title}
+                                    onChange={onChange}
+                                />
 
-                            <Input
-                                type={InputType.rich}
-                                name="description"
-                                label="Описание курса"
-                                placeholder="Введите описание (необязательно)..."
-                                value={description}
-                                onChange={onChange}
-                            />
+                                <Input
+                                    type={InputType.rich}
+                                    name="description"
+                                    label="Описание курса"
+                                    placeholder="Введите описание (необязательно)..."
+                                    value={description}
+                                    onChange={onChange}
+                                />
 
-                            <Checkbox
-                                isChecked={isPublic}
-                                checkedChanger={() => {
-                                    setUnavailable(false);
-                                    setPublic(prev => !prev);
-                                }}
-                                label="Публикация в общий доступ"
-                            />
+                                <Checkbox
+                                    isChecked={isPublic}
+                                    checkedChanger={() => {
+                                        setUnavailable(false);
+                                        setPublic(prev => !prev);
+                                    }}
+                                    label="Публикация в общий доступ"
+                                />
 
-                            <Checkbox
-                                isChecked={isUnavailable}
-                                checkedChanger={() => {
-                                    setPublic(false);
-                                    setUnavailable(prev => !prev);
-                                }}
-                                label="Скрыть курс"
-                            />
-                        </div>
-                    </form>
-                </ModalContent>
+                                <Checkbox
+                                    isChecked={isUnavailable}
+                                    checkedChanger={() => {
+                                        setPublic(false);
+                                        setUnavailable(prev => !prev);
+                                    }}
+                                    label="Скрыть курс"
+                                />
+                            </div>
+                        </form>
+                    </ModalContent>
 
-                <ModalFooter>
-                    <ModalButton text="Сохранить" onClick={updateCourse} />
-                </ModalFooter>
+                    <ModalFooter>
+                        <ModalButton text="Сохранить" onClick={updateCourse} />
+                    </ModalFooter>
 
-            </Modal >
+                </Modal >
+            }
 
             {loading &&
                 <PopupLoader />
             }
 
             {success &&
-                <PopupNotification notificationType={NotificationType.success} onFade={resetValues}>
+                <PopupNotification notificationType={NotificationType.success} onFade={closeModal}>
                     {success}
                 </PopupNotification>
             }
 
             {error &&
-                <PopupNotification notificationType={NotificationType.error} onFade={resetValues}>
+                <PopupNotification notificationType={NotificationType.error} onFade={closeModal}>
                     {error}
                 </PopupNotification>
             }

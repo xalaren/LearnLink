@@ -10,6 +10,7 @@ import { useHistoryNavigation } from "../../hooks/historyNavigation";
 import CourseEditModal from "./CourseEditModal";
 import CourseDeleteModal from "./CourseDeleteModal";
 import { paths } from "../../models/paths";
+import { useNavigate } from "react-router-dom";
 
 interface ICourseViewProps {
     course: Course;
@@ -48,11 +49,11 @@ function CourseView({
                             }
 
                             {course.localRole.viewAccess &&
-                                <DropdownItem title="Участники" className="icon icon-user-group-circle" key={2} onClick={() => toNext(paths.course.participants(course.id))} />
+                                <DropdownItem title="Участники" className="icon icon-user-group-circle" key={2} onClick={() => toNext(paths.course.participants.full(course.id), true)} />
                             }
 
                             {course.localRole.editRolesAccess &&
-                                <DropdownItem title="Роли" className="icon icon-star" key={2} onClick={() => toNext(paths.course.roles(course.id))} />
+                                <DropdownItem title="Роли" className="icon icon-star" key={2} onClick={() => toNext(paths.course.roles.full(course.id), true)} />
                             }
 
                             {course.localRole.removeAccess &&
@@ -71,7 +72,7 @@ function CourseView({
                 isCreator={isCreator}
                 isSubscriber={isSubscriber}
             />
-            <CourseEditModal active={updateModalActive} course={course} onClose={() => setUpdateModalActive(false)} />
+            <CourseEditModal active={updateModalActive} onClose={() => setUpdateModalActive(false)} />
             <CourseDeleteModal active={deleteModalActive} courseId={course.id} onClose={() => setDeleteModalActive(false)} />
         </>
     );

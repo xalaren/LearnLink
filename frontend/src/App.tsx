@@ -16,7 +16,7 @@ import { fetchUser } from "./store/actions/userActionCreators";
 import CourseParticipantsPage from "./pages/CourseParticipantsPage";
 import CourseRolesPage from "./pages/CourseRolesPage.tsx";
 import Layout from "./pages/Layout.tsx";
-import { CourseContext, CourseState } from "./contexts/CourseContext.tsx";
+import CourseNestedLayout from "./pages/CourseNestedLayout.tsx";
 
 
 function App() {
@@ -40,9 +40,11 @@ function App() {
                 <Route path={paths.register} element={<RegisterPage />}></Route>
                 <Route path={paths.profile.edit(':action')} element={<ProfilePage />}></Route>
                 <Route path={paths.profile.courses(':type', ':pageNumber')} element={<UserCoursesPage />} />
-                <Route path={paths.course.view(':courseId')} element={<CoursePage />}></Route>
-                <Route path={paths.course.participants(':courseId', ':pageNumber')} element={<CourseParticipantsPage />} />
-                <Route path={paths.course.roles(':courseId')} element={<CourseRolesPage />}></Route>
+                <Route path={paths.course.base(':courseId')} element={<CourseNestedLayout />}>
+                    <Route path={paths.course.view.base} element={<CoursePage />}></Route>
+                    <Route path={paths.course.participants.base(':pageNumber')} element={<CourseParticipantsPage />} />
+                    <Route path={paths.course.roles.base} element={<CourseRolesPage />}></Route>
+                </Route>
                 <Route path="*" element={<InvalidPage />}></Route>
             </Routes>
 

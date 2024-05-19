@@ -7,9 +7,9 @@ export function useHistoryNavigation() {
     const dispatch = useAppDispatch();
     const prevPath = useAppSelector(state => state.navigationReducer.prevPath);
 
-    const toNext = (toPath: string) => {
+    const toNext = (toPath: string, replace: boolean = false) => {
         dispatch(saveNavigation(toPath));
-        navigate(toPath);
+        navigate(toPath, { replace: replace });
     }
 
     const toPrev = () => {

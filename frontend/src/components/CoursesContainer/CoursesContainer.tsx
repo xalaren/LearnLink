@@ -15,7 +15,7 @@ export function CoursesContainer({ courses }: ICoursesContainerProps) {
         <section className="control-list">
             {anyCourses && courses.map(course =>
                 <CourseItem course={course} key={course.id} onClick={() => {
-                    toNext(paths.course.view(course.id.toString()));
+                    toNext(paths.course.view.full(course.id));
                 }} />
             )}
             {!anyCourses && <p>На данный момент курсы отсутствуют...</p>}

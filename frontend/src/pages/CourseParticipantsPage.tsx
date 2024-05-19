@@ -1,7 +1,7 @@
 import { Outlet, useParams } from "react-router-dom";
 import { MainContainer } from "../components/MainContainer";
 import SearchForm from "../components/SearchForm";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
 import Paginate from "../components/Paginate";
 import ControlNav from "../components/ControlNav";
@@ -21,6 +21,7 @@ import BreadcrumbItem from "../components/Breadcrumb/BreadcrumbItem.tsx";
 import { Course } from "../models/course.ts";
 import { paths } from "../models/paths.ts";
 import { ViewTypes } from "../models/enums.ts";
+import { CourseContext } from "../contexts/CourseContext.tsx";
 
 function CourseParticipantsPage() {
     const courseParam = useParams<'courseId'>();
@@ -29,7 +30,9 @@ function CourseParticipantsPage() {
     const [page, setPage] = useState(Number(pageParam.pageNumber));
     const [pageCount, setPageCount] = useState(1);
     const [searchText, setSearchText] = useState('');
-    const [course, setCourse] = useState<Course>();
+
+    // const [course, setCourse] = useState<Course>();
+    const { course } = useContext(CourseContext);
     const { user } = useAppSelector(state => state.userReducer);
     const { accessToken } = useAppSelector(state => state.authReducer);
 
@@ -42,7 +45,6 @@ function CourseParticipantsPage() {
 
     const findCourseParticipantsHook = useFindCourseParticipants();
     const getLocalRoleHook = useGetLocalRoleByUserAtCourse();
-    const getCourseHook = useGetCourse();
 
     const { toNext } = useHistoryNavigation();
 
@@ -52,25 +54,25 @@ function CourseParticipantsPage() {
     }, [user, localRole, pageParam, course, kickModalActive, localRoleModalActive, inviteModalActive]);
 
     async function fetchData() {
-        await fetchCourse();
+        // await fetchCourse();
         await fetchLocalRole();
         await fetchParticipants();
     }
 
-    async function fetchCourse() {
-        if (course) return;
+    // async function fetchCourse() {
+    //     if (course) return;
 
-        resetValues();
+    //     resetValues();
 
-        if (user) {
-            const result = await getCourseHook.getCourseQuery(Number(courseParam.courseId), user.id);
+    //     if (user) {
+    //         const result = await getCourseHook.getCourseQuery(Number(courseParam.courseId), user.id);
 
-            if (result) {
-                setCourse(result);
-            }
-        }
+    //         if (result) {
+    //             setCourse(result);
+    //         }
+    //     }
 
-    }
+    // }
 
     async function fetchLocalRole() {
         if (localRole) {
@@ -116,7 +118,7 @@ function CourseParticipantsPage() {
 
     function navigateToPage(nextPage: number) {
         setPage(nextPage);
-        toNext(paths.course.participants(nextPage));
+        toNext(paths.course.participants.full(course?.id || 0, nextPage), true);
     }
 
     function resetValues() {
@@ -135,8 +137,8 @@ function CourseParticipantsPage() {
                             {!course.isPublic &&
                                 <BreadcrumbItem text="Мои курсы" path={paths.profile.courses(ViewTypes.created)} />
                             }
-                            <BreadcrumbItem text={course.title} path={paths.course.view(course.id)} />
-                            <BreadcrumbItem text="Участники курса" path={paths.course.participants(course.id)} />
+                            <BreadcrumbItem text={course.title} path={paths.course.view.full(course.id)} />
+                            <BreadcrumbItem text="Участники курса" />
                         </Breadcrumb>
 
                         <div className="line-distributed-container">
@@ -219,7 +221,6 @@ function CourseParticipantsPage() {
                     </> :
                     <p>Не удалось получить доступ к курсу...</p>
                 }
-
 
             </MainContainer>
 

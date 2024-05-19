@@ -29,7 +29,7 @@ function ProfilePage() {
 
             <Breadcrumb>
                 <BreadcrumbItem text="В начало" path={paths.public()} />
-                <BreadcrumbItem text="Профиль" />
+                <BreadcrumbItem text="Профиль" path={paths.profile.edit(ProfileEditActions.main)} />
                 {param.action === ProfileEditActions.main &&
                     <BreadcrumbItem text="Основные данные" />
                 }

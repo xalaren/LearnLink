@@ -12,16 +12,16 @@ import { ErrorModal } from "../components/Modal/ErrorModal.tsx";
 import CreateCourseRoleModal from "../modules/CourseRoles/CreateCourseRoleModal.tsx";
 import UpdateLocalRoleModal from "../modules/CourseRoles/UpdateCourseRoleModal.tsx";
 import DeleteCourseLocalRoleModal from "../modules/CourseRoles/DeleteCourseRoleModal.tsx";
-import { Course } from "../models/course.ts";
-import { useGetCourse } from "../hooks/courseHooks.ts";
 import Breadcrumb from "../components/Breadcrumb/Breadcrumb.tsx";
 import BreadcrumbItem from "../components/Breadcrumb/BreadcrumbItem.tsx";
 import { paths } from "../models/paths.ts";
+import { CourseContext } from "../contexts/CourseContext.tsx";
 
 function CourseRolesPage() {
     const param = useParams<'courseId'>();
 
-    const [course, setCourse] = useState<Course>();
+    const { course } = useContext(CourseContext);
+
     const [roles, setRoles] = useState<LocalRole[]>();
     const [createModalActive, setCreateModalActive] = useState(false);
     const [updateModalActive, setUpdateModalActive] = useState(false);
@@ -32,17 +32,11 @@ function CourseRolesPage() {
     const { accessToken } = useAppSelector(state => state.authReducer);
     const { listLocalRolesQuery, loading, error, resetValues } = useListAllLocalRolesAtCourse();
 
-    const getCourseHook = useGetCourse();
 
     useEffect(() => {
         if (createModalActive || selectedLocalRole) return;
-        fetchData();
+        fetchRoles();
     }, [user, createModalActive, selectedLocalRole]);
-
-    async function fetchData() {
-        await fetchCourse();
-        await fetchRoles();
-    }
 
     async function fetchRoles() {
         const result = await listLocalRolesQuery(Number(param.courseId), accessToken);
@@ -50,20 +44,6 @@ function CourseRolesPage() {
         if (result) {
             setRoles(result);
         }
-    }
-
-    async function fetchCourse() {
-        if (!user) return;
-        if (course) return;
-
-        resetValues();
-
-        const result = await getCourseHook.getCourseQuery(Number(param.courseId), user.id);
-
-        if (result) {
-            setCourse(result);
-        }
-
     }
 
     return (
@@ -75,8 +55,8 @@ function CourseRolesPage() {
                         {!course.isPublic &&
                             <BreadcrumbItem text="Мои курсы" path={paths.profile.courses()} />
                         }
-                        <BreadcrumbItem text={course.title} path={paths.course.view(course.id)} />
-                        <BreadcrumbItem text="Локальные роли курса" path={paths.course.roles(course.id)} />
+                        <BreadcrumbItem text={course.title} path={paths.course.view.full(course.id)} />
+                        <BreadcrumbItem text="Локальные роли курса" path={paths.course.roles.full(course.id)} />
                     </Breadcrumb>
 
                     {!error && !loading &&
