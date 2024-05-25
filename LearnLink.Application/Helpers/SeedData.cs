@@ -113,7 +113,7 @@ namespace LearnLink.Application.Helpers
                     EditRolesAccess = true,
                 };
 
-                await localRoleInteractor.CreateLocalRoleAsync(userRole);
+                await localRoleInteractor.CreateLocalRoleAsync(userRole, true);
             }
             catch (Exception)
             {
@@ -143,7 +143,7 @@ namespace LearnLink.Application.Helpers
                     EditRolesAccess = false,
                 };
 
-                await localRoleInteractor.CreateLocalRoleAsync(userRole);
+                await localRoleInteractor.CreateLocalRoleAsync(userRole, true);
             }
             catch (Exception)
             {

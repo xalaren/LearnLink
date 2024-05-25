@@ -9,6 +9,8 @@
         public bool InviteAccess { get; set; }
         public bool KickAccess { get; set; }
         public bool EditRolesAccess { get; set; }
+        
+        public bool SystemRole { get; init; }
 
         public override bool IsAdmin
         {

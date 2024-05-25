@@ -119,7 +119,7 @@ function ParticipantsInviteModal(
                             <SelectItem
                                 key={0}
                                 title="Добавить локальные роли..."
-                                onSelect={() => toNext(paths.course.roles(courseId))}
+                                onSelect={() => toNext(paths.course.roles.full(courseId))}
                             />
                             {localRoles && localRoles.map(localRole =>
 

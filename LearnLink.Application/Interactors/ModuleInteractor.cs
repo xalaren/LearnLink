@@ -111,7 +111,7 @@ namespace LearnLink.Application.Interactors
                 };
             }
         }
-        
+
         public async Task<Response<ModuleDto?>> GetModuleAsync(int moduleId)
         {
             try
@@ -148,7 +148,7 @@ namespace LearnLink.Application.Interactors
                 };
             }
         }
-        
+
 
         public async Task<Response> UpdateModuleAsync(ModuleDto moduleDto)
         {
@@ -227,7 +227,7 @@ namespace LearnLink.Application.Interactors
                 };
             }
         }
-        
+
         public async Task<Response<ClientModuleDto[]>> RequestGetCourseModulesAsync(int courseId, int userId = 0)
         {
             try
@@ -293,7 +293,7 @@ namespace LearnLink.Application.Interactors
                 };
             }
         }
-        
+
         public async Task<Response<ClientModuleDto?>> RequestGetModuleAsync(int userId, int courseId, int moduleId)
         {
             try
@@ -311,11 +311,20 @@ namespace LearnLink.Application.Interactors
                     .Reference(role => role.LocalRole)
                     .LoadAsync();
 
+                await unitOfWork.UserCourseLocalRoles.Entry(userCourseLocalRole)
+                    .Reference(role => role.Course)
+                    .LoadAsync();
+
+                if (userCourseLocalRole.Course.IsUnavailable)
+                {
+                    throw new AccessLevelException("Курс является недоступным");
+                }
+
                 if (!userCourseLocalRole.LocalRole.ViewAccess)
                 {
                     throw new AccessLevelException("Вы не можете просматривать модуль");
                 }
-                
+
                 var module = await unitOfWork.Modules.AsNoTracking().FirstOrDefaultAsync(module => module.Id == moduleId);
 
                 if (module == null)
@@ -353,7 +362,7 @@ namespace LearnLink.Application.Interactors
                 };
             }
         }
-        
+
         public async Task<Response> RequestCreateModuleAsync(int userId, int courseId, ModuleDto moduleDto)
         {
             try
@@ -375,7 +384,7 @@ namespace LearnLink.Application.Interactors
                 {
                     throw new AccessLevelException("Вы не можете изменять материалы курса");
                 }
-                
+
                 return await CreateModuleAsync(courseId, moduleDto);
             }
             catch (CustomException exception)
@@ -396,7 +405,7 @@ namespace LearnLink.Application.Interactors
                 };
             }
         }
-        
+
         public async Task<Response> RequestUpdateModuleAsync(int userId, int courseId, ModuleDto moduleDto)
         {
             try
@@ -418,7 +427,7 @@ namespace LearnLink.Application.Interactors
                 {
                     throw new AccessLevelException("Вы не можете изменять материалы курса");
                 }
-                
+
                 return await UpdateModuleAsync(moduleDto);
             }
             catch (CustomException exception)
@@ -439,7 +448,7 @@ namespace LearnLink.Application.Interactors
                 };
             }
         }
-        
+
         public async Task<Response> RequestRemoveModuleAsync(int userId, int courseId, int moduleId)
         {
             try
@@ -461,7 +470,7 @@ namespace LearnLink.Application.Interactors
                 {
                     throw new AccessLevelException("Вы не можете изменять материалы курса");
                 }
-                
+
                 return await RemoveModuleAsync(moduleId);
             }
             catch (CustomException exception)

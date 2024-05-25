@@ -41,16 +41,16 @@ namespace LearnLink.WebApi.Controllers
 
         [Authorize]
         [HttpPost("create")]
-        public async Task<Response> CreateLocalRoleAsync(LocalRoleDto LocalRoleDto)
+        public async Task<Response> CreateLocalRoleAsync(LocalRoleDto localRoleDto)
         {
-            return await localRoleInteractor.CreateLocalRoleAsync(LocalRoleDto);
+            return await localRoleInteractor.CreateLocalRoleAsync(localRoleDto);
         }
 
         [Authorize]
         [HttpPost("update")]
-        public async Task<Response> UpdateLocalRoleAsync(LocalRoleDto LocalRoleDto)
+        public async Task<Response> UpdateLocalRoleAsync(LocalRoleDto localRoleDto)
         {
-            return await localRoleInteractor.UpdateLocalRoleAsync(LocalRoleDto);
+            return await localRoleInteractor.UpdateLocalRoleAsync(localRoleDto);
         }
 
         [Authorize]

@@ -65,9 +65,9 @@ function CreateCourseRoleModal({
             isValidated = false;
         }
 
-        const regex: RegExp = /^[a-z]+$/gm;;
+        const regex: RegExp = /^^[a-zA-Z][a-zA-Z0-9_]*$/gm;;
         if (!regex.test(sign)) {
-            setSignError('Сигнатура должна состоять из латинских символов нижнего регистра');
+            setSignError('Сигнатура должна состоять из латинских символов и не может начинаться с цифр или других символов');
             isValidated = false;
         }
 
@@ -117,7 +117,7 @@ function CreateCourseRoleModal({
                                     type={InputType.text}
                                     name="sign"
                                     label="Сигнатура роли"
-                                    placeholder="Введите сигнатуру (только латинские буквы)..."
+                                    placeholder="Введите сигнатуру (только латиница)..."
                                     required={true}
                                     errorMessage={signError}
                                     value={sign}

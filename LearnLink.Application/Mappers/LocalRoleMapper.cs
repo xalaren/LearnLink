@@ -5,7 +5,7 @@ namespace LearnLink.Application.Mappers
 {
     public static class LocalRoleMapper
     {
-        public static LocalRole ToEntity(this LocalRoleDto roleDto)
+        public static LocalRole ToEntity(this LocalRoleDto roleDto, bool setSystemRole = false)
         {
             return new LocalRole()
             {
@@ -18,7 +18,8 @@ namespace LearnLink.Application.Mappers
                 ManageInternalAccess = roleDto.ManageInternalAccess,
                 InviteAccess = roleDto.InviteAccess,
                 KickAccess = roleDto.KickAccess,
-                EditRolesAccess = roleDto.EditRolesAccess
+                EditRolesAccess = roleDto.EditRolesAccess,
+                SystemRole = setSystemRole,
             };
         }
 

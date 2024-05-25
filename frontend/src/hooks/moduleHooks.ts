@@ -112,40 +112,39 @@ export function useGetModule() {
 }
 
 export function useUpdateModule() {
-    const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
-    const updateModuleQuery = async (moduleId: number, title: string, accessToken: string, description?: string) => {
+    const updateModuleQuery = async (module: Module, courseId: number, userId: number, accessToken: string) => {
         try {
             setLoading(true);
-            const module = new Module(title, description, moduleId);
-            const response = await axiosInstance.post<VoidResponse>(`${MODULE_ENDPOINTS_URL}/update`, module, {
+            const response = (await axiosInstance.post<VoidResponse>(`${MODULE_ENDPOINTS_URL}update?userId=${userId}&courseId=${courseId}`, module, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
-            });
+            }));
+
+            setLoading(false);
 
             if (!response.data.success) {
                 throw new AxiosError(response.data.message);
             }
 
-            setLoading(false);
             setSuccess(response.data.message!);
         }
         catch (err: unknown) {
-            setLoading(false);
             setError((err as AxiosError).message);
         }
     }
 
     const resetValues = () => {
-        setError('');
         setLoading(false);
+        setError('');
         setSuccess('');
     }
 
-    return { updateModuleQuery, success, error, loading, resetValues }
+    return { updateModuleQuery, loading, error, success, resetValues };
 }
 
 export function useRemoveModule() {
@@ -153,11 +152,10 @@ export function useRemoveModule() {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
-    const removeModuleQuery = async (moduleId: number, accessToken: string) => {
+    const removeModuleQuery = async (moduleId: number, courseId: number, userId: number, accessToken: string) => {
         try {
             setLoading(true);
-
-            const response = (await axiosInstance.delete<VoidResponse>(`${MODULE_ENDPOINTS_URL}remove?moduleId=${moduleId}`, {
+            const response = (await axiosInstance.delete<VoidResponse>(`${MODULE_ENDPOINTS_URL}remove?userId=${userId}&courseId=${courseId}&moduleId=${moduleId}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }

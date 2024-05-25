@@ -10,7 +10,7 @@ namespace LearnLink.Application.Interactors
 {
     public class LocalRoleInteractor(IUnitOfWork unitOfWork)
     {
-        public async Task<Response> CreateLocalRoleAsync(LocalRoleDto localRoleDto)
+        public async Task<Response> CreateLocalRoleAsync(LocalRoleDto localRoleDto, bool createSystemRole = false)
         {
             try
             {
@@ -183,6 +183,11 @@ namespace LearnLink.Application.Interactors
                     throw new NotFoundException("Локальная роль не найдена");
                 }
 
+                if (localRole.SystemRole)
+                {
+                    throw new AccessLevelException("Локальная роль является системной");
+                }
+
                 unitOfWork.Roles.Remove(localRole);
                 await unitOfWork.CommitAsync();
 
@@ -222,6 +227,11 @@ namespace LearnLink.Application.Interactors
                     throw new NotFoundException("Локальная роль не найдена");
                 }
 
+                if (localRole.SystemRole)
+                {
+                    throw new AccessLevelException("Локальная роль является системной");
+                }
+
                 localRole = localRole.Assign(localRoleDto);
 
                 unitOfWork.Roles.Update(localRole);
@@ -252,7 +262,7 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task CreateLocalRoleAsyncNoResponse(LocalRoleDto localRoleDto)
+        public async Task CreateLocalRoleAsyncNoResponse(LocalRoleDto localRoleDto, bool createSystemRole = false)
         {
             var existingRole = await unitOfWork.LocalRoles
                     .AsNoTracking()
@@ -263,7 +273,7 @@ namespace LearnLink.Application.Interactors
                 throw new ValidationException("Данная локальная роль уже добавлена в систему");
             }
 
-            var localRoleEntity = localRoleDto.ToEntity();
+            var localRoleEntity = localRoleDto.ToEntity(createSystemRole);
 
             await unitOfWork.LocalRoles.AddAsync(localRoleEntity);
             await unitOfWork.CommitAsync();
