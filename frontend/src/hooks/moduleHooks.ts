@@ -75,9 +75,8 @@ export function useCreateModules() {
 export function useGetModule() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [module, setModule] = useState<Module>();
 
-    const getModuleQuery = async (moduleId: number, accessToken: string) => {
+    const getModuleQuery = async (userId: number, courseId: number, moduleId: number, accessToken: string) => {
         try {
             setLoading(true);
 
@@ -85,7 +84,7 @@ export function useGetModule() {
                 throw new AxiosError('Пользователь не авторизован');
             }
 
-            const response = (await axiosInstance.get<IValueResponse<Module>>(`${MODULE_ENDPOINTS_URL}get?moduleId=${moduleId}`, {
+            const response = (await axiosInstance.get<IValueResponse<Module>>(`${MODULE_ENDPOINTS_URL}get?userId=${userId}&courseId=${courseId}&moduleId=${moduleId}`, {
                 headers: {
                     Authorization: 'Bearer ' + accessToken
                 }
@@ -96,7 +95,7 @@ export function useGetModule() {
             }
 
             setLoading(false);
-            setModule(response.data.value);
+            return response.data.value;
         }
         catch (err: unknown) {
             setLoading(false);
@@ -109,7 +108,7 @@ export function useGetModule() {
         setLoading(false);
     }
 
-    return { getModuleQuery, module, loading, error, resetValues };
+    return { getModuleQuery, loading, error, resetValues };
 }
 
 export function useUpdateModule() {

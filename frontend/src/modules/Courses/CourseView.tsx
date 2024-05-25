@@ -10,7 +10,6 @@ import { useHistoryNavigation } from "../../hooks/historyNavigation";
 import CourseEditModal from "./CourseEditModal";
 import CourseDeleteModal from "./CourseDeleteModal";
 import { paths } from "../../models/paths";
-import { useNavigate } from "react-router-dom";
 
 interface ICourseViewProps {
     course: Course;

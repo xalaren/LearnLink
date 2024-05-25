@@ -20,7 +20,7 @@ interface ICourseUpdateModalProps {
 }
 
 function CourseEditModal({ active, onClose }: ICourseUpdateModalProps) {
-    const { course, signalUpdate } = useContext(CourseContext);
+    const { course, fetchCourse } = useContext(CourseContext);
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -42,7 +42,7 @@ function CourseEditModal({ active, onClose }: ICourseUpdateModalProps) {
     }, [user])
 
     function closeModal() {
-        signalUpdate();
+        fetchCourse();
         resetValues();
         onClose();
     }

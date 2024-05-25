@@ -1,12 +1,7 @@
-import { useParams } from "react-router-dom";
 import { MainContainer } from "../components/MainContainer";
 import { useContext, useEffect, useState } from "react";
-import { useHistoryNavigation } from "../hooks/historyNavigation";
 import { useAppSelector } from "../hooks/redux";
-import { useGetCourse, useGetCreatorStatus, useGetSubscriberStatus } from "../hooks/courseHooks";
-import { Course } from "../models/course";
-import { ErrorModal } from "../components/Modal/ErrorModal";
-import { Loader } from "../components/Loader/Loader";
+import { useGetCreatorStatus, useGetSubscriberStatus } from "../hooks/courseHooks";
 import CourseView from "../modules/Courses/CourseView";
 import { useSubscription } from "../hooks/subscriptionHooks";
 import BreadcrumbContainer from "../components/Breadcrumb/Breadcrumb";
@@ -16,17 +11,13 @@ import { ViewTypes } from "../models/enums";
 import { CourseContext } from "../contexts/CourseContext";
 
 function CoursePage() {
-    // const param = useParams<'courseId'>();
-
     const { user } = useAppSelector(state => state.userReducer);
     const { accessToken } = useAppSelector(state => state.authReducer);
-    const { course, fetchCourse, signalUpdate } = useContext(CourseContext);
+    const { course, fetchCourse } = useContext(CourseContext);
 
-    // const [course, setCourse] = useState<Course>();
     const [subscriberStatus, setSubscriberStatus] = useState(false);
     const [creatorStatus, setCreatorStatus] = useState(false);
 
-    // const courseHook = useGetCourse();
     const subscribeHook = useSubscription();
     const getSubscriberStatusHook = useGetSubscriberStatus();
     const getCreatorStatusHook = useGetCreatorStatus();
@@ -37,12 +28,6 @@ function CoursePage() {
     useEffect(() => {
         fetchUserStatus();
     }, [user])
-
-
-    async function fetchData() {
-        await fetchUserStatus();
-
-    }
 
     async function fetchUserStatus() {
         if (!user || !accessToken || !course) {
@@ -67,7 +52,7 @@ function CoursePage() {
         }
 
         await fetchUserStatus();
-        signalUpdate();
+        await fetchCourse();
     }
 
     async function onUnsubscribe() {
@@ -76,7 +61,7 @@ function CoursePage() {
         }
 
         await fetchUserStatus();
-        signalUpdate();
+        await fetchCourse();
     }
 
 

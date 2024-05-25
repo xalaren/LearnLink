@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Checkbox from "../../components/Checkbox";
 import PopupLoader from "../../components/Loader/PopupLoader";
 import { Modal } from "../../components/Modal/Modal";
@@ -12,6 +12,7 @@ import { useHistoryNavigation } from "../../hooks/historyNavigation";
 import { useAppSelector } from "../../hooks/redux";
 import { NotificationType, ViewTypes } from "../../models/enums";
 import { paths } from "../../models/paths";
+import { CourseContext } from "../../contexts/CourseContext";
 
 interface ICourseDeleteModalProps {
     active: boolean;
@@ -28,6 +29,8 @@ function CourseDeleteModal({ active, courseId, onClose }: ICourseDeleteModalProp
     const { accessToken } = useAppSelector(state => state.authReducer);
     const { toNext } = useHistoryNavigation();
 
+    const { fetchCourse } = useContext(CourseContext);
+
     const removeCourseHook = useRemoveCourse();
     const hideCourseHook = useHideCourse();
 
@@ -35,6 +38,7 @@ function CourseDeleteModal({ active, courseId, onClose }: ICourseDeleteModalProp
 
     function closeModal() {
         resetDefault();
+        fetchCourse();
         onClose();
     }
 
@@ -74,28 +78,30 @@ function CourseDeleteModal({ active, courseId, onClose }: ICourseDeleteModalProp
 
     return (
         <>
-            <Modal
-                active={active && !removeCourseHook.success}
-                title="Подтвердите действие"
-                onClose={onClose}>
+            {!error && !hideCourseHook.success && !hideCourseHook.loading && !removeCourseHook.success && !removeCourseHook.loading &&
+                <Modal
+                    active={active && !removeCourseHook.success}
+                    title="Подтвердите действие"
+                    onClose={onClose}>
 
-                <ModalContent className="indented">
-                    {isSubmitted && !isConfirmed &&
-                        <p className="error-text required">Вы не подтвердили действие</p>
-                    }
-                    <Checkbox
-                        checkedChanger={() => { setConfirmed(prev => !prev) }}
-                        isChecked={isConfirmed}
-                        labelClassName="ui-text"
-                        label="Вы подтверждаете удаление курсов? Это повлечет удаление всех модулей, уроков, а также прогрессов, сделанных участниками этого курса.Рекомендуем скрыть курс вместо полного удаления!" />
-                </ModalContent>
+                    <ModalContent className="indented">
+                        {isSubmitted && !isConfirmed &&
+                            <p className="error-text required">Вы не подтвердили действие</p>
+                        }
+                        <Checkbox
+                            checkedChanger={() => { setConfirmed(prev => !prev) }}
+                            isChecked={isConfirmed}
+                            labelClassName="ui-text"
+                            label="Вы подтверждаете удаление курсов? Это повлечет удаление всех модулей, уроков, а также прогрессов, сделанных участниками этого курса.Рекомендуем скрыть курс вместо полного удаления!" />
+                    </ModalContent>
 
-                <ModalFooter>
-                    <ModalButton text="Скрыть курс" onClick={onHideSubmit} />
-                    <ModalButton className="button-danger-light" text="Удалить курс" onClick={onDeleteSubmit} />
-                </ModalFooter>
+                    <ModalFooter>
+                        <ModalButton text="Скрыть курс" onClick={onHideSubmit} />
+                        <ModalButton className="button-danger-light" text="Удалить курс" onClick={onDeleteSubmit} />
+                    </ModalFooter>
 
-            </Modal>
+                </Modal>
+            }
 
             {removeCourseHook.loading || hideCourseHook.loading &&
                 <PopupLoader />
@@ -113,7 +119,7 @@ function CourseDeleteModal({ active, courseId, onClose }: ICourseDeleteModalProp
             }
 
             {hideCourseHook.success &&
-                <PopupNotification notificationType={NotificationType.success} onFade={resetDefault}>
+                <PopupNotification notificationType={NotificationType.success} onFade={closeModal}>
                     {hideCourseHook.success}
                 </PopupNotification>
             }

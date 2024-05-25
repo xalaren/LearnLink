@@ -25,8 +25,12 @@ export const paths = {
             full: (courseId: string | number) => `/course/${courseId}/roles`
         },
         module: {
-            base: '/module',
-            view: (courseId: number, moduleId: number | string) => `/course/${courseId}/module/${moduleId}`
+            base: (moduleId: number | string) => `module/${moduleId}/`,
+            full: (courseId: number | string, moduleId: number | string) => `/course/${courseId}/module/${moduleId}`,
+            view: {
+                base: 'view',
+                full: (courseId: string | number, moduleId: string | number) => `/course/${courseId}/module/${moduleId}/view`
+            }
         }
     }
 }
