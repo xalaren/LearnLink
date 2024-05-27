@@ -3,7 +3,7 @@ import { Module } from "../models/module";
 import { AxiosError } from "axios";
 import axiosInstance from "../axios_config/axiosConfig";
 import { MODULE_ENDPOINTS_URL } from "../models/constants";
-import { IValueResponse, VoidResponse } from "../models/response";
+import { ValueResponse, VoidResponse } from "../models/response";
 
 export function useGetCourseModules() {
     const [error, setError] = useState('');
@@ -12,7 +12,7 @@ export function useGetCourseModules() {
     const getModulesQuery = async (courseId: number, userId: number = 0) => {
         try {
             setLoading(true);
-            const response = await axiosInstance.get<IValueResponse<Module[]>>(`${MODULE_ENDPOINTS_URL}get/atCourse?userId=${userId}&courseId=${courseId}`);
+            const response = await axiosInstance.get<ValueResponse<Module[]>>(`${MODULE_ENDPOINTS_URL}get/atCourse?userId=${userId}&courseId=${courseId}`);
 
             if (!response.data.success) {
                 throw new AxiosError(response.data.message);
@@ -84,7 +84,7 @@ export function useGetModule() {
                 throw new AxiosError('Пользователь не авторизован');
             }
 
-            const response = (await axiosInstance.get<IValueResponse<Module>>(`${MODULE_ENDPOINTS_URL}get?userId=${userId}&courseId=${courseId}&moduleId=${moduleId}`, {
+            const response = (await axiosInstance.get<ValueResponse<Module>>(`${MODULE_ENDPOINTS_URL}get?userId=${userId}&courseId=${courseId}&moduleId=${moduleId}`, {
                 headers: {
                     Authorization: 'Bearer ' + accessToken
                 }

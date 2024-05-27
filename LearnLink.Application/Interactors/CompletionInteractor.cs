@@ -234,5 +234,107 @@ namespace LearnLink.Application.Interactors
 
             await unitOfWork.LessonCompletions.AddAsync(lessonCompletion);
         }
+
+        public async Task<Response> ChangeLessonCompleted(int userId, int courseId, int moduleId, int lessonId, bool completed)
+        {
+            try
+            {
+                var lessonCompletion = await unitOfWork.LessonCompletions.FirstOrDefaultAsync(completion =>
+                    completion.UserId == userId &&
+                    completion.LessonId == lessonId);
+
+                NotFoundException.ThrowIfNull(lessonCompletion, "Прогресс урока не найден");
+
+                lessonCompletion.Completed = completed;
+                unitOfWork.LessonCompletions.Update(lessonCompletion);
+                await unitOfWork.CommitAsync();
+
+                await RefreshModuleCompletionByLessonCompletions(userId, moduleId);
+                await RefreshCourseCompletionByModuleCompletions(userId, courseId);
+
+                return new()
+                {
+                    Success = true,
+                    Message = $"Прогресс урока успешно записан",
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    StatusCode = exception.StatusCode,
+                    Message = exception.Message
+                };
+            }
+            catch (Exception exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    StatusCode = 500,
+                    Message = "Не удалось пройти урок",
+                    InnerErrorMessages = [exception.Message]
+                };
+            }
+        }
+
+        public async Task RefreshModuleCompletionByLessonCompletions(int userId, int moduleId)
+        {
+            var moduleCompletion = await unitOfWork.ModuleCompletions.FirstOrDefaultAsync(completion =>
+                completion.UserId == userId &&
+                completion.ModuleId == moduleId);
+
+            NotFoundException.ThrowIfNull(moduleCompletion, "Прогресс модуля не найден");
+
+            var lessonCompletions = await unitOfWork.LessonCompletions.Where(completion =>
+                    completion.UserId == userId &&
+                    completion.ModuleId == moduleId)
+                .ToArrayAsync();
+
+            int maxCount = lessonCompletions.Length;
+
+            int completedCount = lessonCompletions.Count(completion => completion.Completed);
+
+            if (maxCount == 0) return;
+
+            int increment = (int)Math.Round((double)(Completion.MAX_COMPLETION_VALUE / maxCount), 0);
+
+            moduleCompletion.CompletionProgress = maxCount == completedCount
+                ? Completion.MAX_COMPLETION_VALUE
+                : completedCount * increment;
+
+            unitOfWork.ModuleCompletions.Update(moduleCompletion);
+            await unitOfWork.CommitAsync();
+        }
+
+        public async Task RefreshCourseCompletionByModuleCompletions(int userId, int courseId)
+        {
+            var courseCompletion = await unitOfWork.CourseCompletions.FirstOrDefaultAsync(completion =>
+                completion.UserId == userId &&
+                completion.CourseId == courseId);
+
+            NotFoundException.ThrowIfNull(courseCompletion, "Прогресс курса не найден");
+
+            var moduleCompletions = await unitOfWork.ModuleCompletions.Where(completion =>
+                    completion.UserId == userId &&
+                    completion.CourseId == courseId)
+                .ToArrayAsync();
+
+            int maxCount = moduleCompletions.Length;
+
+            int completedCount = moduleCompletions.Count(completion => completion.Completed);
+
+            if (maxCount == 0) return;
+
+            int increment = (int)Math.Round((double)(Completion.MAX_COMPLETION_VALUE / maxCount), 0);
+
+            courseCompletion.CompletionProgress = maxCount == completedCount
+                ? Completion.MAX_COMPLETION_VALUE
+                : completedCount * increment;
+
+            unitOfWork.CourseCompletions.Update(courseCompletion);
+            await unitOfWork.CommitAsync();
+        }
     }
 }

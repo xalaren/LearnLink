@@ -1,47 +1,35 @@
-import { useContext, useEffect, useState } from "react";
-import { CourseContext } from "../../contexts/CourseContext";
-import { ModuleContext } from "../../contexts/ModuleContext";
-import { useAppSelector } from "../../hooks/redux";
-import { validate } from "../../helpers/validation";
-import { Modal } from "../../components/Modal/Modal";
-import ModalContent from "../../components/Modal/ModalContent";
+import { useEffect, useState } from "react";
 import { Input } from "../../components/Input";
-import { InputType, NotificationType } from "../../models/enums";
-import ModalFooter from "../../components/Modal/ModalFooter";
-import ModalButton from "../../components/Modal/ModalButton";
 import PopupLoader from "../../components/Loader/PopupLoader";
+import { Modal } from "../../components/Modal/Modal";
+import ModalButton from "../../components/Modal/ModalButton";
+import ModalContent from "../../components/Modal/ModalContent";
+import ModalFooter from "../../components/Modal/ModalFooter";
 import PopupNotification from "../../components/PopupNotification";
-import { useUpdateModule } from "../../hooks/moduleHooks";
+import { validate } from "../../helpers/validation";
+import { InputType, NotificationType } from "../../models/enums";
+import { useAppSelector } from "../../hooks/redux";
+import { useCreateLesson } from "../../hooks/lessonHook";
 
-interface IModuleEditModalProps {
+interface ILessonCreateModalProps {
+    courseId: number;
+    moduleId: number;
     active: boolean;
     onClose: () => void;
+
 }
 
-function ModuleEditModal({ active, onClose }: IModuleEditModalProps) {
-    const { course } = useContext(CourseContext);
-    const { module, fetchModule } = useContext(ModuleContext);
-
+function ModuleCreateModal({ courseId, moduleId, active, onClose }: ILessonCreateModalProps) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [titleError, setTitleError] = useState('');
 
-    const { accessToken } = useAppSelector(state => state.authReducer);
     const { user } = useAppSelector(state => state.userReducer);
-    const { updateModuleQuery, loading, error, success, resetValues } = useUpdateModule();
+    const { accessToken } = useAppSelector(state => state.authReducer);
+    const { createLessonQuery, success, error, loading, resetValues } = useCreateLesson();
 
     useEffect(() => {
-        if (module) {
-            setTitle(module.title);
-            setDescription(module.description || '');
-        }
-    }, [user])
-
-    function closeModal() {
-        fetchModule();
-        resetValues();
-        onClose();
-    }
+    }, [accessToken]);
 
     function onChange(event: React.ChangeEvent) {
         const inputElement = event.target as HTMLInputElement;
@@ -57,7 +45,7 @@ function ModuleEditModal({ active, onClose }: IModuleEditModalProps) {
         }
     }
 
-    async function updateModule() {
+    async function createModule() {
         let isValidated = true;
 
         if (!validate(title)) {
@@ -65,20 +53,30 @@ function ModuleEditModal({ active, onClose }: IModuleEditModalProps) {
             isValidated = false;
         }
 
-        if (isValidated && user && accessToken && course && module) {
-            const newModule = { ...module, title, description };
-
-            await updateModuleQuery(newModule, course.id, user.id, accessToken);
+        if (isValidated && user && accessToken) {
+            await createLessonQuery(user.id, courseId, moduleId, title, accessToken, description);
         }
+    }
+
+    function resetDefault() {
+        resetValues();
+        setTitle('');
+        setDescription('');
+        setTitleError('');
+    }
+
+    function closeModal() {
+        resetDefault();
+        onClose();
     }
 
     return (
         <>
-            {!error && !loading && !success &&
+            {!loading && !error && !success &&
                 <Modal
                     active={active}
                     onClose={closeModal}
-                    title="Редактирование модуля">
+                    title="Создание урока">
 
                     <ModalContent>
                         <form className="form">
@@ -86,18 +84,18 @@ function ModuleEditModal({ active, onClose }: IModuleEditModalProps) {
                                 <Input
                                     type={InputType.text}
                                     name="title"
-                                    label="Название модуля"
+                                    label="Название урока"
                                     placeholder="Введите название..."
                                     errorMessage={titleError}
+                                    required={true}
                                     value={title}
                                     onChange={onChange}
-                                    required={true}
                                 />
 
                                 <Input
                                     type={InputType.rich}
                                     name="description"
-                                    label="Описание модуля"
+                                    label="Описание урока"
                                     placeholder="Введите описание (необязательно)..."
                                     value={description}
                                     onChange={onChange}
@@ -107,7 +105,7 @@ function ModuleEditModal({ active, onClose }: IModuleEditModalProps) {
                     </ModalContent>
 
                     <ModalFooter>
-                        <ModalButton text="Сохранить" onClick={updateModule} />
+                        <ModalButton text="Сохранить" onClick={createModule} />
                     </ModalFooter>
 
                 </Modal >
@@ -130,7 +128,6 @@ function ModuleEditModal({ active, onClose }: IModuleEditModalProps) {
             }
         </>
     );
-
 }
 
-export default ModuleEditModal;
+export default ModuleCreateModal;

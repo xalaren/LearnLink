@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { MainContainer } from "../components/MainContainer";
 import { CourseContext } from "../contexts/CourseContext";
 import { ModuleContext } from "../contexts/ModuleContext";
@@ -11,11 +11,16 @@ import { Module } from "../models/module";
 import ModuleView from "../modules/Modules/ModuleView";
 
 function ModulePage() {
-    const { course } = useContext(CourseContext);
-    const { module } = useContext(ModuleContext);
+    const { course, fetchCourse } = useContext(CourseContext);
+    const { module, fetchModule } = useContext(ModuleContext);
 
     const [updateModalActive, setUpdateModalActive] = useState(false);
     const [deleteModalActive, setDeleteModalActive] = useState(false);
+
+    async function update() {
+        await fetchModule();
+        await fetchCourse();
+    }
 
     return (
         <MainContainer className="view-page">
@@ -38,6 +43,7 @@ function ModulePage() {
                             setUpdateModalActive={setUpdateModalActive}
                             deleteModalActive={deleteModalActive}
                             setDeleteModalActive={setDeleteModalActive}
+                            updateSignal={update}
                         />
                     </>
                 }

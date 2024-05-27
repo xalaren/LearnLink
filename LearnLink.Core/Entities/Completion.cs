@@ -7,6 +7,8 @@ namespace LearnLink.Core.Entities
         private int completionProgress = 0;
         private bool completed = false;
 
+        public const int MAX_COMPLETION_VALUE = 100;
+
         public bool Completed
         {
             get => completed;
@@ -15,7 +17,7 @@ namespace LearnLink.Core.Entities
                 completed = value;
                 if (completed)
                 {
-                    completionProgress = 100;
+                    completionProgress = MAX_COMPLETION_VALUE;
                 }
             }
         }
@@ -25,19 +27,14 @@ namespace LearnLink.Core.Entities
             get => completionProgress;
             set
             {
-                if (value < 0 || value > 100)
+                if (value < 0 || value > MAX_COMPLETION_VALUE)
                 {
                     throw new ValidationException("Процент прохождения был вне допустимого диапазона");
                 }
 
-                if (value == 100)
-                {
-                    Completed = true;
-                }
-                else
-                {
-                    Completed = false;
-                }
+                completionProgress = value;
+                
+                Completed = value == MAX_COMPLETION_VALUE;
             }
         }
     }

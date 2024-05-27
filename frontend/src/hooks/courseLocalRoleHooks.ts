@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axiosInstance from "../axios_config/axiosConfig";
 import { COURSE_LOCAL_ROLE_ENDPOINTS_URL } from "../models/constants";
-import { IValueResponse, VoidResponse } from "../models/response";
+import { ValueResponse, VoidResponse } from "../models/response";
 import { LocalRole } from "../models/localRole";
 import { AxiosError } from "axios";
 
@@ -12,7 +12,7 @@ export function useListAllLocalRolesAtCourse() {
     const listLocalRolesQuery = async (courseId: number, accessToken: string) => {
         try {
             setLoading(true);
-            const response = await axiosInstance.get<IValueResponse<LocalRole[]>>(
+            const response = await axiosInstance.get<ValueResponse<LocalRole[]>>(
                 `${COURSE_LOCAL_ROLE_ENDPOINTS_URL}get/atCourse?courseId=${courseId}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`

@@ -13,7 +13,7 @@ import { CourseContext } from "../contexts/CourseContext";
 function CoursePage() {
     const { user } = useAppSelector(state => state.userReducer);
     const { accessToken } = useAppSelector(state => state.authReducer);
-    const { course, fetchCourse } = useContext(CourseContext);
+    const { course, fetchCourse, signalUpdate } = useContext(CourseContext);
 
     const [subscriberStatus, setSubscriberStatus] = useState(false);
     const [creatorStatus, setCreatorStatus] = useState(false);
@@ -72,7 +72,7 @@ function CoursePage() {
                 <>
                     <BreadcrumbContainer>
                         <BreadcrumbItem text="В начало" path={paths.public()} />
-                        {!course.isPublic &&
+                        {course.localRole?.viewAccess &&
                             <BreadcrumbItem text="Мои курсы" path={paths.profile.courses(ViewTypes.created)} />
                         }
                         <BreadcrumbItem text={course.title} />

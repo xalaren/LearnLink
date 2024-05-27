@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Course } from "../../models/course";
 import { useAppSelector } from "../../hooks/redux";
 import { Module } from "../../models/module";
-import ItemLink from "../../components/ItemLink";
+import ItemLink from "../../components/ItemLink/ItemLink";
 import ContentList from "../../components/ContentList/ContentList";
 import { useGetCourseModules } from "../../hooks/moduleHooks";
 import { Loader } from "../../components/Loader/Loader";
@@ -10,6 +10,7 @@ import { ErrorModal } from "../../components/Modal/ErrorModal";
 import { useHistoryNavigation } from "../../hooks/historyNavigation";
 import { paths } from "../../models/paths";
 import ModuleCreateModal from "./ModuleCreateModal";
+import ControlItemLink from "../../components/ItemLink/ControlItemLink";
 
 interface IModuleListProps {
     course: Course;
@@ -75,15 +76,18 @@ function BuildedModulesList(props: {
     return (
         <>
             {props.modules && props.modules.length > 0 ?
-                props.modules.map(module =>
-                    <ItemLink
-                        title={module.title}
-                        checked={module.completed}
-                        onClick={() => toNext(paths.course.module.view.full(props.courseId, module.id))}
-                        iconClassName="icon-module icon-medium-size"
-                        className="content-list__item"
-                        key={module.id}
-                    />) :
+                <>{
+                    props.modules.map(module =>
+                        <ItemLink
+                            title={module.title}
+                            checked={module.completed}
+                            onClick={() => toNext(paths.course.module.view.full(props.courseId, module.id))}
+                            iconClassName="icon-module icon-medium-size"
+                            className="content-list__item"
+                            key={module.id}
+                        />)}
+                </>
+                :
                 <p>Нет доступных модулей</p>
             }
         </>

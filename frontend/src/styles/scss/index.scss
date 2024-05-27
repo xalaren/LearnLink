@@ -767,6 +767,17 @@
     }
 }
 
+.control-item-link {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    align-items: center;
+
+    .item-link {
+        width: 100%;
+    }
+}
+
 .link-light-violet {
     color: $lightViolet;
     transition: 0.3s ease-in-out;
@@ -912,6 +923,11 @@
             }
         }
     }
+}
+
+.checkbox-rounded {
+    @extend .checkbox;
+    border-radius: 15px;
 }
 
 .user-item {

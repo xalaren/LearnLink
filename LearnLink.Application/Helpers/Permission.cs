@@ -1,6 +1,16 @@
-﻿namespace LearnLink.Application.Helpers;
+﻿using LearnLink.Core.Exceptions;
 
-public class Permission
+namespace LearnLink.Application.Helpers;
+
+public class Permission(bool accessGranted)
 {
-    
+    public bool AccessGranted { get; } = accessGranted;
+
+    public void ThrowExceptionIfAccessNotGranted(string message = "Доступ отклонен")
+    {
+        if (!AccessGranted)
+        {
+            throw new AccessLevelException(message);
+        }
+    }
 }

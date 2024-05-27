@@ -20,5 +20,17 @@ namespace LearnLink.Application.Mappers
                 CompletionProgress: lessonCompletionEntity.CompletionProgress
             );
         }
+        
+        public static ClientLessonDto ToClientDto(this LessonCompletion lessonCompletion)
+        {
+            return new ClientLessonDto()
+            {
+                Id = lessonCompletion.Lesson.Id,
+                Title = lessonCompletion.Lesson.Title,
+                Description = lessonCompletion.Lesson.Description,
+                Completed = lessonCompletion.Completed,
+                CompletionProgress = lessonCompletion.CompletionProgress
+            };
+        }
     }
 }

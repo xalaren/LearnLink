@@ -1,18 +1,12 @@
-﻿using LearnLink.Application.Transaction;
+﻿using LearnLink.Application.Helpers;
+using LearnLink.Application.Transaction;
 using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Interactors
 {
-    public class PermissionService
+    public class PermissionService(IUnitOfWork unitOfWork)
     {
-        private readonly IUnitOfWork unitOfWork;
-
-        public PermissionService(IUnitOfWork unitOfWork)
-        {
-            this.unitOfWork = unitOfWork;
-        }
-
-        public async Task<bool> GetPermissionAsync(int userId, int courseId, 
+        public async Task<Permission> GetPermissionAsync(int userId, int courseId, 
             bool toView = false, 
             bool toEdit = false, 
             bool toRemove = false, 
@@ -24,7 +18,7 @@ namespace LearnLink.Application.Interactors
 
             if (user == null)
             {
-                return false;
+                return new Permission(false);
             }
 
             await unitOfWork.Users.Entry(user)
@@ -33,25 +27,30 @@ namespace LearnLink.Application.Interactors
 
             if (user.Role.IsAdmin)
             {
-                return true;
+                return new Permission(true);
             }
 
             var userCourseRole = await unitOfWork.UserCourseLocalRoles
-                .Include(u => u.LocalRole)
                 .FirstOrDefaultAsync(u => u.UserId == userId && u.CourseId == courseId);
+            
 
             if (userCourseRole == null)
             {
-                return false;
+                return new Permission(false);
             }
 
-            return
-                (userCourseRole.LocalRole.ViewAccess && toView) ||
-                (userCourseRole.LocalRole.EditAcess && toEdit) ||
-                (userCourseRole.LocalRole.RemoveAccess && toRemove) ||
-                (userCourseRole.LocalRole.ManageInternalAccess && toManageInternal) ||
-                (userCourseRole.LocalRole.InviteAccess && toInvite) ||
-                (userCourseRole.LocalRole.KickAccess && toKick);
+            await unitOfWork.UserCourseLocalRoles.Entry(userCourseRole)
+                .Reference(role => role.LocalRole)
+                .LoadAsync();
+            
+            bool access = (userCourseRole.LocalRole.ViewAccess && toView) ||
+                          (userCourseRole.LocalRole.EditAcess && toEdit) ||
+                          (userCourseRole.LocalRole.RemoveAccess && toRemove) ||
+                          (userCourseRole.LocalRole.ManageInternalAccess && toManageInternal) ||
+                          (userCourseRole.LocalRole.InviteAccess && toInvite) ||
+                          (userCourseRole.LocalRole.KickAccess && toKick);
+
+            return new Permission(access);
         }
     }
 }

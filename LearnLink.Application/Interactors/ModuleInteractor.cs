@@ -8,7 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Interactors
 {
-    public class ModuleInteractor(IUnitOfWork unitOfWork, LessonInteractor lessonInteractor)
+    public class ModuleInteractor(
+        IUnitOfWork unitOfWork,
+        CompletionInteractor completionInteractor,
+        LessonInteractor lessonInteractor,
+        PermissionService permissionService)
     {
         public async Task<Response> CreateModuleAsync(int courseId, ModuleDto moduleDto)
         {
@@ -37,7 +41,9 @@ namespace LearnLink.Application.Interactors
                 await unitOfWork.Modules.AddAsync(moduleEntity);
                 await unitOfWork.CourseModules.AddAsync(courseModule);
 
-                var courseCompletions = unitOfWork.CourseCompletions.Where(courseCompletion => courseCompletion.CourseId == courseId).Include(courseCompletion => courseCompletion.User);
+                var courseCompletions = unitOfWork.CourseCompletions
+                    .Where(courseCompletion => courseCompletion.CourseId == courseId)
+                    .Include(courseCompletion => courseCompletion.User);
 
                 if (courseCompletions.Count() > 0)
                 {
@@ -49,7 +55,6 @@ namespace LearnLink.Application.Interactors
                         Completed = false,
                         CompletionProgress = 0,
                     });
-
                     await unitOfWork.ModuleCompletions.AddRangeAsync(moduleCompletions);
                 }
 
@@ -116,7 +121,8 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                var module = await unitOfWork.Modules.AsNoTracking().FirstOrDefaultAsync(module => module.Id == moduleId);
+                var module = await unitOfWork.Modules.AsNoTracking()
+                    .FirstOrDefaultAsync(module => module.Id == moduleId);
 
                 if (module == null)
                 {
@@ -253,13 +259,6 @@ namespace LearnLink.Application.Interactors
                     };
                 }
 
-                var user = await unitOfWork.Users.FirstOrDefaultAsync(user => user.Id == userId);
-
-                if (user == null)
-                {
-                    throw new NotFoundException("Пользователь не найден");
-                }
-
                 var moduleCompletions = unitOfWork.ModuleCompletions
                     .Where(mc => mc.UserId == userId && mc.CourseId == courseId)
                     .Include(mc => mc.Module);
@@ -298,34 +297,11 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                var userCourseLocalRole = await unitOfWork.UserCourseLocalRoles.FirstOrDefaultAsync(role =>
-                    role.CourseId == courseId &&
-                    role.UserId == userId);
+                (await permissionService.GetPermissionAsync(userId, courseId, toView: true))
+                    .ThrowExceptionIfAccessNotGranted();
 
-                if (userCourseLocalRole == null)
-                {
-                    throw new NotFoundException("Локальная роль пользователя не найдена");
-                }
-
-                await unitOfWork.UserCourseLocalRoles.Entry(userCourseLocalRole)
-                    .Reference(role => role.LocalRole)
-                    .LoadAsync();
-
-                await unitOfWork.UserCourseLocalRoles.Entry(userCourseLocalRole)
-                    .Reference(role => role.Course)
-                    .LoadAsync();
-
-                if (userCourseLocalRole.Course.IsUnavailable)
-                {
-                    throw new AccessLevelException("Курс является недоступным");
-                }
-
-                if (!userCourseLocalRole.LocalRole.ViewAccess)
-                {
-                    throw new AccessLevelException("Вы не можете просматривать модуль");
-                }
-
-                var module = await unitOfWork.Modules.AsNoTracking().FirstOrDefaultAsync(module => module.Id == moduleId);
+                var module = await unitOfWork.Modules.AsNoTracking()
+                    .FirstOrDefaultAsync(module => module.Id == moduleId);
 
                 if (module == null)
                 {
@@ -367,25 +343,12 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                var userCourseLocalRole = await unitOfWork.UserCourseLocalRoles.FirstOrDefaultAsync(role =>
-                    role.UserId == userId &&
-                    role.CourseId == courseId);
+                (await permissionService.GetPermissionAsync(userId, courseId, toManageInternal: true))
+                    .ThrowExceptionIfAccessNotGranted("Вы не можете изменять материалы курса");
 
-                if (userCourseLocalRole == null)
-                {
-                    throw new NotFoundException("Локальная роль пользователя не найдена");
-                }
-
-                await unitOfWork.UserCourseLocalRoles.Entry(userCourseLocalRole)
-                    .Reference(role => role.LocalRole)
-                    .LoadAsync();
-
-                if (!userCourseLocalRole.LocalRole.ManageInternalAccess)
-                {
-                    throw new AccessLevelException("Вы не можете изменять материалы курса");
-                }
-
-                return await CreateModuleAsync(courseId, moduleDto);
+                var result = await CreateModuleAsync(courseId, moduleDto);
+                await completionInteractor.RefreshCourseCompletionByModuleCompletions(userId, courseId);
+                return result;
             }
             catch (CustomException exception)
             {
@@ -410,24 +373,7 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                var userCourseLocalRole = await unitOfWork.UserCourseLocalRoles.FirstOrDefaultAsync(role =>
-                    role.UserId == userId &&
-                    role.CourseId == courseId);
-
-                if (userCourseLocalRole == null)
-                {
-                    throw new NotFoundException("Локальная роль пользователя не найдена");
-                }
-
-                await unitOfWork.UserCourseLocalRoles.Entry(userCourseLocalRole)
-                    .Reference(role => role.LocalRole)
-                    .LoadAsync();
-
-                if (!userCourseLocalRole.LocalRole.ManageInternalAccess)
-                {
-                    throw new AccessLevelException("Вы не можете изменять материалы курса");
-                }
-
+                (await permissionService.GetPermissionAsync(userId, courseId, toManageInternal: true)).ThrowExceptionIfAccessNotGranted();
                 return await UpdateModuleAsync(moduleDto);
             }
             catch (CustomException exception)
@@ -453,24 +399,7 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                var userCourseLocalRole = await unitOfWork.UserCourseLocalRoles.FirstOrDefaultAsync(role =>
-                    role.UserId == userId &&
-                    role.CourseId == courseId);
-
-                if (userCourseLocalRole == null)
-                {
-                    throw new NotFoundException("Локальная роль пользователя не найдена");
-                }
-
-                await unitOfWork.UserCourseLocalRoles.Entry(userCourseLocalRole)
-                    .Reference(role => role.LocalRole)
-                    .LoadAsync();
-
-                if (!userCourseLocalRole.LocalRole.ManageInternalAccess)
-                {
-                    throw new AccessLevelException("Вы не можете изменять материалы курса");
-                }
-
+                (await permissionService.GetPermissionAsync(userId, courseId, toManageInternal: true)).ThrowExceptionIfAccessNotGranted();
                 return await RemoveModuleAsync(moduleId);
             }
             catch (CustomException exception)
@@ -509,7 +438,8 @@ namespace LearnLink.Application.Interactors
                 await lessonInteractor.RemoveLessonAsyncNoResponse(moduleLesson.LessonId, false);
             }
 
-            var completions = unitOfWork.ModuleCompletions.Where(moduleCompletion => moduleCompletion.ModuleId == moduleId);
+            var completions =
+                unitOfWork.ModuleCompletions.Where(moduleCompletion => moduleCompletion.ModuleId == moduleId);
 
             unitOfWork.Modules.Remove(module);
             unitOfWork.ModuleCompletions.RemoveRange(completions);

@@ -19,8 +19,8 @@ namespace LearnLink.WebApi.Pages.Courses
 
         public async Task OnPost(int userId, string title, string description, string isPublic, string isUnavailable)
         {
-            bool isPublicValue = string.IsNullOrWhiteSpace(isPublic) ? false : true;
-            bool isUnavailableValue = string.IsNullOrWhiteSpace(isUnavailable) ? false : true;
+            bool isPublicValue = !string.IsNullOrWhiteSpace(isPublic);
+            bool isUnavailableValue = !string.IsNullOrWhiteSpace(isUnavailable);
 
             var courseDto = new CourseDto(
                 Id: 0,

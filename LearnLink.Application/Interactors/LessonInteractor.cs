@@ -8,11 +8,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Interactors
 {
-    public class LessonInteractor(IUnitOfWork unitOfWork, SectionInteractor sectionInteractor)
+    public class LessonInteractor(
+        IUnitOfWork unitOfWork,
+        SectionInteractor sectionInteractor,
+        CompletionInteractor completionInteractor,
+        PermissionService permissionService)
     {
-        private readonly IUnitOfWork unitOfWork = unitOfWork;
-        private readonly SectionInteractor sectionInteractor = sectionInteractor;
-
         public async Task<Response<LessonDto[]>> GetAllLessonsAsync()
         {
             try
@@ -30,7 +31,7 @@ namespace LearnLink.Application.Interactors
                     Value = lessons
                 };
             }
-            catch(CustomException exception)
+            catch (CustomException exception)
             {
                 return new()
                 {
@@ -39,7 +40,7 @@ namespace LearnLink.Application.Interactors
                     Message = exception.Message,
                 };
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 return new()
                 {
@@ -47,6 +48,183 @@ namespace LearnLink.Application.Interactors
                     StatusCode = 500,
                     Message = "Не удалось получить уроки",
                     InnerErrorMessages = [exception.Message],
+                };
+            }
+        }
+
+        public async Task<Response<ClientLessonDto[]>> RequestGetModuleLessonsAsync(int userId, int courseId, int moduleId)
+        {
+            try
+            {
+                var viewPermission = await permissionService.GetPermissionAsync(userId, courseId, toView: true);
+                viewPermission.ThrowExceptionIfAccessNotGranted();
+
+                var lessonCompletions = await unitOfWork.LessonCompletions
+                    .Where(completion => completion.UserId == userId && completion.ModuleId == moduleId)
+                    .Include(completion => completion.Lesson)
+                    .OrderBy(completion => completion.LessonId)
+                    .ToArrayAsync();
+
+                var clientLessons = lessonCompletions.Select(completion => completion.ToClientDto()).ToArray();
+
+                return new()
+                {
+                    Success = true,
+                    Message = "Уроки модуля успешно получены",
+                    Value = clientLessons
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    StatusCode = exception.StatusCode,
+                    Message = exception.Message
+                };
+            }
+            catch (Exception exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    StatusCode = 500,
+                    Message = "Не удалось получить уроки модуля",
+                    InnerErrorMessages = [exception.Message]
+                };
+            }
+        }
+
+        public async Task<Response<ClientLessonDto>> RequestGetLessonAsync(int userId, int courseId, int lessonId)
+        {
+            try
+            {
+                (await permissionService.GetPermissionAsync(userId, courseId, toView: true)).ThrowExceptionIfAccessNotGranted();
+
+                var lessonCompletion = await unitOfWork.LessonCompletions.FirstOrDefaultAsync(lessonCompletion =>
+                    lessonCompletion.UserId == userId &&
+                    lessonCompletion.LessonId == lessonId);
+
+                NotFoundException.ThrowIfNull(lessonCompletion, "Урок не найден");
+
+                await unitOfWork.LessonCompletions.Entry(lessonCompletion)
+                    .Reference(completion => completion.Lesson)
+                    .LoadAsync();
+
+                return new()
+                {
+                    Success = true,
+                    Message = "Урок успешно получен",
+                    Value = lessonCompletion.ToClientDto()
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                    StatusCode = exception.StatusCode
+                };
+            }
+            catch (Exception exception)
+            {
+                return new()
+                {
+                    Success = false,
+                    StatusCode = 500,
+                    Message = "Не удалось получить урок",
+                    InnerErrorMessages = [exception.Message]
+                };
+            }
+        }
+
+        public async Task<Response> RequestCreateLessonAsync(int userId, int courseId, int moduleId, LessonDto lessonDto)
+        {
+            try
+            {
+                (await permissionService.GetPermissionAsync(userId, courseId, toManageInternal: true))
+                    .ThrowExceptionIfAccessNotGranted("Вы не можете изменять материалы курса");
+
+                var result = await CreateLessonAsync(courseId, moduleId, lessonDto);
+                await completionInteractor.RefreshCourseCompletionByModuleCompletions(userId, courseId);
+                await completionInteractor.RefreshModuleCompletionByLessonCompletions(userId, moduleId);
+                return result;
+            }
+            catch (CustomException exception)
+            {
+                return new Response()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new Response()
+                {
+                    Success = false,
+                    Message = "Не удалось создать модуль",
+                    InnerErrorMessages = new string[] { exception.Message }
+                };
+            }
+        }
+
+        public async Task<Response> RequestUpdateLessonAsync(int userId, int courseId, LessonDto lessonDto)
+        {
+            try
+            {
+                (await permissionService.GetPermissionAsync(userId, courseId, toManageInternal: true))
+                    .ThrowExceptionIfAccessNotGranted("Вы не можете изменять материалы курса");
+
+                return await UpdateLessonAsync(lessonDto);
+            }
+            catch (CustomException exception)
+            {
+                return new Response()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new Response()
+                {
+                    Success = false,
+                    Message = "Не удалось создать модуль",
+                    InnerErrorMessages = new string[] { exception.Message }
+                };
+            }
+        }
+
+        public async Task<Response> RequestRemoveLessonAsync(int userId, int courseId, int moduleId, int lessonId)
+        {
+            try
+            {
+                (await permissionService.GetPermissionAsync(userId, courseId, toManageInternal: true))
+                    .ThrowExceptionIfAccessNotGranted("Вы не можете изменять материалы курса");
+
+                var result = await RemoveLessonAsync(lessonId);
+                await completionInteractor.RefreshModuleCompletionByLessonCompletions(userId, moduleId);
+                await completionInteractor.RefreshCourseCompletionByModuleCompletions(userId, courseId);
+                return result;
+            }
+            catch (CustomException exception)
+            {
+                return new Response()
+                {
+                    Success = false,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new Response()
+                {
+                    Success = false,
+                    Message = "Не удалось создать модуль",
+                    InnerErrorMessages = new string[] { exception.Message }
                 };
             }
         }
@@ -90,7 +268,7 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                if(string.IsNullOrWhiteSpace(lessonDto.Title))
+                if (string.IsNullOrWhiteSpace(lessonDto.Title))
                 {
                     throw new ValidationException("Название урока не было заполнено");
                 }
@@ -99,7 +277,7 @@ namespace LearnLink.Application.Interactors
 
                 var module = await unitOfWork.Modules.FirstOrDefaultAsync(module => module.Id == moduleId);
 
-                if(module == null)
+                if (module == null)
                 {
                     throw new NotFoundException("Модуль не найден");
                 }
@@ -159,7 +337,7 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public async Task<Response> UpdateLessonAsync(LessonDto lessonDto)      
+        public async Task<Response> UpdateLessonAsync(LessonDto lessonDto)
         {
             try
             {
@@ -256,7 +434,6 @@ namespace LearnLink.Application.Interactors
             unitOfWork.LessonCompletions.RemoveRange(completions);
             unitOfWork.Lessons.Remove(lesson);
         }
-
     }
 
 }

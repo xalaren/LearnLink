@@ -2,7 +2,7 @@ import { AxiosError } from "axios";
 import { USER_ENDPOINTS_URL } from "../models/constants";
 import { useState } from "react";
 import { IAuthModel } from "../models/authModel";
-import { IValueResponse, VoidResponse } from "../models/response";
+import { ValueResponse, VoidResponse } from "../models/response";
 import { User } from "../models/user";
 import axiosInstance from "../axios_config/axiosConfig";
 import { ValueDataPage } from "../models/dataPage";
@@ -12,7 +12,7 @@ export function useLogin() {
 
     const loginQuery = async (nickname: string, password: string): Promise<IAuthModel | undefined> => {
         try {
-            const response = await axiosInstance.post<IValueResponse<string>>(`${USER_ENDPOINTS_URL}login?nickname=${nickname}&password=${password}`);
+            const response = await axiosInstance.post<ValueResponse<string>>(`${USER_ENDPOINTS_URL}login?nickname=${nickname}&password=${password}`);
 
             if (!response.data.success) {
                 throw new AxiosError(response.data.message);
@@ -75,7 +75,7 @@ export function useGetUser() {
 
     const getUserQuery = async (accessToken: string) => {
         try {
-            const response = (await axiosInstance.get<IValueResponse<User>>(`${USER_ENDPOINTS_URL}get`, {
+            const response = (await axiosInstance.get<ValueResponse<User>>(`${USER_ENDPOINTS_URL}get`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -107,7 +107,7 @@ export function useUpdateUserData() {
 
     const updateUserDataQuery = async (user: User, accessToken: string) => {
         try {
-            const response = (await axiosInstance.post<IValueResponse<string>>(`${USER_ENDPOINTS_URL}update/user`, user, {
+            const response = (await axiosInstance.post<ValueResponse<string>>(`${USER_ENDPOINTS_URL}update/user`, user, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${accessToken}`
@@ -207,7 +207,7 @@ export function useFindUsers() {
     const findUsersQuery = async (courseId: number, page: number, size: number, accessToken: string, searchText?: string) => {
         try {
             setLoading(true);
-            const response = (await axiosInstance.get<IValueResponse<ValueDataPage<User[]>>>(`${USER_ENDPOINTS_URL}find/exceptCourseUsers?courseId=${courseId}&searchText=${searchText}&page=${page}&size=${size}&accessToken=${accessToken}`, {
+            const response = (await axiosInstance.get<ValueResponse<ValueDataPage<User[]>>>(`${USER_ENDPOINTS_URL}find/exceptCourseUsers?courseId=${courseId}&searchText=${searchText}&page=${page}&size=${size}&accessToken=${accessToken}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }

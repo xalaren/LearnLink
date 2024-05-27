@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Course } from "../models/course";
 import { AxiosError } from "axios";
-import { IValueResponse, VoidResponse } from "../models/response";
+import { ValueResponse, VoidResponse } from "../models/response";
 import { COURSE_ENDPOINTS_URL } from "../models/constants";
 import axiosInstance from "../axios_config/axiosConfig";
 import { ValueDataPage } from "../models/dataPage";
@@ -17,7 +17,7 @@ export function usePublicCourses() {
         try {
             setLoading(true);
 
-            const response = (await axiosInstance.get<IValueResponse<ValueDataPage<Course[]>>>(`${COURSE_ENDPOINTS_URL}find/public?title=${searchText}&page=${page}&size=${size}`));
+            const response = (await axiosInstance.get<ValueResponse<ValueDataPage<Course[]>>>(`${COURSE_ENDPOINTS_URL}find/public?title=${searchText}&page=${page}&size=${size}`));
 
             if (!response.data.success) {
                 throw new AxiosError(response.data.message!);
@@ -49,7 +49,7 @@ export function useUserCourses() {
         try {
             setLoading(true);
 
-            const response = (await axiosInstance.get<IValueResponse<ValueDataPage<Course[]>>>(`${COURSE_ENDPOINTS_URL}find/user-courses?userId=${userId}&title=${searchText}&findSubscription=${findSubscription}&findUnavailable=${findUnavailable}&page=${page}&size=${size}`, {
+            const response = (await axiosInstance.get<ValueResponse<ValueDataPage<Course[]>>>(`${COURSE_ENDPOINTS_URL}find/user-courses?userId=${userId}&title=${searchText}&findSubscription=${findSubscription}&findUnavailable=${findUnavailable}&page=${page}&size=${size}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -84,7 +84,7 @@ export function useGetCourse() {
         try {
             setLoading(true);
 
-            const response = (await axiosInstance.get<IValueResponse<Course>>(`${COURSE_ENDPOINTS_URL}get/any?userId=${userId}&courseId=${courseId}`));
+            const response = (await axiosInstance.get<ValueResponse<Course>>(`${COURSE_ENDPOINTS_URL}get/any?userId=${userId}&courseId=${courseId}`));
             setLoading(false);
 
             if (!response.data.success) {
@@ -150,7 +150,7 @@ export function useGetSubscriberStatus() {
 
     const getStatusesQuery = async (userId: number, courseId: number, accessToken: string) => {
         try {
-            const subscribedResponse = await axiosInstance.get<IValueResponse<boolean>>(`${COURSE_ENDPOINTS_URL}get/status/subscriber?userId=${userId}&courseId=${courseId}`, {
+            const subscribedResponse = await axiosInstance.get<ValueResponse<boolean>>(`${COURSE_ENDPOINTS_URL}get/status/subscriber?userId=${userId}&courseId=${courseId}`, {
                 headers: {
                     Authorization: 'Bearer ' + accessToken
                 }
@@ -179,7 +179,7 @@ export function useGetCreatorStatus() {
 
     const getStatusesQuery = async (userId: number, courseId: number, accessToken: string) => {
         try {
-            const response = await axiosInstance.get<IValueResponse<boolean>>(`${COURSE_ENDPOINTS_URL}get/status/creator?userId=${userId}&courseId=${courseId}`, {
+            const response = await axiosInstance.get<ValueResponse<boolean>>(`${COURSE_ENDPOINTS_URL}get/status/creator?userId=${userId}&courseId=${courseId}`, {
                 headers: {
                     Authorization: 'Bearer ' + accessToken
                 }
@@ -327,7 +327,7 @@ export function useFindCourseParticipants() {
             setLoading(true);
 
             const response = (await axiosInstance
-                .get<IValueResponse<ValueDataPage<Participant[]>>>(
+                .get<ValueResponse<ValueDataPage<Participant[]>>>(
                     `${COURSE_ENDPOINTS_URL}find/participants?userId=${userId}&courseId=${courseId}&searchText=${searchText}&page=${page}&size=${size}`, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`

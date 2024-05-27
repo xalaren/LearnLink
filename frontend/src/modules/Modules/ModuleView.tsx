@@ -13,6 +13,7 @@ import ModuleEditModal from "./ModuleEditModal";
 interface IModuleViewProps {
     course: Course;
     module: Module;
+    updateSignal: () => void;
     updateModalActive: boolean;
     setUpdateModalActive: (active: boolean) => void;
     deleteModalActive: boolean;
@@ -26,7 +27,8 @@ function ModuleView({
     updateModalActive,
     setUpdateModalActive,
     deleteModalActive,
-    setDeleteModalActive
+    setDeleteModalActive,
+    updateSignal,
 }: IModuleViewProps) {
     return (
         <>
@@ -50,7 +52,7 @@ function ModuleView({
 
 
             <section className="view-page__content content-side">
-                <LessonsList course={course} module={module} />
+                <LessonsList course={course} module={module} updateSignal={updateSignal} />
 
                 <ContentAbout
                     className="content-side__aside"

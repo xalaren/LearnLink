@@ -492,11 +492,7 @@ namespace LearnLink.Application.Interactors
             try
             {
                 var viewPermission = await permissionService.GetPermissionAsync(userId: userId, courseId: courseId, toView: true);
-
-                if (!viewPermission)
-                {
-                    throw new AccessLevelException("Доступ отклонен");
-                }
+                viewPermission.ThrowExceptionIfAccessNotGranted();
 
                 IEnumerable<UserCourseLocalRole> usersQuery = unitOfWork.UserCourseLocalRoles
                     .AsNoTracking()
@@ -515,9 +511,10 @@ namespace LearnLink.Application.Interactors
                         u.LocalRole.Sign.ToLower().Contains(searchText));
                 }
 
-                int total = usersQuery.Count();
+                var userCourseLocalRoles = usersQuery as UserCourseLocalRole[] ?? usersQuery.ToArray();
+                int total = userCourseLocalRoles.Count();
 
-                usersQuery = usersQuery
+                usersQuery = userCourseLocalRoles
                     .OrderBy(u => u.User.Lastname)
                     .ThenBy(u => u.User.Name)
                     .ThenBy(u => u.User.Nickname)
@@ -648,14 +645,10 @@ namespace LearnLink.Application.Interactors
                     throw new NotFoundException("Курс не найден");
 
                 var editPermission = await permissionService.GetPermissionAsync(userId: userId, courseId: courseDto.Id, toEdit: true);
-
-                if (!editPermission)
-                {
-                    throw new AccessLevelException("Доступ отклонен");
-                }
+                editPermission.ThrowExceptionIfAccessNotGranted();
 
                 course = course.Assign(courseDto);
-
+                unitOfWork.Courses.Update(course);
                 await unitOfWork.CommitAsync();
 
                 return new Response()
@@ -692,11 +685,7 @@ namespace LearnLink.Application.Interactors
                     throw new NotFoundException("Курс не найден");
 
                 var editPermission = await permissionService.GetPermissionAsync(userId: userId, courseId: courseId, toEdit: true);
-
-                if (!editPermission)
-                {
-                    throw new AccessLevelException("Доступ отклонен");
-                }
+                editPermission.ThrowExceptionIfAccessNotGranted();
 
                 course.IsUnavailable = true;
                 course.IsPublic = false;
@@ -735,11 +724,7 @@ namespace LearnLink.Application.Interactors
             try
             {
                 var removePermission = await permissionService.GetPermissionAsync(userId: userId, courseId: courseId, toRemove: true);
-
-                if (!removePermission)
-                {
-                    throw new AccessLevelException("Доступ отклонен");
-                }
+                removePermission.ThrowExceptionIfAccessNotGranted();
 
                 await RemoveCourseAsyncNoResponse(courseId, true);
 
@@ -854,6 +839,13 @@ namespace LearnLink.Application.Interactors
                     InnerErrorMessages = [exception.Message],
                 };
             }
+        }
+
+        public async Task<Permission> CheckUnavailability(int courseId)
+        {
+            var course = await unitOfWork.Courses.FindAsync(courseId);
+            NotFoundException.ThrowIfNull(course, "Курс не найден");
+            return new Permission(course.IsUnavailable);
         }
         private async Task RemoveCourseAsyncNoResponse(int courseId, bool strictRemove)
         {

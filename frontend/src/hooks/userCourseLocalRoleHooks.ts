@@ -1,9 +1,9 @@
-import {useState} from "react";
+import { useState } from "react";
 import axiosInstance from "../axios_config/axiosConfig.ts";
-import {IValueResponse, VoidResponse} from "../models/response.ts";
-import {LocalRole} from "../models/localRole.ts";
-import {USER_COURSE_LOCAL_ROLE_ENDPOINTS_URL} from "../models/constants.ts";
-import {AxiosError} from "axios";
+import { ValueResponse, VoidResponse } from "../models/response.ts";
+import { LocalRole } from "../models/localRole.ts";
+import { USER_COURSE_LOCAL_ROLE_ENDPOINTS_URL } from "../models/constants.ts";
+import { AxiosError } from "axios";
 
 export function useGetLocalRoleByUserAtCourse() {
     const [loading, setLoading] = useState(false);
@@ -12,12 +12,12 @@ export function useGetLocalRoleByUserAtCourse() {
     const getLocalRoleQuery = async (courseId: number, userId: number, accessToken: string) => {
         try {
             setLoading(true);
-            const response = await axiosInstance.get<IValueResponse<LocalRole>>(
+            const response = await axiosInstance.get<ValueResponse<LocalRole>>(
                 `${USER_COURSE_LOCAL_ROLE_ENDPOINTS_URL}get?userId=${userId}&courseId=${courseId}`, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                });
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            });
 
             setLoading(false);
 
@@ -55,10 +55,10 @@ export function useRequestReassignUserLocalRole() {
             setLoading(true);
             const response = await axiosInstance.post<VoidResponse>(
                 `${USER_COURSE_LOCAL_ROLE_ENDPOINTS_URL}request/reassign?requesterUserId=${requesterUserId}&targetUserId=${targetUserId}&courseId=${courseId}&localRoleId=${localRoleId}`, {}, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                });
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            });
 
             setLoading(false);
 

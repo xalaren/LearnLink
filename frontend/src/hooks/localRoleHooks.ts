@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { LOCAL_ROLE_ENDPOINTS_URL } from "../models/constants";
 import axiosInstance from "../axios_config/axiosConfig";
-import { IValueResponse } from "../models/response";
+import { ValueResponse } from "../models/response";
 import { LocalRole } from "../models/localRole";
 import { AxiosError } from "axios";
 
@@ -12,7 +12,7 @@ export function useGetLocalRole() {
     const getLocalRoleQuery = async (roleId: number, accessToken: string) => {
         try {
             setLoading(true);
-            const response = await axiosInstance.get<IValueResponse<LocalRole>>(
+            const response = await axiosInstance.get<ValueResponse<LocalRole>>(
                 `${LOCAL_ROLE_ENDPOINTS_URL}get/roleId=${roleId}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`

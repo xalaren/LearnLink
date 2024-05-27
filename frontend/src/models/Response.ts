@@ -5,6 +5,6 @@ export interface VoidResponse {
     innerErrorMessages?: string[];
 }
 
-export interface IValueResponse<T> extends VoidResponse {
+export interface ValueResponse<T> extends VoidResponse {
     value: T;
 }

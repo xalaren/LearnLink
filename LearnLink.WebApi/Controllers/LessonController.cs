@@ -8,48 +8,76 @@ namespace LearnLink.WebApi.Controllers
 {
     [ApiController]
     [Route("api/lessons")]
-    public class LessonController : Controller
+    public class LessonController(LessonInteractor lessonInteractor, UserVerifierService verifierService) : Controller
     {
-        private readonly LessonInteractor lessonInteractor;
-
-        public LessonController(LessonInteractor lessonInteractor)
-        {
-            this.lessonInteractor = lessonInteractor;
-        }
-
         [Authorize]
         [HttpGet("get")]
-        public async Task<Response<LessonDto>> GetLessonAsync(int lessonId)
+        public async Task<Response<ClientLessonDto>> RequestGetLessonAsync(int userId, int courseId, int lessonId)
         {
-            return await lessonInteractor.GetLessonAsync(lessonId);
+            var response = await verifierService.VerifyUserAsync(User.Identity?.Name, userId);
+
+            if (!response.Success)
+            {
+                return new()
+                {
+                    Success = false,
+                    StatusCode = response.StatusCode,
+                    Message = response.Message,
+                };
+            }
+
+            return await lessonInteractor.RequestGetLessonAsync(userId, courseId, lessonId);
         }
 
         [Authorize]
-        [HttpGet("get/all")]
-        public async Task<Response<LessonDto[]>> GetAllLessonsAsync()
+        [HttpGet("get/atModule")]
+        public async Task<Response<ClientLessonDto[]>> RequestGetLessonsAtModuleAsync(int userId, int courseId, int moduleId)
         {
-            return await lessonInteractor.GetAllLessonsAsync();
+            var response = await verifierService.VerifyUserAsync(User.Identity?.Name, userId);
+
+            if (!response.Success)
+            {
+                return new()
+                {
+                    Success = false,
+                    StatusCode = response.StatusCode,
+                    Message = response.Message,
+                };
+            }
+            return await lessonInteractor.RequestGetModuleLessonsAsync(userId, courseId, moduleId);
         }
 
         [Authorize]
         [HttpPost("create")]
-        public async Task<Response> CreateLessonAsync(int courseId, int moduleId, LessonDto lessonDto)
+        public async Task<Response> CreateLessonAsync(int userId, int courseId, int moduleId, LessonDto lessonDto)
         {
-            return await lessonInteractor.CreateLessonAsync(courseId, moduleId, lessonDto);
+            var response = await verifierService.VerifyUserAsync(User.Identity?.Name, userId);
+
+            if (!response.Success)
+            {
+                return new()
+                {
+                    Success = false,
+                    StatusCode = response.StatusCode,
+                    Message = response.Message,
+                };
+            }
+
+            return await lessonInteractor.RequestCreateLessonAsync(userId, courseId, moduleId, lessonDto);
         }
 
         [Authorize]
         [HttpPost("update")]
-        public async Task<Response> UpdateLessonAsync(LessonDto lessonDto)
+        public async Task<Response> UpdateLessonAsync(int userId, int courseId, LessonDto lessonDto)
         {
-            return await lessonInteractor.UpdateLessonAsync(lessonDto);
+            return await lessonInteractor.RequestUpdateLessonAsync(userId, courseId, lessonDto);
         }
 
         [Authorize]
         [HttpDelete("delete")]
-        public async Task<Response> RemoveLessonAsync(int lessonId)
+        public async Task<Response> RemoveLessonAsync(int userId, int courseId, int moduleId, int lessonId)
         {
-            return await lessonInteractor.RemoveLessonAsync(lessonId);
+            return await lessonInteractor.RequestRemoveLessonAsync(userId, courseId, moduleId, lessonId);
         }
     }
 }
