@@ -1628,3 +1628,26 @@
         }
     }
 }
+
+.file-icon-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 3px 5px;
+    background-color: $white;
+    border-radius: 5px;
+
+    &__extension {
+        z-index: 2;
+        bottom: 3px;
+        right: 3px;
+        font-size: $small-fz;
+        padding: 3px;
+        border-radius: 3px;
+        background-color: $lightViolet;
+        color: $white;
+        font-weight: 500;
+        margin-left: -20px;
+        margin-bottom: -20px;
+    }
+}

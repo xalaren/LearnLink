@@ -4,7 +4,7 @@
         (
             int Id,
             int Order,
-            ContentDto ContentDto,
+            ContentDto Content,
             int LessonId = 0,
             string? Title = null
         );

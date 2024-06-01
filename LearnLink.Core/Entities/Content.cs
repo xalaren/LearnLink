@@ -1,6 +1,4 @@
-﻿using LearnLink.Core.Exceptions;
-
-namespace LearnLink.Core.Entities
+﻿namespace LearnLink.Core.Entities
 {
     public class Content
     {
@@ -10,5 +8,7 @@ namespace LearnLink.Core.Entities
 
         public string? Text { get; set; }
         public string? FileName { get; set; }
+        public string? FileExtension { get; set; }
+        public string? CodeLanguage { get; set; }
     }
 }

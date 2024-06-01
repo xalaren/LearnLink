@@ -52,15 +52,15 @@
                     <p>Title: <span class="white-selection">@sectionExample.Title</span></p>
                 }
                 <p>Order: <span class="white-selection">@sectionExample.Order</span></p>
-                @if (sectionExample.ContentDto.FileName != null)
+                @if (sectionExample.Content.FileName != null)
                 {
-                    <p>FileName: <span class="white-selection">@sectionExample.ContentDto.FileName</span></p>
-                    <p>Url: <a class="white-selection white-link" href="api/@sectionExample.ContentDto.FileUrl">@sectionExample.ContentDto.FileUrl</a></p>
+                    <p>FileName: <span class="white-selection">@sectionExample.Content.FileName</span></p>
+                    <p>Url: <a class="white-selection white-link" href="api/@sectionExample.Content.FileUrl">@sectionExample.Content.FileUrl</a></p>
                 }
-                @if(sectionExample.ContentDto.IsText)
+                @if (sectionExample.Content.IsText)
                 {
                     <p>Text:</p>
-                    <p class="white-selection">@sectionExample.ContentDto.Text</p>
+                    <p class="white-selection">@sectionExample.Content.Text</p>
                 }
             </div>
         }

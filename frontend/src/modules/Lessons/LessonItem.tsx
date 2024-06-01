@@ -5,6 +5,7 @@ import { useCompleteLesson } from "../../hooks/completionHook";
 import { useAppSelector } from "../../hooks/redux";
 import { NotificationType } from "../../models/enums";
 import { Lesson } from "../../models/lesson";
+import { AcademicCapIcon } from "@heroicons/react/24/outline";
 
 interface ILessonItemProps {
     lesson: Lesson;
@@ -40,13 +41,14 @@ function LessonItem({ lesson, courseId, moduleId, onClick, updateSignal }: ILess
                 title={lesson.title}
                 checked={lesson.completed}
                 onClick={onClick}
-                iconClassName="icon-bolt icon-medium-size"
                 className="content-list__item"
+                iconClassName=""
                 key={lesson.id}
                 loading={loading || Boolean(success) || Boolean(error)}
                 onCheck={completeLesson}
-                onUncheck={uncompleteLesson}
-            />
+                onUncheck={uncompleteLesson}>
+                <span className="icon icon-medium-size icon-bolt"></span>
+            </ControlItemLink>
             {error &&
                 <PopupNotification notificationType={NotificationType.error} onFade={onFade}>
                     {error}

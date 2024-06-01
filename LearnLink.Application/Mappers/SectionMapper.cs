@@ -8,17 +8,19 @@ namespace LearnLink.Application.Mappers
     {
         public static SectionDto ToDto(this Section sectionEntity)
         {
-            var contentDto = new ContentDto
-            (
-                IsText: sectionEntity.IsText,
-                IsCodeBlock: sectionEntity.IsCodeBlock,
-                IsFile: sectionEntity.IsFile,
-                Text: sectionEntity.Text,
-                FileName: sectionEntity.FileName,
-                FileUrl: sectionEntity.FileName != null ? 
-                    DirectoryStore.GetRelativeDirectoryUrlToLessonContent(sectionEntity.LessonId, sectionEntity.Id) +  sectionEntity.FileName
-                    : null
-            );
+            var contentDto = new ContentDto()
+            {
+                IsText = sectionEntity.IsText,
+                IsCodeBlock = sectionEntity.IsCodeBlock,
+                IsFile = sectionEntity.IsFile,
+                Text = sectionEntity.Text,
+                CodeLanguage = sectionEntity.CodeLanguage,
+                FileName = sectionEntity.FileName,
+                FileExtension = sectionEntity.FileExtension,
+                FileUrl = sectionEntity.FileName != null ?
+                    DirectoryStore.GetRelativeDirectoryUrlToLessonContent(sectionEntity.LessonId, sectionEntity.Id) + sectionEntity.FileName
+                     : null
+            };
 
             return new SectionDto
             (
@@ -26,51 +28,72 @@ namespace LearnLink.Application.Mappers
                 LessonId: sectionEntity.LessonId,
                 Title: sectionEntity.Title,
                 Order: sectionEntity.Order,
-                ContentDto: contentDto
+                Content: contentDto
             );
         }
 
         public static Section ToEntity(this SectionDto sectionDto)
         {
+            string? fileExt = null;
+
+            if (sectionDto.Content.IsFile && sectionDto.Content.FormFile != null)
+            {
+                fileExt = Path.GetExtension(sectionDto.Content.FormFile.FileName);
+            }
+
             return new Section()
             {
                 LessonId = sectionDto.LessonId,
                 Order = sectionDto.Order,
                 Title = sectionDto.Title,
-                IsText = sectionDto.ContentDto.IsText,
-                IsFile = sectionDto.ContentDto.IsFile,
-                IsCodeBlock = sectionDto.ContentDto.IsCodeBlock,
-                FileName = sectionDto.ContentDto.FormFile?.FileName,
-                Text = sectionDto.ContentDto.Text
+                IsText = sectionDto.Content.IsText,
+                IsFile = sectionDto.Content.IsFile,
+                IsCodeBlock = sectionDto.Content.IsCodeBlock,
+                FileName = sectionDto.Content.FormFile?.FileName,
+                FileExtension = fileExt,
+                Text = sectionDto.Content.Text,
+                CodeLanguage = sectionDto.Content.CodeLanguage,
             };
         }
 
         public static Section ToEntity(this SectionDto sectionDto, Lesson lesson)
         {
+            string? fileExt = null;
+
+            if (sectionDto.Content.IsFile && sectionDto.Content.FormFile != null)
+            {
+                fileExt = Path.GetExtension(sectionDto.Content.FormFile.FileName);
+            }
+
             return new Section()
             {
                 Lesson = lesson,
                 Order = sectionDto.Order,
                 Title = sectionDto.Title,
-                IsText = sectionDto.ContentDto.IsText,
-                IsFile = sectionDto.ContentDto.IsFile,
-                IsCodeBlock = sectionDto.ContentDto.IsCodeBlock,
-                FileName = sectionDto.ContentDto.FormFile?.FileName,
-                Text = sectionDto.ContentDto.Text
+                IsText = sectionDto.Content.IsText,
+                IsFile = sectionDto.Content.IsFile,
+                IsCodeBlock = sectionDto.Content.IsCodeBlock,
+                FileName = sectionDto.Content.FormFile?.FileName,
+                FileExtension = fileExt,
+                Text = sectionDto.Content.Text,
+                CodeLanguage = sectionDto.Content.CodeLanguage
             };
         }
 
         public static Section Assign(this Section sectionEntity, SectionDto sectionDto)
         {
-            sectionEntity.Title = sectionDto.Title;
-            sectionEntity.IsText = sectionDto.ContentDto.IsText;
-            sectionEntity.IsCodeBlock = sectionDto.ContentDto.IsCodeBlock;
-            sectionEntity.IsFile = sectionDto.ContentDto.IsFile;
-            sectionEntity.Text = sectionDto.ContentDto.Text;
 
-            if(sectionDto.ContentDto.IsFile && sectionDto.ContentDto.FormFile != null)
+            sectionEntity.Title = sectionDto.Title;
+            sectionEntity.IsText = sectionDto.Content.IsText;
+            sectionEntity.IsCodeBlock = sectionDto.Content.IsCodeBlock;
+            sectionEntity.IsFile = sectionDto.Content.IsFile;
+            sectionEntity.Text = sectionDto.Content.Text;
+            sectionEntity.CodeLanguage = sectionDto.Content.CodeLanguage;
+
+            if (sectionDto.Content.IsFile && sectionDto.Content.FormFile != null)
             {
-                sectionEntity.FileName = sectionDto.ContentDto.FormFile.FileName;
+                sectionEntity.FileName = sectionDto.Content.FormFile.FileName;
+                sectionEntity.FileExtension = Path.GetExtension(sectionDto.Content.FormFile.FileName);
             }
 
             return sectionEntity;

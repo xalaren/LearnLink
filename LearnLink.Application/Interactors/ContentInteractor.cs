@@ -43,7 +43,7 @@ namespace LearnLink.Application.Interactors
                     }
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw new CustomException("Не удалось сохранить файл контента");
             }

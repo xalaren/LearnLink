@@ -98,7 +98,7 @@ namespace LearnLink.Application.Interactors
 
                 if (lesson == null) throw new NotFoundException("Урок не был найден");
 
-                var content = sectionDto.ContentDto;
+                var content = sectionDto.Content;
                 var section = sectionDto.ToEntity(lesson);
 
                 if (section.IsText)
@@ -164,13 +164,13 @@ namespace LearnLink.Application.Interactors
 
                 if (section == null) throw new NotFoundException("Раздел не был найден");
 
-                var content = sectionDto.ContentDto;
+                var content = sectionDto.Content;
                 var prevSectionFileState = section.IsFile;
                 var prevSectionFileName = section.FileName;
 
                 section.Assign(sectionDto);
 
-                if((prevSectionFileState && !section.IsFile) || (prevSectionFileState && section.IsFile && sectionDto.ContentDto.FormFile != null))
+                if ((prevSectionFileState && !section.IsFile) || (prevSectionFileState && section.IsFile && sectionDto.Content.FormFile != null))
                 {
                     contentInteractor.RemoveLessonContent(section.LessonId, section.Id, prevSectionFileName);
                 }
@@ -192,10 +192,10 @@ namespace LearnLink.Application.Interactors
                 }
 
                 await unitOfWork.Sections.AddAsync(section);
-                await UpdateSectionOrders(section.LessonId);
                 await unitOfWork.CommitAsync();
 
                 await contentInteractor.SaveLessonContentAsync(content, section.LessonId, section.Id);
+                await UpdateSectionOrders(section.LessonId);
 
 
                 return new Response()
@@ -273,7 +273,7 @@ namespace LearnLink.Application.Interactors
             unitOfWork.Sections.Remove(section);
             contentInteractor.RemoveLessonContent(section.LessonId, section.Id, section.FileName);
         }
-       
+
         public async Task RemoveLessonSectionsAsyncNoResponse(int lessonId)
         {
             var sections = await unitOfWork.Sections
@@ -295,21 +295,21 @@ namespace LearnLink.Application.Interactors
             {
                 var foundSection = await unitOfWork.Sections.FindAsync(sectionId);
 
-                if(foundSection == null)
+                if (foundSection == null)
                 {
                     throw new NotFoundException("Раздел не найден");
                 }
 
                 int nextOrderModifier = 1;
 
-                if(increase)
+                if (increase)
                 {
                     nextOrderModifier = -1;
                 }
 
                 var next = unitOfWork.Sections.FirstOrDefault(section => section.LessonId == lessonId && section.Order == foundSection.Order + nextOrderModifier);
 
-                if(next == null)
+                if (next == null)
                 {
                     throw new OrderRangeEndException($"Раздел находится в {(increase ? "начале списка" : "конце списка")}");
                 }

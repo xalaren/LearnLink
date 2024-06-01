@@ -68,6 +68,10 @@ h3 {
     font-weight: 600;
 }
 
+b {
+    font-weight: 600;
+}
+
 //Common style classes
 
 .button-base {
@@ -197,6 +201,8 @@ h3 {
     background-color: $veryLightGray;
     border: solid 2px transparent;
     transition: 0.3s ease-in-out;
+    padding: 10px;
+    box-sizing: content-box;
 
     @include hover {
         border-color: $lightViolet;

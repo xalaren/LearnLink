@@ -5,6 +5,7 @@
         private const int ORDER_DEFAULT_VALUE = 1;
         private int order = ORDER_DEFAULT_VALUE;
 
+
         public int Id { get; set; }
 
         public int LessonId { get; set; }

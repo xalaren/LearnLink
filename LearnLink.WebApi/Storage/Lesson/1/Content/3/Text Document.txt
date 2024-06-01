@@ -1,0 +1,45 @@
+                var oldCourseCompletion = await unitOfWork.CourseCompletions.AsNoTracking().FirstOrDefaultAsync(cp => cp.UserId == user.Id && cp.CourseId == course.Id);
+
+                if (oldCourseCompletion == null)
+                {
+                    var newCourseCompletion = new CourseCompletion()
+                    {
+                        Course = course,
+                        User = user,
+                        Completed = false,
+                        CompletionProgress = 0,
+                    };
+
+                    await unitOfWork.CourseCompletions.AddAsync(newCourseCompletion);
+                }
+
+                var oldModuleCompletions = unitOfWork.ModuleCompletions.AsNoTracking().Where(m => m.UserId == user.Id && m.CourseId == course.Id);
+
+                if (oldModuleCompletions == null)
+                {
+                    var courseModules = unitOfWork.CourseModules.Where(x => x.CourseId == subscriptionDto.CourseId);
+
+                    if(courseModules == null)
+                    {
+                        throw new NotFoundException("Модули курса не найдены");
+                    }
+
+                    await courseModules.ForEachAsync(courseModule => 
+                    unitOfWork.CourseModules
+                    .Entry(courseModule)
+                    .Reference(x => x.Module)
+                    .LoadAsync());
+
+                    var newModuleCompletions = courseModules.Select(courseModule => new ModuleCompletion()
+                    {
+                        User = user,
+                        Course = course,
+                        Module = courseModule.Module,
+                        Completed = false,
+                        CompletionProgress = 0
+                    });
+
+                    await unitOfWork.ModuleCompletions.AddRangeAsync(newModuleCompletions);
+                }
+
+                var oldLessonCompletions = unitOfWork.LessonCompletions.AsNoTracking().Where(l => l.UserId == user.Id && )

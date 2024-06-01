@@ -7,17 +7,17 @@ interface IControlItemLinkProps {
     onCheck: () => void;
     onUncheck: () => void;
     onClick: () => void;
-    iconClassName?: string;
     className?: string;
+    children?: React.ReactNode;
 }
 
-function ControlItemLink({ title, checked, loading, onCheck, onUncheck, onClick, iconClassName = "", className = "" }: IControlItemLinkProps) {
+function ControlItemLink({ title, checked, loading, onCheck, onUncheck, onClick, children, className = "" }: IControlItemLinkProps) {
 
     return (
         <div className={`control-item-link ${className}`}>
             <div className="item-link link-light-violet" onClick={onClick}>
                 <div className="item-link__info">
-                    <span className={"icon-medium-size " + iconClassName}></span>
+                    {children}
                     {title}
                 </div>
             </div>

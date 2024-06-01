@@ -19,27 +19,28 @@ namespace LearnLink.WebApi.Pages.Sections
             return AuthRequired();
         }
 
-        public async Task OnPost(int lessonId, string? title, string? isText, string? isCodeBlock, string? isFile, string? text, IFormFile contentFile)
+        public async Task OnPost(int lessonId, string? title, string? isText, string? isCodeBlock, string? isFile, string? text, string? lang, IFormFile contentFile)
         {
             bool isTextValue = string.IsNullOrWhiteSpace(isText) ? false : true;
             bool isCodeBlockValue = string.IsNullOrWhiteSpace(isCodeBlock) ? false : true;
             bool isFileValue = string.IsNullOrWhiteSpace(isFile) ? false : true;
 
-            var contentDto = new ContentDto
-            (
-                isTextValue,
-                isCodeBlockValue,
-                isFileValue,
-                text,
-                null,
-                contentFile
-            );
+            var contentDto = new ContentDto()
+            {
+                IsText = isTextValue,
+                IsCodeBlock = isCodeBlockValue,
+                IsFile = isFileValue,
+                Text = text,
+                FileName = null,
+                CodeLanguage = lang,
+                FormFile = contentFile
+            };
 
             var sectionDto = new SectionDto
             (
                 Id: 0,
                 Order: 0,
-                ContentDto: contentDto,
+                Content: contentDto,
                 LessonId: lessonId,
                 Title: title
             );

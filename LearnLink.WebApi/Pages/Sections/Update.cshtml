@@ -62,22 +62,26 @@
         </div>
         <div class="form-input">
             <p class="form-input__label">Text</p>
-            <textarea class="textarea input" name="text" placeholder="Text...">@Model.FoundSection.ContentDto.Text</textarea>
+            <textarea class="textarea input" name="text" placeholder="Text...">@Model.FoundSection.Content.Text</textarea>
+        </div>
+        <div class="form-input">
+            <p class="form-input__label">Code language</p>
+            <input type="text" name="lang" placeholder="Code language..." class="input" value="@Model.FoundSection.Content.CodeLanguage" />
         </div>
         <div class="form-input">
             <p class="form-input__label">File</p>
             <input type="file" class="input" name="contentFile" value="Upload file" />
         </div>
         <div class="line-container">
-            <input type="checkbox" class="checkbox" id="isText" name="isText" checked="@Model.FoundSection.ContentDto.IsText" />
+            <input type="checkbox" class="checkbox" id="isText" name="isText" checked="@Model.FoundSection.Content.IsText" />
             <label for="isText">IsText</label>
         </div>
         <div class="line-container">
-            <input type="checkbox" class="checkbox" id="isCodeBlock" name="isCodeBlock" checked="@Model.FoundSection.ContentDto.IsCodeBlock" />
+            <input type="checkbox" class="checkbox" id="isCodeBlock" name="isCodeBlock" checked="@Model.FoundSection.Content.IsCodeBlock" />
             <label for="isCodeBlock">IsCodeBlock</label>
         </div>
         <div class="line-container">
-            <input type="checkbox" class="checkbox" id="isFile" name="isFile" checked="@Model.FoundSection.ContentDto.IsFile" />
+            <input type="checkbox" class="checkbox" id="isFile" name="isFile" checked="@Model.FoundSection.Content.IsFile" />
             <label for="isFile">IsFile</label>
         </div>
 
