@@ -111,7 +111,7 @@ namespace LearnLink.Application.Interactors
 
                 if (role == null)
                 {
-                    role = await unitOfWork.Roles.FirstOrDefaultAsync(x => x.Sign == RoleSignConstants.USER);
+                    role = await unitOfWork.Roles.FirstOrDefaultAsync(x => x.Sign == RoleDataConstants.USER_ROLE_SIGN);
                 }
 
 
@@ -378,7 +378,7 @@ namespace LearnLink.Application.Interactors
 
                 await unitOfWork.Users.Entry(user).Reference(x => x.Role).LoadAsync();
 
-                if (user.Role.Sign == RoleSignConstants.ADMIN && user.Role.Id == 1)
+                if (user.Role.Sign == RoleDataConstants.ADMIN_ROLE_SIGN && user.Role.Id == 1)
                 {
                     throw new AccessLevelException("Невозможно удалить, пользователь является системным");
                 }

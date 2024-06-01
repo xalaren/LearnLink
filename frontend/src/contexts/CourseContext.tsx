@@ -9,22 +9,17 @@ import { Loader } from "../components/Loader/Loader";
 
 interface ICourseContext {
     course: Course | null;
-    setCourseContextData: (course: Course | null) => void;
     fetchCourse: () => Promise<void>;
-    signalUpdate: () => void;
 }
 
 export const CourseContext = createContext<ICourseContext>({
     course: null,
-    setCourseContextData: () => { },
     fetchCourse: async () => { },
-    signalUpdate: () => { },
 });
 
 export const CourseState = ({ children }: { children: React.ReactNode }) => {
     const [course, setCourse] = useState<Course | null>(null);
     const [courseId, setCourseId] = useState(0);
-    const [shouldUpdate, setShouldUpdate] = useState(true);
 
     const { user } = useAppSelector(state => state.userReducer);
 
@@ -34,7 +29,7 @@ export const CourseState = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         if (!user) return;
-        if (!param) return;
+        if (!param || Number(param.courseId) === courseId) return;
         fetchCourse();
     }, [user, param]);
 
@@ -49,21 +44,10 @@ export const CourseState = ({ children }: { children: React.ReactNode }) => {
             setCourse(result);
             setCourseId(Number(param.courseId));
         }
-
-        setShouldUpdate(false);
-    }
-
-    function setCourseContextData(course: Course | null) {
-        if (null) return;
-        setCourse(course);
-    }
-
-    function signalUpdate() {
-        setShouldUpdate(true);
     }
 
     return (
-        <CourseContext.Provider value={{ course, setCourseContextData, fetchCourse, signalUpdate }}>
+        <CourseContext.Provider value={{ course, fetchCourse }}>
             {error &&
                 <MainContainer>
                     <ErrorModal active={Boolean(error)} error={error} onClose={resetValues}>

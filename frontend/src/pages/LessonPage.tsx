@@ -7,25 +7,22 @@ import { paths } from "../models/paths";
 import { ViewTypes } from "../models/enums";
 import Breadcrumb from "../components/Breadcrumb/Breadcrumb";
 import { Course } from "../models/course";
-import { Module } from "../models/module";
-import ModuleView from "../modules/Modules/ModuleView";
+import { LessonContext } from "../contexts/LessonContext";
+import { Lesson } from "../models/lesson";
+import LessonView from "../modules/Lessons/LessonView";
 
-function ModulePage() {
-    const { course, fetchCourse } = useContext(CourseContext);
-    const { module, fetchModule } = useContext(ModuleContext);
+function LessonPage() {
+    const { course } = useContext(CourseContext);
+    const { module } = useContext(ModuleContext);
+    const { lesson, fetchLesson } = useContext(LessonContext);
 
-    const [updateModalActive, setUpdateModalActive] = useState(false);
     const [deleteModalActive, setDeleteModalActive] = useState(false);
 
-    async function update() {
-        await fetchModule();
-        await fetchCourse();
-    }
 
     return (
         <MainContainer className="view-page">
-            <BuildedPage course={course} module={module}>
-                {course && module &&
+            <BuildedPage course={course} lesson={lesson}>
+                {course && module && lesson &&
                     <>
                         <Breadcrumb>
                             <BreadcrumbItem text="В начало" path={paths.public()} />
@@ -34,16 +31,15 @@ function ModulePage() {
                             }
                             <BreadcrumbItem text={course!.title} path={paths.course.view.full(course!.id)} />
                             <BreadcrumbItem text={module!.title} path={paths.module.view.full(course!.id, module!.id)} />
+                            <BreadcrumbItem text={lesson!.title} path={paths.lesson.view.full(course!.id, module!.id, lesson!.id)} />
                         </Breadcrumb>
 
-                        <ModuleView
+                        <LessonView
                             course={course}
                             module={module}
-                            updateModalActive={updateModalActive}
-                            setUpdateModalActive={setUpdateModalActive}
+                            lesson={lesson}
                             deleteModalActive={deleteModalActive}
                             setDeleteModalActive={setDeleteModalActive}
-                            updateSignal={update}
                         />
                     </>
                 }
@@ -54,9 +50,9 @@ function ModulePage() {
     );
 }
 
-function BuildedPage(props: { course: Course | null, module: Module | null, children: React.ReactNode }) {
+function BuildedPage(props: { course: Course | null, lesson: Lesson | null, children: React.ReactNode }) {
     if (!props.course) return <p>Не удалось получить доступ к курсу</p>
-    if (!props.module) return <p>Не удалось получить доступ к модулю</p>
+    if (!props.lesson) return <p>Не удалось получить доступ к уроку</p>
 
     return (
         <>
@@ -65,4 +61,4 @@ function BuildedPage(props: { course: Course | null, module: Module | null, chil
     );
 }
 
-export default ModulePage;
+export default LessonPage;

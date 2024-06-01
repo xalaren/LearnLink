@@ -10,13 +10,14 @@ namespace LearnLink.WebApi.Extensions
             var scope = scopedFactory.CreateAsyncScope();
 
             var service = scope.ServiceProvider.GetRequiredService<SeedData>();
-
+            
             await service.InitializeAdminRole();
             await service.InitializeUserRole();
             await service.InitializeModeratorLocalRole();
             await service.InitializeMemberLocalRole();
-            await service.InitializeAdmin();
 
+            var defaultAdminData = app.Configuration.AdminDefaultAuthenticationData();
+            await service.InitializeAdmin(defaultAdminData.Nickname, defaultAdminData.Password);
 
             await scope.DisposeAsync();
         }

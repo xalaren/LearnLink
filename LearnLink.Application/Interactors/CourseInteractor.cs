@@ -607,7 +607,7 @@ namespace LearnLink.Application.Interactors
                 await unitOfWork.CourseCompletions.AddAsync(courseCompletion);
                 await unitOfWork.CommitAsync();
 
-                await courseLocalRoleInteractor.CreateDefaultLocalRoles(course.Id, RoleSignConstants.MODERATOR, RoleSignConstants.MEMBER);
+                await courseLocalRoleInteractor.CreateDefaultLocalRoles(course.Id, RoleDataConstants.MODERATOR_ROLE_SIGN, RoleDataConstants.MEMBER_ROLE_SIGN);
                 await AssignModeratorAsync(userId, course.Id);
 
                 return new Response()
@@ -866,7 +866,7 @@ namespace LearnLink.Application.Interactors
 
         private async Task AssignModeratorAsync(int userId, int courseId)
         {
-            var moderatorLocalRole = await unitOfWork.LocalRoles.FirstOrDefaultAsync(localRole => localRole.Sign == RoleSignConstants.MODERATOR);
+            var moderatorLocalRole = await unitOfWork.LocalRoles.FirstOrDefaultAsync(localRole => localRole.Sign == RoleDataConstants.MODERATOR_ROLE_SIGN);
 
             if (moderatorLocalRole == null)
             {

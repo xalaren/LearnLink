@@ -40,6 +40,40 @@ export function useGetModuleLessons() {
     return { getLessonsAtModuleQuery, error, loading, resetValues };
 }
 
+export function useGetLesson() {
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const getLessonQuery = async (userId: number, courseId: number, lessonId: number, accessToken: string) => {
+        try {
+            setLoading(true);
+            const response = await axiosInstance.get<ValueResponse<Lesson>>(`${LESSON_ENDPOINTS_URL}get?userId=${userId}&courseId=${courseId}&lessonId=${lessonId}`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            });
+
+            if (!response.data.success) {
+                throw new AxiosError(response.data.message);
+            }
+
+            setLoading(false);
+            return (response.data.value);
+        }
+        catch (err: unknown) {
+            setLoading(false);
+            setError((err as AxiosError).message);
+        }
+    }
+
+    const resetValues = () => {
+        setError('');
+        setLoading(false);
+    }
+
+    return { getLessonQuery, error, loading, resetValues };
+}
+
 export function useCreateLesson() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);

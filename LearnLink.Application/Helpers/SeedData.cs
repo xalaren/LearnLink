@@ -7,6 +7,7 @@ namespace LearnLink.Application.Helpers
 {
     public class SeedData
     {
+
         private readonly IUnitOfWork unitOfWork;
         private readonly UserInteractor userInteractor;
         private readonly RoleInteractor roleInteractor;
@@ -20,7 +21,7 @@ namespace LearnLink.Application.Helpers
             this.localRoleInteractor = localRoleInteractor;
         }
 
-        public async Task InitializeAdmin()
+        public async Task InitializeAdmin(string adminNickname, string adminPassword)
         {
             try
             {
@@ -28,18 +29,16 @@ namespace LearnLink.Application.Helpers
 
                 var admin = new UserDto()
                 {
-                    Id = 1,
-                    Nickname = "admin",
-                    Name = "AdminName",
-                    Lastname = "AdminLastname",
+                    Id = AdminUserDataConstants.ADMIN_USER_ID,
+                    Nickname = adminNickname,
+                    Name = AdminUserDataConstants.ADMIN_USER_NAME,
+                    Lastname = AdminUserDataConstants.ADMIN_LASTNAME,
                 };
 
-                string password = "admin";
+                await userInteractor.RegisterAsync(admin, adminPassword, RoleDataConstants.ADMIN_ROLE_ID);
 
-                await userInteractor.RegisterAsync(admin, password, 1);
-                
             }
-            catch(Exception)
+            catch (Exception)
             {
                 //Catch statement actions
             }
@@ -49,14 +48,14 @@ namespace LearnLink.Application.Helpers
         {
             try
             {
-                var existRole = await roleInteractor.GetRoleBySignAsync(RoleSignConstants.ADMIN);
+                var existRole = await roleInteractor.GetRoleBySignAsync(RoleDataConstants.ADMIN_ROLE_SIGN);
 
                 if (existRole.Value != null) return;
 
                 var adminRole = new RoleDto(
-                    Id: 1,
-                    Name: "Администратор",
-                    Sign: RoleSignConstants.ADMIN,
+                    Id: RoleDataConstants.ADMIN_ROLE_ID,
+                    Name: RoleDataConstants.ADMIN_ROLE_NAME,
+                    Sign: RoleDataConstants.ADMIN_ROLE_SIGN,
                     IsAdmin: true
                 );
 
@@ -72,14 +71,14 @@ namespace LearnLink.Application.Helpers
         {
             try
             {
-                var existRole = await roleInteractor.GetRoleBySignAsync(RoleSignConstants.USER);
+                var existRole = await roleInteractor.GetRoleBySignAsync(RoleDataConstants.USER_ROLE_SIGN);
 
                 if (existRole.Value != null) return;
 
                 var userRole = new RoleDto(
-                    Id: 2,
-                    Name: "Пользователь",
-                    Sign: RoleSignConstants.USER,
+                    Id: RoleDataConstants.USER_ROLE_ID,
+                    Name: RoleDataConstants.USER_ROLE_NAME,
+                    Sign: RoleDataConstants.USER_ROLE_SIGN,
                     IsAdmin: false
                 );
 
@@ -95,15 +94,15 @@ namespace LearnLink.Application.Helpers
         {
             try
             {
-                var existRole = await roleInteractor.GetRoleBySignAsync(RoleSignConstants.MODERATOR);
+                var existRole = await roleInteractor.GetRoleBySignAsync(RoleDataConstants.MODERATOR_ROLE_SIGN);
 
                 if (existRole.Value != null) return;
 
                 var userRole = new LocalRoleDto()
                 {
-                    Id = 3,
-                    Name = "Модератор",
-                    Sign = RoleSignConstants.MODERATOR,
+                    Id = RoleDataConstants.MODERATOR_ROLE_ID,
+                    Name = RoleDataConstants.MODERATOR_ROLE_NAME,
+                    Sign = RoleDataConstants.MODERATOR_ROLE_SIGN,
                     ViewAccess = true,
                     EditAccess = true,
                     RemoveAccess = true,
@@ -125,15 +124,15 @@ namespace LearnLink.Application.Helpers
         {
             try
             {
-                var existRole = await roleInteractor.GetRoleBySignAsync(RoleSignConstants.MEMBER);
+                var existRole = await roleInteractor.GetRoleBySignAsync(RoleDataConstants.MEMBER_ROLE_SIGN);
 
                 if (existRole.Value != null) return;
 
                 var userRole = new LocalRoleDto()
                 {
-                    Id = 4,
-                    Name = "Участник",
-                    Sign = RoleSignConstants.MEMBER,
+                    Id = RoleDataConstants.MEMBER_ROLE_ID,
+                    Name = RoleDataConstants.MEMBER_ROLE_NAME,
+                    Sign = RoleDataConstants.MEMBER_ROLE_SIGN,
                     ViewAccess = true,
                     EditAccess = false,
                     RemoveAccess = false,

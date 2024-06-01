@@ -23,14 +23,26 @@ export const paths = {
         roles: {
             base: 'roles',
             full: (courseId: string | number) => `/course/${courseId}/roles`
+        }
+    },
+    module: {
+        base: (moduleId: number | string) => `module/${moduleId}/`,
+        full: (courseId: number | string, moduleId: number | string) => `/course/${courseId}/module/${moduleId}`,
+        view: {
+            base: 'view',
+            full: (courseId: string | number, moduleId: string | number) => `/course/${courseId}/module/${moduleId}/view`
+        }
+    },
+    lesson: {
+        base: (lessonId: number | string) => `lesson/${lessonId}/`,
+        full: (courseId: number | string, moduleId: number | string, lessonId: number | string) => `/course/${courseId}/module/${moduleId}/lesson/${lessonId}`,
+        view: {
+            base: 'view',
+            full: (courseId: number | string, moduleId: number | string, lessonId: number | string) => `/course/${courseId}/module/${moduleId}/lesson/${lessonId}/view`
         },
-        module: {
-            base: (moduleId: number | string) => `module/${moduleId}/`,
-            full: (courseId: number | string, moduleId: number | string) => `/course/${courseId}/module/${moduleId}`,
-            view: {
-                base: 'view',
-                full: (courseId: string | number, moduleId: string | number) => `/course/${courseId}/module/${moduleId}/view`
-            }
+        edit: {
+            base: 'edit',
+            full: (courseId: number | string, moduleId: number | string, lessonId: number | string) => `/course/${courseId}/module/${moduleId}/lesson/${lessonId}/edit`
         }
     }
 }

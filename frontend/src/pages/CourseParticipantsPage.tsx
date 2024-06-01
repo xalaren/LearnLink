@@ -32,7 +32,7 @@ function CourseParticipantsPage() {
     const [searchText, setSearchText] = useState('');
 
     // const [course, setCourse] = useState<Course>();
-    const { course } = useContext(CourseContext);
+    const { course, fetchCourse } = useContext(CourseContext);
     const { user } = useAppSelector(state => state.userReducer);
     const { accessToken } = useAppSelector(state => state.authReducer);
 

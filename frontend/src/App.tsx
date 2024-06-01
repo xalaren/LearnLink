@@ -19,6 +19,8 @@ import Layout from "./pages/Layout.tsx";
 import CourseNestedLayout from "./pages/CourseNestedLayout.tsx";
 import ModuleNestedLayout from "./pages/ModuleNestedLayout.tsx";
 import ModulePage from "./pages/ModulePage.tsx";
+import LessonNestedLayout from "./pages/LessonNestedLayout.tsx";
+import LessonPage from "./pages/LessonPage.tsx";
 
 
 function App() {
@@ -46,12 +48,15 @@ function App() {
                     <Route path={paths.course.view.base} element={<CoursePage />}></Route>
                     <Route path={paths.course.participants.base(':pageNumber')} element={<CourseParticipantsPage />} />
                     <Route path={paths.course.roles.base} element={<CourseRolesPage />}></Route>
-                    <Route path={paths.course.module.base(':moduleId')} element={<ModuleNestedLayout />}>
-                        <Route path={paths.course.module.view.base} element={<ModulePage />}></Route>
+                    <Route path={paths.module.base(':moduleId')} element={<ModuleNestedLayout />}>
+                        <Route path={paths.module.view.base} element={<ModulePage />}></Route>
+                        <Route path={paths.lesson.base(':lessonId')} element={<LessonNestedLayout />}>
+                            <Route path={paths.lesson.view.base} element={<LessonPage />}></Route>
+                        </Route>
                     </Route>
                 </Route>
                 <Route path="*" element={<InvalidPage />}></Route>
-            </Routes>
+            </Routes >
 
             <Footer />
         </>

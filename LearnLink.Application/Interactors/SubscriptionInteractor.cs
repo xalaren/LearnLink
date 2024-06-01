@@ -145,7 +145,7 @@ namespace LearnLink.Application.Interactors
                 var course = await unitOfWork.Courses.FindAsync(subscriptionDto.CourseId) ??
                     throw new NotFoundException("Курс не найден");
 
-                var role = await unitOfWork.LocalRoles.FirstOrDefaultAsync(role => string.Equals(role.Sign, RoleSignConstants.MEMBER));
+                var role = await unitOfWork.LocalRoles.FirstOrDefaultAsync(role => string.Equals(role.Sign, RoleDataConstants.MEMBER_ROLE_SIGN));
 
                 if (role == null)
                 {
@@ -306,7 +306,7 @@ namespace LearnLink.Application.Interactors
         
         private async Task AssignMembersAsync(int userId, int courseId)
         {
-            var memberRole = await unitOfWork.LocalRoles.FirstOrDefaultAsync(localRole => localRole.Sign == RoleSignConstants.MEMBER);
+            var memberRole = await unitOfWork.LocalRoles.FirstOrDefaultAsync(localRole => localRole.Sign == RoleDataConstants.MEMBER_ROLE_SIGN);
 
             if(memberRole == null)
             {

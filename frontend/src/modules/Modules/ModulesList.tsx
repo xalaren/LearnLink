@@ -81,7 +81,7 @@ function BuildedModulesList(props: {
                         <ItemLink
                             title={module.title}
                             checked={module.completed}
-                            onClick={() => toNext(paths.course.module.view.full(props.courseId, module.id))}
+                            onClick={() => toNext(paths.module.view.full(props.courseId, module.id))}
                             iconClassName="icon-module icon-medium-size"
                             className="content-list__item"
                             key={module.id}

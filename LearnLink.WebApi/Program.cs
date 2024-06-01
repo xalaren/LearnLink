@@ -18,12 +18,12 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 var rootDirectory = builder.Environment.ContentRootPath;
 
-builder.WebHost.UseUrls(ServerConfig.Url(configuration));
+builder.WebHost.UseUrls(configuration.Url());
 
 builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
     policyBuilder =>
     {
-        policyBuilder.WithOrigins("https://localhost:5174")
+        policyBuilder.WithOrigins(configuration.ClientUrl())
                .AllowAnyHeader()
                .AllowAnyMethod();
     }

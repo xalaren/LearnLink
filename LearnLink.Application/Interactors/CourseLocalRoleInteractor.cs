@@ -269,7 +269,7 @@ namespace LearnLink.Application.Interactors
                 }
 
                 var memberLocalRole =
-                    await unitOfWork.LocalRoles.FirstOrDefaultAsync(role => role.Sign == RoleSignConstants.MEMBER);
+                    await unitOfWork.LocalRoles.FirstOrDefaultAsync(role => role.Sign == RoleDataConstants.MEMBER_ROLE_SIGN);
 
                 if (memberLocalRole == null)
                 {

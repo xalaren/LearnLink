@@ -44,8 +44,6 @@ namespace LearnLink.WebApi.Pages
 
             SuccessText = result.Message;
             HttpContext.Session.SetString("IsAdmin", userRole.IsAdmin.ToString());
-            //HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity([new Claim(ClaimTypes.Name, login)], "Cookies"));
-            //HttpContext.User.AddIdentity(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Role, userRole.Sign) }));
         }
     }
 }

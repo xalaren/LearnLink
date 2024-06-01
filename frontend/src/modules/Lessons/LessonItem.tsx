@@ -10,10 +10,11 @@ interface ILessonItemProps {
     lesson: Lesson;
     courseId: number;
     moduleId: number;
+    onClick: () => void;
     updateSignal: () => void;
 }
 
-function LessonItem({ lesson, courseId, moduleId, updateSignal }: ILessonItemProps) {
+function LessonItem({ lesson, courseId, moduleId, onClick, updateSignal }: ILessonItemProps) {
     const { completeLessonQuery, error, success, loading, resetValues } = useCompleteLesson();
     const { user } = useAppSelector(state => state.userReducer);
     const { accessToken } = useAppSelector(state => state.authReducer);
@@ -38,7 +39,7 @@ function LessonItem({ lesson, courseId, moduleId, updateSignal }: ILessonItemPro
             <ControlItemLink
                 title={lesson.title}
                 checked={lesson.completed}
-                onClick={() => { }}
+                onClick={onClick}
                 iconClassName="icon-bolt icon-medium-size"
                 className="content-list__item"
                 key={lesson.id}

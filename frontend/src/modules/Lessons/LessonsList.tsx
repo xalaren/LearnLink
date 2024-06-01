@@ -10,6 +10,7 @@ import { ErrorModal } from "../../components/Modal/ErrorModal";
 import { useHistoryNavigation } from "../../hooks/historyNavigation";
 import LessonItem from "./LessonItem";
 import LessonCreateModal from "./LessonCreateModal";
+import { paths } from "../../models/paths";
 
 interface ILessonsListProps {
     module: Module;
@@ -90,6 +91,7 @@ function BuildedLessonsList(props: {
                 <>{
                     props.lessons.map(lesson =>
                         <LessonItem
+                            onClick={() => toNext(paths.lesson.view.full(props.courseId, props.moduleId, lesson.id))}
                             courseId={props.courseId}
                             moduleId={props.moduleId}
                             lesson={lesson}
