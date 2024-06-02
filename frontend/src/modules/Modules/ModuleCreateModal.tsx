@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Input } from "../../components/Input";
+import { Input } from "../../components/Input/Input";
 import PopupLoader from "../../components/Loader/PopupLoader";
 import { Modal } from "../../components/Modal/Modal";
 import ModalButton from "../../components/Modal/ModalButton";

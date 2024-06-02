@@ -57,16 +57,16 @@ interface ISectionSelectorProps {
 function SectionSelector({ section }: ISectionSelectorProps) {
     if (section.content.isText) {
         return (
-            <SectionView sectionTitle={section.title || `Раздел ${section.order}`}>
-                <TextContent text={section.content.text || ''} />
+            <SectionView sectionTitle={section.title || ''} key={section.id}>
+                <TextContent text={section.content.text || ''} key={section.id} />
             </SectionView>
         );
     }
 
     if (section.content.isFile) {
         return (
-            <SectionView sectionTitle={section.title || `Раздел ${section.order}`}>
-                <FileContent>
+            <SectionView sectionTitle={section.title || ''} key={section.id}>
+                <FileContent key={section.id}>
                     {[
                         new FileInfo(section.content.fileName!, section.content.fileExtension!, section.content.fileUrl!)
                     ]}
@@ -77,8 +77,8 @@ function SectionSelector({ section }: ISectionSelectorProps) {
 
     if (section.content.isCodeBlock) {
         return (
-            <SectionView sectionTitle={section.title || `Раздел ${section.order}`}>
-                <CodeContent language={section.content.codeLanguage || ''}>
+            <SectionView sectionTitle={section.title || ''} key={section.id}>
+                <CodeContent language={section.content.codeLanguage || ''} key={section.id}>
                     {section.content.text || ''}
                 </CodeContent>
             </SectionView>

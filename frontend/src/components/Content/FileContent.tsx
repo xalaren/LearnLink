@@ -23,7 +23,7 @@ function FileContent({ children }: IFileContentProps) {
     return (
         <div className="lesson-section__files files-list">
             {children.map(file =>
-                <button className="button button-gray-violet" onClick={() => download(file.fileName, file.url)}>
+                <button className="button button-gray-violet" onClick={() => download(file.fileName, file.url)} key={children.indexOf(file)}>
                     <FileIcon fileExtension={file.fileExtension} />
                     {file.fileName}
                 </button>

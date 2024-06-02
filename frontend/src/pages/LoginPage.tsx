@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
 import { MainContainer } from "../components/MainContainer";
-import { Input } from "../components/Input";
+import { Input } from "../components/Input/Input";
 import { InputType, ProfileEditActions } from "../models/enums";
 import { validate } from "../helpers/validation";
 import { useLogin } from "../hooks/userHooks";

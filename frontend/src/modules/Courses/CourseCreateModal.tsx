@@ -10,7 +10,7 @@ import { InputType, NotificationType } from "../../models/enums";
 import { useAppSelector } from "../../hooks/redux";
 import { useCreateCourse } from "../../hooks/courseHooks";
 import { validate } from "../../helpers/validation";
-import { Input } from "../../components/Input";
+import { Input } from "../../components/Input/Input";
 import RoundedCheckbox from "../../components/LoadedCheckbox";
 
 interface ICourseCreateModalProps {

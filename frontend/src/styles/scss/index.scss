@@ -677,6 +677,10 @@
         display: flex;
         justify-content: space-between;
     }
+
+    &__description {
+        white-space: pre-wrap;
+    }
 }
 
 .content-side {
@@ -1040,7 +1044,6 @@
 }
 
 .lesson-creator {
-    max-width: 800px;
     width: 100%;
 
     @include child-not-last {
@@ -1146,7 +1149,6 @@
 
     &__text {
         @extend .ui-text;
-        white-space: pre-wrap;
         padding: 20px;
         font-family: "Roboto Mono";
     }
@@ -1649,5 +1651,108 @@
         font-weight: 500;
         margin-left: -20px;
         margin-bottom: -20px;
+    }
+}
+
+.editor {
+    @extend .ui-text;
+
+    .ck-editor__editable_inline {
+        min-height: 300px;
+    }
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background-color: $white;
+    width: fit-content;
+    padding: 5px 10px;
+
+    &__remove-button {
+        @include static-size(30px);
+        background-color: $veryLightGray;
+        border-radius: 15px;
+        transition: 0.3s ease-in-out;
+
+        @include hover {
+            color: $white;
+            background-color: $lightRed;
+        }
+    }
+}
+
+.file-uploader {
+    padding: 20px;
+    border: solid 2px $veryLightGray;
+    border-radius: 5px;
+
+    @include child-not-last {
+        margin-bottom: 30px;
+    }
+}
+
+.drag-n-drop {
+    min-height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: dashed 5px $veryLightGray;
+    border-radius: 5px;
+    padding: 20px;
+    &__content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        * {
+            color: $lightGray;
+        }
+    }
+
+    &__input {
+        display: none;
+    }
+
+    &__icon {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        max-width: 140px;
+    }
+
+    &__text {
+        font-size: $big-fz;
+        text-align: center;
+    }
+
+    &-dragging {
+        border-color: $lightViolet;
+        .drag-n-drop__content {
+            * {
+                color: $lightViolet;
+            }
+        }
+    }
+
+    @media screen and (max-width: $md) {
+        &__text {
+            font-size: $h3-fz;
+        }
+
+        &__icon {
+            max-width: 100px;
+        }
+    }
+
+    @media screen and (max-width: $sm) {
+        &__text {
+            font-size: $inputs-fz;
+        }
+
+        &__icon {
+            max-width: 80px;
+        }
     }
 }

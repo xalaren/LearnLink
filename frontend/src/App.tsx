@@ -21,6 +21,7 @@ import ModuleNestedLayout from "./pages/ModuleNestedLayout.tsx";
 import ModulePage from "./pages/ModulePage.tsx";
 import LessonNestedLayout from "./pages/LessonNestedLayout.tsx";
 import LessonPage from "./pages/LessonPage.tsx";
+import LessonEditPage from "./pages/LessonEditPage.tsx";
 
 
 function App() {
@@ -52,6 +53,7 @@ function App() {
                         <Route path={paths.module.view.base} element={<ModulePage />}></Route>
                         <Route path={paths.lesson.base(':lessonId')} element={<LessonNestedLayout />}>
                             <Route path={paths.lesson.view.base} element={<LessonPage />}></Route>
+                            <Route path={paths.lesson.edit.base} element={<LessonEditPage />}></Route>
                         </Route>
                     </Route>
                 </Route>

@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../../hooks/redux.ts";
 import { useUpdateUserData } from "../../hooks/userHooks.ts";
 import ProfileCard from "../../components/ProfileCard.tsx";
-import { Input } from "../../components/Input.tsx";
+import { Input } from "../../components/Input/Input.tsx";
 import { InputType, NotificationType } from "../../models/enums.ts";
 import { useEffect, useState } from "react";
 import { validate } from "../../helpers/validation.ts";

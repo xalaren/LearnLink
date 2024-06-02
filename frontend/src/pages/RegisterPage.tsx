@@ -3,7 +3,7 @@ import { MainContainer } from "../components/MainContainer";
 import { useAppSelector } from "../hooks/redux";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
 import { paths } from "../models/paths";
-import { Input } from "../components/Input";
+import { Input } from "../components/Input/Input";
 import { InputType } from "../models/enums";
 import ImageUploader from "../components/ImageUploader/ImageUploader";
 import { validate } from "../helpers/validation";

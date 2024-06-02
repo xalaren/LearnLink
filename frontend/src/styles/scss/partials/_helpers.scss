@@ -68,8 +68,24 @@ h3 {
     font-weight: 600;
 }
 
-b {
+b,
+strong {
     font-weight: 600;
+}
+
+i {
+    font-style: italic;
+}
+
+ul {
+    list-style-type: round; /* Замените на любой другой тип маркера */
+    padding-left: 20px; /* Добавьте отступ слева */
+}
+
+/* Стили для нумерованных списков */
+ol {
+    list-style-type: upper-latin; /* Замените на любой другой тип нумерации */
+    padding-left: 20px; /* Добавьте отступ слева */
 }
 
 //Common style classes
@@ -202,7 +218,7 @@ b {
     border: solid 2px transparent;
     transition: 0.3s ease-in-out;
     padding: 10px;
-    box-sizing: content-box;
+    height: max-content;
 
     @include hover {
         border-color: $lightViolet;
@@ -368,6 +384,25 @@ b {
     }
 }
 
+.outlined-input-danger {
+    @extend .outlined-input-line;
+    border-bottom: solid 2px $lighterRed;
+    &::placeholder {
+        color: $lighterRed;
+    }
+    @include hover {
+        background-color: rgba($veryLightRed, 0.4);
+    }
+    &:focus {
+        background-color: $veryLightRed;
+        color: $lightRed;
+        border-bottom-color: $lightRed;
+        &::placeholder {
+            color: $lighterRed;
+        }
+    }
+}
+
 .ui-title {
     font-size: $h3-fz;
     font-weight: 500;
@@ -463,6 +498,12 @@ b {
 
 .icon-normal-size {
     font-size: 20px;
+}
+
+.line-start-container {
+    display: flex;
+    gap: 20px;
+    align-items: center;
 }
 
 .line-distributed-container {

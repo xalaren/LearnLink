@@ -164,11 +164,16 @@ namespace LearnLink.Application.Interactors
 
                 if (section == null) throw new NotFoundException("Раздел не был найден");
 
+                var maxOrder = await unitOfWork.Sections
+                    .Where(s => s.LessonId == lessonId)
+                    .MaxAsync(s => (int?)s.Order) ?? 0;
+
                 var content = sectionDto.Content;
                 var prevSectionFileState = section.IsFile;
                 var prevSectionFileName = section.FileName;
 
                 section.Assign(sectionDto);
+                section.Order = maxOrder + 1;
 
                 if ((prevSectionFileState && !section.IsFile) || (prevSectionFileState && section.IsFile && sectionDto.Content.FormFile != null))
                 {
@@ -195,8 +200,6 @@ namespace LearnLink.Application.Interactors
                 await unitOfWork.CommitAsync();
 
                 await contentInteractor.SaveLessonContentAsync(content, section.LessonId, section.Id);
-                await UpdateSectionOrders(section.LessonId);
-
 
                 return new Response()
                 {
@@ -261,6 +264,8 @@ namespace LearnLink.Application.Interactors
             }
         }
 
+        //TODO: make remove file content from section
+
         public async Task RemoveSectionAsyncNoResponse(int sectionId, bool strictMode)
         {
             var section = await unitOfWork.Sections.FindAsync(sectionId);
@@ -284,7 +289,6 @@ namespace LearnLink.Application.Interactors
             {
                 contentInteractor.RemoveLessonContent(section.LessonId, section.Id, section.FileName);
             }
-
 
             unitOfWork.Sections.RemoveRange(sections);
         }

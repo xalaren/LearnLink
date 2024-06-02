@@ -1,4 +1,4 @@
-import { InputType } from "../models/enums";
+import { InputType } from "../../models/enums";
 
 interface IInputProps {
     type: InputType,
@@ -14,9 +14,9 @@ interface IInputProps {
 }
 
 export function Input({ type, name, errorMessage, onChange, value, placeholder, label, required = false, className = '' }: IInputProps) {
-
+    const filledClassName = className || 'input-gray';
     return (
-        <div className={"form-input " + className}>
+        <div className={"form-input"}>
             {label && !errorMessage &&
                 <p className={`form-input__label ${required ? 'form-input__label-required' : ''}`}>{label}</p>
             }
@@ -28,11 +28,11 @@ export function Input({ type, name, errorMessage, onChange, value, placeholder, 
                     name={name}
                     onChange={onChange}
                     placeholder={placeholder}
-                    className={`form-input__input textarea ${errorMessage ? 'input-danger' : 'input-gray'}`}
+                    className={`form-input__input textarea ${errorMessage ? 'input-danger' : filledClassName}`}
                     value={value}
                 /> :
                 <input
-                    className={`form-input__input ${errorMessage ? 'input-danger' : 'input-gray'}`}
+                    className={`form-input__input ${errorMessage ? 'input-danger' : filledClassName}`}
                     type={type} name={name}
                     placeholder={placeholder}
                     onChange={onChange}

@@ -5,10 +5,12 @@ import DropdownItem from "../../components/Dropdown/DropdownItem";
 import EllipsisDropdown from "../../components/Dropdown/EllipsisDropdown";
 import SectionView from "../../components/Sections/SectionView";
 import { DropdownState } from "../../contexts/DropdownContext";
+import { useHistoryNavigation } from "../../hooks/historyNavigation";
 import { Course } from "../../models/course";
 import { FileInfo } from "../../models/fileInfo";
 import { Lesson } from "../../models/lesson";
 import { Module } from "../../models/module";
+import { paths } from "../../models/paths";
 import SectionsViewContainer from "../Sections/SectionsViewContainer";
 import LessonDeleteModal from "./LessonDeleteModal";
 
@@ -20,13 +22,14 @@ interface ILessonViewProps {
     setDeleteModalActive: (active: boolean) => void;
 }
 
-function ModuleView({
+function LessonView({
     course,
     module,
     lesson,
     deleteModalActive,
     setDeleteModalActive
 }: ILessonViewProps) {
+    const { toNext } = useHistoryNavigation();
     return (
         <>
             <section className="view-page__header">
@@ -35,7 +38,7 @@ function ModuleView({
                     <>
                         <DropdownState>
                             <EllipsisDropdown>
-                                <DropdownItem title="Редактировать" className="icon icon-pen-circle" key={1} onClick={() => { }} />
+                                <DropdownItem title="Редактировать" className="icon icon-pen-circle" key={1} onClick={() => toNext(paths.lesson.edit.full(course!.id, module!.id, lesson!.id))} />
                                 <DropdownItem title="Удалить" className="icon icon-cross-circle" key={2} onClick={() => setDeleteModalActive(true)} />
                             </EllipsisDropdown>
                         </DropdownState>
@@ -58,4 +61,4 @@ function ModuleView({
     );
 }
 
-export default ModuleView;
+export default LessonView;

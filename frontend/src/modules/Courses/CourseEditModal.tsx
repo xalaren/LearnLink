@@ -5,7 +5,7 @@ import { useUpdateCourse } from "../../hooks/courseHooks";
 import { validate } from "../../helpers/validation";
 import { Modal } from "../../components/Modal/Modal";
 import ModalContent from "../../components/Modal/ModalContent";
-import { Input } from "../../components/Input";
+import { Input } from "../../components/Input/Input";
 import { InputType, NotificationType } from "../../models/enums";
 import Checkbox from "../../components/Checkbox";
 import ModalFooter from "../../components/Modal/ModalFooter";

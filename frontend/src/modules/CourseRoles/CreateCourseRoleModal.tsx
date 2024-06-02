@@ -2,7 +2,7 @@ import { Modal } from "../../components/Modal/Modal.tsx";
 import { useState } from "react";
 import { LocalRole } from "../../models/localRole.ts";
 import { validate } from "../../helpers/validation.ts";
-import { Input } from "../../components/Input.tsx";
+import { Input } from "../../components/Input/Input.tsx";
 import { InputType } from "../../models/enums.ts";
 import ModalContent from "../../components/Modal/ModalContent.tsx";
 import ModalButton from "../../components/Modal/ModalButton.tsx";

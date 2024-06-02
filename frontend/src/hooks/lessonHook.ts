@@ -111,6 +111,43 @@ export function useCreateLesson() {
     return { createLessonQuery, success, error, loading, resetValues }
 }
 
+export function useUpdateLesson() {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+
+    const updateLessonQuery = async (lesson: Lesson, courseId: number, userId: number, accessToken: string) => {
+        try {
+            setLoading(true);
+            const response = (await axiosInstance.post<VoidResponse>(`${LESSON_ENDPOINTS_URL}update?userId=${userId}&courseId=${courseId}`, lesson, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            }));
+
+            setLoading(false);
+
+            if (!response.data.success) {
+                throw new AxiosError(response.data.message);
+            }
+
+            setSuccess(response.data.message!);
+        }
+        catch (err: unknown) {
+            setError((err as AxiosError).message);
+        }
+    }
+
+    const resetValues = () => {
+        setLoading(false);
+        setError('');
+        setSuccess('');
+    }
+
+    return { updateLessonQuery, loading, error, success, resetValues };
+}
+
+
 export function useRemoveLesson() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
