@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { validate } from "../../helpers/validation";
 
 interface ISelectProps {
     children: React.ReactNode;
@@ -10,7 +11,8 @@ interface ISelectProps {
 }
 
 function Select({ defaultTitle, selectedTitle, children, active, toggle, onDeselect }: ISelectProps) {
-    let title = selectedTitle || defaultTitle;
+    let title = validate(selectedTitle || '') ? selectedTitle : defaultTitle;
+
     useEffect(() => {
         const closeSelect = (event: MouseEvent) => {
             const target = event.target as HTMLElement;
@@ -41,3 +43,7 @@ function Select({ defaultTitle, selectedTitle, children, active, toggle, onDesel
 }
 
 export default Select;
+
+function validata(selectedTitle: string | undefined) {
+    throw new Error("Function not implemented.");
+}

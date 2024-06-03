@@ -6,25 +6,26 @@ interface IFileUploaderProps {
     name: string;
     file?: File;
     setFile: (file: File) => void;
+    uploadedFileInfo?: FileInfo;
 }
 
-function FileUploader({ name, file, setFile }: IFileUploaderProps) {
-    const [uploadedFile, setUploadedFile] = useState<File | null>();
+function FileUploader({ name, file, setFile, uploadedFileInfo }: IFileUploaderProps) {
     const [drag, setDrag] = useState(false);
+    const [fileInfo, setFileInfo] = useState<FileInfo | null>(null);
 
     useEffect(() => {
         if (file) {
-            setUploadedFile(file);
-            return;
+            const fileUrl = URL.createObjectURL(file);
+            const fileExt = file.name.split('.').pop() || 'file';
+            setFileInfo(new FileInfo(file.name, fileExt, fileUrl))
         }
-
-        if (!file && uploadedFile) {
-            setFile(uploadedFile);
+        else if (uploadedFileInfo) {
+            setFileInfo(uploadedFileInfo);
         }
-
-        console.log(uploadedFile);
-
-    }, [uploadedFile]);
+        else {
+            setFileInfo(null);
+        }
+    }, [file]);
 
 
     function dragStartHandler(event: React.DragEvent) {
@@ -42,7 +43,7 @@ function FileUploader({ name, file, setFile }: IFileUploaderProps) {
         const files = [...event.dataTransfer.files];
 
         if (files) {
-            setUploadedFile(files[0]);
+            setFile(files[0]);
         }
         setDrag(false);
     }
@@ -52,18 +53,22 @@ function FileUploader({ name, file, setFile }: IFileUploaderProps) {
         const inputElement = event.target as HTMLInputElement;
 
         if (inputElement.files) {
-            setUploadedFile(inputElement.files[0]);
+            setFile(inputElement.files[0]);
         }
+    }
+
+    function onRemove() {
+        setFileInfo(null);
     }
 
     return (
         <div className="file-uploader">
-            {uploadedFile ?
+            {fileInfo ?
                 <>
                     <p>Загруженные файлы:</p>
                     <FileItem
-                        fileInfo={new FileInfo(uploadedFile.name, uploadedFile.name.split('.').pop()!)}
-                        onRemove={() => { }}
+                        fileInfo={fileInfo}
+                        onRemove={onRemove}
                     />
                 </>
                 :

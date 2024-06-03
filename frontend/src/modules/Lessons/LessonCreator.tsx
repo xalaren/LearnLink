@@ -9,6 +9,7 @@ import { LessonContext } from "../../contexts/LessonContext";
 import { CourseContext } from "../../contexts/CourseContext";
 import PopupLoader from "../../components/Loader/PopupLoader";
 import PopupNotification from "../../components/PopupNotification";
+import CodeEditor from "../../components/CodeEditor/CodeEditor";
 
 
 function LessonCreator() {
@@ -25,6 +26,9 @@ function LessonCreator() {
     const [loading, setLoading] = useState(false);
 
     const updateLessonHook = useUpdateLesson();
+
+    const [language, setLanguage] = useState('');
+    const [text, setText] = useState('');
 
     useEffect(() => {
         if (!lesson) return;
