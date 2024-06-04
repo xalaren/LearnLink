@@ -20,3 +20,10 @@ export enum NotificationType {
     success = 'success',
     default = '',
 }
+
+export enum ContentTypes {
+    none = '',
+    text = 'text',
+    code = 'code',
+    file = 'file'
+};

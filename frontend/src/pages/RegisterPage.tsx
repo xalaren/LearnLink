@@ -113,7 +113,7 @@ export function RegisterPage() {
 
                     <Input
                         type={InputType.text}
-                        className="form__form-input"
+                        className="form__form-input input-gray"
                         name="nickname"
                         errorMessage={nicknameError}
                         placeholder="Введите никнейм..."
@@ -124,7 +124,7 @@ export function RegisterPage() {
 
                     <Input
                         type={InputType.password}
-                        className="form__form-input"
+                        className="form__form-input input-gray"
                         name="password"
                         errorMessage={passwordError}
                         placeholder="Введите пароль..."
@@ -135,7 +135,7 @@ export function RegisterPage() {
 
                     <Input
                         type={InputType.text}
-                        className="form__form-input"
+                        className="form__form-input input-gray"
                         name="name"
                         errorMessage={nameError}
                         placeholder="Введите имя..."
@@ -146,7 +146,7 @@ export function RegisterPage() {
 
                     <Input
                         type={InputType.text}
-                        className="form__form-input"
+                        className="form__form-input input-gray"
                         name="lastname"
                         errorMessage={lastnameError}
                         placeholder="Введите фамилию..."

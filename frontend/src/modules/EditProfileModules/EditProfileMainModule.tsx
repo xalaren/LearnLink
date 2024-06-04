@@ -110,7 +110,7 @@ function EditProfileMainModule() {
                     <div className="form__inputs">
                         <Input
                             type={InputType.text}
-                            className="form__form-input"
+                            className="form__form-input input-gray"
                             name="nickname"
                             errorMessage={nicknameError}
                             placeholder="Введите никнейм..."
@@ -122,7 +122,7 @@ function EditProfileMainModule() {
 
                         <Input
                             type={InputType.text}
-                            className="form__form-input"
+                            className="form__form-input input-gray"
                             name="name"
                             errorMessage={nameError}
                             placeholder="Введите имя..."
@@ -134,7 +134,7 @@ function EditProfileMainModule() {
 
                         <Input
                             type={InputType.text}
-                            className="form__form-input"
+                            className="form__form-input input-gray"
                             name="lastname"
                             errorMessage={lastnameError}
                             placeholder="Введите фамилию..."

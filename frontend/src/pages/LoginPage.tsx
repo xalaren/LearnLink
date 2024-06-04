@@ -87,7 +87,7 @@ export function LoginPage() {
                 <div className="form__inputs">
                     <Input
                         type={InputType.text}
-                        className="form__form-input"
+                        className="form__form-input input-gray"
                         name="nickname"
                         errorMessage={nicknameError}
                         placeholder="Введите никнейм..."
@@ -99,7 +99,7 @@ export function LoginPage() {
 
                     <Input
                         type={InputType.password}
-                        className="form__form-input"
+                        className="form__form-input input-gray"
                         name="password"
                         errorMessage={passwordError}
                         placeholder="Введите пароль..."

@@ -273,7 +273,6 @@
     display: flex;
     gap: 20px;
     &__add-button {
-        font-size: 24px;
         width: 50px;
         height: 50px;
     }
@@ -1079,35 +1078,6 @@
     }
 }
 
-.section-create {
-    @include child-not-last {
-        margin-bottom: 40px;
-    }
-
-    &__actions {
-        display: flex;
-        gap: 40px;
-        flex-wrap: wrap;
-    }
-
-    &__large-button {
-        @extend .button-base;
-        @include static-size(100px);
-        padding: 5px;
-        font-size: $h1-fz;
-    }
-
-    &__section-input {
-        min-width: 200px;
-    }
-
-    @media screen and (max-width: $sm) {
-        &__actions {
-            gap: 20px;
-        }
-    }
-}
-
 .lesson-section {
     @include child-not-last {
         margin-bottom: 40px;
@@ -1495,9 +1465,10 @@
     &__items {
         display: none;
         position: absolute;
-        background-color: $veryLightGray;
+        background-color: $white;
         border-bottom-left-radius: 5px;
         border-bottom-right-radius: 5px;
+        border: solid 2px $lightGray;
         width: 100%;
         max-height: 200px;
         overflow: auto;
@@ -1789,5 +1760,23 @@
         &__icon {
             max-width: 80px;
         }
+    }
+}
+
+.section-create {
+    @include child-not-last {
+        margin-bottom: 40px;
+    }
+
+    &__input {
+        max-width: 500px;
+    }
+
+    &__button {
+        padding: 0;
+        min-width: 40px;
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
     }
 }

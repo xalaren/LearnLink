@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Input } from "../../components/Input/Input";
 import { OutlinedInput } from "../../components/Input/OutlinedInput";
-import { InputType, NotificationType } from "../../models/enums";
+import { ContentTypes, InputType, NotificationType } from "../../models/enums";
 import { useUpdateLesson } from "../../hooks/lessonHook";
 import { validate } from "../../helpers/validation";
 import { useAppSelector } from "../../hooks/redux";
@@ -10,6 +10,8 @@ import { CourseContext } from "../../contexts/CourseContext";
 import PopupLoader from "../../components/Loader/PopupLoader";
 import PopupNotification from "../../components/PopupNotification";
 import CodeEditor from "../../components/CodeEditor/CodeEditor";
+import ControlNav from "../../components/ControlNav";
+import SectionCreator from "../Sections/SectionCreator";
 
 
 function LessonCreator() {
@@ -25,10 +27,9 @@ function LessonCreator() {
     const [description, setDescription] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const updateLessonHook = useUpdateLesson();
+    const [creatorContentType, setCreatorContentType] = useState(ContentTypes.none);
 
-    const [language, setLanguage] = useState('');
-    const [text, setText] = useState('');
+    const updateLessonHook = useUpdateLesson();
 
     useEffect(() => {
         if (!lesson) return;
@@ -77,73 +78,84 @@ function LessonCreator() {
     }
 
     return (
-        <div className="lesson-creator">
-            <div className="line-start-container">
-                <button className="button-violet-outline" onClick={procceedSave}>Сохранить</button>
-                <button className="button-violet-outline" onClick={fetchLesson}>Отменить</button>
-            </div>
+        <>
+            {
+                lesson ?
+                    <div className="lesson-creator">
+                        <div className="line-start-container">
+                            <button className="button-violet-outline" onClick={procceedSave}>Сохранить</button>
+                            <button className="button-violet-outline" onClick={fetchLesson}>Отменить</button>
+                        </div>
 
-            <form action="#" className="lesson-creator__form">
-                <OutlinedInput
-                    className="big-text"
-                    name="title"
-                    placeholder="Введите название урока..."
-                    errorMessage={titleError}
-                    required={true}
-                    value={title}
-                    onChange={onChange}
-                />
-                <Input
-                    type={InputType.rich}
-                    placeholder="Введите описание урока (необязательно)..."
-                    name="description"
-                    required={false}
-                    onChange={onChange}
-                    className="outlined-input"
-                    value={description}
-                />
-            </form>
+                        <form action="#" className="lesson-creator__form">
+                            <OutlinedInput
+                                className="big-text"
+                                name="title"
+                                placeholder="Введите название урока..."
+                                errorMessage={titleError}
+                                required={true}
+                                value={title}
+                                onChange={onChange}
+                            />
+                            <Input
+                                type={InputType.rich}
+                                placeholder="Введите описание урока (необязательно)..."
+                                name="description"
+                                required={false}
+                                onChange={onChange}
+                                className="outlined-input"
+                                value={description}
+                            />
+                        </form>
 
 
-            <section className="lesson-creator__content content-creator">
-                <h3>Содержимое</h3>
+                        <section className="lesson-creator__content content-creator">
+                            <div className="line-distributed-container">
+                                <h3>Содержимое</h3>
+                                <ControlNav>
+                                    <button
+                                        className="control-nav__add-button button-gray icon icon-big-size icon-text-add"
+                                        onClick={() => setCreatorContentType(ContentTypes.text)}
+                                    ></button>
+                                    <button
+                                        className="control-nav__add-button button-gray icon icon-big-size icon-document-add"
+                                        onClick={() => setCreatorContentType(ContentTypes.file)}
+                                    >
+                                    </button>
+                                    <button
+                                        className="control-nav__add-button button-gray icon icon-big-size icon-code-add"
+                                        onClick={() => setCreatorContentType(ContentTypes.code)}
+                                    ></button>
+                                </ControlNav>
+                            </div>
 
-                <button className="content-creator__add-button button-gray icon-plus" onClick={() => { }}></button>
+                            <SectionCreator
+                                lessonId={lesson.id}
+                                contentType={creatorContentType}
+                                onClose={() => setCreatorContentType(ContentTypes.none)}
+                            />
+                        </section>
 
-                <div className="content-creator__section-create section-create">
-                    <input type="text" className="section-create__input outlined-input-line"
-                        placeholder="Название раздела..." />
+                        {loading &&
+                            <PopupLoader />
+                        }
 
-                    <div className="section-create__actions">
-                        <button className="section-create__large-button button-gray-violet icon-text-add">
-                        </button>
-                        <button className="section-create__large-button button-gray-violet icon-document-add">
-                        </button>
-                        <button className="section-create__large-button button-gray-violet icon-code-add">
-                        </button>
+                        {updateLessonHook.error && !loading &&
+                            <PopupNotification notificationType={NotificationType.error} onFade={onSuccessLessonUpdate}>
+                                {updateLessonHook.error}
+                            </PopupNotification>
+                        }
+
+                        {updateLessonHook.success && !loading &&
+                            <PopupNotification notificationType={NotificationType.success} onFade={onSuccessLessonUpdate}>
+                                {updateLessonHook.success}
+                            </PopupNotification>
+                        }
                     </div>
-                </div>
-            </section>
-
-
-            {loading &&
-                <PopupLoader />
+                    :
+                    <p>Не удалось получить доступ к уроку...</p>
             }
-
-            {updateLessonHook.error && !loading &&
-                <PopupNotification notificationType={NotificationType.error} onFade={onSuccessLessonUpdate}>
-                    {updateLessonHook.error}
-                </PopupNotification>
-            }
-
-            {updateLessonHook.success && !loading &&
-                <PopupNotification notificationType={NotificationType.success} onFade={onSuccessLessonUpdate}>
-                    {updateLessonHook.success}
-                </PopupNotification>
-            }
-
-
-        </div>
+        </>
     );
 }
 

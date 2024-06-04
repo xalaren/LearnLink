@@ -69,7 +69,7 @@ function EditProfilePasswordModule() {
                 <div className="form__inputs">
                     <Input
                         type={InputType.password}
-                        className="form__form-input"
+                        className="form__form-input input-gray"
                         name="oldPassword"
                         errorMessage={oldPasswordError}
                         placeholder="Введите старый пароль..."
@@ -81,7 +81,7 @@ function EditProfilePasswordModule() {
 
                     <Input
                         type={InputType.password}
-                        className="form__form-input"
+                        className="form__form-input input-gray"
                         name="newPassword"
                         errorMessage={newPasswordError}
                         placeholder="Введите новый пароль..."

@@ -4,7 +4,7 @@ import FileItem from "./FileItem";
 
 interface IFileUploaderProps {
     name: string;
-    file?: File;
+    file?: File | null;
     setFile: (file: File) => void;
     uploadedFileInfo?: FileInfo;
 }
