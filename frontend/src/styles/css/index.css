@@ -1985,6 +1985,7 @@ ol {
 .code-block {
   border: solid 2px #f3f3f3;
   border-radius: 5px;
+  font-family: "Roboto Mono";
 }
 .code-block__title {
   width: -moz-max-content;

@@ -1,6 +1,8 @@
 ﻿using LearnLink.Application.Helpers;
 using LearnLink.Core.Entities;
+using LearnLink.Core.Exceptions;
 using LearnLink.Shared.DataTransferObjects;
+using Microsoft.AspNetCore.Http;
 
 namespace LearnLink.Application.Mappers
 {
@@ -22,18 +24,23 @@ namespace LearnLink.Application.Mappers
                      : null
             };
 
-            return new SectionDto
-            (
-                Id: sectionEntity.Id,
-                LessonId: sectionEntity.LessonId,
-                Title: sectionEntity.Title,
-                Order: sectionEntity.Order,
-                Content: contentDto
-            );
+            return new SectionDto()
+            {
+                Id = sectionEntity.Id,
+                LessonId = sectionEntity.LessonId,
+                Title = sectionEntity.Title,
+                Order = sectionEntity.Order,
+                Content = contentDto
+            };
         }
 
         public static Section ToEntity(this SectionDto sectionDto)
         {
+            if(sectionDto.Content == null)
+            {
+                throw new ValidationException("Контент не был заполнен");
+            }
+
             string? fileExt = null;
 
             if (sectionDto.Content.IsFile && sectionDto.Content.FormFile != null)
@@ -60,6 +67,11 @@ namespace LearnLink.Application.Mappers
         {
             string? fileExt = null;
 
+            if (sectionDto.Content == null)
+            {
+                throw new ValidationException("Контент не был заполнен");
+            }
+
             if (sectionDto.Content.IsFile && sectionDto.Content.FormFile != null)
             {
                 fileExt = Path.GetExtension(sectionDto.Content.FormFile.FileName);
@@ -82,7 +94,10 @@ namespace LearnLink.Application.Mappers
 
         public static Section Assign(this Section sectionEntity, SectionDto sectionDto)
         {
-
+            if (sectionDto.Content == null)
+            {
+                throw new ValidationException("Контент не был заполнен");
+            }
             sectionEntity.Title = sectionDto.Title;
             sectionEntity.IsText = sectionDto.Content.IsText;
             sectionEntity.IsCodeBlock = sectionDto.Content.IsCodeBlock;
@@ -97,6 +112,66 @@ namespace LearnLink.Application.Mappers
             }
 
             return sectionEntity;
+        }
+
+        public static SectionDto ToSectionDto(this SectionFileContentDto sectionFileContentDto)
+        {
+            string fileExt = Path.GetExtension(sectionFileContentDto.FormFile.FileName);
+            string fileName = sectionFileContentDto.FormFile.FileName;
+
+            return new SectionDto()
+            {
+                Id = sectionFileContentDto.Id,
+                LessonId = sectionFileContentDto.LessonId,
+                Order = sectionFileContentDto.Order,
+                Title = sectionFileContentDto.Title,
+                Content = new ContentDto()
+                {
+                    IsText = false,
+                    IsCodeBlock = false,
+                    IsFile = true,
+                    FormFile = sectionFileContentDto.FormFile,
+                    FileName = fileName,
+                    FileExtension = fileExt
+                }
+            };
+        }
+
+        public static SectionDto ToSectionDto(this SectionTextContentDto sectionTextContentDto)
+        {
+            return new SectionDto()
+            {
+                Id = sectionTextContentDto.Id,
+                LessonId = sectionTextContentDto.LessonId,
+                Order = sectionTextContentDto.Order,
+                Title = sectionTextContentDto.Title,
+                Content = new ContentDto()
+                {
+                    IsText = true,
+                    IsCodeBlock = false,
+                    IsFile = false,
+                    Text = sectionTextContentDto.Text
+                }
+            };
+        }
+        public static SectionDto ToSectionDto(this SectionCodeContentDto sectionCodeContentDto)
+        {
+
+            return new SectionDto()
+            {
+                Id = sectionCodeContentDto.Id,
+                LessonId = sectionCodeContentDto.LessonId,
+                Order = sectionCodeContentDto.Order,
+                Title = sectionCodeContentDto.Title,
+                Content = new ContentDto()
+                {
+                    IsText = false,
+                    IsCodeBlock = true,
+                    IsFile = false,
+                    Text = sectionCodeContentDto.Code,
+                    CodeLanguage = sectionCodeContentDto.CodeLanguage
+                }
+            };
         }
     }
 }

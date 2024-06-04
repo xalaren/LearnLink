@@ -1,9 +1,9 @@
 import { useState } from "react";
 import axiosInstance from "../axios_config/axiosConfig";
 import { ValueResponse, VoidResponse } from "../models/response";
-import { Section } from "../models/section";
+import { Section, SectionCodeContent, SectionFileContent, SectionTextContent } from "../models/section";
 import { SECTIONS_ENDPOINTS_URL } from "../models/constants";
-import { AxiosError } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 
 export function useGetLessonSections() {
     const [error, setError] = useState('');
@@ -42,15 +42,69 @@ export function useGetLessonSections() {
 export function useCreateSection() {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    const createSectionQuery = async (lessonId: number, section: Section, accessToken: string) => {
+    const createSectionQuery = async (section: Section, accessToken: string) => {
         try {
-            const response = await axiosInstance.post<VoidResponse>(`${SECTIONS_ENDPOINTS_URL}create?lessonId=${lessonId}`, section, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${accessToken}`,
-                }
-            });
+            setLoading(true);
+
+            let response: AxiosResponse<VoidResponse, any>;
+
+            if (section.content.isText) {
+                const textContent: SectionTextContent = {
+                    id: section.id,
+                    lessonId: section.lessonId,
+                    order: section.order,
+                    text: section.content.text || '',
+                    title: section.title
+                };
+
+                response = await axiosInstance.post<VoidResponse>(`${SECTIONS_ENDPOINTS_URL}create/text`, textContent, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${accessToken}`,
+                    }
+                });
+            }
+            else if (section.content.isCodeBlock) {
+                const codeContent: SectionCodeContent = {
+                    id: section.id,
+                    lessonId: section.lessonId,
+                    order: section.order,
+                    code: section.content.text || '',
+                    codeLanguage: section.content.codeLanguage || '',
+                    title: section.title
+                };
+
+                response = await axiosInstance.post<VoidResponse>(`${SECTIONS_ENDPOINTS_URL}create/code`, codeContent, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${accessToken}`,
+                    }
+                });
+            }
+            else if (section.content.isFile) {
+                const fileContent: SectionFileContent = {
+                    id: section.id,
+                    lessonId: section.lessonId,
+                    order: section.order,
+                    formFile: section.content.formFile!,
+                    title: section.title
+                };
+
+                response = await axiosInstance.post<VoidResponse>(`${SECTIONS_ENDPOINTS_URL}create/file`, fileContent, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${accessToken}`,
+                    }
+                });
+
+            }
+            else {
+                throw new AxiosError("Неверный формат контента");
+            }
+
+            setLoading(false);
 
             if (!response.data.success) {
                 throw new AxiosError(response.data.message);
@@ -60,15 +114,17 @@ export function useCreateSection() {
         }
         catch (err: unknown) {
             setError((err as AxiosError).message);
+            setLoading(false);
         }
     }
 
     const resetValues = () => {
         setError('');
         setSuccess('');
+        setLoading(false);
     }
 
-    return { createSectionQuery, error, success, resetValues };
+    return { createSectionQuery, error, loading, success, resetValues };
 }
 
 export function useUpdateSection() {

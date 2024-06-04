@@ -19,3 +19,30 @@ export class Section {
         this.title = title;
     }
 }
+
+export interface SectionCodeContent {
+    id: number;
+    order: number;
+    lessonId: number;
+    title?: string;
+    code: string;
+    codeLanguage: string;
+}
+
+export interface SectionFileContent {
+    id: number;
+    order: number;
+    lessonId: number;
+    title?: string;
+    formFile: File;
+}
+
+export interface SectionTextContent {
+    id: number;
+    order: number;
+    lessonId: number;
+    title?: string;
+    text: string;
+}
+
+

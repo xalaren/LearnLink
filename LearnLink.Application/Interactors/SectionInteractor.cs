@@ -117,12 +117,16 @@ namespace LearnLink.Application.Interactors
                     section.IsCodeBlock = false;
                 }
 
+                var maxOrder = await unitOfWork.Sections
+                    .Where(s => s.LessonId == lessonId)
+                    .MaxAsync(s => (int?)s.Order) ?? 0;
+
+                section.Order = maxOrder + 1;
+
                 await unitOfWork.Sections.AddAsync(section);
-                await UpdateSectionOrders(section.LessonId);
                 await unitOfWork.CommitAsync();
 
                 await contentInteractor.SaveLessonContentAsync(content, section.LessonId, section.Id);
-
 
                 return new Response()
                 {
@@ -164,16 +168,14 @@ namespace LearnLink.Application.Interactors
 
                 if (section == null) throw new NotFoundException("Раздел не был найден");
 
-                var maxOrder = await unitOfWork.Sections
-                    .Where(s => s.LessonId == lessonId)
-                    .MaxAsync(s => (int?)s.Order) ?? 0;
+                
 
                 var content = sectionDto.Content;
                 var prevSectionFileState = section.IsFile;
                 var prevSectionFileName = section.FileName;
 
                 section.Assign(sectionDto);
-                section.Order = maxOrder + 1;
+                
 
                 if ((prevSectionFileState && !section.IsFile) || (prevSectionFileState && section.IsFile && sectionDto.Content.FormFile != null))
                 {

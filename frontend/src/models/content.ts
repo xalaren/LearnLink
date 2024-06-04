@@ -3,11 +3,11 @@ export class Content {
     isCodeBlock: boolean;
     isFile: boolean;
     text?: string;
-    formFile?: File;
     fileName?: string;
+    formFile?: File | null;
+    fileUrl?: string;
     fileExtension?: string;
     codeLanguage?: string;
-    fileUrl?: string;
 
     constructor(
         isText: boolean,
@@ -15,7 +15,7 @@ export class Content {
         isFile: boolean,
         text?: string,
         codeLanguage?: string,
-        formFile?: File
+        formFile?: File | null
     ) {
         this.isText = isText;
         this.isCodeBlock = isCodeBlock;

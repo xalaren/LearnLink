@@ -50,14 +50,14 @@ namespace LearnLink.WebApi.Pages.Sections
                 FormFile = contentFile
             };
 
-            var sectionDto = new SectionDto
-            (
-                Id: sectionId,
-                Order: 0,
-                Content: contentDto,
-                LessonId: lessonId,
-                Title: title
-            );
+            var sectionDto = new SectionDto()
+            {
+                Id = sectionId,
+                Order = 0,
+                Content = contentDto,
+                LessonId = lessonId,
+                Title = title
+            };
 
             QueryResult = await SectionInteractor.UpdateSectionAsync(lessonId, sectionDto);
         }

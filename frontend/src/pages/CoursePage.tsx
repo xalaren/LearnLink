@@ -13,7 +13,7 @@ import { CourseContext } from "../contexts/CourseContext";
 function CoursePage() {
     const { user } = useAppSelector(state => state.userReducer);
     const { accessToken } = useAppSelector(state => state.authReducer);
-    const { course, fetchCourse, signalUpdate } = useContext(CourseContext);
+    const { course, fetchCourse } = useContext(CourseContext);
 
     const [subscriberStatus, setSubscriberStatus] = useState(false);
     const [creatorStatus, setCreatorStatus] = useState(false);

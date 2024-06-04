@@ -1,11 +1,11 @@
 ﻿namespace LearnLink.Shared.DataTransferObjects
 {
-    public class SectionDto
+    public class SectionTextContentDto
     {
         public int Id { get; set; }
         public int Order { get; set; }
-        public ContentDto Content { get; set; } = null!;
         public int LessonId { get; set; }
         public string? Title { get; set; }
+        public string Text { get; set; } = string.Empty;
     }
 }
