@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LearnLink.WebApi.Controllers
 {
     [ApiController]
-    [Route("api/courses")]
+    [Route("api/Courses")]
     public class CourseController : Controller
     {
         private readonly CourseInteractor courseInteractor;
@@ -59,15 +59,15 @@ namespace LearnLink.WebApi.Controllers
 
 
         [AllowAnonymous]
-        [HttpGet("get/public")]
+        [HttpGet("get-public")]
         public async Task<Response<DataPage<CourseDto[]>>> GetPublicCoursesAsync(int page, int size)
         {
-            return await courseInteractor.GetPublicCoursesAsync(new DataPageHeader(page, size));
+            return await courseInteractor.GetPublicCoursesAsync();
         }
 
         [Authorize]
-        [HttpGet("get/subscribed")]
-        public async Task<Response<CourseDto[]>> GetSubscribedCoursesAsync(int userId)
+        [HttpGet("get-subscribed")]
+        public async Task<Response<DataPage<CourseDto[]>>> GetSubscribedCoursesAsync(int userId, int page, int size)
         {
             var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
 
@@ -77,46 +77,22 @@ namespace LearnLink.WebApi.Controllers
                 Message = verifyResponse.Message,
             };
 
-            return await courseInteractor.GetSubscribedCoursesAsync(userId);
+            return await courseInteractor.GetSubscribedCoursesAsync(userId, new DataPageHeader(page, size));
         }
 
         [Authorize]
-        [HttpGet("get/unavailable")]
-        public async Task<Response<CourseDto[]>> GetUnavailableCoursesAsync(int userId)
+        [HttpGet("get-unavailable")]
+        public async Task<Response<DataPage<CourseDto[]>>> GetUnavailableCoursesAsync(int userId, int page, int size)
         {
             var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
 
-            if (!verifyResponse.Success) return new Response<CourseDto[]>()
+            if (!verifyResponse.Success) return new Response<DataPage<CourseDto[]>>()
             {
                 Success = verifyResponse.Success,
                 Message = verifyResponse.Message,
             };
 
-            return await courseInteractor.GetUnavailableUserCoursesAsync(userId);
-        }
-
-
-        [AllowAnonymous]
-        [HttpGet("find/public")]
-        public async Task<Response<DataPage<CourseDto[]>>> FindPublicCourses(string? title, int page, int size)
-        {
-            return await courseInteractor.FindCoursesByTitle(title, new DataPageHeader(page, size));
-        }
-
-        [Authorize]
-        [HttpGet("find/user-courses")]
-        public async Task<Response<DataPage<CourseDto[]>>> FindInUserCourses(int userId, string? title, bool findSubscription, bool findUnavailable, int page, int size)
-        {
-            var verifyResponse = await userVerifierService.VerifyUserAsync(User.Identity?.Name, userId);
-
-
-            if (!verifyResponse.Success) return new()
-            {
-                Success = verifyResponse.Success,
-                Message = verifyResponse.Message,
-            };
-
-            return await courseInteractor.FindCoursesByTitleInUserCourses(userId, title, findSubscription, findUnavailable, new DataPageHeader(page, size));
+            return await courseInteractor.GetUnavailableUserCoursesAsync(userId, new DataPageHeader(page, size));
         }
 
         [Authorize]
