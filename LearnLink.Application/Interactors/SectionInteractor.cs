@@ -126,7 +126,11 @@ namespace LearnLink.Application.Interactors
                 await unitOfWork.Sections.AddAsync(section);
                 await unitOfWork.CommitAsync();
 
-                await contentInteractor.SaveLessonContentAsync(content, section.LessonId, section.Id);
+                if(content != null)
+                {
+                    await contentInteractor.SaveLessonContentAsync(content, section.LessonId, section.Id);
+                }
+
 
                 return new Response()
                 {
