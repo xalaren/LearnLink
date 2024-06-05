@@ -18,7 +18,7 @@
     <div class="form-input">
         <p class="form-input__label">Lesson Id</p>
         <div class="line-container">
-            <input type="number" name="lessonId"  placeholder="Lesson Id..." min="0" class="input" />
+            <input type="number" name="lessonId" placeholder="Lesson Id..." min="0" class="input" />
             <button class="primary-button">List lesson sections</button>
         </div>
     </div>
@@ -47,31 +47,31 @@
             <div class="result-value">
                 <p>Id: <span class="white-selection">@sectionExample.Id</span></p>
                 <p>Lesson Id: <span class="white-selection">@sectionExample.LessonId</span></p>
-                @if(sectionExample.Title != null)
+                @if (sectionExample.Title != null)
                 {
                     <p>Title: <span class="white-selection">@sectionExample.Title</span></p>
                 }
                 <p>Order: <span class="white-selection">@sectionExample.Order</span></p>
-                @if (sectionExample.Content.FileName != null)
+                @if (sectionExample.Content != null)
                 {
-                    <p>FileName: <span class="white-selection">@sectionExample.Content.FileName</span></p>
-                    <p>Url: <a class="white-selection white-link" href="api/@sectionExample.Content.FileUrl">@sectionExample.Content.FileUrl</a></p>
-                }
-                @if (sectionExample.Content.IsText)
-                {
-                    <p>Text:</p>
-                    <p class="white-selection">@sectionExample.Content.Text</p>
+                    @if (sectionExample.Content.FileName != null)
+                    {
+                        <p>FileName: <span class="white-selection">@sectionExample.Content.FileName</span></p>
+                        <p>Url: <a class="white-selection white-link"
+                                href="api/@sectionExample.Content.FileUrl">@sectionExample.Content.FileUrl</a></p>
+                    }
+                    @if (sectionExample.Content.IsCodeBlock)
+                    {
+                        <p>Code language:</p>
+                        <p class="white-selection">@sectionExample.Content.CodeLanguage</p>
+                    }
+                    @if (sectionExample.Content.IsText)
+                    {
+                        <p>Text:</p>
+                        <p class="white-selection">@sectionExample.Content.Text</p>
+                    }
                 }
             </div>
         }
     </div>
 }
-
-
-
-
-
-
-
-
-

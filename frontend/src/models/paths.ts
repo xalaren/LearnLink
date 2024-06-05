@@ -44,5 +44,9 @@ export const paths = {
             base: 'edit',
             full: (courseId: number | string, moduleId: number | string, lessonId: number | string) => `/course/${courseId}/module/${moduleId}/lesson/${lessonId}/edit`
         }
+    },
+    privacy: {
+        base: 'privacy',
+        full: '/privacy'
     }
 }

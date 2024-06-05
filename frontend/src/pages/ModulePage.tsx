@@ -18,8 +18,7 @@ function ModulePage() {
     const [deleteModalActive, setDeleteModalActive] = useState(false);
 
     async function update() {
-        await fetchModule();
-        await fetchCourse();
+        await fetchModule().then(fetchCourse);
     }
 
     return (

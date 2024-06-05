@@ -6,7 +6,7 @@ import { LoginPage } from "./pages/LoginPage";
 import { InvalidPage } from "./pages/InvalidPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import ProfilePage from "./pages/ProfilePage";
-import Footer from "./components/Footer";
+import Footer from "./modules/Footer.tsx";
 import CoursePage from "./pages/CoursePage";
 import UserCoursesPage from "./pages/UserCoursesPage";
 import { paths } from "./models/paths";
@@ -15,13 +15,14 @@ import { useEffect } from "react";
 import { fetchUser } from "./store/actions/userActionCreators";
 import CourseParticipantsPage from "./pages/CourseParticipantsPage";
 import CourseRolesPage from "./pages/CourseRolesPage.tsx";
-import Layout from "./pages/Layout.tsx";
 import CourseNestedLayout from "./pages/CourseNestedLayout.tsx";
 import ModuleNestedLayout from "./pages/ModuleNestedLayout.tsx";
 import ModulePage from "./pages/ModulePage.tsx";
 import LessonNestedLayout from "./pages/LessonNestedLayout.tsx";
 import LessonPage from "./pages/LessonPage.tsx";
 import LessonEditPage from "./pages/LessonEditPage.tsx";
+import HomePage from "./pages/HomePage.tsx";
+import PrivacyPolicy from "./pages/PrivacyPolicy.tsx";
 
 
 function App() {
@@ -39,7 +40,7 @@ function App() {
             <Header />
 
             <Routes>
-                <Route path={'/'} element={<Layout />}></Route>
+                <Route path={'/'} element={<HomePage />}></Route>
                 <Route path={paths.public(':pageNumber')} element={<PublicPage />}></Route>
                 <Route path={paths.login} element={<LoginPage />}></Route>
                 <Route path={paths.register} element={<RegisterPage />}></Route>
@@ -57,6 +58,7 @@ function App() {
                         </Route>
                     </Route>
                 </Route>
+                <Route path={paths.privacy.base} element={<PrivacyPolicy />}></Route>
                 <Route path="*" element={<InvalidPage />}></Route>
             </Routes >
 

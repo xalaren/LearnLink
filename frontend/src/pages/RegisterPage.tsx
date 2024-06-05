@@ -10,6 +10,8 @@ import { validate } from "../helpers/validation";
 import { useRegister } from "../hooks/userHooks";
 import { ErrorModal } from "../components/Modal/ErrorModal";
 import { SuccessModal } from "../components/Modal/SuccessModal";
+import Checkbox from "../components/Checkbox";
+import { Link } from "react-router-dom";
 
 
 export function RegisterPage() {
@@ -25,12 +27,21 @@ export function RegisterPage() {
     const [passwordError, setPasswordError] = useState('');
     const [nameError, setNameError] = useState('');
     const [lastnameError, setLastnameError] = useState('');
+    const [privacyAccept, setPrivacyAccept] = useState(false);
+    const [privacyAcceptError, setPrivacyAcceptError] = useState('');
 
     const { registerQuery, error, success, resetValues } = useRegister();
+
+
 
     useEffect(() => {
         if (isAuthenticated) toNext(paths.public());
     }, [isAuthenticated, toNext]);
+
+    function resetDefault() {
+        resetValues();
+        setPrivacyAcceptError('');
+    }
 
     async function onSubmit(event: React.FormEvent) {
         event.preventDefault();
@@ -55,6 +66,11 @@ export function RegisterPage() {
 
         if (!validate(name)) {
             setNameError("Имя должно быть заполнено");
+            isValidDate = false;
+        }
+
+        if (!privacyAccept) {
+            setPrivacyAcceptError("Вы не приняли пользовательское соглашение");
             isValidDate = false;
         }
 
@@ -154,13 +170,24 @@ export function RegisterPage() {
                         onChange={onChange}
                         required={true}
                     />
+
+
+                    <Checkbox
+                        isChecked={privacyAccept}
+                        checkedChanger={() => { setPrivacyAccept(prev => !prev); }}
+                    >
+                        <p className={`form-input__label-required ui-text`}>
+                            Я даю согласие на обработку моих <Link to={paths.privacy.full}>персональных данных</Link>
+                        </p>
+                    </Checkbox>
+
                 </div>
 
                 <button type="submit" className="form__button button-violet">Зарегистрироваться</button>
             </form>
 
-            <ErrorModal active={Boolean(error)} onClose={resetValues} error={error} />
+            <ErrorModal active={Boolean(error || privacyAcceptError)} onClose={resetDefault} error={error || privacyAcceptError} />
             <SuccessModal active={Boolean(success)} onClose={() => { toNext(paths.login) }} message={success} />
-        </MainContainer>
+        </MainContainer >
     )
 }

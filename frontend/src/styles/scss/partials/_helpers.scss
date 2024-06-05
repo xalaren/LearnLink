@@ -88,6 +88,19 @@ ol {
     padding-left: 20px; /* Добавьте отступ слева */
 }
 
+a {
+    color: $lightViolet;
+    font-weight: 500;
+
+    * {
+        color: $lightViolet;
+    }
+
+    @include hover {
+        text-decoration: underline;
+    }
+}
+
 //Common style classes
 
 .button-base {
@@ -527,4 +540,10 @@ ol {
     user-select: none;
     pointer-events: none;
     opacity: 0.6;
+}
+
+.violet-selection {
+    background-color: $veryLightViolet;
+    color: $lightViolet;
+    padding: 0 5px;
 }

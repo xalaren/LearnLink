@@ -1376,27 +1376,32 @@
     height: 100%;
     background-color: $darkViolet;
     padding: 20px;
-
+    color: $white;
     &__content {
         height: 100%;
         display: flex;
         justify-content: space-between;
         align-items: center;
-
-        > * {
-            color: $white;
-        }
     }
 
     &__title {
         font-size: $h1-fz;
         font-weight: 600;
+        color: $white;
     }
 
     &__text {
         font-size: $reg-fz;
         line-height: 1.5;
         text-align: right;
+        color: $white;
+        * {
+            color: $white;
+        }
+
+        a {
+            color: rgba($white, 0.5);
+        }
     }
 
     @media screen and (max-width: $sm) {
@@ -1601,6 +1606,7 @@
         display: flex;
         gap: 20px;
         align-items: center;
+        color: $mainGray;
 
         &:not(:last-child)::after {
             content: "\e903";
@@ -1633,6 +1639,7 @@
             text-wrap: balance;
             border-radius: 3px;
             cursor: pointer;
+            color: $mainGray;
             @include hover-focus {
                 text-decoration: underline;
                 color: $lightViolet;
@@ -1809,6 +1816,75 @@
         &__actions {
             flex-direction: row;
             gap: 10px;
+        }
+    }
+}
+
+.greetings {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    height: 100%;
+    margin: 0 !important;
+
+    &__info {
+        max-width: 600px;
+        @include child-not-last {
+            margin-bottom: 40px;
+        }
+    }
+
+    &__links {
+        font-size: $inputs-fz;
+    }
+
+    &__link {
+        display: inline-flex;
+        align-items: center;
+        gap: 20px;
+
+        &:hover {
+            text-decoration: none;
+
+            p {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    &__description {
+        font-size: $inputs-fz;
+        text-wrap: balance;
+    }
+
+    &__image {
+        img {
+            max-width: 400px;
+        }
+    }
+
+    @media screen and (max-width: $lg) {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 40px 0 !important;
+
+        &__info {
+            text-align: center;
+        }
+    }
+
+    @media screen and (max-width: $sm) {
+        &__info {
+            h1 {
+                font-size: 30px;
+            }
+        }
+        &__image {
+            img {
+                max-width: 300px;
+            }
         }
     }
 }

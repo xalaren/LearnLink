@@ -52,7 +52,7 @@ export function Header() {
                                     onClick={() => {
                                         dispatch(logout());
                                         dispatch(fetchUser());
-                                        toNext(paths.public());
+                                        toNext(paths.home);
                                     }}
                                 />
                             </HeaderDropdown>
