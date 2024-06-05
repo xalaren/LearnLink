@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { MainContainer } from "../components/MainContainer";
 import { CourseContext } from "../contexts/CourseContext";
 import { ModuleContext } from "../contexts/ModuleContext";
@@ -10,7 +10,6 @@ import { Course } from "../models/course";
 import { LessonContext } from "../contexts/LessonContext";
 import { Lesson } from "../models/lesson";
 import LessonCreator from "../modules/Lessons/LessonCreator";
-import SectionsEditContainer from "../modules/Sections/SectionsEditContainer";
 
 function LessonPage() {
     const { course } = useContext(CourseContext);

@@ -14,7 +14,6 @@ import CodeContent from "../../components/Content/CodeContent";
 import PopupNotification from "../../components/PopupNotification";
 import { NotificationType } from "../../models/enums";
 import MiniLoader from "../../components/Loader/MiniLoader";
-import { removeHook } from "dompurify";
 
 interface ISectionEditContainerProps {
     onChange: () => void;

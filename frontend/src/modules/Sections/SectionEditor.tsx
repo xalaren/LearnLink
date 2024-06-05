@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { OutlinedInput } from "../../components/Input/OutlinedInput";
-import { ContentTypes, NotificationType } from "../../models/enums";
+import { NotificationType } from "../../models/enums";
 import ControlNav from "../../components/ControlNav";
 import Editor from "../../components/Editor";
 import CodeEditor from "../../components/CodeEditor/CodeEditor";
 import FileUploader from "../../components/FileUploader/FileUploader";
-import { useCreateSection, useUpdateSection } from "../../hooks/sectionHooks";
+import { useUpdateSection } from "../../hooks/sectionHooks";
 import PopupNotification from "../../components/PopupNotification";
 import PopupLoader from "../../components/Loader/PopupLoader";
 import { Content } from "../../models/content";
