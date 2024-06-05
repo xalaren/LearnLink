@@ -6,10 +6,6 @@ interface IFileContentProps {
 }
 
 function FileContent({ children }: IFileContentProps) {
-    function redirect(url: string) {
-        window.open(url, '_blank')?.focus();
-    }
-
     function download(fileName: string, url: string) {
         const element = document.createElement('a');
         element.setAttribute('href', url);

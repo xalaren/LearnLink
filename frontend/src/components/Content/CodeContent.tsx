@@ -7,6 +7,7 @@ interface ICodeContentProps {
 }
 
 function CodeContent({ language, children }: ICodeContentProps) {
+
     return (
         <div className='code-block'>
             <div className="code-block__title">{language}</div>

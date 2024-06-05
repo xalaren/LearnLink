@@ -1,7 +1,7 @@
 export class FileInfo {
     fileName: string;
     fileExtension: string;
-    url?: string;
+    url: string;
 
     constructor(
         fileName: string,

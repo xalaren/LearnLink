@@ -9,9 +9,9 @@ import { LessonContext } from "../../contexts/LessonContext";
 import { CourseContext } from "../../contexts/CourseContext";
 import PopupLoader from "../../components/Loader/PopupLoader";
 import PopupNotification from "../../components/PopupNotification";
-import CodeEditor from "../../components/CodeEditor/CodeEditor";
 import ControlNav from "../../components/ControlNav";
 import SectionCreator from "../Sections/SectionCreator";
+import SectionsEditContainer from "../Sections/SectionsEditContainer";
 
 
 function LessonCreator() {
@@ -114,16 +114,16 @@ function LessonCreator() {
                                 <h3>Содержимое</h3>
                                 <ControlNav>
                                     <button
-                                        className="control-nav__add-button button-gray icon icon-big-size icon-text-add"
+                                        className="control-nav__add-button button-gray-violet icon icon-big-size icon-text-add"
                                         onClick={() => setCreatorContentType(ContentTypes.text)}
                                     ></button>
                                     <button
-                                        className="control-nav__add-button button-gray icon icon-big-size icon-document-add"
+                                        className="control-nav__add-button button-gray-violet icon icon-big-size icon-document-add"
                                         onClick={() => setCreatorContentType(ContentTypes.file)}
                                     >
                                     </button>
                                     <button
-                                        className="control-nav__add-button button-gray icon icon-big-size icon-code-add"
+                                        className="control-nav__add-button button-gray-violet icon icon-big-size icon-code-add"
                                         onClick={() => setCreatorContentType(ContentTypes.code)}
                                     ></button>
                                 </ControlNav>
@@ -132,9 +132,16 @@ function LessonCreator() {
                             <SectionCreator
                                 lessonId={lesson.id}
                                 contentType={creatorContentType}
-                                onClose={() => setCreatorContentType(ContentTypes.none)}
+                                onClose={() => {
+                                    setCreatorContentType(ContentTypes.none);
+                                    fetchLesson();
+                                }}
                             />
                         </section>
+
+                        <SectionsEditContainer
+                            onChange={fetchLesson}
+                        />
 
                         {loading &&
                             <PopupLoader />

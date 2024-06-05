@@ -940,6 +940,7 @@ ol {
   gap: 20px;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .line-end-container {
@@ -1222,8 +1223,14 @@ ol {
   gap: 20px;
 }
 .control-nav__add-button {
+  min-width: 50px;
   width: 50px;
   height: 50px;
+}
+.control-nav__small-button {
+  min-width: 30px;
+  width: 30px;
+  height: 30px;
 }
 
 .control-list > *:not(:last-child) {
@@ -2352,6 +2359,7 @@ ol {
   width: 100%;
   max-height: 200px;
   overflow: auto;
+  z-index: 3;
 }
 .select__item {
   height: 50px;
@@ -2541,7 +2549,7 @@ ol {
 }
 
 .editor .ck-editor__editable_inline {
-  min-height: 300px;
+  min-height: 500px;
 }
 
 .file-item {
@@ -2649,4 +2657,29 @@ ol {
   width: 40px;
   height: 40px;
   font-size: 20px;
+}
+
+.section-editor-container {
+  border-bottom: solid 2px #f3f3f3;
+  padding-bottom: 50px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  -moz-column-gap: 50px;
+       column-gap: 50px;
+}
+.section-editor-container__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+@media (max-width: 576px) {
+  .section-editor-container {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 30px;
+  }
+  .section-editor-container__actions {
+    flex-direction: row;
+    gap: 10px;
+  }
 }/*# sourceMappingURL=index.css.map */

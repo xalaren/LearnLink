@@ -130,15 +130,73 @@ export function useCreateSection() {
 export function useUpdateSection() {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    const updateSectionQuery = async (lessonId: number, section: Section, accessToken: string) => {
+    const updateSectionQuery = async (section: Section, accessToken: string) => {
         try {
-            const response = await axiosInstance.post<VoidResponse>(`${SECTIONS_ENDPOINTS_URL}update?lessonId=${lessonId}`, section, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${accessToken}`,
-                }
-            });
+            setLoading(true);
+
+            let response: AxiosResponse<VoidResponse, any>;
+
+            if (section.content.isText) {
+                const textContent: SectionTextContent = {
+                    id: section.id,
+                    lessonId: section.lessonId,
+                    order: section.order,
+                    text: section.content.text || '',
+                    title: section.title
+                };
+
+                response = await axiosInstance.post<VoidResponse>(`${SECTIONS_ENDPOINTS_URL}update/text`, textContent, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${accessToken}`,
+                    }
+                });
+            }
+            else if (section.content.isCodeBlock) {
+                const codeContent: SectionCodeContent = {
+                    id: section.id,
+                    lessonId: section.lessonId,
+                    order: section.order,
+                    code: section.content.text || '',
+                    codeLanguage: section.content.codeLanguage || '',
+                    title: section.title
+                };
+
+                response = await axiosInstance.post<VoidResponse>(`${SECTIONS_ENDPOINTS_URL}update/code`, codeContent, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${accessToken}`,
+                    }
+                });
+            }
+            else if (section.content.isFile && section.content.formFile) {
+                const fileContent: SectionFileContent = {
+                    id: section.id,
+                    lessonId: section.lessonId,
+                    order: section.order,
+                    formFile: section.content.formFile,
+                    title: section.title
+                };
+
+                response = await axiosInstance.post<VoidResponse>(`${SECTIONS_ENDPOINTS_URL}update/file`, fileContent, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${accessToken}`,
+                    }
+                });
+            }
+            else {
+                response = await axiosInstance.post<VoidResponse>(`${SECTIONS_ENDPOINTS_URL}update`, section, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${accessToken}`,
+                    }
+                });
+            }
+
+            setLoading(false);
 
             if (!response.data.success) {
                 throw new AxiosError(response.data.message);
@@ -148,28 +206,33 @@ export function useUpdateSection() {
         }
         catch (err: unknown) {
             setError((err as AxiosError).message);
+            setLoading(false);
         }
     }
 
     const resetValues = () => {
         setError('');
         setSuccess('');
+        setLoading(false);
     }
 
-    return { updateSectionQuery, error, success, resetValues };
+    return { updateSectionQuery, error, loading, success, resetValues };
 }
 
 export function useChangeSectionOrder() {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const changeSectionOrder = async (sectionId: number, lessonId: number, increase: boolean, accessToken: string) => {
         try {
+            setLoading(true);
             const response = await axiosInstance.post<VoidResponse>(`${SECTIONS_ENDPOINTS_URL}update/order?sectionId=${sectionId}&lessonId=${lessonId}&increase=${increase}`, {}, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 }
             });
+            setLoading(false);
 
             if (!response.data.success) {
                 throw new AxiosError(response.data.message);
@@ -179,28 +242,33 @@ export function useChangeSectionOrder() {
         }
         catch (err: unknown) {
             setError((err as AxiosError).message);
+            setLoading(false);
         }
     }
 
     const resetValues = () => {
         setError('');
         setSuccess('');
+        setLoading(false);
     }
 
-    return { changeSectionOrder, error, success, resetValues };
+    return { changeSectionOrder, error, success, loading, resetValues };
 }
 
 export function useRemoveSection() {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const sectionRemoveQuery = async (sectionId: number, accessToken: string) => {
         try {
+            setLoading(true);
             const response = await axiosInstance.delete<VoidResponse>(`${SECTIONS_ENDPOINTS_URL}remove?sectionId=${sectionId}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 }
             });
+            setLoading(false);
 
             if (!response.data.success) {
                 throw new AxiosError(response.data.message);
@@ -210,13 +278,15 @@ export function useRemoveSection() {
         }
         catch (err: unknown) {
             setError((err as AxiosError).message);
+            setLoading(false);
         }
     }
 
     const resetValues = () => {
         setError('');
         setSuccess('');
+        setLoading(false);
     }
 
-    return { sectionRemoveQuery, error, success, resetValues };
+    return { sectionRemoveQuery, error, success, loading, resetValues };
 }

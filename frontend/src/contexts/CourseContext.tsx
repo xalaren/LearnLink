@@ -30,7 +30,10 @@ export const CourseState = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         if (!user) return;
         if (!param || Number(param.courseId) === courseId) return;
-        fetchCourse();
+
+        if (!course) {
+            fetchCourse();
+        }
     }, [user, param]);
 
     async function fetchCourse() {

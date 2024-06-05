@@ -32,7 +32,10 @@ export const ModuleState = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         if (!moduleParam || !courseParam) return;
-        fetchModule();
+
+        if (!module) {
+            fetchModule();
+        }
     }, [user]);
 
     async function fetchModule() {

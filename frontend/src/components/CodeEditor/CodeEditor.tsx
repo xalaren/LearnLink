@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import Select from "../Select/Select";
 import SelectItem from "../Select/SelectItem";
 import { codeLanguages } from "../../models/codeLangs";
+import { Editor, Monaco, loader } from "@monaco-editor/react";
 
 interface ICodeEditorProps {
     language: string;
@@ -12,20 +13,43 @@ interface ICodeEditorProps {
 
 function CodeEditor({ language, setLanguage, setText, text }: ICodeEditorProps) {
     const [selectActive, setSelectActive] = useState(false);
-    const [lineNumbers, setLineNumbers] = useState(['1']);
-    function onChange(event: React.ChangeEvent) {
-        const inputElement = event.target as HTMLInputElement;
+    const [theme, setTheme] = useState('atomOneLight');
 
-        setText(inputElement.value);
-        refreshLineNumbers();
-    }
+    useEffect(() => {
+        loader.init().then(monaco => {
+            monaco.editor.defineTheme('atomOneLight', {
+                base: 'vs',
+                inherit: true,
+                rules: [
+                    { foreground: '383a42', token: 'comment' },
+                    { foreground: 'a626a4', token: 'keyword' },
+                    { foreground: '4078f2', token: 'variable' },
+                    { foreground: 'e45649', token: 'number' },
+                    { foreground: '50a14f', token: 'string' },
+                    { foreground: '986801', token: 'type' },
+                    { foreground: '0184bc', token: 'tag' },
+                    { foreground: 'c18401', token: 'meta.tag' },
+                    { foreground: '4078f2', token: 'attribute.name' },
+                    { foreground: '4078f2', token: 'attribute.value' },
+                    { foreground: '383a42', token: 'text' }
+                ],
+                colors: {
+                    'editor.background': '#fafafa',
+                    'editor.foreground': '#383a42',
+                    'editor.lineHighlightBackground': '#fafafa',
+                    'editorCursor.foreground': '#526fff',
+                    'editorWhitespace.foreground': '#d3d3d3',
+                    'editorIndentGuide.background': '#ecebec',
+                    'editorIndentGuide.activeBackground': '#e0e0e0',
+                    'editor.selectionBackground': '#d6deeb',
+                    'editor.lineHighlightBorder': '#eeeeee',
+                    'editor.rangeHighlightBackground': '#f0f0f0',
+                    'editor.wordHighlightBackground': '#e0e0e0'
+                }
+            });
+        });
+    }, []);
 
-
-    function refreshLineNumbers() {
-        const numberOfLines = text.split('\n').length;
-        const newLineNumbers = Array.from({ length: numberOfLines }, (_, i) => (i + 1).toString());
-        setLineNumbers(newLineNumbers);
-    }
 
 
     return (<div className='code-block'>
@@ -48,22 +72,29 @@ function CodeEditor({ language, setLanguage, setText, text }: ICodeEditorProps) 
                 }
             </Select>
         </div>
-        <div className="code-block__code">
-            <div className="code-block__line-numbers">
-                {lineNumbers.map((line, index) =>
-                    <p key={index}>
-                        {line}
-                    </p>)}
-            </div>
-            <textarea
-                className="textarea"
-                value={text}
-                onChange={onChange}
-                onKeyDown={refreshLineNumbers}
-                onBlur={refreshLineNumbers}
-            >
-            </textarea>
-        </div>
+
+        <Editor
+            height="500px"
+            language={language}
+            defaultLanguage="javascript"
+            value={text}
+            onChange={(value) => setText(value || '')}
+            options={
+                {
+                    fontSize: 16,
+                    fontFamily: 'Roboto Mono',
+                    minimap: {
+                        enabled: false
+                    },
+                    padding: {
+                        top: 20,
+                        bottom: 20
+                    }
+
+                }
+            }
+            theme={theme}
+        />
     </div >);
 }
 

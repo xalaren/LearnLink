@@ -273,8 +273,10 @@
     display: flex;
     gap: 20px;
     &__add-button {
-        width: 50px;
-        height: 50px;
+        @include static-size(50px);
+    }
+    &__small-button {
+        @include static-size(30px);
     }
 }
 
@@ -1473,6 +1475,7 @@
         width: 100%;
         max-height: 200px;
         overflow: auto;
+        z-index: 3;
     }
 
     &__item {
@@ -1665,7 +1668,7 @@
     @extend .ui-text;
 
     .ck-editor__editable_inline {
-        min-height: 300px;
+        min-height: 500px;
     }
 }
 
@@ -1779,5 +1782,33 @@
         width: 40px;
         height: 40px;
         font-size: 20px;
+    }
+}
+
+.section-editor-container {
+    border-bottom: solid 2px $veryLightGray;
+    padding-bottom: 50px;
+    // @include child-not-last {
+    //     margin-bottom: 30px;
+    // }
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 50px;
+
+    &__actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    @media (max-width: $sm) {
+        display: flex;
+        flex-direction: column-reverse;
+        gap: 30px;
+
+        &__actions {
+            flex-direction: row;
+            gap: 10px;
+        }
     }
 }

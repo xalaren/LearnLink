@@ -168,46 +168,53 @@ namespace LearnLink.Application.Interactors
 
                 if (section == null) throw new NotFoundException("Раздел не был найден");
 
-                
-
-                var content = sectionDto.Content;
-                var prevSectionFileState = section.IsFile;
-                var prevSectionFileName = section.FileName;
 
                 section.Assign(sectionDto);
-                
 
-                if ((prevSectionFileState && !section.IsFile) || (prevSectionFileState && section.IsFile && sectionDto.Content.FormFile != null))
+                if (sectionDto.Content == null)
                 {
-                    contentInteractor.RemoveLessonContent(section.LessonId, section.Id, prevSectionFileName);
+                    unitOfWork.Sections.Update(section);
+                    await unitOfWork.CommitAsync();
                 }
+                else
+                {
+                    var content = sectionDto.Content;
+                    var prevSectionFileState = section.IsFile;
+                    var prevSectionFileName = section.FileName;
 
-                if (section.IsText)
-                {
-                    section.IsCodeBlock = false;
-                    section.IsFile = false;
-                }
-                else if (section.IsCodeBlock)
-                {
-                    section.IsText = false;
-                    section.IsFile = false;
-                }
-                else if (section.IsFile)
-                {
-                    section.IsText = false;
-                    section.IsCodeBlock = false;
-                }
 
-                await unitOfWork.Sections.AddAsync(section);
-                await unitOfWork.CommitAsync();
+                    if ((prevSectionFileState && !section.IsFile) || (prevSectionFileState && section.IsFile && sectionDto.Content.FormFile != null))
+                    {
+                        contentInteractor.RemoveLessonContent(section.LessonId, section.Id, prevSectionFileName);
+                    }
 
-                await contentInteractor.SaveLessonContentAsync(content, section.LessonId, section.Id);
+                    if (section.IsText)
+                    {
+                        section.IsCodeBlock = false;
+                        section.IsFile = false;
+                    }
+                    else if (section.IsCodeBlock)
+                    {
+                        section.IsText = false;
+                        section.IsFile = false;
+                    }
+                    else if (section.IsFile)
+                    {
+                        section.IsText = false;
+                        section.IsCodeBlock = false;
+                    }
+
+                    unitOfWork.Sections.Update(section);
+                    await unitOfWork.CommitAsync();
+
+                    await contentInteractor.SaveLessonContentAsync(content, section.LessonId, section.Id);
+                }
 
                 return new Response()
                 {
                     Success = true,
                     StatusCode = 200,
-                    Message = "Раздел успешно создан",
+                    Message = "Раздел успешно обновлен",
                 };
             }
             catch (CustomException exception)
@@ -225,7 +232,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     StatusCode = 500,
-                    Message = "Не удалось создать раздел",
+                    Message = "Не удалось обновить раздел",
                     InnerErrorMessages = new string[] { exception.Message },
                 };
             }

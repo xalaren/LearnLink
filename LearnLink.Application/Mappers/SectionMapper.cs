@@ -36,7 +36,7 @@ namespace LearnLink.Application.Mappers
 
         public static Section ToEntity(this SectionDto sectionDto)
         {
-            if(sectionDto.Content == null)
+            if (sectionDto.Content == null)
             {
                 throw new ValidationException("Контент не был заполнен");
             }
@@ -94,21 +94,21 @@ namespace LearnLink.Application.Mappers
 
         public static Section Assign(this Section sectionEntity, SectionDto sectionDto)
         {
-            if (sectionDto.Content == null)
-            {
-                throw new ValidationException("Контент не был заполнен");
-            }
             sectionEntity.Title = sectionDto.Title;
-            sectionEntity.IsText = sectionDto.Content.IsText;
-            sectionEntity.IsCodeBlock = sectionDto.Content.IsCodeBlock;
-            sectionEntity.IsFile = sectionDto.Content.IsFile;
-            sectionEntity.Text = sectionDto.Content.Text;
-            sectionEntity.CodeLanguage = sectionDto.Content.CodeLanguage;
 
-            if (sectionDto.Content.IsFile && sectionDto.Content.FormFile != null)
+            if (sectionDto.Content != null)
             {
-                sectionEntity.FileName = sectionDto.Content.FormFile.FileName;
-                sectionEntity.FileExtension = Path.GetExtension(sectionDto.Content.FormFile.FileName);
+                sectionEntity.IsText = sectionDto.Content.IsText;
+                sectionEntity.IsCodeBlock = sectionDto.Content.IsCodeBlock;
+                sectionEntity.IsFile = sectionDto.Content.IsFile;
+                sectionEntity.Text = sectionDto.Content.Text;
+                sectionEntity.CodeLanguage = sectionDto.Content.CodeLanguage;
+
+                if (sectionDto.Content.IsFile && sectionDto.Content.FormFile != null)
+                {
+                    sectionEntity.FileName = sectionDto.Content.FormFile.FileName;
+                    sectionEntity.FileExtension = Path.GetExtension(sectionDto.Content.FormFile.FileName);
+                }
             }
 
             return sectionEntity;

@@ -10,6 +10,7 @@ import { Course } from "../models/course";
 import { LessonContext } from "../contexts/LessonContext";
 import { Lesson } from "../models/lesson";
 import LessonCreator from "../modules/Lessons/LessonCreator";
+import SectionsEditContainer from "../modules/Sections/SectionsEditContainer";
 
 function LessonPage() {
     const { course } = useContext(CourseContext);

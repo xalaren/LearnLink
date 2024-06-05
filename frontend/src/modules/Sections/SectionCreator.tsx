@@ -6,7 +6,6 @@ import Editor from "../../components/Editor";
 import CodeEditor from "../../components/CodeEditor/CodeEditor";
 import FileUploader from "../../components/FileUploader/FileUploader";
 import { useCreateSection } from "../../hooks/sectionHooks";
-// import * as DOMPurify from 'dompurify';
 import PopupNotification from "../../components/PopupNotification";
 import PopupLoader from "../../components/Loader/PopupLoader";
 import { Content } from "../../models/content";
@@ -15,7 +14,7 @@ import { useAppSelector } from "../../hooks/redux";
 import { validate } from "../../helpers/validation";
 import { ErrorModal } from "../../components/Modal/ErrorModal";
 import MiniLoader from "../../components/Loader/MiniLoader";
-import { codeLanguages } from "../../models/codeLangs";
+import DOMPurify from 'dompurify';
 
 interface ISectionCreatorProps {
     lessonId: number;
@@ -38,7 +37,6 @@ function SectionCreator({ lessonId, contentType, onClose }: ISectionCreatorProps
 
     function onChange(event: React.ChangeEvent) {
         const inputElement = event.target as HTMLInputElement;
-
         setTitle(inputElement.value);
     }
 
@@ -66,7 +64,9 @@ function SectionCreator({ lessonId, contentType, onClose }: ISectionCreatorProps
                 return;
             }
 
-            const content = new Content(true, false, false, text);
+            const cleanData = DOMPurify.sanitize(text);
+
+            const content = new Content(true, false, false, cleanData);
             const section = new Section(content, lessonId, title);
 
             await createSectionQuery(section, accessToken);

@@ -67,13 +67,6 @@ namespace LearnLink.WebApi.Controllers
             return await sectionInteractor.ChangeOrder(sectionId, lessonId, increase);
         }
 
-        //[Authorize]
-        //[HttpPost("update")]
-        //public async Task<Response> UpdateSectionAsync([FromForm] SectionDto sectionDto, [FromQuery] int lessonId)
-        //{
-        //    return await sectionInteractor.UpdateSectionAsync(lessonId, sectionDto);
-        //}
-
         [Authorize]
         [HttpPost("update/text")]
         public async Task<Response> UpdateSectionAsync([FromForm] SectionTextContentDto sectionTextDto)
@@ -93,6 +86,13 @@ namespace LearnLink.WebApi.Controllers
         public async Task<Response> UpdateSectionAsync([FromForm] SectionCodeContentDto sectionCodeDto)
         {
             return await sectionInteractor.UpdateSectionAsync(sectionCodeDto.LessonId, sectionCodeDto.ToSectionDto());
+        }
+
+        [Authorize]
+        [HttpPost("update")]
+        public async Task<Response> UpdateSectionAsync([FromForm] SectionDto sectionDto)
+        {
+            return await sectionInteractor.UpdateSectionAsync(sectionDto.LessonId, sectionDto);
         }
 
         [Authorize]

@@ -34,7 +34,10 @@ export const LessonState = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         if (!lessonParam || !courseParam) return;
-        fetchLesson();
+
+        if (!lesson) {
+            fetchLesson();
+        }
     }, [user]);
 
     async function fetchLesson() {
