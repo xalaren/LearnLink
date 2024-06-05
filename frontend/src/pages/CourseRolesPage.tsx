@@ -64,7 +64,7 @@ function CourseRolesPage() {
                             <div className="line-distributed-container">
                                 <h3>Локальные роли курса</h3>
                                 <ControlNav>
-                                    <button className="control-nav__add-button button-gray icon-plus"
+                                    <button className="control-nav__add-button button-gray icon icon-medium-size icon-plus"
                                         onClick={() => setCreateModalActive(true)}></button>
                                 </ControlNav>
                             </div>

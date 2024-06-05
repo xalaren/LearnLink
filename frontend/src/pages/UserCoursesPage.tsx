@@ -46,7 +46,7 @@ function UserCoursesPage() {
             <div className="line-distributed-container">
                 <h3>Мои курсы</h3>
                 <ControlNav>
-                    <button className="control-nav__add-button button-gray icon-plus" onClick={() => setCreateModalActive(true)}></button>
+                    <button className="control-nav__add-button button-gray icon icon-medium-size icon-plus" onClick={() => setCreateModalActive(true)}></button>
                 </ControlNav>
             </div>
 

@@ -7,7 +7,7 @@ import Paginate from "../components/Paginate";
 import ControlNav from "../components/ControlNav";
 import { LocalRole } from "../models/localRole";
 import { useAppSelector } from "../hooks/redux";
-import { useFindCourseParticipants, useGetCourse } from "../hooks/courseHooks";
+import { useFindCourseParticipants } from "../hooks/courseHooks";
 import { Participant } from "../models/participant";
 import { Loader } from "../components/Loader/Loader";
 import { ErrorModal } from "../components/Modal/ErrorModal";
@@ -18,7 +18,6 @@ import ParticipantKickModal from "../modules/Participants/ParticipantKickModal.t
 import ParticipantsInviteModal from "../modules/Participants/ParticipantsInviteModal.tsx";
 import Breadcrumb from "../components/Breadcrumb/Breadcrumb.tsx";
 import BreadcrumbItem from "../components/Breadcrumb/BreadcrumbItem.tsx";
-import { Course } from "../models/course.ts";
 import { paths } from "../models/paths.ts";
 import { ViewTypes } from "../models/enums.ts";
 import { CourseContext } from "../contexts/CourseContext.tsx";
@@ -31,8 +30,7 @@ function CourseParticipantsPage() {
     const [pageCount, setPageCount] = useState(1);
     const [searchText, setSearchText] = useState('');
 
-    // const [course, setCourse] = useState<Course>();
-    const { course, fetchCourse } = useContext(CourseContext);
+    const { course } = useContext(CourseContext);
     const { user } = useAppSelector(state => state.userReducer);
     const { accessToken } = useAppSelector(state => state.authReducer);
 
@@ -54,25 +52,9 @@ function CourseParticipantsPage() {
     }, [user, localRole, pageParam, course, kickModalActive, localRoleModalActive, inviteModalActive]);
 
     async function fetchData() {
-        // await fetchCourse();
         await fetchLocalRole();
         await fetchParticipants();
     }
-
-    // async function fetchCourse() {
-    //     if (course) return;
-
-    //     resetValues();
-
-    //     if (user) {
-    //         const result = await getCourseHook.getCourseQuery(Number(courseParam.courseId), user.id);
-
-    //         if (result) {
-    //             setCourse(result);
-    //         }
-    //     }
-
-    // }
 
     async function fetchLocalRole() {
         if (localRole) {
@@ -145,7 +127,7 @@ function CourseParticipantsPage() {
                             <h3>Участники курса</h3>
                             {localRole && localRole.inviteAccess &&
                                 <ControlNav>
-                                    <button className="control-nav__add-button button-gray icon-plus"
+                                    <button className="control-nav__add-button button-gray icon icon-medium-size icon-plus"
                                         onClick={() => setInviteModalActive(true)}></button>
                                 </ControlNav>
                             }
