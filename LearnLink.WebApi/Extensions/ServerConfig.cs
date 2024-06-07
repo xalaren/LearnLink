@@ -13,10 +13,5 @@ namespace LearnLink.WebApi.Extensions
         {
             return config.GetSection("ClientUrl").Get<string>()!;
         }
-
-        public static AdminDefaultAuthenticationData AdminDefaultAuthenticationData(this IConfiguration config)
-        {
-            return config.GetSection("AdminDefaultAuthenticationData").Get<AdminDefaultAuthenticationData>()!;
-        }
     }
 }

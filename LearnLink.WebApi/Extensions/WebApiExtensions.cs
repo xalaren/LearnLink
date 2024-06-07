@@ -1,4 +1,5 @@
 ﻿using LearnLink.Application.Helpers;
+using LearnLink.WebApi.Helpers;
 
 namespace LearnLink.WebApi.Extensions
 {
@@ -10,14 +11,17 @@ namespace LearnLink.WebApi.Extensions
             var scope = scopedFactory.CreateAsyncScope();
 
             var service = scope.ServiceProvider.GetRequiredService<SeedData>();
+            var registerConfig = scope.ServiceProvider.GetRequiredService<RegisterConfig>();
             
             await service.InitializeAdminRole();
             await service.InitializeUserRole();
             await service.InitializeModeratorLocalRole();
             await service.InitializeMemberLocalRole();
 
-            var defaultAdminData = app.Configuration.AdminDefaultAuthenticationData();
-            await service.InitializeAdmin(defaultAdminData.Nickname, defaultAdminData.Password);
+            var adminAuthData = registerConfig.GetAdminDefaultAuthenticationData(app.Configuration);
+
+
+            await service.InitializeAdmin(adminAuthData.Nickname, adminAuthData.Password);
 
             await scope.DisposeAsync();
         }

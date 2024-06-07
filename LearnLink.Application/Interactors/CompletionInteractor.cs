@@ -209,6 +209,7 @@ namespace LearnLink.Application.Interactors
             };
 
             await unitOfWork.ModuleCompletions.AddAsync(moduleCompletion);
+            await unitOfWork.CommitAsync();
         }
 
         public async Task CreateLessonCompletion(int userId, int moduleId, int lessonId)
@@ -219,7 +220,10 @@ namespace LearnLink.Application.Interactors
 
             LessonCompletion? lessonCompletion = await unitOfWork.LessonCompletions
                 .AsNoTracking()
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(lessonCompletion => 
+                    lessonCompletion.UserId == userId && 
+                    lessonCompletion.ModuleId == moduleId && 
+                    lessonCompletion.LessonId == lessonId);
 
             if (lessonCompletion != null) return;
 
@@ -233,6 +237,7 @@ namespace LearnLink.Application.Interactors
             };
 
             await unitOfWork.LessonCompletions.AddAsync(lessonCompletion);
+            await unitOfWork.CommitAsync();
         }
 
         public async Task<Response> ChangeLessonCompleted(int userId, int courseId, int moduleId, int lessonId, bool completed)

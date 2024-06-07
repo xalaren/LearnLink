@@ -2,7 +2,7 @@ import { ProfileEditActions, ViewTypes } from "./enums";
 
 export const paths = {
     home: '/',
-    public: (pageNumber: string | number = '1') => `/public/page/${pageNumber}`,
+    public: (pageNumber: string | number = '1') => `/page/${pageNumber}`,
     login: '/login',
     register: '/register',
     profile: {

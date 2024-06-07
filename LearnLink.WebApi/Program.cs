@@ -52,8 +52,9 @@ builder.Services.AddTransient<SeedData>();
 builder.Services.AddSingleton<IEncryptionService, EncryptionService>();
 builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
 
-builder.Services.AddSingleton(provider => AuthenticationConfig.GetAuthenticationOptions(configuration));
+builder.Services.AddSingleton(provider => new AuthenticationConfig().GetAuthenticationOptions(configuration));
 builder.Services.AddTransient(provider => new DirectoryStore(rootDirectory));
+builder.Services.AddSingleton<RegisterConfig>();
 
 builder.Services.AddDbContext<AppDbContext>(options => options.GetNpgSqlOptions(configuration));
 
@@ -66,7 +67,7 @@ builder.Services.AddRazorPages();
 
 /* Setup authentication start */
 
-var authOptions = AuthenticationConfig.GetAuthenticationOptions(configuration);
+var authOptions = new AuthenticationConfig().GetAuthenticationOptions(configuration);
 
 builder.Services.AddAuthorization();
 

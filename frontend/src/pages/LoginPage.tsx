@@ -13,7 +13,6 @@ import { paths } from "../models/paths";
 
 
 export function LoginPage() {
-    const isAuthenticated = useAppSelector(state => state.authReducer.isAuthenticated);
     const { toNext } = useHistoryNavigation();
 
     const [nickname, setNickname] = useState('');
@@ -24,10 +23,6 @@ export function LoginPage() {
     const { loginQuery, error, resetError } = useLogin();
 
     const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        if (isAuthenticated) toNext(paths.profile.edit(ProfileEditActions.main));
-    }, [isAuthenticated])
 
     useEffect(() => {
         if (error) {

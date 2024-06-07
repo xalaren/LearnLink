@@ -2,7 +2,7 @@
 {
     public class AdminDefaultAuthenticationData
     {
-        public string Nickname { get; } = null!;
-        public string Password { get; } = null!;
+        public string Nickname { get; set; } = null!;
+        public string Password { get; set; } = null!;
     }
 }

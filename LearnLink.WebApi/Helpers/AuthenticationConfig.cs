@@ -2,9 +2,9 @@
 
 namespace LearnLink.WebApi.Helpers
 {
-    public static class AuthenticationConfig
+    public class AuthenticationConfig
     {
-        public static AuthenticationOptions GetAuthenticationOptions(IConfiguration config) =>
+        public AuthenticationOptions GetAuthenticationOptions(IConfiguration config) =>
             config.GetSection("AuthenticationOptions").Get<AuthenticationOptions>()!;
     }
 }

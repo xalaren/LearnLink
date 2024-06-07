@@ -2692,7 +2692,6 @@ a * {
 }
 
 .section-editor-container {
-  border-bottom: solid 2px #f3f3f3;
   padding-bottom: 50px;
   display: grid;
   grid-template-columns: 1fr auto;
