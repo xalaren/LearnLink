@@ -29,7 +29,7 @@ namespace LearnLink.Application.Helpers
 
                 var admin = new UserDto()
                 {
-                    Id = AdminUserDataConstants.ADMIN_USER_ID,
+                    Id = 0,
                     Nickname = adminNickname,
                     Name = AdminUserDataConstants.ADMIN_USER_NAME,
                     Lastname = AdminUserDataConstants.ADMIN_LASTNAME,
@@ -53,7 +53,7 @@ namespace LearnLink.Application.Helpers
                 if (existRole.Value != null) return;
 
                 var adminRole = new RoleDto(
-                    Id: RoleDataConstants.ADMIN_ROLE_ID,
+                    Id: 0,
                     Name: RoleDataConstants.ADMIN_ROLE_NAME,
                     Sign: RoleDataConstants.ADMIN_ROLE_SIGN,
                     IsAdmin: true
@@ -76,7 +76,7 @@ namespace LearnLink.Application.Helpers
                 if (existRole.Value != null) return;
 
                 var userRole = new RoleDto(
-                    Id: RoleDataConstants.USER_ROLE_ID,
+                    Id: 0,
                     Name: RoleDataConstants.USER_ROLE_NAME,
                     Sign: RoleDataConstants.USER_ROLE_SIGN,
                     IsAdmin: false
@@ -100,7 +100,7 @@ namespace LearnLink.Application.Helpers
 
                 var userRole = new LocalRoleDto()
                 {
-                    Id = RoleDataConstants.MODERATOR_ROLE_ID,
+                    Id = 0,
                     Name = RoleDataConstants.MODERATOR_ROLE_NAME,
                     Sign = RoleDataConstants.MODERATOR_ROLE_SIGN,
                     ViewAccess = true,
@@ -130,7 +130,7 @@ namespace LearnLink.Application.Helpers
 
                 var userRole = new LocalRoleDto()
                 {
-                    Id = RoleDataConstants.MEMBER_ROLE_ID,
+                    Id = 0,
                     Name = RoleDataConstants.MEMBER_ROLE_NAME,
                     Sign = RoleDataConstants.MEMBER_ROLE_SIGN,
                     ViewAccess = true,

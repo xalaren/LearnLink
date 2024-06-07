@@ -1291,7 +1291,7 @@
     margin: 0 !important;
     width: 100px;
     height: 6px;
-    background-color: #9d33ff;
+    background-color: $mainViolet;
     animation: sliding 3s linear infinite;
 
     @keyframes sliding {
@@ -1299,7 +1299,7 @@
             transform: translateX(0);
         }
         100% {
-            width: 400px;
+            // width: 400px;
             transform: translateX(100vw);
         }
     }

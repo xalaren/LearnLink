@@ -12,7 +12,7 @@ import UserCoursesPage from "./pages/UserCoursesPage";
 import { paths } from "./models/paths";
 import { useAppDispatch, useAppSelector } from "./hooks/redux";
 import { useEffect } from "react";
-import { fetchUser } from "./store/actions/userActionCreators";
+import { fetchUser, resetUserState } from "./store/actions/userActionCreators";
 import CourseParticipantsPage from "./pages/CourseParticipantsPage";
 import CourseRolesPage from "./pages/CourseRolesPage.tsx";
 import CourseNestedLayout from "./pages/CourseNestedLayout.tsx";
@@ -23,17 +23,19 @@ import LessonPage from "./pages/LessonPage.tsx";
 import LessonEditPage from "./pages/LessonEditPage.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy.tsx";
+import { ErrorModal } from "./components/Modal/ErrorModal.tsx";
+import PageLoader from "./components/Loader/PageLoader.tsx";
 
 
 function App() {
     const dispatch = useAppDispatch();
-    const { user } = useAppSelector(state => state.userReducer);
+    const { user, error, loading } = useAppSelector(state => state.userReducer);
     const { isAuthenticated } = useAppSelector(state => state.authReducer);
 
     useEffect(() => {
-        if (isAuthenticated && !user) dispatch(fetchUser());
-
-    }, [dispatch, isAuthenticated, user]);
+        console.log(user);
+        if (!user && isAuthenticated) dispatch(fetchUser());
+    }, [user]);
 
     return (
         <>
@@ -61,6 +63,16 @@ function App() {
                 <Route path={paths.privacy.base} element={<PrivacyPolicy />}></Route>
                 <Route path="*" element={<InvalidPage />}></Route>
             </Routes >
+
+            {error && isAuthenticated &&
+                <ErrorModal active={Boolean(error)} error={error} onClose={() => dispatch(resetUserState())} />
+            }
+
+            {loading && !error &&
+                <PageLoader />
+            }
+
+
 
             <Footer />
         </>

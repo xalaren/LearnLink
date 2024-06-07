@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LearnLink.WebApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240607132433_Initial")]
+    [Migration("20240607153557_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -184,6 +184,55 @@ namespace LearnLink.WebApi.Migrations
                     b.ToTable("LessonCompletions");
                 });
 
+            modelBuilder.Entity("LearnLink.Core.Entities.LocalRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("EditAcess")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("EditRolesAccess")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("InviteAccess")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("KickAccess")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("ManageInternalAccess")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("RemoveAccess")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Sign")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<bool>("SystemRole")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("ViewAccess")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Sign")
+                        .IsUnique();
+
+                    b.ToTable("LocalRoles");
+                });
+
             modelBuilder.Entity("LearnLink.Core.Entities.Module", b =>
                 {
                     b.Property<int>("Id")
@@ -255,11 +304,6 @@ namespace LearnLink.WebApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("character varying(13)");
-
                     b.Property<bool>("IsAdmin")
                         .HasColumnType("boolean");
 
@@ -269,16 +313,11 @@ namespace LearnLink.WebApi.Migrations
 
                     b.Property<string>("Sign")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Role");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("LearnLink.Core.Entities.Section", b =>
@@ -416,40 +455,6 @@ namespace LearnLink.WebApi.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("UserCreatedCourses");
-                });
-
-            modelBuilder.Entity("LearnLink.Core.Entities.LocalRole", b =>
-                {
-                    b.HasBaseType("LearnLink.Core.Entities.Role");
-
-                    b.Property<bool>("EditAcess")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("EditRolesAccess")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("InviteAccess")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("KickAccess")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("ManageInternalAccess")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("RemoveAccess")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("SystemRole")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("ViewAccess")
-                        .HasColumnType("boolean");
-
-                    b.HasIndex("Sign")
-                        .IsUnique();
-
-                    b.HasDiscriminator().HasValue("LocalRole");
                 });
 
             modelBuilder.Entity("LearnLink.Core.Entities.CourseCompletion", b =>

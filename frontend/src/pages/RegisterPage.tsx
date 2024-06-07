@@ -15,7 +15,6 @@ import { Link } from "react-router-dom";
 
 
 export function RegisterPage() {
-    const isAuthenticated = useAppSelector(state => state.authReducer.isAuthenticated);
     const { toNext } = useHistoryNavigation();
 
     const [nickname, setNickname] = useState('');
@@ -31,12 +30,6 @@ export function RegisterPage() {
     const [privacyAcceptError, setPrivacyAcceptError] = useState('');
 
     const { registerQuery, error, success, resetValues } = useRegister();
-
-
-
-    useEffect(() => {
-        if (isAuthenticated) toNext(paths.public());
-    }, [isAuthenticated, toNext]);
 
     function resetDefault() {
         resetValues();

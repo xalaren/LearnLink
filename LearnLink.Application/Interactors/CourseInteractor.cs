@@ -86,7 +86,7 @@ namespace LearnLink.Application.Interactors
 
                 var localRole = userCourseLocalRole.LocalRole;
 
-                if (!localRole.IsAdmin && !localRole.ViewAccess)
+                if (!localRole.IsModerator && !localRole.ViewAccess)
                 {
                     throw new AccessLevelException("Курс недоступен пользователю");
                 }

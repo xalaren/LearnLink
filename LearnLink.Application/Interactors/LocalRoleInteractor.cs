@@ -14,7 +14,7 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                await CreateLocalRoleAsyncNoResponse(localRoleDto);
+                await CreateLocalRoleAsyncNoResponse(localRoleDto, createSystemRole);
 
                 return new Response()
                 {
@@ -188,7 +188,7 @@ namespace LearnLink.Application.Interactors
                     throw new AccessLevelException("Локальная роль является системной");
                 }
 
-                unitOfWork.Roles.Remove(localRole);
+                unitOfWork.LocalRoles.Remove(localRole);
                 await unitOfWork.CommitAsync();
 
                 return new()
@@ -234,7 +234,7 @@ namespace LearnLink.Application.Interactors
 
                 localRole = localRole.Assign(localRoleDto);
 
-                unitOfWork.Roles.Update(localRole);
+                unitOfWork.LocalRoles.Update(localRole);
                 await unitOfWork.CommitAsync();
 
                 return new()

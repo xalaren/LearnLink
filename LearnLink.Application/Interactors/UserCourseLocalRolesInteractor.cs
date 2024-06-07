@@ -81,7 +81,7 @@ namespace LearnLink.Application.Interactors
                     throw new NotFoundException("Локальная роль пользователя не найдена");
                 }
 
-                if (!(requesterUserLocalRole.User.Role.IsAdmin || requesterUserLocalRole.LocalRole.IsAdmin))
+                if (!(requesterUserLocalRole.User.Role.IsAdmin || requesterUserLocalRole.LocalRole.IsModerator))
                 {
                     throw new AccessLevelException("Недостаточный уровень прав");
                 }

@@ -1,7 +1,52 @@
-﻿namespace LearnLink.Core.Entities
+﻿using LearnLink.Core.Exceptions;
+
+namespace LearnLink.Core.Entities
 {
-    public class LocalRole : Role
+    public class LocalRole
     {
+        private string name = string.Empty;
+        private string sign = string.Empty;
+
+        public int Id { get; set; }
+        public string Name
+        {
+            get => name;
+            set
+            {
+                if (!string.IsNullOrWhiteSpace(name) && string.IsNullOrWhiteSpace(value))
+                {
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ValidationException("Название роли не было заполнено");
+                }
+
+                name = value;
+            }
+        }
+
+        public string Sign
+        {
+            get => sign;
+            set
+            {
+                if (!string.IsNullOrWhiteSpace(sign) && string.IsNullOrWhiteSpace(value))
+                {
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ValidationException("Подпись роли не была заполнена");
+                }
+
+                sign = value.ToLower();
+            }
+        }
+
+
         public bool ViewAccess { get; set; }
         public bool EditAcess { get; set; }
         public bool RemoveAccess { get; set; }
@@ -10,15 +55,8 @@
         public bool KickAccess { get; set; }
         public bool EditRolesAccess { get; set; }
         
+        public bool IsModerator => ViewAccess && EditAcess && RemoveAccess && ManageInternalAccess && InviteAccess && KickAccess && EditRolesAccess;
         public bool SystemRole { get; init; }
-
-        public override bool IsAdmin
-        {
-            get
-            {
-                return ViewAccess && EditAcess && RemoveAccess && ManageInternalAccess && InviteAccess && KickAccess && EditRolesAccess;
-            }
-        }
 
         public int GetRolePriority()
         {

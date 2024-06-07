@@ -45,6 +45,15 @@ function UpdateLocalRoleModal({
 
     const { requestUpdateCourseLocalRoleQuery, loading, error, success, resetValues } = useRequestUpdateCourseLocalRole();
 
+    const isModerator =
+        viewAccess &&
+        editAccess &&
+        removeAccess &&
+        manageInternalAccess &&
+        inviteAccess &&
+        kickAccess &&
+        editRolesAccess;
+
     function onChange(event: React.ChangeEvent) {
         const inputElement = event.target as HTMLInputElement;
 
@@ -135,33 +144,75 @@ function UpdateLocalRoleModal({
                                     />
                                     <Switch
                                         isChecked={editAccess}
-                                        checkedChanger={() => setEditAccess(prev => !prev)}
+                                        checkedChanger={() => {
+                                            setEditAccess(prev => !prev);
+                                            setViewAccess(true);
+                                        }}
                                         label="Разрешить редактирование курса"
                                     />
                                     <Switch
                                         isChecked={removeAccess}
-                                        checkedChanger={() => setRemoveAccess(prev => !prev)}
                                         label="Разрешить удаление курса"
+                                        checkedChanger={() => {
+                                            setRemoveAccess(prev => !prev);
+                                            setViewAccess(true);
+                                        }}
                                     />
                                     <Switch
                                         isChecked={manageInternalAccess}
-                                        checkedChanger={() => setManageInternalAccess(prev => !prev)}
                                         label="Разрешить редактирование материалов курса"
+                                        checkedChanger={() => {
+                                            setManageInternalAccess(prev => !prev);
+                                            setViewAccess(true);
+                                        }}
                                     />
                                     <Switch
                                         isChecked={inviteAccess}
-                                        checkedChanger={() => setInviteAccess(prev => !prev)}
                                         label="Разрешить приглашение пользователей"
+                                        checkedChanger={() => {
+                                            setInviteAccess(prev => !prev);
+                                            setViewAccess(true);
+                                        }}
                                     />
                                     <Switch
                                         isChecked={kickAccess}
-                                        checkedChanger={() => setKickAccess(prev => !prev)}
                                         label="Разрешить исключение пользователей"
+                                        checkedChanger={() => {
+                                            setKickAccess(prev => !prev);
+                                            setViewAccess(true);
+                                        }}
                                     />
                                     <Switch
                                         isChecked={editRolesAccess}
-                                        checkedChanger={() => setEditRolesAccess(prev => !prev)}
                                         label="Разрешить редактировать роли"
+                                        checkedChanger={() => {
+                                            setEditRolesAccess(prev => !prev);
+                                            setViewAccess(true);
+                                        }}
+                                    />
+                                    <Switch
+                                        isChecked={isModerator}
+                                        label="Модератор курса"
+                                        checkedChanger={() => {
+                                            if (isModerator) {
+                                                setViewAccess(false);
+                                                setEditAccess(false);
+                                                setRemoveAccess(false);
+                                                setManageInternalAccess(false);
+                                                setInviteAccess(false);
+                                                setKickAccess(false);
+                                                setEditRolesAccess(false);
+                                            }
+                                            else {
+                                                setViewAccess(true);
+                                                setEditAccess(true);
+                                                setRemoveAccess(true);
+                                                setManageInternalAccess(true);
+                                                setInviteAccess(true);
+                                                setKickAccess(true);
+                                                setEditRolesAccess(true);
+                                            }
+                                        }}
                                     />
                                 </div>
 

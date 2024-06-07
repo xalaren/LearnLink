@@ -3,8 +3,8 @@ import { AppDispatch } from "../store"
 import { User } from "../../models/user"
 import { ACCESS_KEY, USER_ENDPOINTS_URL } from "../../models/constants"
 import { AxiosError } from "axios"
-import { IValueResponse } from "../../models/response"
 import axiosInstance from "../../axios_config/axiosConfig"
+import { ValueResponse } from "../../models/response"
 
 export const fetchUser = () => {
     return async (dispatch: AppDispatch) => {
@@ -18,7 +18,7 @@ export const fetchUser = () => {
         }
 
         try {
-            const response = await axiosInstance.get<IValueResponse<User>>(`${USER_ENDPOINTS_URL}get/auth`, {
+            const response = await axiosInstance.get<ValueResponse<User>>(`${USER_ENDPOINTS_URL}get/auth`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

@@ -247,17 +247,11 @@ namespace LearnLink.Application.Interactors
                     throw new NotFoundException("Ваша локальная роль не найдена");
                 }
 
-                if (!requesterUserLocalRole.LocalRole.IsAdmin)
+                if (!requesterUserLocalRole.LocalRole.IsModerator)
                 {
                     throw new AccessLevelException("Приоритет вашей роли низкий");
                 }
 
-                var localRole = await unitOfWork.LocalRoles.FindAsync(localRoleId);
-
-                if (localRole == null)
-                {
-                    throw new NotFoundException("Локальная роль не найдена");
-                }
 
                 var courseLocalRole = await unitOfWork.CourseLocalRoles.FirstOrDefaultAsync(courseLocalRole =>
                     courseLocalRole.CourseId == courseId &&
@@ -266,6 +260,15 @@ namespace LearnLink.Application.Interactors
                 if (courseLocalRole == null)
                 {
                     throw new NotFoundException("Локальная роль не найдена");
+                }
+
+                await unitOfWork.CourseLocalRoles.Entry(courseLocalRole)
+                    .Reference(role => role.LocalRole)
+                    .LoadAsync();
+
+                if(courseLocalRole.LocalRole.SystemRole)
+                {
+                    throw new AccessLevelException("Локальная роль является системной");
                 }
 
                 var memberLocalRole =

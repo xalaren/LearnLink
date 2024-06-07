@@ -45,6 +45,28 @@ namespace LearnLink.WebApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LocalRoles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Sign = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    ViewAccess = table.Column<bool>(type: "boolean", nullable: false),
+                    EditAcess = table.Column<bool>(type: "boolean", nullable: false),
+                    RemoveAccess = table.Column<bool>(type: "boolean", nullable: false),
+                    ManageInternalAccess = table.Column<bool>(type: "boolean", nullable: false),
+                    InviteAccess = table.Column<bool>(type: "boolean", nullable: false),
+                    KickAccess = table.Column<bool>(type: "boolean", nullable: false),
+                    EditRolesAccess = table.Column<bool>(type: "boolean", nullable: false),
+                    SystemRole = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LocalRoles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Modules",
                 columns: table => new
                 {
@@ -65,17 +87,8 @@ namespace LearnLink.WebApi.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    Sign = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    IsAdmin = table.Column<bool>(type: "boolean", nullable: false),
-                    Discriminator = table.Column<string>(type: "character varying(13)", maxLength: 13, nullable: false),
-                    ViewAccess = table.Column<bool>(type: "boolean", nullable: true),
-                    EditAcess = table.Column<bool>(type: "boolean", nullable: true),
-                    RemoveAccess = table.Column<bool>(type: "boolean", nullable: true),
-                    ManageInternalAccess = table.Column<bool>(type: "boolean", nullable: true),
-                    InviteAccess = table.Column<bool>(type: "boolean", nullable: true),
-                    KickAccess = table.Column<bool>(type: "boolean", nullable: true),
-                    EditRolesAccess = table.Column<bool>(type: "boolean", nullable: true),
-                    SystemRole = table.Column<bool>(type: "boolean", nullable: true)
+                    Sign = table.Column<string>(type: "text", nullable: false),
+                    IsAdmin = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -106,6 +119,30 @@ namespace LearnLink.WebApi.Migrations
                         name: "FK_Sections_Lessons_LessonId",
                         column: x => x.LessonId,
                         principalTable: "Lessons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CourseLocalRoles",
+                columns: table => new
+                {
+                    CourseId = table.Column<int>(type: "integer", nullable: false),
+                    LocalRoleId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CourseLocalRoles", x => new { x.CourseId, x.LocalRoleId });
+                    table.ForeignKey(
+                        name: "FK_CourseLocalRoles_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CourseLocalRoles_LocalRoles_LocalRoleId",
+                        column: x => x.LocalRoleId,
+                        principalTable: "LocalRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -154,30 +191,6 @@ namespace LearnLink.WebApi.Migrations
                         name: "FK_ModuleLessons_Modules_ModuleId",
                         column: x => x.ModuleId,
                         principalTable: "Modules",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CourseLocalRoles",
-                columns: table => new
-                {
-                    CourseId = table.Column<int>(type: "integer", nullable: false),
-                    LocalRoleId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CourseLocalRoles", x => new { x.CourseId, x.LocalRoleId });
-                    table.ForeignKey(
-                        name: "FK_CourseLocalRoles_Courses_CourseId",
-                        column: x => x.CourseId,
-                        principalTable: "Courses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CourseLocalRoles_Roles_LocalRoleId",
-                        column: x => x.LocalRoleId,
-                        principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -361,9 +374,9 @@ namespace LearnLink.WebApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserCourseLocalRoles_Roles_LocalRoleId",
+                        name: "FK_UserCourseLocalRoles_LocalRoles_LocalRoleId",
                         column: x => x.LocalRoleId,
-                        principalTable: "Roles",
+                        principalTable: "LocalRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -429,6 +442,12 @@ namespace LearnLink.WebApi.Migrations
                 column: "ModuleId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_LocalRoles_Sign",
+                table: "LocalRoles",
+                column: "Sign",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ModuleCompletions_CourseId",
                 table: "ModuleCompletions",
                 column: "CourseId");
@@ -442,12 +461,6 @@ namespace LearnLink.WebApi.Migrations
                 name: "IX_ModuleLessons_LessonId",
                 table: "ModuleLessons",
                 column: "LessonId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Roles_Sign",
-                table: "Roles",
-                column: "Sign",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Sections_LessonId",
@@ -527,6 +540,9 @@ namespace LearnLink.WebApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "Lessons");
+
+            migrationBuilder.DropTable(
+                name: "LocalRoles");
 
             migrationBuilder.DropTable(
                 name: "Courses");

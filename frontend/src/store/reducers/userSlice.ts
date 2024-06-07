@@ -15,7 +15,7 @@ interface IUserState {
 const initialState: IUserState = {
     user: null,
     error: '',
-    loading: false,
+    loading: false
 }
 
 export const userSlice = createSlice({
