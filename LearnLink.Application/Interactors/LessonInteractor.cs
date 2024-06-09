@@ -10,7 +10,7 @@ namespace LearnLink.Application.Interactors
 {
     public class LessonInteractor(
         IUnitOfWork unitOfWork,
-        SectionInteractor sectionInteractor,
+        LessonSectionInteractor sectionInteractor,
         CompletionInteractor completionInteractor,
         PermissionService permissionService)
     {
@@ -430,7 +430,7 @@ namespace LearnLink.Application.Interactors
 
             var completions = unitOfWork.LessonCompletions.Where(lessonCompletion => lessonCompletion.LessonId == lessonId);
 
-            await sectionInteractor.RemoveLessonSectionsAsyncNoResponse(lessonId);
+            await sectionInteractor.RemoveSectionsFromLessonAsyncNoResponse(lessonId);
             unitOfWork.LessonCompletions.RemoveRange(completions);
             unitOfWork.Lessons.Remove(lesson);
         }

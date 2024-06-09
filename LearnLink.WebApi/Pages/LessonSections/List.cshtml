@@ -5,10 +5,10 @@
 }
 
 <div class="breadcrumb">
-    <h2 class="breadcrumb__item" onclick="redirect('Sections/SectionsActionsPage')">
-        Sections
+    <h2 class="breadcrumb__item" onclick="redirect('LessonSections/LessonSectionsActionsPage')">
+        Lesson-Sections
     </h2>
-    <h2 class="breadcrumb__item" onclick="redirect('Sections/List')">
+    <h2 class="breadcrumb__item" onclick="redirect('LessonSections/List')">
         List
     </h2>
 </div>
@@ -46,7 +46,7 @@
         {
             <div class="result-value">
                 <p>Id: <span class="white-selection">@sectionExample.Id</span></p>
-                <p>Lesson Id: <span class="white-selection">@sectionExample.LessonId</span></p>
+                <p>Lesson Id: <span class="white-selection">@Model.LessonId</span></p>
                 @if (sectionExample.Title != null)
                 {
                     <p>Title: <span class="white-selection">@sectionExample.Title</span></p>

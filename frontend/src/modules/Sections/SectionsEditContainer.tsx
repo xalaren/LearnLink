@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useAppSelector } from "../../hooks/redux";
 import { Section } from "../../models/section";
 import { useEffect, useState } from "react";
-import { useChangeSectionOrder, useGetLessonSections, useRemoveSection } from "../../hooks/sectionHooks";
+import { useChangeSectionOrder, useGetLessonSections, useRemoveSection } from "../../hooks/lessonSectionHook";
 import { ErrorModal } from "../../components/Modal/ErrorModal";
 import { Loader } from "../../components/Loader/Loader";
 import SectionEditor from "./SectionEditor";
@@ -44,6 +44,7 @@ function SectionsEditContainer({ onChange }: ISectionEditContainerProps) {
             {!error && !loading && sections &&
                 sections.map(section =>
                     <SectionSelector
+                        lessonId={Number(param.lessonId)}
                         section={section}
                         key={section.id}
                         updateCallback={onChange}
@@ -66,12 +67,13 @@ function SectionsEditContainer({ onChange }: ISectionEditContainerProps) {
 }
 
 interface ISectionSelectorProps {
+    lessonId: number,
     section: Section;
     accessToken: string;
     updateCallback: () => void;
 }
 
-function SectionSelector({ section, updateCallback, accessToken }: ISectionSelectorProps) {
+function SectionSelector({ lessonId, section, updateCallback, accessToken }: ISectionSelectorProps) {
     const [editorMode, setEditorMode] = useState(false);
 
     const sectionRemoveHook = useRemoveSection();
@@ -87,13 +89,13 @@ function SectionSelector({ section, updateCallback, accessToken }: ISectionSelec
     async function removeSection() {
         if (!accessToken) return;
 
-        await sectionRemoveHook.sectionRemoveQuery(section.id, accessToken);
+        await sectionRemoveHook.sectionRemoveQuery(lessonId, section.id, accessToken);
     }
 
     async function changeOrder(increase: boolean) {
         if (!accessToken) return;
 
-        await changeOrderHook.changeSectionOrder(section.id, section.lessonId, increase, accessToken);
+        await changeOrderHook.changeSectionOrder(section.id, lessonId, increase, accessToken);
     }
 
     function resetValues() {
@@ -113,6 +115,7 @@ function SectionSelector({ section, updateCallback, accessToken }: ISectionSelec
             <div className="section-editor-container">
                 {editorMode ?
                     <SectionEditor
+                        lessonId={lessonId}
                         currentSection={section}
                         onClose={() => {
                             setEditorMode(false);

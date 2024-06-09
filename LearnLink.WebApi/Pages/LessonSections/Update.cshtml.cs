@@ -3,17 +3,18 @@ using LearnLink.Shared.DataTransferObjects;
 using LearnLink.Shared.Responses;
 using LearnLink.WebApi.Pages.PageModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace LearnLink.WebApi.Pages.Sections
 {
     public class UpdateModel : SectionsBasePageModel
     {
-        public UpdateModel(SectionInteractor sectionInteractor) : base(sectionInteractor) { }
+        public UpdateModel(LessonSectionInteractor sectionInteractor) : base(sectionInteractor) { }
 
         public Response? QueryResult { get; set; }
 
         public SectionDto? FoundSection { get; set; }
+
+        public int LessonId { get; set; }
 
         public async Task<IActionResult> OnGet(int lessonId, int order)
         {
@@ -21,6 +22,7 @@ namespace LearnLink.WebApi.Pages.Sections
             {
                 if (lessonId == 0 || order == 0) return;
 
+                LessonId = lessonId;
                 var result = await SectionInteractor.GetSectionByLessonAndOrderAsync(lessonId, order);
 
                 if (result.Success && result.Value != null)
@@ -55,11 +57,10 @@ namespace LearnLink.WebApi.Pages.Sections
                 Id = sectionId,
                 Order = 0,
                 Content = contentDto,
-                LessonId = lessonId,
                 Title = title
             };
 
-            QueryResult = await SectionInteractor.UpdateSectionAsync(lessonId, sectionDto);
+            QueryResult = await SectionInteractor.UpdateLessonSectionAsync(lessonId, sectionDto);
         }
     }
 }

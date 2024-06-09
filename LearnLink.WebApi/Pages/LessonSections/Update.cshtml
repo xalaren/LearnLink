@@ -5,10 +5,10 @@
 }
 
 <div class="breadcrumb">
-    <h2 class="breadcrumb__item" onclick="redirect('Sections/SectionsActionsPage')">
-        Sections
+    <h2 class="breadcrumb__item" onclick="redirect('LessonSections/LessonSectionsActionsPage')">
+        Lesson-Sections
     </h2>
-    <h2 class="breadcrumb__item" onclick="redirect('Sections/Update')">
+    <h2 class="breadcrumb__item" onclick="redirect('LessonSections/Update')">
         Update
     </h2>
 </div>
@@ -48,7 +48,7 @@
     <form class="form" method="post" enctype="multipart/form-data">
         <div class="form-input">
             <p class="form-input__label">Lesson Id</p>
-            <input type="number" min="0" name="lessonId" placeholder="Lesson Id..." class="input" value="@Model.FoundSection.LessonId" />
+            <input type="number" min="0" name="lessonId" placeholder="Lesson Id..." class="input" value="@Model.LessonId" />
         </div>
 
         <div class="form-input">

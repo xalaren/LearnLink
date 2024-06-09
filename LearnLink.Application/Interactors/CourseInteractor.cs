@@ -845,6 +845,7 @@ namespace LearnLink.Application.Interactors
         {
             var course = await unitOfWork.Courses.FindAsync(courseId);
             NotFoundException.ThrowIfNull(course, "Курс не найден");
+
             return new Permission(course.IsUnavailable);
         }
         private async Task RemoveCourseAsyncNoResponse(int courseId, bool strictRemove)

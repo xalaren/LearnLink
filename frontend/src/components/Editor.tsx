@@ -13,7 +13,11 @@ function Editor({ data, setData }: IEditorProps) {
                 data={data}
                 editor={ClassicEditor}
                 config={{
-                    toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
+                    toolbar: ['heading', '|',
+                        'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote',
+                        'fontSize', 'subscript', 'superscript', '|',
+                        'insertTable', 'tableColumn', 'tableRow', 'mergeTableCells', '|',
+                        'undo', 'redo'],
                     heading: {
                         options: [
                             { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
@@ -21,6 +25,11 @@ function Editor({ data, setData }: IEditorProps) {
                             { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' }
                         ]
                     },
+                    //fontSize: {
+                    //    options: [
+                    //        9, 11, 13, 'default', 17, 19, 21
+                    //    ]
+                    //},
                     placeholder: "Введите текст здесь..."
                 }}
                 onChange={(event, editor) => {

@@ -4,11 +4,11 @@ namespace LearnLink.WebApi.Pages.PageModels
 {
     public class SectionsBasePageModel : AuthorizePageModel
     {
-        private readonly SectionInteractor sectionInteractor;
+        private readonly LessonSectionInteractor sectionInteractor;
 
-        protected SectionInteractor SectionInteractor => sectionInteractor;
+        protected LessonSectionInteractor SectionInteractor => sectionInteractor;
 
-        public SectionsBasePageModel(SectionInteractor sectionInteractor)
+        public SectionsBasePageModel(LessonSectionInteractor sectionInteractor)
         {
             this.sectionInteractor = sectionInteractor;
         }

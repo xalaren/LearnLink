@@ -44,7 +44,7 @@ builder.Services.AddScoped<UserCourseLocalRolesInteractor>();
 builder.Services.AddScoped<PermissionService>();
 builder.Services.AddScoped<CompletionInteractor>();
 builder.Services.AddScoped<ContentInteractor>();
-builder.Services.AddScoped<SectionInteractor>();
+builder.Services.AddScoped<LessonSectionInteractor>();
 
 
 builder.Services.AddTransient<SeedData>();

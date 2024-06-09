@@ -1,4 +1,4 @@
-namespace LearnLink.Core.Entities.Content
+namespace LearnLink.Core.Entities.ContentEntities
 {
     public class TextContent
     {

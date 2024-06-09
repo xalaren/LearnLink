@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useAppSelector } from "../../hooks/redux";
 import { Section } from "../../models/section";
 import { useEffect, useState } from "react";
-import { useGetLessonSections } from "../../hooks/sectionHooks";
+import { useGetLessonSections } from "../../hooks/lessonSectionHook";
 import { ErrorModal } from "../../components/Modal/ErrorModal";
 import { Loader } from "../../components/Loader/Loader";
 import SectionView from "../../components/Sections/SectionView";

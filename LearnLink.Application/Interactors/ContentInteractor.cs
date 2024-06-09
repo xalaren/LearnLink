@@ -5,42 +5,31 @@ using LearnLink.Shared.DataTransferObjects;
 
 namespace LearnLink.Application.Interactors
 {
-    public class ContentInteractor
+    public class ContentInteractor(IUnitOfWork unitOfWork, DirectoryStore directoryStore)
     {
-        private readonly IUnitOfWork unitOfWork;
-        private readonly DirectoryStore directoryStore;
+        private readonly IUnitOfWork unitOfWork = unitOfWork;
 
-        public ContentInteractor(IUnitOfWork unitOfWork, DirectoryStore directoryStore)
-        {
-            this.unitOfWork = unitOfWork;
-            this.directoryStore = directoryStore;
-        }
-
-        public async Task SaveLessonContentAsync(ContentDto contentDto, int lessonId, int sectionId)
+        public async Task SaveLessonFileContent(ContentDto contentDto, int lessonId, int sectionId, int contentId)
         {
             try
             {
-                if (contentDto.IsFile && contentDto.FormFile != null)
+                if (contentDto is { IsFile: true, FormFile: not null })
                 {
                     var fileName = contentDto.FormFile.FileName;
 
-                    using (var stream = contentDto.FormFile.OpenReadStream())
+                    await using var stream = contentDto.FormFile.OpenReadStream();
+                    
+                    if (stream == null || string.IsNullOrWhiteSpace(fileName))
                     {
-                        if (stream == null || string.IsNullOrWhiteSpace(fileName))
-                        {
-                            throw new ValidationException("Файл или его название было пустое");
-                        }
-
-                        var directory = directoryStore.GetDirectoryPathToLessonContents(lessonId, sectionId);
-                        var contentPath = Path.Combine(directory, fileName);
-
-                        Directory.CreateDirectory(Path.GetDirectoryName(contentPath)!);
-                        using (var fileStream = new FileStream(contentPath, FileMode.Create))
-                        {
-                            await stream.CopyToAsync(fileStream);
-                        }
-
+                        throw new ValidationException("Файл или его название было пустое");
                     }
+
+                    var directory = directoryStore.GetDirectoryPathToLessonSectionContent(lessonId, sectionId, contentId);
+                    var contentPath = Path.Combine(directory, fileName);
+
+                    Directory.CreateDirectory(Path.GetDirectoryName(contentPath)!);
+                    await using var fileStream = new FileStream(contentPath, FileMode.Create);
+                    await stream.CopyToAsync(fileStream);
                 }
             }
             catch (Exception)
@@ -49,11 +38,11 @@ namespace LearnLink.Application.Interactors
             }
         }
 
-        public void RemoveLessonContent(int lessonId, int sectionId, string? fileName)
+        public void RemoveLessonFileContent(int lessonId, int sectionId, int contentId, string? fileName)
         {
             if (string.IsNullOrWhiteSpace(fileName)) return;
 
-            var directory = directoryStore.GetDirectoryPathToLessonContents(lessonId, sectionId);
+            var directory = directoryStore.GetDirectoryPathToLessonSectionContent(lessonId, sectionId, contentId);
             var path = Path.Combine(directory, fileName);
 
             RemoveContent(path);

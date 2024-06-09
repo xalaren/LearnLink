@@ -2,7 +2,7 @@ import { useState } from "react";
 import axiosInstance from "../axios_config/axiosConfig";
 import { ValueResponse, VoidResponse } from "../models/response";
 import { Section, SectionCodeContent, SectionFileContent, SectionTextContent } from "../models/section";
-import { SECTIONS_ENDPOINTS_URL } from "../models/constants";
+import { LESSON_SECTIONS_ENDPOINTS_URL, SECTIONS_ENDPOINTS_URL } from "../models/constants";
 import { AxiosError, AxiosResponse } from "axios";
 
 export function useGetLessonSections() {
@@ -12,7 +12,7 @@ export function useGetLessonSections() {
     const getSectionsFromLesson = async (lessonId: number, accessToken: string) => {
         try {
             setLoading(true);
-            const response = await axiosInstance.get<ValueResponse<Section[]>>(`${SECTIONS_ENDPOINTS_URL}get/fromlesson?lessonId=${lessonId}`, {
+            const response = await axiosInstance.get<ValueResponse<Section[]>>(`${LESSON_SECTIONS_ENDPOINTS_URL}get/fromlesson?lessonId=${lessonId}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -44,7 +44,7 @@ export function useCreateSection() {
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const createSectionQuery = async (section: Section, accessToken: string) => {
+    const createSectionQuery = async (lessonId: number, section: Section, accessToken: string) => {
         try {
             setLoading(true);
 
@@ -53,13 +53,12 @@ export function useCreateSection() {
             if (section.content.isText) {
                 const textContent: SectionTextContent = {
                     id: section.id,
-                    lessonId: section.lessonId,
                     order: section.order,
                     text: section.content.text || '',
                     title: section.title
                 };
 
-                response = await axiosInstance.post<VoidResponse>(`${SECTIONS_ENDPOINTS_URL}create/text`, textContent, {
+                response = await axiosInstance.post<VoidResponse>(`${LESSON_SECTIONS_ENDPOINTS_URL}create/text?lessonId=${lessonId}`, textContent, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${accessToken}`,
@@ -69,14 +68,13 @@ export function useCreateSection() {
             else if (section.content.isCodeBlock) {
                 const codeContent: SectionCodeContent = {
                     id: section.id,
-                    lessonId: section.lessonId,
                     order: section.order,
                     code: section.content.text || '',
                     codeLanguage: section.content.codeLanguage || '',
                     title: section.title
                 };
 
-                response = await axiosInstance.post<VoidResponse>(`${SECTIONS_ENDPOINTS_URL}create/code`, codeContent, {
+                response = await axiosInstance.post<VoidResponse>(`${LESSON_SECTIONS_ENDPOINTS_URL}create/code?lessonId=${lessonId}`, codeContent, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${accessToken}`,
@@ -86,13 +84,12 @@ export function useCreateSection() {
             else if (section.content.isFile) {
                 const fileContent: SectionFileContent = {
                     id: section.id,
-                    lessonId: section.lessonId,
                     order: section.order,
                     formFile: section.content.formFile!,
                     title: section.title
                 };
 
-                response = await axiosInstance.post<VoidResponse>(`${SECTIONS_ENDPOINTS_URL}create/file`, fileContent, {
+                response = await axiosInstance.post<VoidResponse>(`${LESSON_SECTIONS_ENDPOINTS_URL}create/file?lessonId=${lessonId}`, fileContent, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${accessToken}`,
@@ -132,7 +129,7 @@ export function useUpdateSection() {
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const updateSectionQuery = async (section: Section, accessToken: string) => {
+    const updateSectionQuery = async (lessonId: number, section: Section, accessToken: string) => {
         try {
             setLoading(true);
 
@@ -141,13 +138,12 @@ export function useUpdateSection() {
             if (section.content.isText) {
                 const textContent: SectionTextContent = {
                     id: section.id,
-                    lessonId: section.lessonId,
                     order: section.order,
                     text: section.content.text || '',
                     title: section.title
                 };
 
-                response = await axiosInstance.post<VoidResponse>(`${SECTIONS_ENDPOINTS_URL}update/text`, textContent, {
+                response = await axiosInstance.post<VoidResponse>(`${LESSON_SECTIONS_ENDPOINTS_URL}update/text?lessonId=${lessonId}`, textContent, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${accessToken}`,
@@ -157,14 +153,13 @@ export function useUpdateSection() {
             else if (section.content.isCodeBlock) {
                 const codeContent: SectionCodeContent = {
                     id: section.id,
-                    lessonId: section.lessonId,
                     order: section.order,
                     code: section.content.text || '',
                     codeLanguage: section.content.codeLanguage || '',
                     title: section.title
                 };
 
-                response = await axiosInstance.post<VoidResponse>(`${SECTIONS_ENDPOINTS_URL}update/code`, codeContent, {
+                response = await axiosInstance.post<VoidResponse>(`${LESSON_SECTIONS_ENDPOINTS_URL}update/code?lessonId=${lessonId}`, codeContent, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${accessToken}`,
@@ -174,13 +169,12 @@ export function useUpdateSection() {
             else if (section.content.isFile && section.content.formFile) {
                 const fileContent: SectionFileContent = {
                     id: section.id,
-                    lessonId: section.lessonId,
                     order: section.order,
                     formFile: section.content.formFile,
                     title: section.title
                 };
 
-                response = await axiosInstance.post<VoidResponse>(`${SECTIONS_ENDPOINTS_URL}update/file`, fileContent, {
+                response = await axiosInstance.post<VoidResponse>(`${LESSON_SECTIONS_ENDPOINTS_URL}update/file?lessonId=${lessonId}`, fileContent, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${accessToken}`,
@@ -188,7 +182,7 @@ export function useUpdateSection() {
                 });
             }
             else {
-                response = await axiosInstance.post<VoidResponse>(`${SECTIONS_ENDPOINTS_URL}update`, section, {
+                response = await axiosInstance.post<VoidResponse>(`${SECTIONS_ENDPOINTS_URL}update?lessonId=${lessonId}`, section, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${accessToken}`,
@@ -227,7 +221,7 @@ export function useChangeSectionOrder() {
     const changeSectionOrder = async (sectionId: number, lessonId: number, increase: boolean, accessToken: string) => {
         try {
             setLoading(true);
-            const response = await axiosInstance.post<VoidResponse>(`${SECTIONS_ENDPOINTS_URL}update/order?sectionId=${sectionId}&lessonId=${lessonId}&increase=${increase}`, {}, {
+            const response = await axiosInstance.post<VoidResponse>(`${LESSON_SECTIONS_ENDPOINTS_URL}update/order?sectionId=${sectionId}&lessonId=${lessonId}&increase=${increase}`, {}, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 }
@@ -260,10 +254,10 @@ export function useRemoveSection() {
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const sectionRemoveQuery = async (sectionId: number, accessToken: string) => {
+    const sectionRemoveQuery = async (lessonId: number, sectionId: number, accessToken: string) => {
         try {
             setLoading(true);
-            const response = await axiosInstance.delete<VoidResponse>(`${SECTIONS_ENDPOINTS_URL}remove?sectionId=${sectionId}`, {
+            const response = await axiosInstance.delete<VoidResponse>(`${LESSON_SECTIONS_ENDPOINTS_URL}remove?lessonId=${lessonId}&sectionId=${sectionId}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 }

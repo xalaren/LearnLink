@@ -8,11 +8,13 @@ namespace LearnLink.WebApi.Pages.Sections
 {
     public class ChangeOrderModel : SectionsBasePageModel
     {
-        public ChangeOrderModel(SectionInteractor sectionInteractor) : base(sectionInteractor) { }
+        public ChangeOrderModel(LessonSectionInteractor sectionInteractor) : base(sectionInteractor) { }
 
         public Response? QueryResult { get; set; }
 
         public SectionDto? FoundSection { get; set; }
+
+        public int LessonId { get; set; }
 
 
         public async Task<IActionResult> OnGet(int lessonId, int order)
@@ -21,6 +23,7 @@ namespace LearnLink.WebApi.Pages.Sections
             {
                 if (lessonId == 0 || order == 0) return;
 
+                LessonId = lessonId;
                 var result = await SectionInteractor.GetSectionByLessonAndOrderAsync(lessonId, order);
 
                 if(result.Success && result.Value != null)

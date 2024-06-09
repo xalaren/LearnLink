@@ -5,15 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Adapter.EFTransaction
 {
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork(AppDbContext context) : IUnitOfWork
     {
-        private readonly AppDbContext context;
-
-        public UnitOfWork(AppDbContext context)
-        {
-            this.context = context;
-        }
-
         public DbSet<User> Users => context.Users;
         public DbSet<Credentials> Credentials => context.Credentials;
         public DbSet<Role> Roles => context.Roles;
@@ -26,6 +19,7 @@ namespace LearnLink.Adapter.EFTransaction
         public DbSet<Lesson> Lessons => context.Lessons;
         public DbSet<ModuleLesson> ModuleLessons => context.ModuleLessons;
         public DbSet<Section> Sections => context.Sections;
+        public DbSet<LessonSection> LessonSections => context.LessonSections;
 
         public DbSet<LocalRole> LocalRoles => context.LocalRoles;
         public DbSet<CourseLocalRole> CourseLocalRoles => context.CourseLocalRoles;

@@ -5,10 +5,10 @@
 }
 
 <div class="breadcrumb">
-    <h2 class="breadcrumb__item" onclick="redirect('Sections/SectionsActionsPage')">
-        Sections
+    <h2 class="breadcrumb__item" onclick="redirect('LessonSections/LessonSectionsActionsPage')">
+        Lesson-Sections
     </h2>
-    <h2 class="breadcrumb__item" onclick="redirect('Sections/ChangeOrder')">
+    <h2 class="breadcrumb__item" onclick="redirect('LessonSections/ChangeOrder')">
         Change-Order
     </h2>
 </div>
@@ -49,7 +49,6 @@
 
         <div class="result-value">
             <p>Id: <span class="white-selection">@Model.FoundSection.Id</span></p>
-            <p>Lesson Id: <span class="white-selection">@Model.FoundSection.LessonId</span></p>
             @if (Model.FoundSection.Title != null)
             {
                 <p>Title: <span class="white-selection">@Model.FoundSection.Title</span></p>
@@ -61,7 +60,7 @@
     <h3>Change order</h3>
     <form class="form width-400" method="post">
         <input type="hidden" name="sectionId" class="input" value="@Model.FoundSection.Id" />
-        <input type="hidden" name="lessonId" class="input" value="@Model.FoundSection.LessonId" />
+        <input type="hidden" name="lessonId" class="input" value="@Model.LessonId" />
         <div class="line-container">
             <button class="primary-button fixed-button" type="submit" asp-page-handler="Increase">+</button>
             <button class="primary-button fixed-button" type="submit" asp-page-handler="Decrease">-</button>

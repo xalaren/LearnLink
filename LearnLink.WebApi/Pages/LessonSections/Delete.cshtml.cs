@@ -7,7 +7,7 @@ namespace LearnLink.WebApi.Pages.Sections
 {
     public class DeleteModel : SectionsBasePageModel
     {
-        public DeleteModel(SectionInteractor sectionInteractor) : base(sectionInteractor) { }
+        public DeleteModel(LessonSectionInteractor sectionInteractor) : base(sectionInteractor) { }
 
         public Response? QueryResult { get; set; }
 
@@ -16,9 +16,9 @@ namespace LearnLink.WebApi.Pages.Sections
             return AuthRequired();
         }
 
-        public async Task OnPost(int sectionId)
+        public async Task OnPost(int lessonId, int sectionId)
         {
-            QueryResult = await SectionInteractor.RemoveSectionAsync(sectionId);
+            QueryResult = await SectionInteractor.RemoveLessonSectionAsync(sectionId, lessonId);
         }
     }
 }

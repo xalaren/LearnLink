@@ -4,31 +4,31 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Adapter.EFContexts
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext(DbContextOptions options) : DbContext(options)
     {
-        public DbSet<User> Users { get; set; }
-        public DbSet<Credentials> Credentials { get; set; }
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<LocalRole> LocalRoles { get; set; }
+        public DbSet<User> Users { get; init; }
+        public DbSet<Credentials> Credentials { get; init; }
+        public DbSet<Role> Roles { get; init; }
+        public DbSet<LocalRole> LocalRoles { get; init; }
 
-        public DbSet<Course> Courses { get; set; }
-        public DbSet<Subscription> Subscriptions { get; set; }
-        public DbSet<UserCreatedCourse> UserCreatedCourses { get; set; }
-        public DbSet<CourseLocalRole> CourseLocalRoles { get; set; }
-        public DbSet<UserCourseLocalRole> UserCourseLocalRoles { get; set; }
+        public DbSet<Course> Courses { get; init; }
+        public DbSet<Subscription> Subscriptions { get; init; }
+        public DbSet<UserCreatedCourse> UserCreatedCourses { get; init; }
+        public DbSet<CourseLocalRole> CourseLocalRoles { get; init; }
+        public DbSet<UserCourseLocalRole> UserCourseLocalRoles { get; init; }
 
-        public DbSet<Module> Modules { get; set; }
-        public DbSet<CourseModule> CourseModules { get; set; }
+        public DbSet<Module> Modules { get; init; }
+        public DbSet<CourseModule> CourseModules { get; init; }
 
-        public DbSet<Lesson> Lessons { get; set; }
-        public DbSet<Section> Sections { get; set; }
-        public DbSet<ModuleLesson> ModuleLessons { get; set; }
+        public DbSet<Lesson> Lessons { get; init; }
+        public DbSet<Section> Sections { get; init; }
+        
+        public DbSet<LessonSection> LessonSections { get; init; }
+        public DbSet<ModuleLesson> ModuleLessons { get; init; }
 
-        public DbSet<CourseCompletion> CourseCompletions { get; set; }
-        public DbSet<ModuleCompletion> ModuleCompletions { get; set; }
-        public DbSet<LessonCompletion> LessonCompletions { get; set; }
-
-        public AppDbContext(DbContextOptions options) : base(options) { }
+        public DbSet<CourseCompletion> CourseCompletions { get; init; }
+        public DbSet<ModuleCompletion> ModuleCompletions { get; init; }
+        public DbSet<LessonCompletion> LessonCompletions { get; init; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -48,6 +48,7 @@ namespace LearnLink.Adapter.EFContexts
             modelBuilder.ApplyConfiguration(new ModuleComletionEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new SectionEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new LessonCompletionEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new LessonSectionEntityTypeConfiguration());
         }
     }
 }

@@ -5,7 +5,7 @@ import ControlNav from "../../components/ControlNav";
 import Editor from "../../components/Editor";
 import CodeEditor from "../../components/CodeEditor/CodeEditor";
 import FileUploader from "../../components/FileUploader/FileUploader";
-import { useUpdateSection } from "../../hooks/sectionHooks";
+import { useUpdateSection } from "../../hooks/lessonSectionHook";
 import PopupNotification from "../../components/PopupNotification";
 import PopupLoader from "../../components/Loader/PopupLoader";
 import { Content } from "../../models/content";
@@ -18,11 +18,12 @@ import DOMPurify from 'dompurify';
 import { FileInfo } from "../../models/fileInfo";
 
 interface ISectionEditorProps {
+    lessonId: number;
     currentSection: Section;
     onClose: () => void;
 }
 
-function SectionEditor({ currentSection, onClose }: ISectionEditorProps) {
+function SectionEditor({ lessonId, currentSection, onClose }: ISectionEditorProps) {
     const [title, setTitle] = useState('');
 
     const [text, setText] = useState('');
@@ -74,7 +75,7 @@ function SectionEditor({ currentSection, onClose }: ISectionEditorProps) {
 
     async function updateSection() {
 
-        if (currentSection.lessonId === 0 || !accessToken) return;
+        if (lessonId === 0 || !accessToken) return;
 
         if (currentSection.content.isText) {
             if (!validate(text)) {
@@ -87,7 +88,7 @@ function SectionEditor({ currentSection, onClose }: ISectionEditorProps) {
             const content = new Content(true, false, false, cleanData);
             const section = { ...currentSection, title, content };
 
-            await updateSectionQuery(section, accessToken);
+            await updateSectionQuery(lessonId, section, accessToken);
 
             return;
         }
@@ -101,14 +102,14 @@ function SectionEditor({ currentSection, onClose }: ISectionEditorProps) {
             const content = new Content(false, true, false, text, language);
             const section = { ...currentSection, title, content };
 
-            await updateSectionQuery(section, accessToken);
+            await updateSectionQuery(lessonId, section, accessToken);
             return;
         }
 
         const content = new Content(false, false, true, '', '', file);
         const section = { ...currentSection, title, content };
 
-        await updateSectionQuery(section, accessToken);
+        await updateSectionQuery(lessonId, section, accessToken);
     }
 
     return (

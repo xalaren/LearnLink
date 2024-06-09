@@ -8,6 +8,7 @@ export const COURSE_ENDPOINTS_URL: string = BASE_URL + 'courses/';
 export const MODULE_ENDPOINTS_URL: string = BASE_URL + 'modules/';
 export const LESSON_ENDPOINTS_URL: string = BASE_URL + 'lessons/';
 export const SECTIONS_ENDPOINTS_URL: string = BASE_URL + 'sections/';
+export const LESSON_SECTIONS_ENDPOINTS_URL: string = BASE_URL + 'lesson/sections/';
 export const COMPLETION_ENDPOINTS_URL: string = BASE_URL + 'completions/';
 export const SUBSCRIPTION_ENDPOINTS_URL: string = BASE_URL + 'subscriptions/';
 export const ROLE_ENDPOINTS_URL: string = BASE_URL + 'roles/';

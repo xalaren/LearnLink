@@ -1,6 +1,15 @@
-﻿namespace LearnLink.Adapter.EFConfigurations;
+﻿using LearnLink.Core.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-public class LessonSectionEntityTypeConfiguration
+namespace LearnLink.Adapter.EFConfigurations;
+
+public class LessonSectionEntityTypeConfiguration : IEntityTypeConfiguration<LessonSection>
 {
-    
+    public void Configure(EntityTypeBuilder<LessonSection> builder)
+    {
+        builder
+            .HasKey(lessonSection => new { lessonSection.LessonId, lessonSection.SectionId });
+        
+    }
 }

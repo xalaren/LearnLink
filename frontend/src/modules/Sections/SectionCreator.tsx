@@ -5,7 +5,7 @@ import ControlNav from "../../components/ControlNav";
 import Editor from "../../components/Editor";
 import CodeEditor from "../../components/CodeEditor/CodeEditor";
 import FileUploader from "../../components/FileUploader/FileUploader";
-import { useCreateSection } from "../../hooks/sectionHooks";
+import { useCreateSection } from "../../hooks/lessonSectionHook";
 import PopupNotification from "../../components/PopupNotification";
 import PopupLoader from "../../components/Loader/PopupLoader";
 import { Content } from "../../models/content";
@@ -67,9 +67,9 @@ function SectionCreator({ lessonId, contentType, onClose }: ISectionCreatorProps
             const cleanData = DOMPurify.sanitize(text);
 
             const content = new Content(true, false, false, cleanData);
-            const section = new Section(content, lessonId, title);
+            const section = new Section(content, title);
 
-            await createSectionQuery(section, accessToken);
+            await createSectionQuery(lessonId, section, accessToken);
             return;
         }
 
@@ -80,9 +80,9 @@ function SectionCreator({ lessonId, contentType, onClose }: ISectionCreatorProps
             }
 
             const content = new Content(false, true, false, text, language);
-            const section = new Section(content, lessonId, title);
+            const section = new Section(content, title);
 
-            await createSectionQuery(section, accessToken);
+            await createSectionQuery(lessonId, section, accessToken);
             return;
         }
 
@@ -91,8 +91,8 @@ function SectionCreator({ lessonId, contentType, onClose }: ISectionCreatorProps
         }
 
         const content = new Content(false, false, true, '', '', file);
-        const section = new Section(content, lessonId, title);
-        await createSectionQuery(section, accessToken);
+        const section = new Section(content, title);
+        await createSectionQuery(lessonId, section, accessToken);
     }
 
     return (

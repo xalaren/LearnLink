@@ -13,6 +13,20 @@ namespace LearnLink.WebApi.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "CodeContent",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CodeText = table.Column<string>(type: "text", nullable: false),
+                    CodeLanguage = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CodeContent", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Courses",
                 columns: table => new
                 {
@@ -28,6 +42,20 @@ namespace LearnLink.WebApi.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Courses", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FileContent",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    FileName = table.Column<string>(type: "text", nullable: false),
+                    FileExtension = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FileContent", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -96,31 +124,16 @@ namespace LearnLink.WebApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Sections",
+                name: "TextContent",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    LessonId = table.Column<int>(type: "integer", nullable: false),
-                    Title = table.Column<string>(type: "text", nullable: true),
-                    Order = table.Column<int>(type: "integer", nullable: false),
-                    IsText = table.Column<bool>(type: "boolean", nullable: false),
-                    IsCodeBlock = table.Column<bool>(type: "boolean", nullable: false),
-                    IsFile = table.Column<bool>(type: "boolean", nullable: false),
-                    Text = table.Column<string>(type: "text", nullable: true),
-                    FileName = table.Column<string>(type: "text", nullable: true),
-                    FileExtension = table.Column<string>(type: "text", nullable: true),
-                    CodeLanguage = table.Column<string>(type: "text", nullable: true)
+                    Text = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Sections", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Sections_Lessons_LessonId",
-                        column: x => x.LessonId,
-                        principalTable: "Lessons",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_TextContent", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -214,6 +227,41 @@ namespace LearnLink.WebApi.Migrations
                         name: "FK_Users_Roles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Sections",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Title = table.Column<string>(type: "text", nullable: true),
+                    Order = table.Column<int>(type: "integer", nullable: false),
+                    TextContentId = table.Column<int>(type: "integer", nullable: false),
+                    FileContentId = table.Column<int>(type: "integer", nullable: false),
+                    CodeContentId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sections", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Sections_CodeContent_CodeContentId",
+                        column: x => x.CodeContentId,
+                        principalTable: "CodeContent",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Sections_FileContent_FileContentId",
+                        column: x => x.FileContentId,
+                        principalTable: "FileContent",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Sections_TextContent_TextContentId",
+                        column: x => x.TextContentId,
+                        principalTable: "TextContent",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -411,6 +459,30 @@ namespace LearnLink.WebApi.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "LessonSections",
+                columns: table => new
+                {
+                    LessonId = table.Column<int>(type: "integer", nullable: false),
+                    SectionId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LessonSections", x => new { x.LessonId, x.SectionId });
+                    table.ForeignKey(
+                        name: "FK_LessonSections_Lessons_LessonId",
+                        column: x => x.LessonId,
+                        principalTable: "Lessons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LessonSections_Sections_SectionId",
+                        column: x => x.SectionId,
+                        principalTable: "Sections",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_CourseCompletions_CourseId",
                 table: "CourseCompletions",
@@ -442,6 +514,11 @@ namespace LearnLink.WebApi.Migrations
                 column: "ModuleId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_LessonSections_SectionId",
+                table: "LessonSections",
+                column: "SectionId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_LocalRoles_Sign",
                 table: "LocalRoles",
                 column: "Sign",
@@ -463,9 +540,19 @@ namespace LearnLink.WebApi.Migrations
                 column: "LessonId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sections_LessonId",
+                name: "IX_Sections_CodeContentId",
                 table: "Sections",
-                column: "LessonId");
+                column: "CodeContentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sections_FileContentId",
+                table: "Sections",
+                column: "FileContentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sections_TextContentId",
+                table: "Sections",
+                column: "TextContentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Subscriptions_CourseId",
@@ -518,13 +605,13 @@ namespace LearnLink.WebApi.Migrations
                 name: "LessonCompletions");
 
             migrationBuilder.DropTable(
+                name: "LessonSections");
+
+            migrationBuilder.DropTable(
                 name: "ModuleCompletions");
 
             migrationBuilder.DropTable(
                 name: "ModuleLessons");
-
-            migrationBuilder.DropTable(
-                name: "Sections");
 
             migrationBuilder.DropTable(
                 name: "Subscriptions");
@@ -536,10 +623,13 @@ namespace LearnLink.WebApi.Migrations
                 name: "UserCreatedCourses");
 
             migrationBuilder.DropTable(
-                name: "Modules");
+                name: "Sections");
 
             migrationBuilder.DropTable(
                 name: "Lessons");
+
+            migrationBuilder.DropTable(
+                name: "Modules");
 
             migrationBuilder.DropTable(
                 name: "LocalRoles");
@@ -549,6 +639,15 @@ namespace LearnLink.WebApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "CodeContent");
+
+            migrationBuilder.DropTable(
+                name: "FileContent");
+
+            migrationBuilder.DropTable(
+                name: "TextContent");
 
             migrationBuilder.DropTable(
                 name: "Roles");

@@ -5,15 +5,19 @@
 }
 
 <div class="breadcrumb">
-    <h2 class="breadcrumb__item" onclick="redirect('Sections/SectionsActionsPage')">
-        Sections
+    <h2 class="breadcrumb__item" onclick="redirect('LessonSections/LessonSectionsActionsPage')">
+        Lesson-Sections
     </h2>
-    <h2 class="breadcrumb__item" onclick="redirect('Sections/Delete')">
+    <h2 class="breadcrumb__item" onclick="redirect('LessonSections/Delete')">
         Delete
     </h2>
 </div>
 
 <form class="form" method="post">
+    <div class="form-input">
+        <p class="form-input__label">Lesson Id</p>
+        <input type="number" name="lessonId" placeholder="Lesson Id..." min="0" class="input" />
+    </div>
     <div class="form-input">
         <p class="form-input__label">Section Id</p>
         <div class="line-container">

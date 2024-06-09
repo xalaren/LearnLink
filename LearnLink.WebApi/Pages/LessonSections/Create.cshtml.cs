@@ -10,7 +10,7 @@ namespace LearnLink.WebApi.Pages.Sections
 {
     public class CreateModel : SectionsBasePageModel
     {
-        public CreateModel(SectionInteractor sectionInteractor) : base(sectionInteractor) { }
+        public CreateModel(LessonSectionInteractor sectionInteractor) : base(sectionInteractor) { }
 
         public Response? QueryResult { get; set; }
 
@@ -41,11 +41,10 @@ namespace LearnLink.WebApi.Pages.Sections
                 Id = 0,
                 Order = 0,
                 Content = contentDto,
-                LessonId = lessonId,
                 Title = title
             };
 
-            QueryResult = await SectionInteractor.CreateSectionAsync(lessonId, sectionDto);
+            QueryResult = await SectionInteractor.CreateLessonSectionAsync(lessonId, sectionDto);
         }
     }
 }

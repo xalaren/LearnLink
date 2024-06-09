@@ -1,45 +1,45 @@
 ﻿@page
-@model LearnLink.WebApi.Pages.Sections.SectionsActionsPageModel
+@model LearnLink.WebApi.Pages.Sections.LessonSectionsActionsPageModel
 @{
-    ViewData["Title"] = "Sections";
+    ViewData["Title"] = "Lesson Sections";
 }
 
 <div class="breadcrumb">
-    <h2 class="breadcrumb__item" onclick="redirect('Sections/SectionsActionsPage')">
-        Sections
+    <h2 class="breadcrumb__item" onclick="redirect('LessonSections/LessonSectionsActionsPage')">
+        Lesson-Sections
     </h2>
 </div>
 
 <div class="endpoints-list">
-    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Sections/List')">
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('LessonSections/List')">
         <div class="endpoint-item__method">
             get
         </div>
         <div class="endpoint-item__name">List</div>
         <i class="endpoint-item__arrow icon-arrow-right"></i>
     </div>
-    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Sections/Create')">
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('LessonSections/Create')">
         <div class="endpoint-item__method">
             post
         </div>
         <div class="endpoint-item__name">Create</div>
         <i class="endpoint-item__arrow icon-arrow-right"> </i>
     </div>
-    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Sections/ChangeOrder')">
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('LessonSections/ChangeOrder')">
         <div class="endpoint-item__method">
             post
         </div>
         <div class="endpoint-item__name">Change order</div>
         <i class="endpoint-item__arrow icon-arrow-right"></i>
     </div>
-    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Sections/Update')">
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('LessonSections/Update')">
         <div class="endpoint-item__method">
             post
         </div>
         <div class="endpoint-item__name">Update</div>
         <i class="endpoint-item__arrow icon-arrow-right"></i>
     </div>
-    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('Sections/Delete')">
+    <div class="endpoints-list__item endpoint-item endpoint-item-get" onclick="redirect('LessonSections/Delete')">
         <div class="endpoint-item__method">
             delete
         </div>

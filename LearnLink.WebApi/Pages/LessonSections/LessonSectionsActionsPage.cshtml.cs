@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace LearnLink.WebApi.Pages.Sections
 {
-    public class SectionsActionsPageModel : AuthorizePageModel
+    public class LessonSectionsActionsPageModel : AuthorizePageModel
     {
         public IActionResult OnGet()
         {
