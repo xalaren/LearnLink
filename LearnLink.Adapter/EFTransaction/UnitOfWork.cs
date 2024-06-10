@@ -29,6 +29,11 @@ namespace LearnLink.Adapter.EFTransaction
         public DbSet<ModuleCompletion> ModuleCompletions => context.ModuleCompletions;
         public DbSet<LessonCompletion> LessonCompletions => context.LessonCompletions;
 
+        public DbSet<Objective> Objectives => context.Objectives;
+        public DbSet<LessonObjective> LessonObjectives => context.LessonObjectives;
+        public DbSet<Answer> Answers => context.Answers;
+        public DbSet<Review> Reviews => context.Reviews;
+        public DbSet<AnswerReview> AnswerReviews => context.AnswerReviews;
 
         public ValueTask DisposeAsync()
         {

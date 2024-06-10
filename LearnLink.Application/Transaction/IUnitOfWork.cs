@@ -20,7 +20,7 @@ namespace LearnLink.Application.Transaction
         public DbSet<CourseModule> CourseModules { get; }
 
         public DbSet<Lesson> Lessons { get; }
-        
+
         public DbSet<LessonSection> LessonSections { get; }
         public DbSet<ModuleLesson> ModuleLessons { get; }
         public DbSet<Section> Sections { get; }
@@ -28,6 +28,12 @@ namespace LearnLink.Application.Transaction
         public DbSet<CourseCompletion> CourseCompletions { get; }
         public DbSet<ModuleCompletion> ModuleCompletions { get; }
         public DbSet<LessonCompletion> LessonCompletions { get; }
+
+        public DbSet<Objective> Objectives { get; }
+        public DbSet<LessonObjective> LessonObjectives { get; }
+        public DbSet<Answer> Answers { get; }
+        public DbSet<Review> Reviews { get; }
+        public DbSet<AnswerReview> AnswerReviews { get; }
 
         Task CommitAsync();
     }

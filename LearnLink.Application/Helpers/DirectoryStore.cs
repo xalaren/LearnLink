@@ -7,6 +7,8 @@
         public string UsersStorageDirectory { get; }
         public string ContentStorageDirectory { get; }
         public string LessonsStorageDirectory { get; }
+        public string ObjectivesStorageDirectory { get; }
+        public string AnswersStorageDirectory { get; }
 
         public const string API_NAME = "api";
         public const string STORAGE_DIRNAME = "Storage";
@@ -15,6 +17,8 @@
         public const string SECTION_DIRNAME = "Sections";
         public const string CONTENT_DIRNAME = "Content";
         public const string LESSONS_DIRNAME = "Lesson";
+        public const string OBJECTIVES_DIRNAME = "Objectives";
+        public const string ANSWERS_DIRNAME = "Answers";
 
         public DirectoryStore(string rootDirectory)
         {
@@ -23,6 +27,8 @@
             UsersStorageDirectory = Path.Combine(InternalStorageDirectory, USERS_DIRNAME);
             LessonsStorageDirectory = Path.Combine(InternalStorageDirectory, LESSONS_DIRNAME);
             ContentStorageDirectory = Path.Combine(InternalStorageDirectory, CONTENT_DIRNAME);
+            ObjectivesStorageDirectory = Path.Combine(InternalStorageDirectory, OBJECTIVES_DIRNAME);
+            AnswersStorageDirectory = Path.Combine(InternalStorageDirectory, ANSWERS_DIRNAME);
         }
 
         public static string GetRelativeDirectoryUrlToUserImages(int userId)
@@ -40,6 +46,16 @@
             return $"/{API_NAME}/{STORAGE_DIRNAME}/{CONTENT_DIRNAME}/{contentId}/";
         }
 
+        public static string GetRelativeDirectoryUrlToLessonObjectiveContent(int lessonId, int objectionId, int contentId)
+        {
+            return $"/{API_NAME}/{STORAGE_DIRNAME}/{LESSONS_DIRNAME}/{lessonId}/{OBJECTIVES_DIRNAME}/{objectionId}/{CONTENT_DIRNAME}/{contentId}/";
+        }
+
+        public static string GetRelativeDirectoryUrlToLessonObjectiveAnswerContent(int lessonId, int objectionId, int answerId, int contentId)
+        {
+            return $"/{API_NAME}/{STORAGE_DIRNAME}/{LESSONS_DIRNAME}/{lessonId}/{OBJECTIVES_DIRNAME}/{objectionId}/{ANSWERS_DIRNAME}/{answerId}/{CONTENT_DIRNAME}/{contentId}/";
+        }
+
         public string GetDirectoryPathToUserImages(int userId)
         {
             return Path.Combine(UsersStorageDirectory, userId.ToString(), IMAGES_DIRNAME);
@@ -55,6 +71,30 @@
                 CONTENT_DIRNAME,
                 contentId.ToString()
                 );
+        }
+
+        public string GetDirectoryPathToLessonObjectiveContent(int lessonId, int objectionId, int contentId)
+        {
+            return Path.Combine(
+                LessonsStorageDirectory,
+                lessonId.ToString(),
+                OBJECTIVES_DIRNAME,
+                objectionId.ToString(),
+                CONTENT_DIRNAME,
+                contentId.ToString());
+        }
+
+        public string GetDirectoryPathToObjectiveAnswerContent(int lessonId, int objectionId, int answerId, int contentId)
+        {
+            return Path.Combine(
+                LessonsStorageDirectory,
+                lessonId.ToString(),
+                OBJECTIVES_DIRNAME,
+                objectionId.ToString(),
+                ANSWERS_DIRNAME,
+                answerId.ToString(),
+                CONTENT_DIRNAME,
+                contentId.ToString());
         }
 
         public string GetDirectoryPathToContent(int contentId)
