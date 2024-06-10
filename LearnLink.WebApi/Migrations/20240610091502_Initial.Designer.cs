@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LearnLink.WebApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240609155931_Initial")]
+    [Migration("20240610091502_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -24,6 +24,59 @@ namespace LearnLink.WebApi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("LearnLink.Core.Entities.Answer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("FileContentId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ObjectiveId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("TextContentId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FileContentId");
+
+                    b.HasIndex("ObjectiveId");
+
+                    b.HasIndex("TextContentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Answers");
+                });
+
+            modelBuilder.Entity("LearnLink.Core.Entities.AnswerReview", b =>
+                {
+                    b.Property<int>("AnswerId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ReviewId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ExpertUserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("AnswerId", "ReviewId", "ExpertUserId");
+
+                    b.HasIndex("ExpertUserId");
+
+                    b.HasIndex("ReviewId");
+
+                    b.ToTable("AnswerReviews");
+                });
 
             modelBuilder.Entity("LearnLink.Core.Entities.ContentEntities.CodeContent", b =>
                 {
@@ -243,6 +296,21 @@ namespace LearnLink.WebApi.Migrations
                     b.ToTable("LessonCompletions");
                 });
 
+            modelBuilder.Entity("LearnLink.Core.Entities.LessonObjective", b =>
+                {
+                    b.Property<int>("LessonId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ObjectiveId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("LessonId", "ObjectiveId");
+
+                    b.HasIndex("ObjectiveId");
+
+                    b.ToTable("LessonObjectives");
+                });
+
             modelBuilder.Entity("LearnLink.Core.Entities.LessonSection", b =>
                 {
                     b.Property<int>("LessonId")
@@ -370,6 +438,52 @@ namespace LearnLink.WebApi.Migrations
                     b.ToTable("ModuleLessons");
                 });
 
+            modelBuilder.Entity("LearnLink.Core.Entities.Objective", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("FileContentId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FileContentId");
+
+                    b.ToTable("Objectives");
+                });
+
+            modelBuilder.Entity("LearnLink.Core.Entities.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Grade")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Reviews");
+                });
+
             modelBuilder.Entity("LearnLink.Core.Entities.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -402,16 +516,16 @@ namespace LearnLink.WebApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CodeContentId")
+                    b.Property<int?>("CodeContentId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("FileContentId")
+                    b.Property<int?>("FileContentId")
                         .HasColumnType("integer");
 
                     b.Property<int>("Order")
                         .HasColumnType("integer");
 
-                    b.Property<int>("TextContentId")
+                    b.Property<int?>("TextContentId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Title")
@@ -520,6 +634,64 @@ namespace LearnLink.WebApi.Migrations
                     b.ToTable("UserCreatedCourses");
                 });
 
+            modelBuilder.Entity("LearnLink.Core.Entities.Answer", b =>
+                {
+                    b.HasOne("LearnLink.Core.Entities.ContentEntities.FileContent", "FileContent")
+                        .WithMany()
+                        .HasForeignKey("FileContentId");
+
+                    b.HasOne("LearnLink.Core.Entities.Objective", "Objective")
+                        .WithMany()
+                        .HasForeignKey("ObjectiveId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LearnLink.Core.Entities.ContentEntities.TextContent", "TextContent")
+                        .WithMany()
+                        .HasForeignKey("TextContentId");
+
+                    b.HasOne("LearnLink.Core.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FileContent");
+
+                    b.Navigation("Objective");
+
+                    b.Navigation("TextContent");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LearnLink.Core.Entities.AnswerReview", b =>
+                {
+                    b.HasOne("LearnLink.Core.Entities.Answer", "Answer")
+                        .WithMany()
+                        .HasForeignKey("AnswerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LearnLink.Core.Entities.User", "ExpertUser")
+                        .WithMany()
+                        .HasForeignKey("ExpertUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LearnLink.Core.Entities.Review", "Review")
+                        .WithMany()
+                        .HasForeignKey("ReviewId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Answer");
+
+                    b.Navigation("ExpertUser");
+
+                    b.Navigation("Review");
+                });
+
             modelBuilder.Entity("LearnLink.Core.Entities.CourseCompletion", b =>
                 {
                     b.HasOne("LearnLink.Core.Entities.Course", "Course")
@@ -615,6 +787,25 @@ namespace LearnLink.WebApi.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("LearnLink.Core.Entities.LessonObjective", b =>
+                {
+                    b.HasOne("LearnLink.Core.Entities.Lesson", "Lesson")
+                        .WithMany()
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LearnLink.Core.Entities.Objective", "Objective")
+                        .WithMany()
+                        .HasForeignKey("ObjectiveId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Lesson");
+
+                    b.Navigation("Objective");
+                });
+
             modelBuilder.Entity("LearnLink.Core.Entities.LessonSection", b =>
                 {
                     b.HasOne("LearnLink.Core.Entities.Lesson", "Lesson")
@@ -680,25 +871,28 @@ namespace LearnLink.WebApi.Migrations
                     b.Navigation("Module");
                 });
 
+            modelBuilder.Entity("LearnLink.Core.Entities.Objective", b =>
+                {
+                    b.HasOne("LearnLink.Core.Entities.ContentEntities.FileContent", "FileContent")
+                        .WithMany()
+                        .HasForeignKey("FileContentId");
+
+                    b.Navigation("FileContent");
+                });
+
             modelBuilder.Entity("LearnLink.Core.Entities.Section", b =>
                 {
                     b.HasOne("LearnLink.Core.Entities.ContentEntities.CodeContent", "CodeContent")
                         .WithMany()
-                        .HasForeignKey("CodeContentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CodeContentId");
 
                     b.HasOne("LearnLink.Core.Entities.ContentEntities.FileContent", "FileContent")
                         .WithMany()
-                        .HasForeignKey("FileContentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FileContentId");
 
                     b.HasOne("LearnLink.Core.Entities.ContentEntities.TextContent", "TextContent")
                         .WithMany()
-                        .HasForeignKey("TextContentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TextContentId");
 
                     b.Navigation("CodeContent");
 

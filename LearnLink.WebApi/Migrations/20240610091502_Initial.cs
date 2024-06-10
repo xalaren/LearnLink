@@ -109,6 +109,20 @@ namespace LearnLink.WebApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Reviews",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Grade = table.Column<int>(type: "integer", nullable: false),
+                    Comment = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reviews", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
@@ -134,6 +148,26 @@ namespace LearnLink.WebApi.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TextContent", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Objectives",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Text = table.Column<string>(type: "text", nullable: false),
+                    FileContentId = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Objectives", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Objectives_FileContent_FileContentId",
+                        column: x => x.FileContentId,
+                        principalTable: "FileContent",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -239,9 +273,9 @@ namespace LearnLink.WebApi.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Title = table.Column<string>(type: "text", nullable: true),
                     Order = table.Column<int>(type: "integer", nullable: false),
-                    TextContentId = table.Column<int>(type: "integer", nullable: false),
-                    FileContentId = table.Column<int>(type: "integer", nullable: false),
-                    CodeContentId = table.Column<int>(type: "integer", nullable: false)
+                    TextContentId = table.Column<int>(type: "integer", nullable: true),
+                    FileContentId = table.Column<int>(type: "integer", nullable: true),
+                    CodeContentId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -250,18 +284,77 @@ namespace LearnLink.WebApi.Migrations
                         name: "FK_Sections_CodeContent_CodeContentId",
                         column: x => x.CodeContentId,
                         principalTable: "CodeContent",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Sections_FileContent_FileContentId",
                         column: x => x.FileContentId,
                         principalTable: "FileContent",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Sections_TextContent_TextContentId",
                         column: x => x.TextContentId,
                         principalTable: "TextContent",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LessonObjectives",
+                columns: table => new
+                {
+                    LessonId = table.Column<int>(type: "integer", nullable: false),
+                    ObjectiveId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LessonObjectives", x => new { x.LessonId, x.ObjectiveId });
+                    table.ForeignKey(
+                        name: "FK_LessonObjectives_Lessons_LessonId",
+                        column: x => x.LessonId,
+                        principalTable: "Lessons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LessonObjectives_Objectives_ObjectiveId",
+                        column: x => x.ObjectiveId,
+                        principalTable: "Objectives",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Answers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    ObjectiveId = table.Column<int>(type: "integer", nullable: false),
+                    TextContentId = table.Column<int>(type: "integer", nullable: true),
+                    FileContentId = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Answers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Answers_FileContent_FileContentId",
+                        column: x => x.FileContentId,
+                        principalTable: "FileContent",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Answers_Objectives_ObjectiveId",
+                        column: x => x.ObjectiveId,
+                        principalTable: "Objectives",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Answers_TextContent_TextContentId",
+                        column: x => x.TextContentId,
+                        principalTable: "TextContent",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Answers_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -483,6 +576,67 @@ namespace LearnLink.WebApi.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "AnswerReviews",
+                columns: table => new
+                {
+                    AnswerId = table.Column<int>(type: "integer", nullable: false),
+                    ReviewId = table.Column<int>(type: "integer", nullable: false),
+                    ExpertUserId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AnswerReviews", x => new { x.AnswerId, x.ReviewId, x.ExpertUserId });
+                    table.ForeignKey(
+                        name: "FK_AnswerReviews_Answers_AnswerId",
+                        column: x => x.AnswerId,
+                        principalTable: "Answers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AnswerReviews_Reviews_ReviewId",
+                        column: x => x.ReviewId,
+                        principalTable: "Reviews",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AnswerReviews_Users_ExpertUserId",
+                        column: x => x.ExpertUserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AnswerReviews_ExpertUserId",
+                table: "AnswerReviews",
+                column: "ExpertUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AnswerReviews_ReviewId",
+                table: "AnswerReviews",
+                column: "ReviewId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Answers_FileContentId",
+                table: "Answers",
+                column: "FileContentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Answers_ObjectiveId",
+                table: "Answers",
+                column: "ObjectiveId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Answers_TextContentId",
+                table: "Answers",
+                column: "TextContentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Answers_UserId",
+                table: "Answers",
+                column: "UserId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_CourseCompletions_CourseId",
                 table: "CourseCompletions",
@@ -514,6 +668,11 @@ namespace LearnLink.WebApi.Migrations
                 column: "ModuleId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_LessonObjectives_ObjectiveId",
+                table: "LessonObjectives",
+                column: "ObjectiveId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_LessonSections_SectionId",
                 table: "LessonSections",
                 column: "SectionId");
@@ -538,6 +697,11 @@ namespace LearnLink.WebApi.Migrations
                 name: "IX_ModuleLessons_LessonId",
                 table: "ModuleLessons",
                 column: "LessonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Objectives_FileContentId",
+                table: "Objectives",
+                column: "FileContentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Sections_CodeContentId",
@@ -590,6 +754,9 @@ namespace LearnLink.WebApi.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "AnswerReviews");
+
+            migrationBuilder.DropTable(
                 name: "CourseCompletions");
 
             migrationBuilder.DropTable(
@@ -603,6 +770,9 @@ namespace LearnLink.WebApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "LessonCompletions");
+
+            migrationBuilder.DropTable(
+                name: "LessonObjectives");
 
             migrationBuilder.DropTable(
                 name: "LessonSections");
@@ -623,6 +793,12 @@ namespace LearnLink.WebApi.Migrations
                 name: "UserCreatedCourses");
 
             migrationBuilder.DropTable(
+                name: "Answers");
+
+            migrationBuilder.DropTable(
+                name: "Reviews");
+
+            migrationBuilder.DropTable(
                 name: "Sections");
 
             migrationBuilder.DropTable(
@@ -638,16 +814,19 @@ namespace LearnLink.WebApi.Migrations
                 name: "Courses");
 
             migrationBuilder.DropTable(
+                name: "Objectives");
+
+            migrationBuilder.DropTable(
                 name: "Users");
 
             migrationBuilder.DropTable(
                 name: "CodeContent");
 
             migrationBuilder.DropTable(
-                name: "FileContent");
+                name: "TextContent");
 
             migrationBuilder.DropTable(
-                name: "TextContent");
+                name: "FileContent");
 
             migrationBuilder.DropTable(
                 name: "Roles");

@@ -30,6 +30,13 @@ namespace LearnLink.Adapter.EFContexts
         public DbSet<ModuleCompletion> ModuleCompletions { get; init; }
         public DbSet<LessonCompletion> LessonCompletions { get; init; }
 
+        public DbSet<Objective> Objectives { get; init; }
+        public DbSet<LessonObjective> LessonObjectives { get; init; }
+
+        public DbSet<Answer> Answers { get; init; }
+        public DbSet<Review> Reviews { get; init; }
+        public DbSet<AnswerReview> AnswerReviews { get; init; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new UsersEntityTypeConfiguration());
@@ -49,6 +56,11 @@ namespace LearnLink.Adapter.EFContexts
             modelBuilder.ApplyConfiguration(new SectionEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new LessonCompletionEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new LessonSectionEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new ObjectiveEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new LessonObjectiveEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new AnswerEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new ReviewEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new AnswerReviewEntityTypeConfiguration());
         }
     }
 }
