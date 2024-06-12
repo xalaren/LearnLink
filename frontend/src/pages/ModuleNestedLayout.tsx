@@ -4,11 +4,9 @@ import { CourseState } from "../contexts/CourseContext";
 
 function CourseNestedLayout() {
     return (
-        <CourseState>
-            <ModuleState>
-                <Outlet />
-            </ModuleState>
-        </CourseState>
+        <ModuleState>
+            <Outlet />
+        </ModuleState>
     );
 }
 

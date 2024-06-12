@@ -33,7 +33,6 @@ function App() {
     const { isAuthenticated } = useAppSelector(state => state.authReducer);
 
     useEffect(() => {
-        console.log(user);
         if (!user && isAuthenticated) dispatch(fetchUser());
     }, [user]);
 
@@ -71,8 +70,6 @@ function App() {
             {loading && !error &&
                 <PageLoader />
             }
-
-
 
             <Footer />
         </>

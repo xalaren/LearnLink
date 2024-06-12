@@ -19,7 +19,7 @@ interface ILessonCreateModalProps {
 
 }
 
-function ModuleCreateModal({ courseId, moduleId, active, onClose }: ILessonCreateModalProps) {
+function LessonCreateModal({ courseId, moduleId, active, onClose }: ILessonCreateModalProps) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [titleError, setTitleError] = useState('');
@@ -130,4 +130,4 @@ function ModuleCreateModal({ courseId, moduleId, active, onClose }: ILessonCreat
     );
 }
 
-export default ModuleCreateModal;
+export default LessonCreateModal;

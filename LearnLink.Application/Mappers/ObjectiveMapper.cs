@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using LearnLink.Application.Helpers;
+﻿using LearnLink.Application.Helpers;
 using LearnLink.Core.Entities;
 using LearnLink.Core.Entities.ContentEntities;
 using LearnLink.Core.Exceptions;
@@ -11,9 +10,16 @@ namespace LearnLink.Application.Mappers
     {
         public static Objective ToEntity(this ObjectiveDto objectiveDto)
         {
-            if(objectiveDto.FormFile == null)
+            FileContent? fileContent = null;
+
+            if(objectiveDto.FormFile != null)
             {
-                throw new ValidationException("Файл не был добавлен");
+                fileContent = new FileContent()
+                {
+                    Id = 0,
+                    FileExtension = Path.GetExtension(objectiveDto.FormFile.FileName),
+                    FileName = objectiveDto.FormFile.FileName
+                };
             }
 
             return new Objective()
@@ -21,12 +27,7 @@ namespace LearnLink.Application.Mappers
                 Id = objectiveDto.Id,
                 Title = objectiveDto.Title,
                 Text = objectiveDto.Text,
-                FileContent = new FileContent()
-                {
-                    Id = 0,
-                    FileExtension = Path.GetExtension(objectiveDto.FormFile.FileName),
-                    FileName = objectiveDto.FormFile.FileName
-                }
+                FileContent = fileContent
             };
         }
 
@@ -37,7 +38,9 @@ namespace LearnLink.Application.Mappers
                 Id = objectiveEntity.Id,
                 Text = objectiveEntity.Text,
                 Title = objectiveEntity.Title,
-                FileUrl = DirectoryStore.GetRelativeDirectoryUrlToLessonObjectiveContent(lessonId, objectiveEntity.Id, objectiveEntity.FileContent.Id)
+                FileUrl = objectiveEntity.FileContent != null ?
+                DirectoryStore.GetRelativeDirectoryUrlToLessonObjectiveContent(lessonId, objectiveEntity.Id, objectiveEntity.FileContent.Id) + objectiveEntity.FileContent.FileName :
+                null
             };
         }
     }

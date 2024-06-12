@@ -1,8 +1,8 @@
 function Breadcrumb({ children }: { children: React.ReactNode }) {
     return (
-        <ol className="breadcrumb">
+        <nav className="breadcrumb">
             {children}
-        </ol>
+        </nav>
     );
 }
 

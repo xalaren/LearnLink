@@ -18,6 +18,18 @@ export function Modal({ active, title, children, onClose }: IModalProps) {
         })
     }
 
+    useEffect(() => {
+        if (active) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
+        }
+
+        return () => {
+            document.body.style.overflow = 'auto';
+        };
+    }, [active]);
+
     return (
         <>
             {active &&

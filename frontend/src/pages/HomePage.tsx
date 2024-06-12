@@ -16,13 +16,13 @@ function HomePage() {
                         Мы поможем сделать образование более доступным и адаптивным <br /><br />
                         Для этого мы предлагаем Вам простые и удобные инструменты для создания своих образовательных материалов
                     </p>
-                    <p className="greetings__links">
+                    <div className="greetings__links">
                         <Link className="greetings__link" to={paths.public()}>
                             <p>Перейти к курсам</p>
                             <span className="icon icon-arrow-right"></span>
                         </Link>
 
-                    </p>
+                    </div>
                 </div>
                 <div className="greetings__image">
                     <img src={student}></img>

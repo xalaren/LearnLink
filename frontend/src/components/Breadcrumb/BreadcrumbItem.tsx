@@ -8,11 +8,11 @@ interface IBreadcrumbItemProps {
 function BreadcrumbItem({ text, path }: IBreadcrumbItemProps) {
     const { toNext } = useHistoryNavigation();
     return (
-        <li className="breadcrumb__item">
+        <div className="breadcrumb__item">
             <a onClick={() => {
                 if (path) toNext(path);
             }}>{text}</a>
-        </li>
+        </div>
 
     );
 }

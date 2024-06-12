@@ -91,6 +91,7 @@ function BuildedLessonsList(props: {
                 <>{
                     props.lessons.map(lesson =>
                         <LessonItem
+                            key={lesson.id}
                             onClick={() => toNext(paths.lesson.view.full(props.courseId, props.moduleId, lesson.id))}
                             courseId={props.courseId}
                             moduleId={props.moduleId}

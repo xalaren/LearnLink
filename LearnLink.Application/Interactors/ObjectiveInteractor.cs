@@ -56,6 +56,7 @@ namespace LearnLink.Application.Interactors
                     .AsNoTracking()
                     .Where(lessonObjective => lessonObjective.LessonId == lessonId)
                     .Include(lessonObjective => lessonObjective.Objective)
+                    .ThenInclude(objective => objective.FileContent)
                     .Select(lessonObjective => lessonObjective.Objective)
                     .ToArrayAsync();
 
@@ -81,7 +82,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = false,
                     StatusCode = 500,
-                    Message = "errorMessage",
+                    Message = "Не удалось получить задания",
                     InnerErrorMessages = [exception.Message],
                 };
             }
@@ -110,6 +111,7 @@ namespace LearnLink.Application.Interactors
                     Objective = objective
                 };
 
+                await unitOfWork.LessonObjectives.AddAsync(lessonObjective);
                 await unitOfWork.CommitAsync();
 
                 if (objectiveDto.FormFile != null)
@@ -121,6 +123,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = true,
                     StatusCode = 200,
+                    Message = "Задание успешно создано"
                 };
             }
             catch (CustomException exception)

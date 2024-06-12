@@ -10,7 +10,6 @@ import { ErrorModal } from "../../components/Modal/ErrorModal";
 import { useHistoryNavigation } from "../../hooks/historyNavigation";
 import { paths } from "../../models/paths";
 import ModuleCreateModal from "./ModuleCreateModal";
-import ControlItemLink from "../../components/ItemLink/ControlItemLink";
 
 interface IModuleListProps {
     course: Course;

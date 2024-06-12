@@ -42,7 +42,6 @@ export function useRegister() {
     const registerQuery = async (nickname: string, password: string, lastname: string, name: string, avatar?: File) => {
         try {
             const user = new User(nickname, lastname, name, avatar);
-            console.log(user);
 
             const response = await axiosInstance.post<VoidResponse>(`${USER_ENDPOINTS_URL}register?password=${password}`, user, {
                 headers: {

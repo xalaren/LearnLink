@@ -11,6 +11,7 @@ import { FileInfo } from "../../models/fileInfo";
 import { Lesson } from "../../models/lesson";
 import { Module } from "../../models/module";
 import { paths } from "../../models/paths";
+import ObjectivesList from "../Objectives/ObjectivesList";
 import SectionsViewContainer from "../Sections/SectionsViewContainer";
 import LessonDeleteModal from "./LessonDeleteModal";
 
@@ -51,6 +52,8 @@ function LessonView({
             </p>
 
             <SectionsViewContainer />
+
+            <ObjectivesList lessonId={lesson.id} localRole={course.localRole} />
 
             <LessonDeleteModal
                 active={deleteModalActive}

@@ -14,7 +14,7 @@ import LessonView from "../modules/Lessons/LessonView";
 function LessonPage() {
     const { course } = useContext(CourseContext);
     const { module } = useContext(ModuleContext);
-    const { lesson, fetchLesson } = useContext(LessonContext);
+    const { lesson } = useContext(LessonContext);
 
     const [deleteModalActive, setDeleteModalActive] = useState(false);
 
