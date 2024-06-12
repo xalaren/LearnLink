@@ -45,6 +45,16 @@ export const paths = {
             full: (courseId: number | string, moduleId: number | string, lessonId: number | string) => `/course/${courseId}/module/${moduleId}/lesson/${lessonId}/edit`
         }
     },
+    objective: {
+        base: (objectiveId: number | string) => `objective/${objectiveId}/`,
+        full: (courseId: number | string, moduleId: number | string, lessonId: number | string, objectiveId: number | string) =>
+            `/course/${courseId}/module/${moduleId}/lesson/${lessonId}/objective/${objectiveId}`,
+        view: {
+            base: 'view',
+            full: (courseId: number | string, moduleId: number | string, lessonId: number | string, objectiveId: number | string) =>
+                `/course/${courseId}/module/${moduleId}/lesson/${lessonId}/objective/${objectiveId}/view`
+        }
+    },
     privacy: {
         base: 'privacy',
         full: '/privacy'

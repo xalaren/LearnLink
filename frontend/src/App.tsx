@@ -25,6 +25,8 @@ import HomePage from "./pages/HomePage.tsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy.tsx";
 import { ErrorModal } from "./components/Modal/ErrorModal.tsx";
 import PageLoader from "./components/Loader/PageLoader.tsx";
+import ObjectiveNestedLayout from "./pages/ObjectiveNestedLayout.tsx";
+import ObjectivePage from "./pages/ObjectivePage.tsx";
 
 
 function App() {
@@ -56,6 +58,9 @@ function App() {
                         <Route path={paths.lesson.base(':lessonId')} element={<LessonNestedLayout />}>
                             <Route path={paths.lesson.view.base} element={<LessonPage />}></Route>
                             <Route path={paths.lesson.edit.base} element={<LessonEditPage />}></Route>
+                            <Route path={paths.objective.base(':objectiveId')} element={<ObjectiveNestedLayout />}>
+                                <Route path={paths.objective.view.base} element={<ObjectivePage />}></Route>
+                            </Route>
                         </Route>
                     </Route>
                 </Route>

@@ -9,13 +9,16 @@ import { Loader } from "../../components/Loader/Loader";
 import { ErrorModal } from "../../components/Modal/ErrorModal";
 import ItemLink from "../../components/ItemLink/ItemLink";
 import ObjectiveCreateModal from "./ObjectiveCreateModal";
+import { paths } from "../../models/paths";
 
 interface IObjectivesListProps {
+    courseId: number,
+    moduleId: number,
     lessonId: number;
     localRole?: LocalRole;
 }
 
-function ObjectivesList({ lessonId, localRole }: IObjectivesListProps) {
+function ObjectivesList({ courseId, moduleId, lessonId, localRole }: IObjectivesListProps) {
     const [objectives, setObjectives] = useState<Objective[]>();
     const [createModalActive, setCreateModalActive] = useState(false);
 
@@ -45,7 +48,15 @@ function ObjectivesList({ lessonId, localRole }: IObjectivesListProps) {
                 title="Задания"
                 showButton={localRole?.manageInternalAccess || false}
                 onHeadButtonClick={() => setCreateModalActive(true)}>
-                <BuildedObjectivesList error={error} onError={resetValues} loading={loading} objectives={objectives} />
+
+                <BuildedObjectivesList
+                    courseId={courseId}
+                    moduleId={moduleId}
+                    lessonId={lessonId}
+                    error={error}
+                    onError={resetValues}
+                    loading={loading}
+                    objectives={objectives} />
             </ContentList>
 
             <ObjectiveCreateModal active={createModalActive} lessonId={lessonId} onClose={() => setCreateModalActive(false)} />
@@ -55,6 +66,9 @@ function ObjectivesList({ lessonId, localRole }: IObjectivesListProps) {
 }
 
 function BuildedObjectivesList(props: {
+    courseId: number,
+    moduleId: number,
+    lessonId: number,
     error: string,
     onError: () => void,
     loading: boolean,
@@ -79,7 +93,7 @@ function BuildedObjectivesList(props: {
                     props.objectives.map(objective =>
                         <ItemLink
                             title={objective.title}
-                            onClick={() => { }}
+                            onClick={() => { toNext(paths.objective.view.full(props.courseId, props.moduleId, props.lessonId, objective.id)) }}
                             iconClassName="icon-bolt icon-medium-size"
                             className="content-list__item"
                             key={objective.id}

@@ -3,38 +3,32 @@ import EllipsisDropdown from "../../components/Dropdown/EllipsisDropdown";
 import { DropdownState } from "../../contexts/DropdownContext";
 import { useHistoryNavigation } from "../../hooks/historyNavigation";
 import { Course } from "../../models/course";
-import { Lesson } from "../../models/lesson";
-import { Module } from "../../models/module";
-import { paths } from "../../models/paths";
-import ObjectivesList from "../Objectives/ObjectivesList";
+import { Objective } from "../../models/objective";
 import SectionsViewContainer from "../Sections/SectionsViewContainer";
-import LessonDeleteModal from "./LessonDeleteModal";
 
-interface ILessonViewProps {
+interface IObjectiveViewProps {
     course: Course;
-    module: Module;
-    lesson: Lesson;
+    objective: Objective;
     deleteModalActive: boolean;
     setDeleteModalActive: (active: boolean) => void;
 }
 
 function LessonView({
     course,
-    module,
-    lesson,
+    objective,
     deleteModalActive,
     setDeleteModalActive
-}: ILessonViewProps) {
+}: IObjectiveViewProps) {
     const { toNext } = useHistoryNavigation();
     return (
         <>
             <section className="view-page__header">
-                <p className="view-page__title big-text">{lesson.title}</p>
+                <p className="view-page__title big-text">{objective.title}</p>
                 {course.localRole?.manageInternalAccess &&
                     <>
                         <DropdownState>
                             <EllipsisDropdown>
-                                <DropdownItem title="Редактировать" className="icon icon-pen-circle" key={1} onClick={() => toNext(paths.lesson.edit.full(course!.id, module!.id, lesson!.id))} />
+                                <DropdownItem title="Редактировать" className="icon icon-pen-circle" key={1} onClick={() => { }} />
                                 <DropdownItem title="Удалить" className="icon icon-cross-circle" key={2} onClick={() => setDeleteModalActive(true)} />
                             </EllipsisDropdown>
                         </DropdownState>
@@ -42,23 +36,7 @@ function LessonView({
                 }
             </section>
 
-            <p className="view-page__description ui-text">
-                {lesson.description}
-            </p>
-
-            <SectionsViewContainer />
-
-            <ObjectivesList
-                courseId={course.id}
-                moduleId={module.id}
-                lessonId={lesson.id}
-                localRole={course.localRole} />
-
-            <LessonDeleteModal
-                active={deleteModalActive}
-                onClose={() => setDeleteModalActive(false)}
-                courseId={course.id} moduleId={module.id}
-                lessonId={lesson.id} />
+            <div dangerouslySetInnerHTML={{ __html: objective.text }} className="view-page__description ui-text" />
         </>
     );
 }
