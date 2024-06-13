@@ -11,6 +11,7 @@ namespace LearnLink.Application.Interactors
     public class LessonInteractor(
         IUnitOfWork unitOfWork,
         LessonSectionInteractor sectionInteractor,
+        ObjectiveInteractor objectiveInteractor,
         CompletionInteractor completionInteractor,
         PermissionService permissionService)
     {
@@ -105,7 +106,7 @@ namespace LearnLink.Application.Interactors
                     lessonCompletion.UserId == userId &&
                     lessonCompletion.LessonId == lessonId);
 
-                NotFoundException.ThrowIfNull(lessonCompletion, "Урок не найден");
+                NotFoundException.ThrowIfNotFound(lessonCompletion, "Урок не найден");
 
                 await unitOfWork.LessonCompletions.Entry(lessonCompletion)
                     .Reference(completion => completion.Lesson)
@@ -431,6 +432,8 @@ namespace LearnLink.Application.Interactors
             var completions = unitOfWork.LessonCompletions.Where(lessonCompletion => lessonCompletion.LessonId == lessonId);
 
             await sectionInteractor.RemoveSectionsFromLessonAsyncNoResponse(lessonId);
+            await objectiveInteractor.RemoveObjectivesFromLessonAsyncNoResponse(lessonId);
+
             unitOfWork.LessonCompletions.RemoveRange(completions);
             unitOfWork.Lessons.Remove(lesson);
         }

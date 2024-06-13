@@ -73,13 +73,13 @@
                 );
         }
 
-        public string GetDirectoryPathToLessonObjectiveContent(int lessonId, int objectionId, int contentId)
+        public string GetDirectoryPathToLessonObjectiveContent(int lessonId, int objectiveId, int contentId)
         {
             return Path.Combine(
                 LessonsStorageDirectory,
                 lessonId.ToString(),
                 OBJECTIVES_DIRNAME,
-                objectionId.ToString(),
+                objectiveId.ToString(),
                 CONTENT_DIRNAME,
                 contentId.ToString());
         }

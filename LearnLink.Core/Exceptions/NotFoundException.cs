@@ -6,7 +6,7 @@ namespace LearnLink.Core.Exceptions
     {
         public override int StatusCode => 404;
 
-        public static void ThrowIfNull([NotNull]object? obj, string message)
+        public static void ThrowIfNotFound([NotNull]object? obj, string message)
         {
             if (obj is null)
             {

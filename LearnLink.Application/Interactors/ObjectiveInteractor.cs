@@ -10,9 +10,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Interactors
 {
-    public class ObjectiveInteractor(IUnitOfWork unitOfWork, DirectoryStore directoryStore)
+    public class ObjectiveInteractor(IUnitOfWork unitOfWork, DirectoryStore directoryStore, ContentInteractor contentInteractor)
     {
-
         public async Task<Response<ObjectiveDto?>> GetObjectiveAsync(int lessonId, int objectiveId)
         {
             try
@@ -46,6 +45,7 @@ namespace LearnLink.Application.Interactors
                 };
             }
         }
+
 
         public async Task<Response<ObjectiveDto[]>> GetObjectivesFromLessonAsync(int lessonId)
         {
@@ -98,7 +98,7 @@ namespace LearnLink.Application.Interactors
                 }
 
                 var lesson = await unitOfWork.Lessons.FindAsync(lessonId);
-                NotFoundException.ThrowIfNull(lesson, "Урок не был найден");
+                NotFoundException.ThrowIfNotFound(lesson, "Урок не был найден");
 
                 var objective = objectiveDto.ToEntity();
 
@@ -147,6 +147,134 @@ namespace LearnLink.Application.Interactors
             }
         }
 
+
+        public async Task<Response> UpdateObjectiveAsync(ObjectiveDto objectiveDto, bool removeFileContent)
+        {
+            try
+            {
+                var lessonObjective = await unitOfWork.LessonObjectives
+                    .FirstOrDefaultAsync(lessonObjective => lessonObjective.ObjectiveId == objectiveDto.Id);
+
+                NotFoundException.ThrowIfNotFound(lessonObjective, "Урок, к которому прикреплено задание не найден");
+
+                await unitOfWork.LessonObjectives.Entry(lessonObjective)
+                    .Reference(lessonObjective => lessonObjective.Objective)
+                    .LoadAsync();
+
+                await unitOfWork.Objectives.Entry(lessonObjective.Objective)
+                    .Reference(objective => objective.FileContent)
+                    .LoadAsync();
+
+                var objective = lessonObjective.Objective;
+                var prevFileState = objective.FileContent;
+
+                objective = objective.Assign(objectiveDto);
+
+                if (prevFileState != null && (objective.FileContent != null || removeFileContent))
+                {
+                    contentInteractor.RemoveObjectiveFileContent(
+                        lessonObjective.LessonId,
+                        objective.Id,
+                        prevFileState.Id,
+                        prevFileState.FileName
+                        );
+                }
+
+                unitOfWork.Objectives.Update(objective);
+                await unitOfWork.CommitAsync();
+
+                if (objectiveDto.FormFile != null)
+                {
+                    await SaveObjectiveFileContentAsync(lessonObjective.LessonId, objective, objectiveDto.FormFile);
+                }
+
+                return new Response()
+                {
+                    Success = true,
+                    StatusCode = 200,
+                    Message = "Задание успешно обновлено"
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new Response()
+                {
+                    Success = false,
+                    StatusCode = exception.StatusCode,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new Response()
+                {
+                    Success = false,
+                    StatusCode = 500,
+                    Message = "Не удалось обновить задание",
+                    InnerErrorMessages = new string[] { exception.Message },
+                };
+            }
+        }
+
+
+        public async Task<Response> RemoveObjectiveAsync(int objectiveId)
+        {
+            try
+            {
+                var lessonObjective = await unitOfWork.LessonObjectives.FirstOrDefaultAsync(lessonObjective => lessonObjective.ObjectiveId == objectiveId);
+
+                NotFoundException.ThrowIfNotFound(lessonObjective, "Урок, к которому прикреплено задание, не найден");
+
+                await unitOfWork.LessonObjectives.Entry(lessonObjective)
+                    .Reference(lessonObjective => lessonObjective.Objective)
+                    .LoadAsync();
+
+                await unitOfWork.Objectives.Entry(lessonObjective.Objective)
+                    .Reference(objective => objective.FileContent)
+                    .LoadAsync();
+
+                if (lessonObjective.Objective.FileContent != null)
+                {
+                    contentInteractor.RemoveObjectiveFileContent(
+                        lessonObjective.LessonId,
+                        lessonObjective.Objective.Id,
+                        lessonObjective.Objective.FileContent.Id,
+                        lessonObjective.Objective.FileContent.FileName
+                     );
+                }
+
+
+                unitOfWork.Objectives.Remove(lessonObjective.Objective);
+                unitOfWork.LessonObjectives.Remove(lessonObjective);
+
+                return new Response()
+                {
+                    Success = true,
+                    StatusCode = 200,
+                    Message = "Задание успешно удалено",
+                };
+            }
+            catch (CustomException exception)
+            {
+                return new Response()
+                {
+                    Success = false,
+                    StatusCode = exception.StatusCode,
+                    Message = exception.Message,
+                };
+            }
+            catch (Exception exception)
+            {
+                return new Response()
+                {
+                    Success = false,
+                    StatusCode = 500,
+                    Message = "Не удалось удалить задание",
+                    InnerErrorMessages = new string[] { exception.Message },
+                };
+            }
+        }
+
         private async Task SaveObjectiveFileContentAsync(int lessonId, Objective objective, IFormFile file)
         {
             if (objective.FileContent == null)
@@ -167,6 +295,38 @@ namespace LearnLink.Application.Interactors
             Directory.CreateDirectory(Path.GetDirectoryName(contentPath)!);
             await using var fileStream = new FileStream(contentPath, FileMode.Create);
             await stream.CopyToAsync(fileStream);
+        }
+
+        public async Task RemoveObjectivesFromLessonAsyncNoResponse(int lessonId)
+        {
+            var lessonObjectives = unitOfWork.LessonObjectives
+                .Where(lessonObjective => lessonObjective.LessonId == lessonId)
+                .Include(lessonObjective => lessonObjective.Objective);
+
+            var objectives = await lessonObjectives
+                .Select(lessonSection => lessonSection.Objective)
+                .ToListAsync();
+
+            foreach (var objective in objectives)
+            {
+                await unitOfWork.Objectives.Entry(objective)
+                    .Reference(section => section.FileContent)
+                    .LoadAsync();
+
+                if (objective.FileContent != null)
+                {
+                    contentInteractor.RemoveObjectiveFileContent(
+                        lessonId, 
+                        objective.Id, 
+                        objective.FileContent.Id, 
+                        objective.FileContent.FileName
+                     );
+                }
+
+            }
+
+            unitOfWork.LessonObjectives.RemoveRange(lessonObjectives);
+            unitOfWork.Objectives.RemoveRange(objectives);
         }
     }
 }

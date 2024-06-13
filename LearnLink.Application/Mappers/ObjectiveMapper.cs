@@ -43,5 +43,23 @@ namespace LearnLink.Application.Mappers
                 null
             };
         }
+
+        public static Objective Assign(this Objective objectiveEntity, ObjectiveDto objectiveDto)
+        {
+            objectiveEntity.Title = !string.IsNullOrWhiteSpace(objectiveDto.Title) ? objectiveDto.Title : objectiveEntity.Title;
+            objectiveEntity.Text = !string.IsNullOrWhiteSpace(objectiveDto.Text) ? objectiveDto.Text : objectiveEntity.Text;
+
+            if (objectiveDto.FormFile != null)
+            {
+                objectiveEntity.FileContent = new FileContent()
+                {
+                    Id = 0,
+                    FileExtension = Path.GetExtension(objectiveDto.FormFile.FileName),
+                    FileName = objectiveDto.FormFile.FileName
+                };
+            }
+
+            return objectiveEntity;
+        }
     }
 }

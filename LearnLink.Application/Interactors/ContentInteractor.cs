@@ -1,5 +1,7 @@
 ﻿using LearnLink.Application.Helpers;
 using LearnLink.Application.Transaction;
+using LearnLink.Core.Entities;
+using LearnLink.Core.Entities.ContentEntities;
 using LearnLink.Core.Exceptions;
 using LearnLink.Shared.DataTransferObjects;
 
@@ -43,6 +45,16 @@ namespace LearnLink.Application.Interactors
             if (string.IsNullOrWhiteSpace(fileName)) return;
 
             var directory = directoryStore.GetDirectoryPathToLessonSectionContent(lessonId, sectionId, contentId);
+            var path = Path.Combine(directory, fileName);
+
+            RemoveContent(path);
+        }
+
+        public void RemoveObjectiveFileContent(int lessonId, int objectiveId, int contentId, string? fileName)
+        {
+            if (string.IsNullOrWhiteSpace(fileName)) return;
+
+            var directory = directoryStore.GetDirectoryPathToLessonObjectiveContent(lessonId, objectiveId, contentId);
             var path = Path.Combine(directory, fileName);
 
             RemoveContent(path);

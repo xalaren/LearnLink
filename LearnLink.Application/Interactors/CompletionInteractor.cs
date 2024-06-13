@@ -248,7 +248,7 @@ namespace LearnLink.Application.Interactors
                     completion.UserId == userId &&
                     completion.LessonId == lessonId);
 
-                NotFoundException.ThrowIfNull(lessonCompletion, "Прогресс урока не найден");
+                NotFoundException.ThrowIfNotFound(lessonCompletion, "Прогресс урока не найден");
 
                 lessonCompletion.Completed = completed;
                 unitOfWork.LessonCompletions.Update(lessonCompletion);
@@ -290,7 +290,7 @@ namespace LearnLink.Application.Interactors
                 completion.UserId == userId &&
                 completion.ModuleId == moduleId);
 
-            NotFoundException.ThrowIfNull(moduleCompletion, "Прогресс модуля не найден");
+            NotFoundException.ThrowIfNotFound(moduleCompletion, "Прогресс модуля не найден");
 
             var lessonCompletions = await unitOfWork.LessonCompletions.Where(completion =>
                     completion.UserId == userId &&
@@ -319,7 +319,7 @@ namespace LearnLink.Application.Interactors
                 completion.UserId == userId &&
                 completion.CourseId == courseId);
 
-            NotFoundException.ThrowIfNull(courseCompletion, "Прогресс курса не найден");
+            NotFoundException.ThrowIfNotFound(courseCompletion, "Прогресс курса не найден");
 
             var moduleCompletions = await unitOfWork.ModuleCompletions.Where(completion =>
                     completion.UserId == userId &&

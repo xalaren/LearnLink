@@ -30,5 +30,19 @@ namespace LearnLink.WebApi.Controllers
         {
             return await objectiveInteractor.CreateObjectiveAsync(lessonId, objectiveDto);
         }
+
+        [Authorize]
+        [HttpPost("update")]
+        public async Task<Response> UpdateObjectiveAsync([FromForm] ObjectiveDto objectiveDto, [FromQuery] bool removeFileContent)
+        {
+            return await objectiveInteractor.UpdateObjectiveAsync(objectiveDto, removeFileContent);
+        }
+
+        [Authorize]
+        [HttpDelete("delete")]
+        public async Task<Response> RemoveObjectiveAsync(int objectiveId)
+        {
+            return await objectiveInteractor.RemoveObjectiveAsync(objectiveId);
+        }
     }
 }

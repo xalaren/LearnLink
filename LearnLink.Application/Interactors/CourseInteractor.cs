@@ -844,7 +844,7 @@ namespace LearnLink.Application.Interactors
         public async Task<Permission> CheckUnavailability(int courseId)
         {
             var course = await unitOfWork.Courses.FindAsync(courseId);
-            NotFoundException.ThrowIfNull(course, "Курс не найден");
+            NotFoundException.ThrowIfNotFound(course, "Курс не найден");
 
             return new Permission(course.IsUnavailable);
         }

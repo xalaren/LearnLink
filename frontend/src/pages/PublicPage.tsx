@@ -56,7 +56,10 @@ export function PublicPage() {
     return (
         <MainContainer title="Общедоступные курсы">
 
-            <SearchForm value={searchText} placeholder="Название курсов..." onChange={onChange} onSubmit={onSubmit} />
+            <SearchForm
+                value={searchText}
+                placeholder="Название курсов..."
+                onChange={onChange} onSubmit={onSubmit} />
 
             <Paginate currentPage={page} pageCount={pageCount} setPage={navigateToPage} />
 
@@ -66,6 +69,7 @@ export function PublicPage() {
                 courses={courses}
                 onModalClose={resetValues}
             />
+
         </MainContainer>
     )
 }
