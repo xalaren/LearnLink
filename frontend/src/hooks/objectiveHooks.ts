@@ -80,7 +80,50 @@ export function useObjectiveQueries() {
         }
     }
 
+    const updateQuery = async (objective: Objective, removeFileContent: boolean, accessToken: string) => {
+        try {
+            setLoading(true);
+            const response = await axiosInstance.post<VoidResponse>(`${OBJECTIVE_ENDPOINTS_URL}update?removeFileContent=${removeFileContent}`, objective, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${accessToken}`
+                }
+            });
 
+            if (!response.data.success) {
+                throw new AxiosError(response.data.message);
+            }
+
+            setLoading(false);
+            setSuccess(response.data.message || '');
+        }
+        catch (err: unknown) {
+            setLoading(false);
+            setError((err as AxiosError).message);
+        }
+    }
+
+    const removeQuery = async (objectiveId: number, accessToken: string) => {
+        try {
+            setLoading(true);
+            const response = await axiosInstance.delete<VoidResponse>(`${OBJECTIVE_ENDPOINTS_URL}delete?objectiveId=${objectiveId}`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            });
+
+            if (!response.data.success) {
+                throw new AxiosError(response.data.message);
+            }
+
+            setLoading(false);
+            setSuccess(response.data.message || '');
+        }
+        catch (err: unknown) {
+            setLoading(false);
+            setError((err as AxiosError).message);
+        }
+    }
 
     const resetValues = () => {
         setError('');
@@ -88,5 +131,5 @@ export function useObjectiveQueries() {
         setLoading(false);
     }
 
-    return { getObjectiveQuery, getObjectivesFromLessonQuery, createQuery, error, success, loading, resetValues };
+    return { getObjectiveQuery, getObjectivesFromLessonQuery, createQuery, updateQuery, removeQuery, error, success, loading, resetValues };
 }

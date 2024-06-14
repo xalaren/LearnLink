@@ -1,4 +1,5 @@
 ﻿using LearnLink.Core.Entities;
+using LearnLink.Core.Entities.ContentEntities;
 using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Transaction
@@ -34,6 +35,10 @@ namespace LearnLink.Application.Transaction
         public DbSet<Answer> Answers { get; }
         public DbSet<Review> Reviews { get; }
         public DbSet<AnswerReview> AnswerReviews { get; }
+
+        public DbSet<TextContent> TextContents { get; }
+        public DbSet<CodeContent> CodeContents { get; }
+        public DbSet<FileContent> FileContents { get; }
 
         Task CommitAsync();
     }

@@ -1,6 +1,7 @@
 ﻿using LearnLink.Adapter.EFContexts;
 using LearnLink.Application.Transaction;
 using LearnLink.Core.Entities;
+using LearnLink.Core.Entities.ContentEntities;
 using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Adapter.EFTransaction
@@ -34,6 +35,11 @@ namespace LearnLink.Adapter.EFTransaction
         public DbSet<Answer> Answers => context.Answers;
         public DbSet<Review> Reviews => context.Reviews;
         public DbSet<AnswerReview> AnswerReviews => context.AnswerReviews;
+
+        public DbSet<TextContent> TextContents => context.TextContents;
+
+        public DbSet<CodeContent> CodeContents => context.CodeContents;
+        public DbSet<FileContent> FileContents => context.FileContents;
 
         public ValueTask DisposeAsync()
         {

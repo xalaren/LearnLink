@@ -1,29 +1,32 @@
-import { useEffect, useState } from "react";
-import { Input } from "../../components/Input/Input";
-import PopupLoader from "../../components/Loader/PopupLoader";
-import { Modal } from "../../components/Modal/Modal";
-import ModalButton from "../../components/Modal/ModalButton";
-import ModalContent from "../../components/Modal/ModalContent";
-import ModalFooter from "../../components/Modal/ModalFooter";
-import PopupNotification from "../../components/PopupNotification";
-import { validate } from "../../helpers/validation";
-import { InputType, NotificationType } from "../../models/enums";
+import { useContext, useEffect, useState } from "react";
+import { CourseContext } from "../../contexts/CourseContext";
+import { ModuleContext } from "../../contexts/ModuleContext";
 import { useAppSelector } from "../../hooks/redux";
+import { validate } from "../../helpers/validation";
+import { Modal } from "../../components/Modal/Modal";
+import ModalContent from "../../components/Modal/ModalContent";
+import { Input } from "../../components/Input/Input";
+import { InputType, NotificationType } from "../../models/enums";
+import ModalFooter from "../../components/Modal/ModalFooter";
+import ModalButton from "../../components/Modal/ModalButton";
+import PopupLoader from "../../components/Loader/PopupLoader";
+import PopupNotification from "../../components/PopupNotification";
+import { ObjectiveContext } from "../../contexts/ObjectiveContext";
 import { useObjectiveQueries } from "../../hooks/objectiveHooks";
-import Editor from "../../components/Editor";
-import FileUploader from "../../components/FileUploader/FileUploader";
-import CollapseableBlock from "../../components/CollapseableBlock";
-import { Objective } from "../../models/objective";
 import { FileInfo } from "../../models/fileInfo";
+import CollapseableBlock from "../../components/CollapseableBlock";
+import FileUploader from "../../components/FileUploader/FileUploader";
+import Editor from "../../components/Editor";
+import { Objective } from "../../models/objective";
 
-interface IObjectiveCreateModalProps {
-    lessonId: number;
+interface IObjectiveEditModalProps {
     active: boolean;
     onClose: () => void;
-
 }
 
-function ObjectiveCreateModal({ lessonId, active, onClose }: IObjectiveCreateModalProps) {
+function ModuleEditModal({ active, onClose }: IObjectiveEditModalProps) {
+    const { objective, fetchObjective } = useContext(ObjectiveContext);
+
     const [title, setTitle] = useState('');
     const [titleError, setTitleError] = useState('');
 
@@ -33,38 +36,21 @@ function ObjectiveCreateModal({ lessonId, active, onClose }: IObjectiveCreateMod
     const [fileUploaderCollapsed, setFileUploaderCollapsed] = useState(true);
 
     const [file, setFile] = useState<File | null>(null);
-    const [uploadedFileInfo, setUploadedFileInfo] = useState<FileInfo | null>(null);
+    const [uploadedFileInfo, setUpdloadedFileInfo] = useState<FileInfo | null>(null);
 
     const { accessToken } = useAppSelector(state => state.authReducer);
-    const { createQuery, success, error, loading, resetValues } = useObjectiveQueries();
+    const { updateQuery, success, error, loading, resetValues } = useObjectiveQueries();
 
     useEffect(() => {
-    }, [accessToken]);
+        if (objective) {
+            setTitle(objective.title);
+            setText(objective.text);
 
-    async function createObjective() {
-        let isValidated = true;
-
-        if (!validate(title)) {
-            setTitleError('Название модуля должно быть заполнено')
-            isValidated = false;
+            if (objective.fileName && objective.fileExtension && objective.fileUrl) {
+                setUpdloadedFileInfo(new FileInfo(objective.fileName, objective.fileExtension, objective.fileUrl));
+            }
         }
-
-        if (!validate(text)) {
-            setTextError('Текст задания должен быть заполнен');
-        }
-
-        if (isValidated && accessToken) {
-            const objective: Objective = {
-                id: 0,
-                title: title,
-                text: text,
-                formFile: file,
-                fileContentId: 0,
-            };
-
-            await createQuery(lessonId, objective, accessToken);
-        }
-    }
+    }, [objective, accessToken]);
 
     function resetDefault() {
         resetValues();
@@ -77,8 +63,28 @@ function ObjectiveCreateModal({ lessonId, active, onClose }: IObjectiveCreateMod
     }
 
     function closeModal() {
+        fetchObjective();
         resetDefault();
         onClose();
+    }
+
+    async function updateObjective() {
+        let isValidated = true;
+
+        if (!validate(title)) {
+            setTitleError('Название модуля должно быть заполнено')
+            isValidated = false;
+        }
+
+        if (!validate(text)) {
+            setTextError('Текст задания должен быть заполнен');
+        }
+
+        if (isValidated && objective && accessToken) {
+            const newObjective: Objective = { ...objective, title: title, text: text, formFile: file };
+
+            await updateQuery(newObjective, uploadedFileInfo == null, accessToken);
+        }
     }
 
     return (
@@ -87,7 +93,7 @@ function ObjectiveCreateModal({ lessonId, active, onClose }: IObjectiveCreateMod
                 <Modal
                     active={active}
                     onClose={closeModal}
-                    title="Создание задания">
+                    title="Редактирование задания">
 
                     <ModalContent>
                         <form className="form">
@@ -126,7 +132,7 @@ function ObjectiveCreateModal({ lessonId, active, onClose }: IObjectiveCreateMod
                                         file={file}
                                         setFile={setFile}
                                         uploadedFileInfo={uploadedFileInfo}
-                                        setUploadedFileInfo={setUploadedFileInfo}
+                                        setUploadedFileInfo={setUpdloadedFileInfo}
                                     />
                                 </CollapseableBlock>
 
@@ -135,7 +141,7 @@ function ObjectiveCreateModal({ lessonId, active, onClose }: IObjectiveCreateMod
                     </ModalContent>
 
                     <ModalFooter>
-                        <ModalButton text="Сохранить" onClick={createObjective} />
+                        <ModalButton text="Сохранить" onClick={updateObjective} />
                     </ModalFooter>
 
                 </Modal >
@@ -158,6 +164,7 @@ function ObjectiveCreateModal({ lessonId, active, onClose }: IObjectiveCreateMod
             }
         </>
     );
+
 }
 
-export default ObjectiveCreateModal;
+export default ModuleEditModal;

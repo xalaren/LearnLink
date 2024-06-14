@@ -8,7 +8,6 @@ import { ViewTypes } from "../models/enums";
 import Breadcrumb from "../components/Breadcrumb/Breadcrumb";
 import { Course } from "../models/course";
 import { LessonContext } from "../contexts/LessonContext";
-import { Lesson } from "../models/lesson";
 import { ObjectiveContext } from "../contexts/ObjectiveContext";
 import { Objective } from "../models/objective";
 import ObjectiveView from "../modules/Objectives/ObjectiveView";
@@ -20,6 +19,7 @@ function ObjectivePage() {
     const { objective } = useContext(ObjectiveContext);
 
     const [deleteModalActive, setDeleteModalActive] = useState(false);
+    const [editModalActive, setEditModalActive] = useState(false);
 
 
     return (
@@ -40,9 +40,13 @@ function ObjectivePage() {
 
                         <ObjectiveView
                             course={course}
+                            lessonId={lesson.id}
+                            moduleId={module.id}
                             objective={objective}
                             deleteModalActive={deleteModalActive}
                             setDeleteModalActive={setDeleteModalActive}
+                            editModalActive={editModalActive}
+                            setEditModalActive={setEditModalActive}
                         />
                     </>
                 }

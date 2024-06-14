@@ -10,6 +10,10 @@ namespace LearnLink.Shared.DataTransferObjects
         public string Text { get; set; } = string.Empty;
 
         public IFormFile? FormFile { get; set; }
+
+        public int FileContentId { get; set; } = 0;
         public string? FileUrl { get; set; }
+        public string? FileName { get; set; }
+        public string? FileExtension { get; set; }
     }
 }

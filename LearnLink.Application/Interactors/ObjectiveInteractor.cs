@@ -18,6 +18,13 @@ namespace LearnLink.Application.Interactors
             {
                 var objective = await unitOfWork.Objectives.FindAsync(objectiveId);
 
+                if (objective != null)
+                {
+                    await unitOfWork.Objectives.Entry(objective)
+                        .Reference(objective => objective.FileContent)
+                        .LoadAsync();
+                }
+
                 return new Response<ObjectiveDto?>()
                 {
                     Success = true,
@@ -142,7 +149,7 @@ namespace LearnLink.Application.Interactors
                     Success = false,
                     StatusCode = 500,
                     Message = "Не удалось создать задание",
-                    InnerErrorMessages = new string[] { exception.Message },
+                    InnerErrorMessages = [exception.Message],
                 };
             }
         }
@@ -168,6 +175,11 @@ namespace LearnLink.Application.Interactors
                 var objective = lessonObjective.Objective;
                 var prevFileState = objective.FileContent;
 
+                if (removeFileContent)
+                {
+                    objective.FileContent = null;
+                }
+
                 objective = objective.Assign(objectiveDto);
 
                 if (prevFileState != null && (objective.FileContent != null || removeFileContent))
@@ -176,8 +188,10 @@ namespace LearnLink.Application.Interactors
                         lessonObjective.LessonId,
                         objective.Id,
                         prevFileState.Id,
-                        prevFileState.FileName
-                        );
+                        prevFileState.FileName);
+
+                    unitOfWork.FileContents.Remove(prevFileState);
+                    await unitOfWork.CommitAsync();
                 }
 
                 unitOfWork.Objectives.Update(objective);
@@ -246,6 +260,7 @@ namespace LearnLink.Application.Interactors
 
                 unitOfWork.Objectives.Remove(lessonObjective.Objective);
                 unitOfWork.LessonObjectives.Remove(lessonObjective);
+                await unitOfWork.CommitAsync();
 
                 return new Response()
                 {
@@ -316,9 +331,9 @@ namespace LearnLink.Application.Interactors
                 if (objective.FileContent != null)
                 {
                     contentInteractor.RemoveObjectiveFileContent(
-                        lessonId, 
-                        objective.Id, 
-                        objective.FileContent.Id, 
+                        lessonId,
+                        objective.Id,
+                        objective.FileContent.Id,
                         objective.FileContent.FileName
                      );
                 }

@@ -6,24 +6,25 @@ interface IFileUploaderProps {
     name: string;
     file?: File | null;
     setFile: (file: File) => void;
-    uploadedFileInfo?: FileInfo;
+    uploadedFileInfo: FileInfo | null;
+    setUploadedFileInfo: (fileInfo: FileInfo | null) => void;
 }
 
-function FileUploader({ name, file, setFile, uploadedFileInfo }: IFileUploaderProps) {
+function FileUploader({ name, file, setFile, uploadedFileInfo, setUploadedFileInfo }: IFileUploaderProps) {
     const [drag, setDrag] = useState(false);
-    const [fileInfo, setFileInfo] = useState<FileInfo | null>(null);
 
     useEffect(() => {
         if (file) {
             const fileUrl = URL.createObjectURL(file);
             const fileExt = file.name.split('.').pop() || 'file';
-            setFileInfo(new FileInfo(file.name, fileExt, fileUrl))
+
+            setUploadedFileInfo(new FileInfo(file.name, fileExt, fileUrl))
         }
         else if (uploadedFileInfo) {
-            setFileInfo(uploadedFileInfo);
+            setUploadedFileInfo(uploadedFileInfo);
         }
         else {
-            setFileInfo(null);
+            setUploadedFileInfo(null);
         }
     }, [file]);
 
@@ -58,16 +59,16 @@ function FileUploader({ name, file, setFile, uploadedFileInfo }: IFileUploaderPr
     }
 
     function onRemove() {
-        setFileInfo(null);
+        setUploadedFileInfo(null);
     }
 
     return (
         <div className="file-uploader">
-            {fileInfo ?
+            {uploadedFileInfo ?
                 <>
                     <p>Загруженные файлы:</p>
                     <FileItem
-                        fileInfo={fileInfo}
+                        fileInfo={uploadedFileInfo}
                         onRemove={onRemove}
                     />
                 </>

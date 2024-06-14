@@ -1,5 +1,6 @@
 ﻿using LearnLink.Adapter.EFConfigurations;
 using LearnLink.Core.Entities;
+using LearnLink.Core.Entities.ContentEntities;
 using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Adapter.EFContexts
@@ -22,7 +23,7 @@ namespace LearnLink.Adapter.EFContexts
 
         public DbSet<Lesson> Lessons { get; init; }
         public DbSet<Section> Sections { get; init; }
-        
+
         public DbSet<LessonSection> LessonSections { get; init; }
         public DbSet<ModuleLesson> ModuleLessons { get; init; }
 
@@ -36,6 +37,10 @@ namespace LearnLink.Adapter.EFContexts
         public DbSet<Answer> Answers { get; init; }
         public DbSet<Review> Reviews { get; init; }
         public DbSet<AnswerReview> AnswerReviews { get; init; }
+
+        public DbSet<TextContent> TextContents { get; init; }
+        public DbSet<CodeContent> CodeContents { get; init; }
+        public DbSet<FileContent> FileContents { get; init; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

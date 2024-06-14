@@ -12,7 +12,7 @@ namespace LearnLink.Application.Mappers
         {
             FileContent? fileContent = null;
 
-            if(objectiveDto.FormFile != null)
+            if (objectiveDto.FormFile != null)
             {
                 fileContent = new FileContent()
                 {
@@ -33,14 +33,33 @@ namespace LearnLink.Application.Mappers
 
         public static ObjectiveDto ToDto(this Objective objectiveEntity, int lessonId)
         {
+            int fileContentId = 0;
+            string? fileUrl = null;
+            string? fileName = null;
+            string? fileExt = null;
+
+            if (objectiveEntity.FileContent != null)
+            {
+                fileContentId = objectiveEntity.FileContentId ?? 0;
+                fileName = objectiveEntity.FileContent.FileName;
+                fileExt = Path.GetExtension(fileName);
+                fileUrl = DirectoryStore.GetRelativeDirectoryUrlToLessonObjectiveContent
+                (
+                    lessonId,
+                    objectiveEntity.Id,
+                    fileContentId
+                );
+            }
+
             return new ObjectiveDto()
             {
                 Id = objectiveEntity.Id,
                 Text = objectiveEntity.Text,
                 Title = objectiveEntity.Title,
-                FileUrl = objectiveEntity.FileContent != null ?
-                DirectoryStore.GetRelativeDirectoryUrlToLessonObjectiveContent(lessonId, objectiveEntity.Id, objectiveEntity.FileContent.Id) + objectiveEntity.FileContent.FileName :
-                null
+                FileContentId = fileContentId,
+                FileName = fileName,
+                FileExtension = fileExt,
+                FileUrl = fileUrl
             };
         }
 
