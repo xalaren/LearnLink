@@ -10,7 +10,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Interactors
 {
-    public class ObjectiveInteractor(IUnitOfWork unitOfWork, DirectoryStore directoryStore, ContentInteractor contentInteractor)
+    public class ObjectiveInteractor(IUnitOfWork unitOfWork, 
+        DirectoryStore directoryStore, 
+        ContentInteractor contentInteractor,
+        AnswerInteractor answerInteractor
+        )
     {
         public async Task<Response<ObjectiveDto?>> GetObjectiveAsync(int lessonId, int objectiveId)
         {
@@ -255,6 +259,8 @@ namespace LearnLink.Application.Interactors
                         lessonObjective.Objective.FileContent.Id,
                         lessonObjective.Objective.FileContent.FileName
                      );
+
+                    unitOfWork.FileContents.Remove(lessonObjective.Objective.FileContent);
                 }
 
 
@@ -336,8 +342,11 @@ namespace LearnLink.Application.Interactors
                         objective.FileContent.Id,
                         objective.FileContent.FileName
                      );
+
+                    unitOfWork.FileContents.Remove(objective.FileContent);
                 }
 
+                await answerInteractor.RemoveAnswersFromObjective(lessonId, objective.Id);
             }
 
             unitOfWork.LessonObjectives.RemoveRange(lessonObjectives);

@@ -46,6 +46,7 @@ builder.Services.AddScoped<CompletionInteractor>();
 builder.Services.AddScoped<ContentInteractor>();
 builder.Services.AddScoped<LessonSectionInteractor>();
 builder.Services.AddScoped<ObjectiveInteractor>();
+builder.Services.AddScoped<AnswerInteractor>();
 
 
 builder.Services.AddTransient<SeedData>();

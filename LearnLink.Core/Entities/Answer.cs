@@ -6,6 +6,8 @@ namespace LearnLink.Core.Entities
     {
         public int Id { get; set; }
 
+        public DateTime UploadDate { get; set; }
+
         public int UserId { get; set; }
         public User User { get; set; } = null!;
 

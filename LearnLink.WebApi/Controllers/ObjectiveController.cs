@@ -8,7 +8,7 @@ namespace LearnLink.WebApi.Controllers
 {
     [ApiController]
     [Route("api/objectives")]
-    public class ObjectiveController(ObjectiveInteractor objectiveInteractor)
+    public class ObjectiveController(ObjectiveInteractor objectiveInteractor) : Controller
     {
         [Authorize]
         [HttpGet("get")]

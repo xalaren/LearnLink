@@ -60,6 +60,16 @@ namespace LearnLink.Application.Interactors
             RemoveContent(path);
         }
 
+        public void RemoveAnswerFileContent(int lessonId, int objectiveId, int answerId, int contentId, string? fileName)
+        {
+            if (string.IsNullOrWhiteSpace(fileName)) return;
+
+            var directory = directoryStore.GetDirectoryPathToObjectiveAnswerContent(lessonId, objectiveId, answerId, contentId);
+            var path = Path.Combine(directory, fileName);
+
+            RemoveContent(path);
+        }
+
 
         private void RemoveContent(string filePath)
         {

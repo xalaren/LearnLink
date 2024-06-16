@@ -46,14 +46,14 @@
             return $"/{API_NAME}/{STORAGE_DIRNAME}/{CONTENT_DIRNAME}/{contentId}/";
         }
 
-        public static string GetRelativeDirectoryUrlToLessonObjectiveContent(int lessonId, int objectionId, int contentId)
+        public static string GetRelativeDirectoryUrlToLessonObjectiveContent(int lessonId, int objectiveId, int contentId)
         {
-            return $"/{API_NAME}/{STORAGE_DIRNAME}/{LESSONS_DIRNAME}/{lessonId}/{OBJECTIVES_DIRNAME}/{objectionId}/{CONTENT_DIRNAME}/{contentId}/";
+            return $"/{API_NAME}/{STORAGE_DIRNAME}/{LESSONS_DIRNAME}/{lessonId}/{OBJECTIVES_DIRNAME}/{objectiveId}/{CONTENT_DIRNAME}/{contentId}/";
         }
 
-        public static string GetRelativeDirectoryUrlToLessonObjectiveAnswerContent(int lessonId, int objectionId, int answerId, int contentId)
+        public static string GetRelativeDirectoryUrlToLessonObjectiveAnswerContent(int lessonId, int objectiveId, int answerId, int contentId)
         {
-            return $"/{API_NAME}/{STORAGE_DIRNAME}/{LESSONS_DIRNAME}/{lessonId}/{OBJECTIVES_DIRNAME}/{objectionId}/{ANSWERS_DIRNAME}/{answerId}/{CONTENT_DIRNAME}/{contentId}/";
+            return $"/{API_NAME}/{STORAGE_DIRNAME}/{LESSONS_DIRNAME}/{lessonId}/{OBJECTIVES_DIRNAME}/{objectiveId}/{ANSWERS_DIRNAME}/{answerId}/{CONTENT_DIRNAME}/{contentId}/";
         }
 
         public string GetDirectoryPathToUserImages(int userId)
@@ -84,13 +84,13 @@
                 contentId.ToString());
         }
 
-        public string GetDirectoryPathToObjectiveAnswerContent(int lessonId, int objectionId, int answerId, int contentId)
+        public string GetDirectoryPathToObjectiveAnswerContent(int lessonId, int objectiveId, int answerId, int contentId)
         {
             return Path.Combine(
                 LessonsStorageDirectory,
                 lessonId.ToString(),
                 OBJECTIVES_DIRNAME,
-                objectionId.ToString(),
+                objectiveId.ToString(),
                 ANSWERS_DIRNAME,
                 answerId.ToString(),
                 CONTENT_DIRNAME,

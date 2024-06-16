@@ -310,6 +310,18 @@ namespace LearnLink.Application.Interactors
                         sectionId,
                         lessonSection.Section.FileContent.Id,
                         lessonSection.Section.FileContent.FileName);
+
+                    unitOfWork.FileContents.Remove(lessonSection.Section.FileContent);
+                }
+
+                if(lessonSection.Section.TextContent != null)
+                {
+                    unitOfWork.TextContents.Remove(lessonSection.Section.TextContent);
+                }
+
+                if(lessonSection.Section.CodeContent != null)
+                {
+                    unitOfWork.CodeContents.Remove(lessonSection.Section.CodeContent);
                 }
 
                 unitOfWork.LessonSections.Remove(lessonSection);
