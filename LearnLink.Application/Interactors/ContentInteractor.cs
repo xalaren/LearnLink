@@ -83,7 +83,11 @@ namespace LearnLink.Application.Interactors
             }
 
             File.Delete(filePath);
-            Directory.Delete(directory);
+
+            if (Directory.GetFiles(directory).Length == 0)
+            {
+                Directory.Delete(directory);
+            }
         }
     }
 }

@@ -29,6 +29,7 @@ function SectionEditor({ lessonId, currentSection, onClose }: ISectionEditorProp
     const [text, setText] = useState('');
     const [language, setLanguage] = useState('');
     const [file, setFile] = useState<File | null>(null);
+    const [uploadedFileInfo, setUploadedFileInfo] = useState<FileInfo | null>(null);
 
     const [validationError, setValidationError] = useState('');
 
@@ -43,6 +44,17 @@ function SectionEditor({ lessonId, currentSection, onClose }: ISectionEditorProp
         if (!currentSection) return;
 
         setTitle(currentSection.title);
+
+        if (currentSection.content.fileName && currentSection.content.fileExtension && currentSection.content.fileUrl) {
+            setUploadedFileInfo(
+                new FileInfo(
+                    currentSection.content.fileName,
+                    currentSection.content.fileExtension,
+                    currentSection.content.fileUrl
+                )
+            );
+        }
+
 
         if (currentSection.content.isText && currentSection.content.text) {
             setText(currentSection.content.text);
@@ -156,12 +168,8 @@ function SectionEditor({ lessonId, currentSection, onClose }: ISectionEditorProp
                             name="file-upload"
                             file={file}
                             setFile={setFile}
-                            uploadedFileInfo={
-                                new FileInfo(
-                                    currentSection.content.fileName,
-                                    currentSection.content.fileExtension,
-                                    currentSection.content.fileUrl
-                                )}
+                            uploadedFileInfo={uploadedFileInfo}
+                            setUploadedFileInfo={setUploadedFileInfo}
                         />
                     }
                 </> :

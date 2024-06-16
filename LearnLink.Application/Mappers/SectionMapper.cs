@@ -14,6 +14,8 @@ namespace LearnLink.Application.Mappers
             bool isCodeBlock = sectionEntity.CodeContent != null;
             bool isFile = sectionEntity.FileContent != null;
 
+            string? text = null;
+
             if (sectionEntity.TextContent == null && sectionEntity.CodeContent == null && sectionEntity.FileContent == null)
             {
                 throw new ValidationException("Контент был пуст");
@@ -21,25 +23,36 @@ namespace LearnLink.Application.Mappers
 
             string fileUrl = "";
 
-            if (lessonId > 0 && sectionEntity.FileContent != null)
+            if (sectionEntity.FileContent != null && sectionEntity.FileContentId != null)
             {
-                fileUrl = DirectoryStore.GetRelativeDirectoryUrlToLessonSectionContent(lessonId, sectionEntity.Id, sectionEntity.FileContent.Id);
+                fileUrl = Path.Combine
+                (
+                    DirectoryStore.GetRelativeDirectoryUrlToLessonSectionContent(lessonId, sectionEntity.Id, sectionEntity.FileContent.Id),
+                    sectionEntity.FileContent.FileName
+                );
             }
-            else if (sectionEntity.FileContent != null)
+
+            if (sectionEntity.TextContent != null)
             {
-                fileUrl = DirectoryStore.GetRelativeDirectoryUrlToContent(sectionEntity.FileContent.Id);
+                text = sectionEntity.TextContent.Text;
             }
-            
+            else if (sectionEntity.CodeContent != null)
+            {
+                text = sectionEntity.CodeContent.CodeText;
+            }
+
+
+
             var contentDto = new ContentDto()
             {
                 IsText = isText,
                 IsCodeBlock = isCodeBlock,
                 IsFile = isFile,
-                Text = sectionEntity.TextContent?.Text,
+                Text = text,
                 CodeLanguage = sectionEntity.CodeContent?.CodeLanguage,
                 FileName = sectionEntity.FileContent?.FileName,
                 FileExtension = sectionEntity.FileContent?.FileExtension,
-                FileUrl = fileUrl
+                FileUrl = fileUrl,
             };
 
             return new SectionDto()
@@ -83,7 +96,7 @@ namespace LearnLink.Application.Mappers
                     fileName = sectionDto.Content.FormFile.FileName;
                     fileExt = Path.GetExtension(sectionDto.Content.FormFile.FileName);
                 }
-                
+
                 return new Section()
                 {
                     Id = sectionDto.Id,
@@ -133,12 +146,12 @@ namespace LearnLink.Application.Mappers
                     throw new ValidationException("Текстовый контент не объявляен для данного раздела");
                 }
                 sectionEntity.TextContent.Text = sectionDto.Content.Text!;
-            } 
+            }
             else if (sectionDto.Content is { IsFile: true })
             {
                 string fileExt = "";
                 string fileName = "";
-                
+
                 if (sectionEntity.FileContent == null)
                 {
                     throw new ValidationException("Файловый контент не объявляен для данного раздела");
@@ -152,14 +165,14 @@ namespace LearnLink.Application.Mappers
 
                 sectionEntity.FileContent.FileName = fileName;
                 sectionEntity.FileContent.FileExtension = fileExt;
-            } 
+            }
             else if (sectionDto.Content is { IsCodeBlock: true })
             {
                 if (sectionEntity.CodeContent == null)
                 {
                     throw new ValidationException("Контент для кода не объявляен для данного раздела");
                 }
-                
+
                 sectionEntity.CodeContent.CodeText = sectionDto.Content.Text!;
                 sectionEntity.CodeContent.CodeLanguage = sectionDto.Content.CodeLanguage!;
             }

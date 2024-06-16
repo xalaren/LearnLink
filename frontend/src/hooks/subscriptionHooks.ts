@@ -11,8 +11,6 @@ export function useSubscription() {
 
     const subscribeQuery = async (userId: number, courseId: number, accessToken: string) => {
         try {
-            console.log(accessToken);
-
             setLoading(true);
             const response = await axiosInstance.post<VoidResponse>(`${SUBSCRIPTION_ENDPOINTS_URL}subscribe?userId=${userId}&courseId=${courseId}`, {}, {
                 headers: {

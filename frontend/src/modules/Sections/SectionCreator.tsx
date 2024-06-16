@@ -15,6 +15,7 @@ import { validate } from "../../helpers/validation";
 import { ErrorModal } from "../../components/Modal/ErrorModal";
 import MiniLoader from "../../components/Loader/MiniLoader";
 import DOMPurify from 'dompurify';
+import { FileInfo } from "../../models/fileInfo";
 
 interface ISectionCreatorProps {
     lessonId: number;
@@ -28,6 +29,7 @@ function SectionCreator({ lessonId, contentType, onClose }: ISectionCreatorProps
     const [text, setText] = useState('');
     const [language, setLanguage] = useState('');
     const [file, setFile] = useState<File | null>(null);
+    const [uploadedFileInfo, setUploadedFileInfo] = useState<FileInfo | null>(null);
 
     const [validationError, setValidationError] = useState('');
 
@@ -138,6 +140,8 @@ function SectionCreator({ lessonId, contentType, onClose }: ISectionCreatorProps
                                     name="file-upload"
                                     file={file}
                                     setFile={setFile}
+                                    uploadedFileInfo={uploadedFileInfo}
+                                    setUploadedFileInfo={setUploadedFileInfo}
                                 />
                             }
                         </> :

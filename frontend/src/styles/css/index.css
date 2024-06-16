@@ -1452,6 +1452,7 @@ a * {
   grid-template-columns: auto 1fr;
   -moz-column-gap: 100px;
        column-gap: 100px;
+  row-gap: 50px;
 }
 .account-page__nav {
   min-width: 300px;
@@ -1487,6 +1488,7 @@ a * {
   align-items: center;
   -moz-column-gap: 20px;
        column-gap: 20px;
+  row-gap: 50px;
 }
 .account-page__content .account-change-form__inputs {
   grid-area: inputs;
@@ -1965,10 +1967,6 @@ a * {
   margin: 10px;
   width: 100%;
 }
-.modal__content > * {
-  max-height: 600px;
-  overflow: auto;
-}
 .modal__header {
   display: flex;
   justify-content: space-between;
@@ -2029,6 +2027,10 @@ a * {
 .large-modal {
   max-width: 900px;
   width: 100%;
+  max-height: 810px;
+}
+.large-modal .modal__body {
+  overflow: auto;
 }
 .large-modal .modal__body .form, .large-modal .modal__body .form-bordered {
   max-width: none;

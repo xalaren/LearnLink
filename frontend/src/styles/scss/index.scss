@@ -500,6 +500,7 @@
     display: grid;
     grid-template-columns: auto 1fr;
     column-gap: 100px;
+    row-gap: 50px;
 
     &__nav {
         min-width: 300px;
@@ -543,6 +544,7 @@
                 "profile nav";
             align-items: center;
             column-gap: 20px;
+            row-gap: 50px;
 
             &__inputs {
                 grid-area: inputs;
@@ -1036,10 +1038,6 @@
         transform: translate(-50%, -50%);
         margin: 10px;
         width: 100%;
-        > * {
-            max-height: 600px;
-            overflow: auto;
-        }
     }
 
     &__header {
@@ -1103,8 +1101,10 @@
 .large-modal {
     max-width: 900px;
     width: 100%;
+    max-height: 810px;
 
     .modal__body {
+        overflow: auto;
         .form {
             max-width: none;
         }

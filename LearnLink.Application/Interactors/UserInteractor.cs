@@ -615,7 +615,11 @@ namespace LearnLink.Application.Interactors
                 }
 
                 File.Delete(avatarPath);
-                Directory.Delete(directory);
+
+                if(Directory.GetFiles(directory).Length == 0)
+                {
+                    Directory.Delete(directory);
+                }
 
             }
             catch (Exception)

@@ -105,6 +105,7 @@ namespace LearnLink.Application.Interactors
 
                 var count = users.Count();
                 await unitOfWork.CommitAsync();
+
                 await UpdateCourseSubscriptions(course.Id);
                 await userCourseLocalRolesInteractor.RequestCreateAsyncNoResponse(userId, courseId, localRoleId, localUsers);
 

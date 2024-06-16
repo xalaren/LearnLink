@@ -38,7 +38,7 @@
 
         public static string GetRelativeDirectoryUrlToLessonSectionContent(int lessonId, int sectionId, int contentId)
         {
-            return $"/{API_NAME}/{STORAGE_DIRNAME}/{LESSONS_DIRNAME}/{lessonId}/{SECTION_DIRNAME}/{sectionId}/{CONTENT_DIRNAME}/{contentId}";
+            return $"/{API_NAME}/{STORAGE_DIRNAME}/{LESSONS_DIRNAME}/{lessonId}/{SECTION_DIRNAME}/{sectionId}/{CONTENT_DIRNAME}/{contentId}/";
         }
 
         public static string GetRelativeDirectoryUrlToContent(int contentId)
@@ -64,9 +64,9 @@
         public string GetDirectoryPathToLessonSectionContent(int lessonId, int sectionId, int contentId)
         {
             return Path.Combine(
-                LessonsStorageDirectory, 
-                lessonId.ToString(), 
-                SECTION_DIRNAME, 
+                LessonsStorageDirectory,
+                lessonId.ToString(),
+                SECTION_DIRNAME,
                 sectionId.ToString(),
                 CONTENT_DIRNAME,
                 contentId.ToString()

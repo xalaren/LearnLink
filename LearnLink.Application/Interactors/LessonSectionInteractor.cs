@@ -24,7 +24,7 @@ namespace LearnLink.Application.Interactors
                         .OrderBy(section => section.Order)
                         .ToArrayAsync();
 
-                foreach(var section in sections)
+                foreach (var section in sections)
                 {
                     await unitOfWork.Sections.Entry(section)
                         .Reference(section => section.TextContent)
@@ -43,7 +43,7 @@ namespace LearnLink.Application.Interactors
                 {
                     Success = true,
                     StatusCode = 200,
-                    Value = sections.Select(section => section.ToDto()).ToArray()
+                    Value = sections.Select(section => section.ToDto(lessonId)).ToArray()
                 };
             }
             catch (CustomException exception)
@@ -156,7 +156,7 @@ namespace LearnLink.Application.Interactors
                 await unitOfWork.LessonSections.AddAsync(lessonSection);
                 await unitOfWork.CommitAsync();
 
-                if(content != null && section.FileContent != null)
+                if (content != null && section.FileContent != null)
                 {
                     await contentInteractor.SaveLessonFileContent(content, lessonId, section.Id, section.FileContent.Id);
                 }
@@ -217,18 +217,18 @@ namespace LearnLink.Application.Interactors
                 if (sectionDto.Content == null)
                 {
                     var updatedSection = section.Assign(sectionDto);
-                    
+
                     unitOfWork.Sections.Update(updatedSection);
                     await unitOfWork.CommitAsync();
                 }
                 else
                 {
                     var content = sectionDto.Content;
-                    
+
                     bool prevSectionFileState = section.FileContent == null;
                     string? prevSectionFileName = section.FileContent?.FileName;
                     int prevContentId = section.FileContent?.Id ?? 0;
-                    
+
                     var updatedSection = section.Assign(sectionDto);
 
 
@@ -282,7 +282,7 @@ namespace LearnLink.Application.Interactors
                 lessonSection.LessonId == lessonId &&
                 lessonSection.SectionId == sectionId);
 
-                if(lessonSection == null)
+                if (lessonSection == null)
                 {
                     throw new NotFoundException("Раздел не найден");
                 }
@@ -314,12 +314,12 @@ namespace LearnLink.Application.Interactors
                     unitOfWork.FileContents.Remove(lessonSection.Section.FileContent);
                 }
 
-                if(lessonSection.Section.TextContent != null)
+                if (lessonSection.Section.TextContent != null)
                 {
                     unitOfWork.TextContents.Remove(lessonSection.Section.TextContent);
                 }
 
-                if(lessonSection.Section.CodeContent != null)
+                if (lessonSection.Section.CodeContent != null)
                 {
                     unitOfWork.CodeContents.Remove(lessonSection.Section.CodeContent);
                 }

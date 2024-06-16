@@ -13,11 +13,14 @@ function Editor({ data, setData }: IEditorProps) {
                 data={data}
                 editor={ClassicEditor}
                 config={{
-                    toolbar: ['heading', '|',
-                        'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote',
-                        'fontSize', 'subscript', 'superscript', '|',
-                        'insertTable', 'tableColumn', 'tableRow', 'mergeTableCells', '|',
-                        'undo', 'redo'],
+                    toolbar: {
+                        items: ['heading', '|',
+                            'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote',
+                            'fontSize', 'subscript', 'superscript', '|',
+                            'insertTable', 'tableColumn', 'tableRow', 'mergeTableCells', '|',
+                            'undo', 'redo'],
+                        shouldNotGroupWhenFull: true,
+                    },
                     heading: {
                         options: [
                             { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },

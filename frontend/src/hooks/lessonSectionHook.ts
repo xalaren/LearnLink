@@ -182,7 +182,7 @@ export function useUpdateSection() {
                 });
             }
             else {
-                response = await axiosInstance.post<VoidResponse>(`${SECTIONS_ENDPOINTS_URL}update?lessonId=${lessonId}`, section, {
+                response = await axiosInstance.post<VoidResponse>(`${LESSON_SECTIONS_ENDPOINTS_URL}update?lessonId=${lessonId}`, section, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${accessToken}`,

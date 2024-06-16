@@ -12,6 +12,7 @@ interface ISelectProps {
 
 function Select({ defaultTitle, selectedTitle, children, active, toggle, onDeselect }: ISelectProps) {
     let title = validate(selectedTitle || '') ? selectedTitle : defaultTitle;
+    const selectedClassName = active ? 'select-selected' : '';
 
     useEffect(() => {
         const closeSelect = (event: MouseEvent) => {
@@ -30,7 +31,7 @@ function Select({ defaultTitle, selectedTitle, children, active, toggle, onDesel
     }, [onDeselect]);
 
     return (
-        <div className={`select  ${active && 'select-selected'}`}>
+        <div className={`select  ${selectedClassName}`}>
             <div className="select__head" onClick={toggle}>
                 {title}
                 <span className={`icon icon-medium-size ${active ? 'icon-arrow-up' : 'icon-arrow-down'}`}></span>

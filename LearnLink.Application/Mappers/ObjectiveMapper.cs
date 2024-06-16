@@ -43,12 +43,12 @@ namespace LearnLink.Application.Mappers
                 fileContentId = objectiveEntity.FileContentId ?? 0;
                 fileName = objectiveEntity.FileContent.FileName;
                 fileExt = Path.GetExtension(fileName);
-                fileUrl = DirectoryStore.GetRelativeDirectoryUrlToLessonObjectiveContent
+                fileUrl = Path.Combine(DirectoryStore.GetRelativeDirectoryUrlToLessonObjectiveContent
                 (
                     lessonId,
                     objectiveEntity.Id,
                     fileContentId
-                );
+                ), fileName);
             }
 
             return new ObjectiveDto()
