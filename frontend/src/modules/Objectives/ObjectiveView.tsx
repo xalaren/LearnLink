@@ -6,6 +6,7 @@ import { useHistoryNavigation } from "../../hooks/historyNavigation";
 import { Course } from "../../models/course";
 import { FileInfo } from "../../models/fileInfo";
 import { Objective } from "../../models/objective";
+import AnswersList from "../Answers/AnswersList";
 import ObjectiveDeleteModal from "./ObjectiveDeleteModal";
 import ObjectiveEditModal from "./ObjectiveEditModal";
 
@@ -71,6 +72,13 @@ function ObjectiveView({
                     ]}
                 </FileContent>
             }
+
+            <AnswersList
+                courseId={course.id}
+                lessonId={lessonId}
+                moduleId={moduleId}
+                objectiveId={objective.id}
+            />
 
             <ObjectiveDeleteModal
                 active={deleteModalActive}

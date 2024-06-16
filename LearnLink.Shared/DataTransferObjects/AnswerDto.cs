@@ -6,14 +6,16 @@ namespace LearnLink.Shared.DataTransferObjects
     {
         public int Id { get; init; }
 
-        public int UserId { get; init; }
-        public UserDto User { get; init; } = null!;
-        
         public int ObjectiveId { get; init; }
+
+        public string UploadDate { get; init; } = string.Empty;
+
+        public int UserId { get; init; }
+        public UserLiteDetailsDto? UserDetails { get; init; }
+
         public string? Text { get; init; }
-        public string? FileName { get; init; }
-        public string? FileExtension { get; init; }
-        public string? FileUrl { get; init; }
+
+        public FileUpload? FileDetails { get; init; }
         public IFormFile? FormFile { get; init; }
     }
 }

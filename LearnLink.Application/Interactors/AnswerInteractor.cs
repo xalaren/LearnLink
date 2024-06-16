@@ -43,6 +43,10 @@ namespace LearnLink.Application.Interactors
                     .Reference(answer => answer.FileContent)
                     .LoadAsync();
 
+                await unitOfWork.Answers.Entry(answer)
+                    .Reference(answer => answer.User)
+                    .LoadAsync();
+
                 return new Response<AnswerDto>()
                 {
                     Success = true,
@@ -128,6 +132,10 @@ namespace LearnLink.Application.Interactors
 
                     await unitOfWork.Answers.Entry(answer)
                         .Reference(answer => answer.FileContent)
+                        .LoadAsync();
+
+                    await unitOfWork.Answers.Entry(answer)
+                        .Reference(answer => answer.User)
                         .LoadAsync();
                 }
 
@@ -258,7 +266,7 @@ namespace LearnLink.Application.Interactors
                     await unitOfWork.CommitAsync();
                 }
 
-                if(prevTextState != null && answer.TextContent == null)
+                if (prevTextState != null && answer.TextContent == null)
                 {
                     unitOfWork.TextContents.Remove(prevTextState);
                     await unitOfWork.CommitAsync();
@@ -267,7 +275,7 @@ namespace LearnLink.Application.Interactors
                 unitOfWork.Answers.Update(answer);
                 await unitOfWork.CommitAsync();
 
-                if(answerDto.FormFile != null)
+                if (answerDto.FormFile != null)
                 {
                     await SaveAnswerFileContentAsync(lessonId, answer, answerDto.FormFile);
                 }
@@ -385,16 +393,16 @@ namespace LearnLink.Application.Interactors
                 if (answer.FileContent != null)
                 {
                     contentInteractor.RemoveAnswerFileContent(
-                        lessonId, 
-                        answer.ObjectiveId, 
-                        answer.Id, 
-                        answer.FileContent.Id, 
+                        lessonId,
+                        answer.ObjectiveId,
+                        answer.Id,
+                        answer.FileContent.Id,
                         answer.FileContent.FileName);
 
                     unitOfWork.FileContents.Remove(answer.FileContent);
                 }
 
-                if(answer.TextContent != null)
+                if (answer.TextContent != null)
                 {
                     unitOfWork.TextContents.Remove(answer.TextContent);
                 }

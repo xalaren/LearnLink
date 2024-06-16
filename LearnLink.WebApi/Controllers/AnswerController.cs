@@ -1,7 +1,4 @@
-﻿using LearnLink.Adapter.EFTransaction;
-using LearnLink.Application.Interactors;
-using LearnLink.Core.Entities;
-using LearnLink.Core.Exceptions;
+﻿using LearnLink.Application.Interactors;
 using LearnLink.Shared.DataTransferObjects;
 using LearnLink.Shared.Responses;
 using Microsoft.AspNetCore.Authorization;
@@ -40,14 +37,14 @@ namespace LearnLink.WebApi.Controllers
 
         [Authorize]
         [HttpPost("create")]
-        public async Task<Response> CreateAnswerAsync(int lessonId, AnswerDto answerDto)
+        public async Task<Response> CreateAnswerAsync([FromForm] AnswerDto answerDto, [FromQuery] int lessonId)
         {
             return await answerInteractor.CreateAnswerAsync(lessonId, answerDto);
         }
 
         [Authorize]
         [HttpPost("update")]
-        public async Task<Response> UpdateAnswerAsync(int lessonId, AnswerDto answerDto, bool removeFileContent)
+        public async Task<Response> UpdateAnswerAsync([FromForm] AnswerDto answerDto, [FromQuery] int lessonId, [FromQuery] bool removeFileContent)
         {
             return await answerInteractor.UpdateAnswerAsync(lessonId, answerDto, removeFileContent);
         }

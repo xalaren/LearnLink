@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using LearnLink.Application.Helpers;
+﻿using LearnLink.Application.Helpers;
 using LearnLink.Core.Entities;
 using LearnLink.Core.Entities.ContentEntities;
 using LearnLink.Core.Exceptions;
@@ -34,7 +33,7 @@ namespace LearnLink.Application.Mappers
                 };
             }
 
-            if(fileContent == null && textContent == null)
+            if (fileContent == null && textContent == null)
             {
                 throw new ValidationException("Ответ не был заполнен");
             }
@@ -52,33 +51,48 @@ namespace LearnLink.Application.Mappers
 
         public static AnswerDto ToDto(this Answer answerEntity, int lessonId)
         {
-            string? fileUrl = null;
-            string? fileName = null;
-            string? fileExt = null;
+            string? text = null;
+            FileUpload? fileUpload = null;
 
             if (answerEntity.FileContent != null)
             {
                 int fileContentId = answerEntity.FileContentId ?? 0;
-                fileName = answerEntity.FileContent.FileName;
-                fileExt = Path.GetExtension(fileName);
-                fileUrl = DirectoryStore.GetRelativeDirectoryUrlToLessonObjectiveAnswerContent
-                (
-                    lessonId,
-                    answerEntity.ObjectiveId,
-                    answerEntity.Id,
-                    fileContentId
-                );
+
+                fileUpload = new FileUpload()
+                {
+                    Name = answerEntity.FileContent.FileName,
+                    Extension = Path.GetExtension(answerEntity.FileContent.FileName),
+                    Url = DirectoryStore.GetRelativeDirectoryUrlToLessonObjectiveAnswerContent
+                    (
+                        lessonId,
+                        answerEntity.ObjectiveId,
+                        answerEntity.Id,
+                        fileContentId
+                    )
+                };
+            }
+
+            if (answerEntity.TextContent != null)
+            {
+                text = answerEntity.TextContent.Text;
             }
 
             return new AnswerDto()
             {
                 Id = answerEntity.Id,
-                UserId = answerEntity.UserId,
-                User = answerEntity.User.ToDto(),
+                UserDetails = new UserLiteDetailsDto()
+                {
+                    Id = answerEntity.UserId,
+                    Nickname = answerEntity.User.Nickname,
+                    Name = answerEntity.User.Name,
+                    Lastname = answerEntity.User.Lastname,
+                    AvatarUrl = answerEntity.User.AvatarFileName != null ?
+                    DirectoryStore.GetRelativeDirectoryUrlToUserImages(answerEntity.User.Id) + answerEntity.User.AvatarFileName : null
+                },
+                FileDetails = fileUpload,
+                Text = text,
                 ObjectiveId = answerEntity.ObjectiveId,
-                FileName = fileName,
-                FileExtension = fileExt,
-                FileUrl = fileUrl
+                UploadDate = answerEntity.UploadDate.ToLocalDateTime().ToString()
             };
         }
 
@@ -86,9 +100,9 @@ namespace LearnLink.Application.Mappers
         {
             answerEntity.UploadDate = DateTime.UtcNow;
 
-            if(answerEntity.TextContent != null)
+            if (answerEntity.TextContent != null)
             {
-                if(string.IsNullOrWhiteSpace(answerDto.Text))
+                if (string.IsNullOrWhiteSpace(answerDto.Text))
                 {
                     answerEntity.TextContent = null;
                 }

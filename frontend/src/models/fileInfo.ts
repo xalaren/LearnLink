@@ -1,6 +1,6 @@
 export class FileInfo {
-    fileName: string;
-    fileExtension: string;
+    name: string;
+    extension: string;
     url: string;
 
     constructor(
@@ -8,8 +8,8 @@ export class FileInfo {
         fileExtension: string,
         url: string = ''
     ) {
-        this.fileName = fileName;
-        this.fileExtension = fileExtension;
+        this.name = fileName;
+        this.extension = fileExtension;
         this.url = url;
     }
 }

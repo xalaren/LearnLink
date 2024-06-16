@@ -4,7 +4,8 @@ namespace LearnLink.Shared.DataTransferObjects
 {
     public record FileUpload
     {
-        public byte[]? FileBytes { get; set; }
-        public IFormFile? FormFile { get; set; }
+        public string Name { get; init; } = null!;
+        public string Extension { get; init; } = null!;
+        public string Url { get; init; } = null!;
     }
 }
