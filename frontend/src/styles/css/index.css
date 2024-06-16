@@ -1955,16 +1955,15 @@ a * {
   display: grid;
   grid-template-rows: auto 1fr auto;
   gap: 40px;
-  min-width: 600px;
-  max-width: 800px;
+  min-width: 300px;
+  max-width: 600px;
   padding: 40px;
   z-index: 10;
   border-radius: 10px;
   background-color: #fff;
   transform: translate(-50%, -50%);
   margin: 10px;
-  width: -moz-max-content;
-  width: max-content;
+  width: 100%;
 }
 .modal__content > * {
   max-height: 600px;
@@ -2001,7 +2000,7 @@ a * {
 .modal__bottom-button {
   width: 100%;
 }
-@media screen and (max-width: 440px) {
+@media screen and (max-width: 576px) {
   .modal, .popup-loader {
     padding: 0;
   }
@@ -2025,6 +2024,14 @@ a * {
   .modal__content > * {
     max-height: 300px;
   }
+}
+
+.large-modal {
+  max-width: 900px;
+  width: 100%;
+}
+.large-modal .modal__body .form, .large-modal .modal__body .form-bordered {
+  max-width: none;
 }
 
 .lesson-creator {

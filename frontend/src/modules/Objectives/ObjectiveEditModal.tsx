@@ -93,7 +93,9 @@ function ModuleEditModal({ active, onClose }: IObjectiveEditModalProps) {
                 <Modal
                     active={active}
                     onClose={closeModal}
-                    title="Редактирование задания">
+                    title="Редактирование задания"
+                    contentClassName="large-modal"
+                >
 
                     <ModalContent>
                         <form className="form">

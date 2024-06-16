@@ -5,9 +5,10 @@ interface IModalProps {
     title: string;
     active: boolean;
     onClose: () => void;
+    contentClassName?: string;
 }
 
-export function Modal({ active, title, children, onClose }: IModalProps) {
+export function Modal({ active, title, children, onClose, contentClassName = '' }: IModalProps) {
     useEffect(() => {
         addKeyboardEventListeners();
     }, []);
@@ -34,7 +35,7 @@ export function Modal({ active, title, children, onClose }: IModalProps) {
         <>
             {active &&
                 <div className="modal">
-                    <div className="modal__content">
+                    <div className={`modal__content ${contentClassName}`}>
                         <div className="modal__header">
                             <p className="modal__title ui-title">{title}</p>
                             <button className="modal__close-button icon-cross icon-normal-size" onClick={onClose}></button>

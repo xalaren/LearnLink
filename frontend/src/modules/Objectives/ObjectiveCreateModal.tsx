@@ -87,7 +87,9 @@ function ObjectiveCreateModal({ lessonId, active, onClose }: IObjectiveCreateMod
                 <Modal
                     active={active}
                     onClose={closeModal}
-                    title="Создание задания">
+                    title="Создание задания"
+                    contentClassName="large-modal"
+                >
 
                     <ModalContent>
                         <form className="form">
