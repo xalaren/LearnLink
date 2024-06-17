@@ -1,14 +1,14 @@
 import { useContext, useState } from "react";
-import { MainContainer } from "../components/MainContainer";
-import { CourseContext } from "../contexts/CourseContext";
-import { ModuleContext } from "../contexts/ModuleContext";
-import BreadcrumbItem from "../components/Breadcrumb/BreadcrumbItem";
-import { paths } from "../models/paths";
-import { ViewTypes } from "../models/enums";
-import Breadcrumb from "../components/Breadcrumb/Breadcrumb";
-import { Course } from "../models/course";
-import { Module } from "../models/module";
-import ModuleView from "../modules/Modules/ModuleView";
+import { MainContainer } from "../../components/MainContainer";
+import { CourseContext } from "../../contexts/CourseContext";
+import { ModuleContext } from "../../contexts/ModuleContext";
+import BreadcrumbItem from "../../components/Breadcrumb/BreadcrumbItem";
+import { paths } from "../../models/paths";
+import { ViewTypes } from "../../models/enums";
+import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
+import { Course } from "../../models/course";
+import { Module } from "../../models/module";
+import ModuleView from "../../modules/Modules/ModuleView";
 
 function ModulePage() {
     const { course, fetchCourse } = useContext(CourseContext);

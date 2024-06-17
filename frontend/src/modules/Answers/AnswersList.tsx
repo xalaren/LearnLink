@@ -8,18 +8,22 @@ import Paginate from "../../components/Paginate";
 import ControlNav from "../../components/ControlNav";
 import { useAnswerQueries } from "../../hooks/answerHooks";
 import { useAppSelector } from "../../hooks/redux";
+import { Course } from "../../models/course";
+import { LocalRole } from "../../models/localRole";
+import { paths } from "../../models/paths";
 
 interface AnswersListProps {
-    courseId: number,
+    course: Course,
     moduleId: number,
     lessonId: number,
     objectiveId: number
 }
 
-function AnswersList({ courseId, moduleId, lessonId, objectiveId }: AnswersListProps) {
+function AnswersList({ course, moduleId, lessonId, objectiveId }: AnswersListProps) {
     const [answers, setAnswers] = useState<Answer[]>();
     const [page, setPage] = useState(1);
     const [pageCount, setPageCount] = useState(1);
+    const [itemsCount, setItemsCount] = useState(0);
 
     const { user } = useAppSelector(state => state.userReducer);
     const { accessToken } = useAppSelector(state => state.authReducer);
@@ -36,48 +40,57 @@ function AnswersList({ courseId, moduleId, lessonId, objectiveId }: AnswersListP
         resetValues();
 
         if (user && accessToken) {
-            const dataPage = await getAnswersFromObjectiveQuery(user.id, courseId, lessonId, objectiveId, page, 4, accessToken)
+            const dataPage = await getAnswersFromObjectiveQuery(user.id, course.id, lessonId, objectiveId, page, 4, accessToken)
 
             if (dataPage) {
                 setAnswers(dataPage.values);
                 setPageCount(dataPage.pageCount);
+                setItemsCount(dataPage.itemsCount);
             }
         }
     }
 
     return (
         <>
-            <div className="line-distributed-container">
-                <h3>Ответы участников ({answers?.length || 0}): </h3>
+            {user && course && course.localRole ?
+                <>
+                    <div className="line-distributed-container">
+                        <h3>Ответы участников ({itemsCount}): </h3>
 
-                <ControlNav>
-                    <button
-                        className="control-nav__add-button button-gray icon icon-medium-size icon-plus">
-                    </button>
-                </ControlNav>
-            </div>
+                        <ControlNav>
+                            <button
+                                className="control-nav__add-button button-gray icon icon-medium-size icon-plus">
+                            </button>
+                        </ControlNav>
+                    </div>
 
-            <Paginate currentPage={page} pageCount={pageCount} setPage={setPage} />
+                    <Paginate currentPage={page} pageCount={pageCount} setPage={setPage} />
 
-            <BuildedAnswersList
-                courseId={courseId}
-                moduleId={moduleId}
-                lessonId={lessonId}
-                objectiveId={objectiveId}
-                error={error}
-                onError={resetValues}
-                loading={loading}
-                answers={answers}
-            />
+                    <BuildedAnswersList
+                        localRole={course.localRole}
+                        courseId={course.id}
+                        moduleId={moduleId}
+                        lessonId={lessonId}
+                        objectiveId={objectiveId}
+                        userId={user.id}
+                        error={error}
+                        onError={resetValues}
+                        loading={loading}
+                        answers={answers} />
+                </> :
+                <p>Ошибка доступа к ответам...</p>
+            }
         </>
     );
 }
 
 function BuildedAnswersList(props: {
+    localRole: LocalRole,
     courseId: number,
     moduleId: number,
     lessonId: number,
     objectiveId: number,
+    userId: number,
     error: string,
     onError: () => void,
     loading: boolean,
@@ -103,8 +116,19 @@ function BuildedAnswersList(props: {
                         <AnswerItem
                             key={answer.id}
                             answer={answer}
-                            onReviewClick={() => { }}
-                            onViewClick={() => { }}
+                            showReviewButton={props.localRole.manageInternalAccess}
+                            showViewButton={props.userId === answer.userDetails.id || props.localRole.manageInternalAccess}
+                            onReviewClick={() => {
+
+                            }}
+                            onViewClick={() => {
+                                toNext(paths.answer.view.full(
+                                    props.courseId,
+                                    props.moduleId,
+                                    props.lessonId,
+                                    props.objectiveId,
+                                    answer.id))
+                            }}
                         />
                     )}
                 </>

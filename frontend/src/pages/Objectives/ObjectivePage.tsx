@@ -1,16 +1,16 @@
 import { useContext, useState } from "react";
-import { MainContainer } from "../components/MainContainer";
-import { CourseContext } from "../contexts/CourseContext";
-import { ModuleContext } from "../contexts/ModuleContext";
-import BreadcrumbItem from "../components/Breadcrumb/BreadcrumbItem";
-import { paths } from "../models/paths";
-import { ViewTypes } from "../models/enums";
-import Breadcrumb from "../components/Breadcrumb/Breadcrumb";
-import { Course } from "../models/course";
-import { LessonContext } from "../contexts/LessonContext";
-import { ObjectiveContext } from "../contexts/ObjectiveContext";
-import { Objective } from "../models/objective";
-import ObjectiveView from "../modules/Objectives/ObjectiveView";
+import { MainContainer } from "../../components/MainContainer";
+import { CourseContext } from "../../contexts/CourseContext";
+import { ModuleContext } from "../../contexts/ModuleContext";
+import BreadcrumbItem from "../../components/Breadcrumb/BreadcrumbItem";
+import { paths } from "../../models/paths";
+import { ViewTypes } from "../../models/enums";
+import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
+import { Course } from "../../models/course";
+import { LessonContext } from "../../contexts/LessonContext";
+import { ObjectiveContext } from "../../contexts/ObjectiveContext";
+import { Objective } from "../../models/objective";
+import ObjectiveView from "../../modules/Objectives/ObjectiveView";
 
 function ObjectivePage() {
     const { course } = useContext(CourseContext);

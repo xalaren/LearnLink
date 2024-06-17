@@ -1,6 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { ModuleState } from "../contexts/ModuleContext";
-import { CourseState } from "../contexts/CourseContext";
+import { ModuleState } from "../../contexts/ModuleContext";
 
 function CourseNestedLayout() {
     return (

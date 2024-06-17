@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { ObjectiveState } from "../contexts/ObjectiveContext";
+import { ObjectiveState } from "../../contexts/ObjectiveContext";
 
 function ObjectiveNestedLayout() {
     return (

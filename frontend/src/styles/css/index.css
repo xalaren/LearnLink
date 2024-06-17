@@ -1967,6 +1967,12 @@ a * {
   margin: 10px;
   width: 100%;
 }
+.modal__content-restricted {
+  max-height: 800px;
+}
+.modal__content-restricted .modal__body {
+  overflow: auto;
+}
 .modal__header {
   display: flex;
   justify-content: space-between;

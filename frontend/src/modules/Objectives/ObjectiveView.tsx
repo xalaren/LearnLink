@@ -74,7 +74,7 @@ function ObjectiveView({
             }
 
             <AnswersList
-                courseId={course.id}
+                course={course}
                 lessonId={lessonId}
                 moduleId={moduleId}
                 objectiveId={objective.id}

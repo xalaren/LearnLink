@@ -1,14 +1,14 @@
-import { MainContainer } from "../components/MainContainer";
+import { MainContainer } from "../../components/MainContainer";
 import { useContext, useEffect, useState } from "react";
-import { useAppSelector } from "../hooks/redux";
-import { useGetCreatorStatus, useGetSubscriberStatus } from "../hooks/courseHooks";
-import CourseView from "../modules/Courses/CourseView";
-import { useSubscription } from "../hooks/subscriptionHooks";
-import BreadcrumbContainer from "../components/Breadcrumb/Breadcrumb";
-import BreadcrumbItem from "../components/Breadcrumb/BreadcrumbItem";
-import { paths } from "../models/paths";
-import { ViewTypes } from "../models/enums";
-import { CourseContext } from "../contexts/CourseContext";
+import { useAppSelector } from "../../hooks/redux";
+import { useGetCreatorStatus, useGetSubscriberStatus } from "../../hooks/courseHooks";
+import CourseView from "../../modules/Courses/CourseView";
+import { useSubscription } from "../../hooks/subscriptionHooks";
+import BreadcrumbContainer from "../../components/Breadcrumb/Breadcrumb";
+import BreadcrumbItem from "../../components/Breadcrumb/BreadcrumbItem";
+import { paths } from "../../models/paths";
+import { ViewTypes } from "../../models/enums";
+import { CourseContext } from "../../contexts/CourseContext";
 
 function CoursePage() {
     const { user } = useAppSelector(state => state.userReducer);

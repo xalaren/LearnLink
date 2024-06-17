@@ -7,26 +7,28 @@ import { InvalidPage } from "./pages/InvalidPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import ProfilePage from "./pages/ProfilePage";
 import Footer from "./modules/Footer.tsx";
-import CoursePage from "./pages/CoursePage";
 import UserCoursesPage from "./pages/UserCoursesPage";
 import { paths } from "./models/paths";
 import { useAppDispatch, useAppSelector } from "./hooks/redux";
 import { useEffect } from "react";
 import { fetchUser, resetUserState } from "./store/actions/userActionCreators";
-import CourseParticipantsPage from "./pages/CourseParticipantsPage";
-import CourseRolesPage from "./pages/CourseRolesPage.tsx";
-import CourseNestedLayout from "./pages/CourseNestedLayout.tsx";
-import ModuleNestedLayout from "./pages/ModuleNestedLayout.tsx";
-import ModulePage from "./pages/ModulePage.tsx";
-import LessonNestedLayout from "./pages/LessonNestedLayout.tsx";
-import LessonPage from "./pages/LessonPage.tsx";
-import LessonEditPage from "./pages/LessonEditPage.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy.tsx";
 import { ErrorModal } from "./components/Modal/ErrorModal.tsx";
 import PageLoader from "./components/Loader/PageLoader.tsx";
-import ObjectiveNestedLayout from "./pages/ObjectiveNestedLayout.tsx";
-import ObjectivePage from "./pages/ObjectivePage.tsx";
+import ObjectiveNestedLayout from "./pages/Objectives/ObjectiveNestedLayout.tsx";
+import AnswerNestedLayout from "./pages/Answers/AnswerNestedLayout.tsx";
+import AnswerViewPage from "./pages/Answers/AnswerViewPage.tsx";
+import CoursePage from "./pages/Courses/CoursePage.tsx";
+import CourseNestedLayout from "./pages/Courses/CourseNestedLayout.tsx";
+import CourseParticipantsPage from "./pages/Courses/CourseParticipantsPage.tsx";
+import CourseRolesPage from "./pages/Courses/CourseRolesPage.tsx";
+import ModuleNestedLayout from "./pages/Modules/ModuleNestedLayout.tsx";
+import ModulePage from "./pages/Modules/ModulePage.tsx";
+import LessonNestedLayout from "./pages/Lessons/LessonNestedLayout.tsx";
+import ObjectivePage from "./pages/Objectives/ObjectivePage.tsx";
+import LessonEditPage from "./pages/Lessons/LessonEditPage.tsx";
+import LessonPage from "./pages/Lessons/LessonPage.tsx";
 
 
 function App() {
@@ -60,6 +62,9 @@ function App() {
                             <Route path={paths.lesson.edit.base} element={<LessonEditPage />}></Route>
                             <Route path={paths.objective.base(':objectiveId')} element={<ObjectiveNestedLayout />}>
                                 <Route path={paths.objective.view.base} element={<ObjectivePage />}></Route>
+                                <Route path={paths.answer.base(':answerId')} element={<AnswerNestedLayout />}>
+                                    <Route path={paths.answer.view.base} element={<AnswerViewPage />}></Route>
+                                </Route>
                             </Route>
                         </Route>
                     </Route>

@@ -1040,6 +1040,13 @@
         width: 100%;
     }
 
+    &__content-restricted {
+        max-height: 800px;
+        .modal__body {
+            overflow: auto;
+        }
+    }
+
     &__header {
         display: flex;
         justify-content: space-between;

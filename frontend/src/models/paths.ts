@@ -55,6 +55,50 @@ export const paths = {
                 `/course/${courseId}/module/${moduleId}/lesson/${lessonId}/objective/${objectiveId}/view`
         }
     },
+    answer: {
+        base: (answerId: number | string) => `answer/${answerId}/`,
+        full: (
+            courseId: number | string,
+            moduleId: number | string,
+            lessonId: number | string,
+            objectiveId: number | string,
+            answerId: number | string
+        ) =>
+            `/course/${courseId}/module/${moduleId}/lesson/${lessonId}/objective/${objectiveId}/answer/${answerId}`,
+        view: {
+            base: 'view',
+            full: (
+                courseId: number | string,
+                moduleId: number | string,
+                lessonId: number | string,
+                objectiveId: number | string,
+                answerId: number | string
+            ) =>
+                `/course/${courseId}/module/${moduleId}/lesson/${lessonId}/objective/${objectiveId}/answer/${answerId}/view`
+        },
+        create: {
+            base: 'create',
+            full: (
+                courseId: number | string,
+                moduleId: number | string,
+                lessonId: number | string,
+                objectiveId: number | string,
+                answerId: number | string
+            ) =>
+                `/course/${courseId}/module/${moduleId}/lesson/${lessonId}/objective/${objectiveId}/answer/${answerId}/create`
+        },
+        edit: {
+            base: 'edit',
+            full: (
+                courseId: number | string,
+                moduleId: number | string,
+                lessonId: number | string,
+                objectiveId: number | string,
+                answerId: number | string
+            ) =>
+                `/course/${courseId}/module/${moduleId}/lesson/${lessonId}/objective/${objectiveId}/answer/${answerId}/edit`
+        }
+    },
     privacy: {
         base: 'privacy',
         full: '/privacy'

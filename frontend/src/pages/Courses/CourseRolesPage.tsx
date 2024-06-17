@@ -1,21 +1,21 @@
-import { MainContainer } from "../components/MainContainer.tsx";
-import ControlNav from "../components/ControlNav.tsx";
+import { MainContainer } from "../../components/MainContainer.tsx";
+import ControlNav from "../../components/ControlNav.tsx";
 import { useParams } from "react-router-dom";
-import { useAppSelector } from "../hooks/redux.ts";
-import { useListAllLocalRolesAtCourse } from "../hooks/courseLocalRoleHooks.ts";
+import { useAppSelector } from "../../hooks/redux.ts";
+import { useListAllLocalRolesAtCourse } from "../../hooks/courseLocalRoleHooks.ts";
 import { useContext, useEffect, useState } from "react";
-import { LocalRole } from "../models/localRole.ts";
-import RolesList from "../components/RolesList.tsx";
-import { RoleItemModel } from "../models/roleItemModel.ts";
-import { Loader } from "../components/Loader/Loader.tsx";
-import { ErrorModal } from "../components/Modal/ErrorModal.tsx";
-import CreateCourseRoleModal from "../modules/CourseRoles/CreateCourseRoleModal.tsx";
-import UpdateLocalRoleModal from "../modules/CourseRoles/UpdateCourseRoleModal.tsx";
-import DeleteCourseLocalRoleModal from "../modules/CourseRoles/DeleteCourseRoleModal.tsx";
-import Breadcrumb from "../components/Breadcrumb/Breadcrumb.tsx";
-import BreadcrumbItem from "../components/Breadcrumb/BreadcrumbItem.tsx";
-import { paths } from "../models/paths.ts";
-import { CourseContext } from "../contexts/CourseContext.tsx";
+import { LocalRole } from "../../models/localRole.ts";
+import RolesList from "../../components/RolesList.tsx";
+import { RoleItemModel } from "../../models/roleItemModel.ts";
+import { Loader } from "../../components/Loader/Loader.tsx";
+import { ErrorModal } from "../../components/Modal/ErrorModal.tsx";
+import CreateCourseRoleModal from "../../modules/CourseRoles/CreateCourseRoleModal.tsx";
+import UpdateLocalRoleModal from "../../modules/CourseRoles/UpdateCourseRoleModal.tsx";
+import DeleteCourseLocalRoleModal from "../../modules/CourseRoles/DeleteCourseRoleModal.tsx";
+import Breadcrumb from "../../components/Breadcrumb/Breadcrumb.tsx";
+import BreadcrumbItem from "../../components/Breadcrumb/BreadcrumbItem.tsx";
+import { paths } from "../../models/paths.ts";
+import { CourseContext } from "../../contexts/CourseContext.tsx";
 
 function CourseRolesPage() {
     const param = useParams<'courseId'>();

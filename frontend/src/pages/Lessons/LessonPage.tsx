@@ -1,20 +1,23 @@
-import { useContext } from "react";
-import { MainContainer } from "../components/MainContainer";
-import { CourseContext } from "../contexts/CourseContext";
-import { ModuleContext } from "../contexts/ModuleContext";
-import BreadcrumbItem from "../components/Breadcrumb/BreadcrumbItem";
-import { paths } from "../models/paths";
-import { ViewTypes } from "../models/enums";
-import Breadcrumb from "../components/Breadcrumb/Breadcrumb";
-import { Course } from "../models/course";
-import { LessonContext } from "../contexts/LessonContext";
-import { Lesson } from "../models/lesson";
-import LessonCreator from "../modules/Lessons/LessonCreator";
+import { useContext, useState } from "react";
+import { MainContainer } from "../../components/MainContainer";
+import { CourseContext } from "../../contexts/CourseContext";
+import { ModuleContext } from "../../contexts/ModuleContext";
+import BreadcrumbItem from "../../components/Breadcrumb/BreadcrumbItem";
+import { paths } from "../../models/paths";
+import { ViewTypes } from "../../models/enums";
+import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
+import { Course } from "../../models/course";
+import { LessonContext } from "../../contexts/LessonContext";
+import { Lesson } from "../../models/lesson";
+import LessonView from "../../modules/Lessons/LessonView";
 
 function LessonPage() {
     const { course } = useContext(CourseContext);
     const { module } = useContext(ModuleContext);
     const { lesson } = useContext(LessonContext);
+
+    const [deleteModalActive, setDeleteModalActive] = useState(false);
+
 
     return (
         <MainContainer className="view-page">
@@ -29,10 +32,15 @@ function LessonPage() {
                             <BreadcrumbItem text={course!.title} path={paths.course.view.full(course!.id)} />
                             <BreadcrumbItem text={module!.title} path={paths.module.view.full(course!.id, module!.id)} />
                             <BreadcrumbItem text={lesson!.title} path={paths.lesson.view.full(course!.id, module!.id, lesson!.id)} />
-                            <BreadcrumbItem text="Редактирование урока" path={paths.lesson.edit.full(course!.id, module!.id, lesson!.id)} />
                         </Breadcrumb>
 
-                        <LessonCreator />
+                        <LessonView
+                            course={course}
+                            module={module}
+                            lesson={lesson}
+                            deleteModalActive={deleteModalActive}
+                            setDeleteModalActive={setDeleteModalActive}
+                        />
                     </>
                 }
             </BuildedPage>

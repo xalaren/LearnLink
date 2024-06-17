@@ -3,11 +3,13 @@ import profile from '../../assets/img/profile_placeholder.svg';
 
 interface AnswerItemProps {
     answer: Answer;
+    showReviewButton: boolean;
+    showViewButton: boolean;
     onReviewClick: () => void;
     onViewClick: () => void;
 }
 
-function AnswerItem({ answer, onReviewClick, onViewClick }: AnswerItemProps) {
+function AnswerItem({ answer, showReviewButton, showViewButton, onReviewClick, onViewClick }: AnswerItemProps) {
     const profileImage = answer.userDetails?.avatarUrl || profile;
 
     return (
@@ -27,14 +29,18 @@ function AnswerItem({ answer, onReviewClick, onViewClick }: AnswerItemProps) {
             </div>
             <div className="user-item__properties">
                 <div className="user-item__buttons">
-                    <button className="button-gray-violet" onClick={onViewClick}>
-                        <span className="icon-arrow-right icon-medium-size"></span>
-                        Просмотреть
-                    </button>
-                    <button className="button-gray-violet" onClick={onReviewClick}>
-                        <span className="icon-star icon-medium-size"></span>
-                        Оценить
-                    </button>
+                    {showViewButton &&
+                        <button className="button-gray-violet" onClick={onViewClick}>
+                            <span className="icon-arrow-right icon-medium-size"></span>
+                            Просмотреть
+                        </button>
+                    }
+                    {showReviewButton &&
+                        <button className="button-gray-violet" onClick={onReviewClick}>
+                            <span className="icon-star icon-medium-size"></span>
+                            Оценить
+                        </button>
+                    }
                 </div>
             </div>
         </div>

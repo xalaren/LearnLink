@@ -110,7 +110,11 @@ function UpdateLocalRoleModal({
     return (
         <>
             {!error && !loading && !success &&
-                <Modal active={active} onClose={closeModal} title="Создание локальной роли">
+                <Modal
+                    active={active}
+                    onClose={closeModal}
+                    title="Создание локальной роли"
+                    contentClassName="modal__content-restricted">
                     <ModalContent>
                         <form className="form">
                             <div className="form__inputs">
