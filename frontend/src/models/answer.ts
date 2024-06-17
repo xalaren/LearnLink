@@ -8,6 +8,7 @@ export interface Answer {
     userDetails: UserLiteDetails;
     uploadDate: string;
     text?: string;
+    grade?: number;
     fileDetails?: FileInfo;
     formFile?: File | null;
 }

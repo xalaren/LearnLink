@@ -12,6 +12,7 @@ import { Course } from "../../models/course";
 import { LocalRole } from "../../models/localRole";
 import { paths } from "../../models/paths";
 import AnswerCreateModal from "./AnswerCreateModal";
+import CreateReviewModal from "../Reviews/CreateReviewModal";
 
 interface AnswersListProps {
     course: Course,
@@ -27,17 +28,20 @@ function AnswersList({ course, moduleId, lessonId, objectiveId }: AnswersListPro
     const [itemsCount, setItemsCount] = useState(0);
 
     const [createModalActive, setCreateModalActive] = useState(false);
+    const [selectedAnswerId, setSelectedAnswerId] = useState(0);
 
     const { user } = useAppSelector(state => state.userReducer);
     const { accessToken } = useAppSelector(state => state.authReducer);
 
     const { getAnswersFromObjectiveQuery, error, loading, resetValues } = useAnswerQueries();
 
+    const { toNext } = useHistoryNavigation();
+
     useEffect(() => {
-        if (!user || !accessToken || createModalActive) return;
+        if (!user || !accessToken || createModalActive || selectedAnswerId) return;
 
         fetchAnswers();
-    }, [user, accessToken, createModalActive])
+    }, [user, accessToken, createModalActive, selectedAnswerId])
 
     async function fetchAnswers() {
         resetValues();
@@ -80,14 +84,43 @@ function AnswersList({ course, moduleId, lessonId, objectiveId }: AnswersListPro
                         userId={user.id}
                         error={error}
                         onError={resetValues}
-                        loading={loading}
-                        answers={answers} />
+                        loading={loading}>
+
+                        {answers && answers.length > 0 ?
+                            answers.map(answer =>
+                                <AnswerItem
+                                    key={answer.id}
+                                    answer={answer}
+                                    showReviewButton={course.localRole!.manageInternalAccess && !answer.grade}
+                                    showViewButton={user.id === answer.userDetails.id || course.localRole!.manageInternalAccess}
+                                    onReviewClick={() => {
+                                        setSelectedAnswerId(answer.id)
+                                    }}
+                                    onViewClick={() => {
+                                        toNext(paths.answer.view.full(
+                                            course.id,
+                                            moduleId,
+                                            lessonId,
+                                            objectiveId,
+                                            answer.id))
+                                    }}
+                                />
+                            ) :
+                            <p>Ответы пока не загружены...</p>
+                        }
+                    </BuildedAnswersList>
 
                     <AnswerCreateModal
                         lessonId={lessonId}
                         objectiveId={objectiveId}
                         active={Boolean(createModalActive)}
                         onClose={() => setCreateModalActive(false)}
+                    />
+
+                    <CreateReviewModal
+                        active={selectedAnswerId > 0}
+                        answerId={selectedAnswerId}
+                        onClose={() => setSelectedAnswerId(0)}
                     />
                 </> :
                 <p>Ошибка доступа к ответам...</p>
@@ -106,9 +139,8 @@ function BuildedAnswersList(props: {
     error: string,
     onError: () => void,
     loading: boolean,
-    answers?: Answer[]
+    children: React.ReactNode
 }) {
-    const { toNext } = useHistoryNavigation();
 
     if (props.loading) {
         return (<Loader />);
@@ -120,36 +152,7 @@ function BuildedAnswersList(props: {
         );
     }
 
-    return (
-        <>
-            {props.answers && props.answers.length > 0 ?
-                <>{
-                    props.answers.map(answer =>
-                        <AnswerItem
-                            key={answer.id}
-                            answer={answer}
-                            showReviewButton={props.localRole.manageInternalAccess}
-                            showViewButton={props.userId === answer.userDetails.id || props.localRole.manageInternalAccess}
-                            onReviewClick={() => {
-
-                            }}
-                            onViewClick={() => {
-                                toNext(paths.answer.view.full(
-                                    props.courseId,
-                                    props.moduleId,
-                                    props.lessonId,
-                                    props.objectiveId,
-                                    answer.id))
-                            }}
-                        />
-                    )}
-                </>
-                :
-                <p>Ответы пока не загружены...</p>
-            }
-        </>
-
-    );
+    return (props.children);
 
 }
 

@@ -17,3 +17,4 @@ export const COURSE_LOCAL_ROLE_ENDPOINTS_URL: string = ROLE_ENDPOINTS_URL + 'cou
 export const USER_COURSE_LOCAL_ROLE_ENDPOINTS_URL: string = ROLE_ENDPOINTS_URL + 'userCourseLocal/';
 export const OBJECTIVE_ENDPOINTS_URL: string = BASE_URL + 'objectives/';
 export const ANSWER_ENDPOINTS_URL: string = BASE_URL + 'answers/';
+export const REVIEW_ENDPOINTS_URL: string = BASE_URL + 'reviews/';
