@@ -13,6 +13,7 @@ namespace LearnLink.Application.Interactors
     public class AnswerInteractor(
         IUnitOfWork unitOfWork,
         ContentInteractor contentInteractor,
+        ReviewInteractor reviewInteractor,
         PermissionService permissionService,
         DirectoryStore directoryStore)
     {
@@ -139,12 +140,27 @@ namespace LearnLink.Application.Interactors
                         .LoadAsync();
                 }
 
+                var answerDtos = answers.Select(answer =>
+                {
+                    var answerReview = unitOfWork.AnswerReviews
+                        .FirstOrDefault(answerReview => answerReview.AnswerId == answer.Id);
+
+                    if(answerReview != null)
+                    {
+                        unitOfWork.AnswerReviews.Entry(answerReview)
+                            .Reference(answerReview => answerReview.Review)
+                            .Load();
+                    }
+
+                    return answer.ToDto(lessonId, answerReview?.Review.Grade);
+                });
+
                 var dataPage = new DataPage<AnswerDto[]>()
                 {
                     ItemsCount = total,
                     PageNumber = pageHeader.PageNumber,
                     PageSize = pageHeader.PageSize,
-                    Values = answers.Select(answer => answer.ToDto(lessonId)).ToArray()
+                    Values = answerDtos.ToArray()
                 };
 
                 return new()
@@ -409,6 +425,10 @@ namespace LearnLink.Application.Interactors
                 {
                     unitOfWork.TextContents.Remove(answer.TextContent);
                 }
+
+                await reviewInteractor.RemoveReviewByAnswerAsyncNoResponse(answer.Id);
+                unitOfWork.Answers.Remove(answer);
+
             }
         }
 

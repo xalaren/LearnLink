@@ -1,6 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import { CourseContext } from "../../contexts/CourseContext";
-import { ModuleContext } from "../../contexts/ModuleContext";
 import { useAppSelector } from "../../hooks/redux";
 import { validate } from "../../helpers/validation";
 import { Modal } from "../../components/Modal/Modal";

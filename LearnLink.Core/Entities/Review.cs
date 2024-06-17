@@ -29,5 +29,7 @@ namespace LearnLink.Core.Entities
 
         public int ExpertUserId { get; set; }
         public User ExpertUser { get; set; } = null!;
+
+        public DateTime ReviewDate { get; set; }
     }
 }

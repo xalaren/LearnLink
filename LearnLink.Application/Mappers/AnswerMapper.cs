@@ -49,7 +49,7 @@ namespace LearnLink.Application.Mappers
             };
         }
 
-        public static AnswerDto ToDto(this Answer answerEntity, int lessonId)
+        public static AnswerDto ToDto(this Answer answerEntity, int lessonId, int? grade = null)
         {
             string? text = null;
             FileUpload? fileUpload = null;
@@ -97,7 +97,8 @@ namespace LearnLink.Application.Mappers
                 FileDetails = fileUpload,
                 Text = text,
                 ObjectiveId = answerEntity.ObjectiveId,
-                UploadDate = answerEntity.UploadDate.ToLocalDateTime().ToString()
+                UploadDate = answerEntity.UploadDate.ToLocalDateTime().ToString(),
+                Grade = grade,
             };
         }
 

@@ -17,5 +17,7 @@ namespace LearnLink.Shared.DataTransferObjects
 
         public FileUpload? FileDetails { get; init; }
         public IFormFile? FormFile { get; init; }
+
+        public int? Grade { get; init; }
     }
 }
