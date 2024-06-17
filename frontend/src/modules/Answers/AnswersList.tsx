@@ -11,6 +11,7 @@ import { useAppSelector } from "../../hooks/redux";
 import { Course } from "../../models/course";
 import { LocalRole } from "../../models/localRole";
 import { paths } from "../../models/paths";
+import AnswerCreateModal from "./AnswerCreateModal";
 
 interface AnswersListProps {
     course: Course,
@@ -25,16 +26,18 @@ function AnswersList({ course, moduleId, lessonId, objectiveId }: AnswersListPro
     const [pageCount, setPageCount] = useState(1);
     const [itemsCount, setItemsCount] = useState(0);
 
+    const [createModalActive, setCreateModalActive] = useState(false);
+
     const { user } = useAppSelector(state => state.userReducer);
     const { accessToken } = useAppSelector(state => state.authReducer);
 
     const { getAnswersFromObjectiveQuery, error, loading, resetValues } = useAnswerQueries();
 
     useEffect(() => {
-        if (!user || !accessToken) return;
+        if (!user || !accessToken || createModalActive) return;
 
         fetchAnswers();
-    }, [user, accessToken])
+    }, [user, accessToken, createModalActive])
 
     async function fetchAnswers() {
         resetValues();
@@ -59,7 +62,9 @@ function AnswersList({ course, moduleId, lessonId, objectiveId }: AnswersListPro
 
                         <ControlNav>
                             <button
-                                className="control-nav__add-button button-gray icon icon-medium-size icon-plus">
+                                className="control-nav__add-button button-gray icon icon-medium-size icon-plus"
+                                onClick={() => setCreateModalActive(true)}
+                            >
                             </button>
                         </ControlNav>
                     </div>
@@ -77,6 +82,13 @@ function AnswersList({ course, moduleId, lessonId, objectiveId }: AnswersListPro
                         onError={resetValues}
                         loading={loading}
                         answers={answers} />
+
+                    <AnswerCreateModal
+                        lessonId={lessonId}
+                        objectiveId={objectiveId}
+                        active={Boolean(createModalActive)}
+                        onClose={() => setCreateModalActive(false)}
+                    />
                 </> :
                 <p>Ошибка доступа к ответам...</p>
             }

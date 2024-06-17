@@ -62,12 +62,16 @@ namespace LearnLink.Application.Mappers
                 {
                     Name = answerEntity.FileContent.FileName,
                     Extension = Path.GetExtension(answerEntity.FileContent.FileName),
-                    Url = DirectoryStore.GetRelativeDirectoryUrlToLessonObjectiveAnswerContent
-                    (
-                        lessonId,
-                        answerEntity.ObjectiveId,
-                        answerEntity.Id,
-                        fileContentId
+                    Url =
+                    Path.Combine(
+                        DirectoryStore.GetRelativeDirectoryUrlToLessonObjectiveAnswerContent
+                        (
+                            lessonId,
+                            answerEntity.ObjectiveId,
+                            answerEntity.Id,
+                            fileContentId
+                        ),
+                        answerEntity.FileContent.FileName
                     )
                 };
             }
@@ -80,6 +84,7 @@ namespace LearnLink.Application.Mappers
             return new AnswerDto()
             {
                 Id = answerEntity.Id,
+                UserId = answerEntity.UserId,
                 UserDetails = new UserLiteDetailsDto()
                 {
                     Id = answerEntity.UserId,

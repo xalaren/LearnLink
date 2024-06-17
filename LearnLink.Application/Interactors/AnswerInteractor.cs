@@ -180,7 +180,10 @@ namespace LearnLink.Application.Interactors
         {
             try
             {
-                var existingAnswer = await unitOfWork.Answers.FindAsync(answerDto.Id);
+                var existingAnswer = await unitOfWork.Answers.FirstOrDefaultAsync(answer =>
+                        answer.UserId == answerDto.UserId &&
+                        answer.ObjectiveId == answerDto.ObjectiveId
+                );
 
                 if (existingAnswer != null)
                 {

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { MainContainer } from "../../components/MainContainer";
 import { CourseContext } from "../../contexts/CourseContext";
 import { ModuleContext } from "../../contexts/ModuleContext";
@@ -20,6 +20,8 @@ import { useAppSelector } from "../../hooks/redux";
 import { User } from "../../models/user";
 import FileContent from "../../components/Content/FileContent";
 import { FileInfo } from "../../models/fileInfo";
+import AnswerDeleteModal from "../../modules/Answers/AnswerDeleteModal";
+import AnswerEditModal from "../../modules/Answers/AnswerEditModal";
 
 function AnswerViewPage() {
     const { course } = useContext(CourseContext);
@@ -29,6 +31,9 @@ function AnswerViewPage() {
     const { answer } = useContext(AnswerContext);
 
     const { user } = useAppSelector(state => state.userReducer);
+
+    const [deleteModalActive, setDeleteModalActive] = useState(false);
+    const [updateModalActive, setUpdateModalActive] = useState(false);
 
 
     return (
@@ -58,17 +63,26 @@ function AnswerViewPage() {
                                 <>
                                     <DropdownState>
                                         <EllipsisDropdown>
+                                            {course.localRole?.manageInternalAccess &&
+                                                <DropdownItem
+                                                    title="Оценить"
+                                                    className="icon icon-star"
+                                                    key={1}
+                                                    onClick={() => { }}
+                                                />
+                                            }
                                             <DropdownItem
                                                 title="Редактировать"
                                                 className="icon icon-pen-circle"
-                                                key={1}
-                                                onClick={() => { }}
+                                                key={2}
+                                                onClick={() => setUpdateModalActive(true)}
                                             />
+
                                             <DropdownItem
                                                 title="Удалить"
                                                 className="icon icon-cross-circle"
-                                                key={2}
-                                                onClick={() => { }}
+                                                key={3}
+                                                onClick={() => setDeleteModalActive(true)}
                                             />
                                         </EllipsisDropdown>
                                     </DropdownState>
@@ -119,6 +133,22 @@ function AnswerViewPage() {
 
                             </ContentAbout>
                         </section>
+
+                        <AnswerDeleteModal
+                            active={deleteModalActive}
+                            answerId={answer.id}
+                            courseId={course.id}
+                            moduleId={module.id}
+                            lessonId={lesson.id}
+                            objectiveId={objective.id}
+                            onClose={() => setDeleteModalActive(false)}
+                        />
+
+                        <AnswerEditModal
+                            active={updateModalActive}
+                            lessonId={lesson.id}
+                            onClose={() => setUpdateModalActive(false)}
+                        />
                     </>
                 }
             </BuildedPage>
