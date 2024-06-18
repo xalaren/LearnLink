@@ -2058,38 +2058,92 @@
     }
 }
 
-// .pagination-form {
-//     display: flex;
-//     align-items: center;
-//     gap: 20px;
+.review {
+    @include child-not-last {
+        margin-bottom: 40px;
+    }
+}
 
-//     &__pages-view {
-//         display: flex;
-//         align-items: center;
-//     }
+.grade {
+    font-size: $big-fz;
+    font-weight: 600;
+    padding: 8px;
+    background-color: $veryLightViolet;
+    color: $lightViolet;
+    width: max-content;
 
-//     &__button {
-//         height: 50px;
-//         width: 50px;
-//         font-size: 24px;
+    > * {
+        color: $lightViolet;
+    }
 
-//         &-selected {
-//             border: solid 3px $lightViolet;
-//         }
-//     }
+    // &-red {
+    //     background-color: $veryLightRed;
 
-//     @media screen and (max-width: $sm) {
-//         gap: 10px;
-//     }
+    //     > * {
+    //         color: $lightRed;
+    //     }
+    // }
 
-//     @media screen and (max-width: $xs) {
-//         gap: 8px;
+    // &-yellow {
+    //     background-color: $veryLightYellow;
 
-//         &__button {
-//             height: 45px;
-//             width: 45px;
-//             font-size: 22px;
-//             border-width: 2px;
-//         }
-//     }
-// }
+    //     > * {
+    //         color: $yellow;
+    //     }
+    // }
+
+    // &-green {
+    //     background-color: $veryLightGreen;
+
+    //     > * {
+    //         color: $green;
+    //     }
+    // }
+}
+
+.comment {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    row-gap: 5px;
+    border: solid 2px $lightGray;
+    border-radius: 5px;
+
+    &__head {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        padding: 10px;
+        box-sizing: border-box;
+        border-radius: 5px;
+        background-color: $veryLightGray;
+    }
+
+    &__user-info {
+        font-size: $inputs-fz;
+        font-weight: 500;
+    }
+
+    &__body {
+        @extend .ui-text;
+        padding: 10px;
+
+        &-none {
+            color: $secondaryGray;
+            font-style: italic;
+        }
+    }
+
+    &__footer {
+        @extend .ui-text;
+        padding: 10px;
+        display: flex;
+        justify-content: flex-end;
+        color: $secondaryGray;
+    }
+
+    &__avatar {
+        img {
+            @include static-size(60px);
+        }
+    }
+}

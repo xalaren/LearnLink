@@ -24,7 +24,7 @@ interface IAnswerEditModalProps {
 }
 
 function AnswerEditModal({ lessonId, active, onClose }: IAnswerEditModalProps) {
-    const { answer, fetchAnswer } = useContext(AnswerContext);
+    const { answer } = useContext(AnswerContext);
 
     const [text, setText] = useState('');
 
@@ -71,7 +71,6 @@ function AnswerEditModal({ lessonId, active, onClose }: IAnswerEditModalProps) {
     }
 
     function closeModal() {
-        fetchAnswer();
         resetDefault();
         onClose();
     }

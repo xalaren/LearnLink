@@ -18,7 +18,7 @@ namespace LearnLink.Application.Interactors
                 var answerReview = await unitOfWork.AnswerReviews
                     .FirstOrDefaultAsync(answerReview => answerReview.AnswerId == answerId);
 
-                if(answerReview == null)
+                if (answerReview == null)
                 {
                     return new()
                     {
@@ -33,7 +33,11 @@ namespace LearnLink.Application.Interactors
                     .Reference(answerReview => answerReview.Review)
                     .LoadAsync();
 
-                
+                await unitOfWork.Reviews.Entry(answerReview.Review)
+                    .Reference(review => review.ExpertUser)
+                    .LoadAsync();
+
+
                 return new()
                 {
                     Success = true,
@@ -70,7 +74,7 @@ namespace LearnLink.Application.Interactors
                 var existingAnswerReview = await unitOfWork.AnswerReviews
                      .FirstOrDefaultAsync(answerReview => answerReview.AnswerId == answerId);
 
-                if(existingAnswerReview != null)
+                if (existingAnswerReview != null)
                 {
                     throw new ValidationException("Оценка на данный ответ уже записана");
                 }

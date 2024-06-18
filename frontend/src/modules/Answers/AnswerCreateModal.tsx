@@ -20,7 +20,6 @@ interface IAnswerCreateModalProps {
     objectiveId: number;
     active: boolean;
     onClose: () => void;
-
 }
 
 function AnswerCreateModal({ lessonId, objectiveId, active, onClose }: IAnswerCreateModalProps) {

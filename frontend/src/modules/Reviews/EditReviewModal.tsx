@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "../../components/Input/Input";
 import { Modal } from "../../components/Modal/Modal";
 import ModalButton from "../../components/Modal/ModalButton";
@@ -12,14 +12,14 @@ import PopupNotification from "../../components/PopupNotification";
 import { useAppSelector } from "../../hooks/redux";
 import { Review } from "../../models/review";
 
-interface CreateReviewModalProps {
+interface EditReviewModalProps {
     active: boolean;
     onClose: () => void;
-    answerId: number;
+    review: Review;
 }
 
 
-function CreateReviewModal({ answerId, active, onClose }: CreateReviewModalProps) {
+function EditReviewModal({ review, active, onClose }: EditReviewModalProps) {
     const [comment, setComment] = useState('');
 
     const [rateError, setRateError] = useState('');
@@ -28,9 +28,16 @@ function CreateReviewModal({ answerId, active, onClose }: CreateReviewModalProps
     const { accessToken } = useAppSelector(state => state.authReducer);
     const { user } = useAppSelector(state => state.userReducer);
 
-    const { createQuery, error, success, loading, resetValues } = useReviewQueries();
+    const { updateQuery, error, success, loading, resetValues } = useReviewQueries();
 
-    async function createReview() {
+    useEffect(() => {
+        if (review) {
+            if (review.comment) setComment(review.comment);
+            setRateValue(review.grade);
+        }
+    }, [review, accessToken]);
+
+    async function updateReview() {
         if (rateValue === 0) {
             setRateError("Оценка не была выбрана!");
             return;
@@ -38,22 +45,9 @@ function CreateReviewModal({ answerId, active, onClose }: CreateReviewModalProps
 
         if (!user || !accessToken) return;
 
-        const review: Review = {
-            id: 0,
-            grade: rateValue,
-            comment: comment,
-            reviewDate: Date.now.toString(),
-            expertUserId: user.id,
-            expertUserDetails: {
-                id: user.id,
-                nickname: user.nickname,
-                lastname: user.lastname,
-                name: user.name,
-                avatarUrl: user.avatarUrl
-            }
-        };
+        const newReview: Review = { ...review, grade: rateValue, comment: comment };
 
-        await createQuery(answerId, review, accessToken);
+        await updateQuery(newReview, accessToken);
 
     }
 
@@ -111,7 +105,7 @@ function CreateReviewModal({ answerId, active, onClose }: CreateReviewModalProps
                     </ModalContent>
 
                     <ModalFooter>
-                        <ModalButton text="Сохранить" onClick={createReview} />
+                        <ModalButton text="Сохранить" onClick={updateReview} />
                     </ModalFooter>
 
                 </Modal >
@@ -136,4 +130,4 @@ function CreateReviewModal({ answerId, active, onClose }: CreateReviewModalProps
     );
 }
 
-export default CreateReviewModal;
+export default EditReviewModal;

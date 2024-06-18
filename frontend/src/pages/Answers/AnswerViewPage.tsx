@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MainContainer } from "../../components/MainContainer";
 import { CourseContext } from "../../contexts/CourseContext";
 import { ModuleContext } from "../../contexts/ModuleContext";
@@ -22,18 +22,21 @@ import FileContent from "../../components/Content/FileContent";
 import { FileInfo } from "../../models/fileInfo";
 import AnswerDeleteModal from "../../modules/Answers/AnswerDeleteModal";
 import AnswerEditModal from "../../modules/Answers/AnswerEditModal";
+import ReviewView from "../../modules/Reviews/ReviewView";
+import CreateReviewModal from "../../modules/Reviews/CreateReviewModal";
 
 function AnswerViewPage() {
     const { course } = useContext(CourseContext);
     const { module } = useContext(ModuleContext);
     const { lesson } = useContext(LessonContext);
     const { objective } = useContext(ObjectiveContext);
-    const { answer } = useContext(AnswerContext);
+    const { answer, fetchAnswer } = useContext(AnswerContext);
 
     const { user } = useAppSelector(state => state.userReducer);
 
     const [deleteModalActive, setDeleteModalActive] = useState(false);
     const [updateModalActive, setUpdateModalActive] = useState(false);
+    const [createReviewModalActive, setCreateReviewModalActive] = useState(false);
 
 
     return (
@@ -43,7 +46,7 @@ function AnswerViewPage() {
                 answer={answer}
                 user={user || null}
             >
-                {course && module && lesson && objective && answer &&
+                {course && module && lesson && objective && answer && course.localRole &&
                     <>
                         <Breadcrumb>
                             <BreadcrumbItem text="В начало" path={paths.public()} />
@@ -59,29 +62,29 @@ function AnswerViewPage() {
 
                         <section className="view-page__header">
                             <p className="view-page__title ui-title">{`Ответ на "${objective.title}"`}</p>
-                            {course.localRole?.viewAccess &&
+                            {course.localRole.viewAccess &&
                                 <>
                                     <DropdownState>
                                         <EllipsisDropdown>
-                                            {course.localRole?.manageInternalAccess &&
+                                            {course.localRole.manageInternalAccess && !answer.grade &&
                                                 <DropdownItem
                                                     title="Оценить"
                                                     className="icon icon-star"
                                                     key={1}
-                                                    onClick={() => { }}
+                                                    onClick={() => { setCreateReviewModalActive(true) }}
                                                 />
                                             }
                                             <DropdownItem
                                                 title="Редактировать"
                                                 className="icon icon-pen-circle"
-                                                key={2}
+                                                key={3}
                                                 onClick={() => setUpdateModalActive(true)}
                                             />
 
                                             <DropdownItem
                                                 title="Удалить"
                                                 className="icon icon-cross-circle"
-                                                key={3}
+                                                key={4}
                                                 onClick={() => setDeleteModalActive(true)}
                                             />
                                         </EllipsisDropdown>
@@ -93,12 +96,13 @@ function AnswerViewPage() {
                         <section className="view-page__content content-side">
                             <div className="content-side__main indented">
                                 <p className="medium-text">Текст ответа:</p>
-                                {answer.text &&
-                                    <div dangerouslySetInnerHTML={{ __html: answer.text }} className="view-page__description ui-text" />
+                                {answer.text ?
+                                    <div dangerouslySetInnerHTML={{ __html: answer.text }} className="view-page__description ui-text" /> :
+                                    <p className="optional-text">Текст не был заполнен...</p>
                                 }
 
                                 <p className="medium-text">Загруженные файлы:</p>
-                                {answer.fileDetails &&
+                                {answer.fileDetails ?
                                     <FileContent>
                                         {
                                             [
@@ -109,7 +113,8 @@ function AnswerViewPage() {
                                                 )
                                             ]
                                         }
-                                    </FileContent>
+                                    </FileContent> :
+                                    <p className="optional-text">Файл не был загружен...</p>
                                 }
                             </div>
 
@@ -124,7 +129,7 @@ function AnswerViewPage() {
                                 </ContentAboutListItem>
 
                                 <ContentAboutListItem
-                                    key={1}>
+                                    key={2}>
                                     Дата выполнения:&nbsp;
                                     <span className="text-violet medium-text">
                                         {answer.uploadDate}
@@ -133,6 +138,11 @@ function AnswerViewPage() {
 
                             </ContentAbout>
                         </section>
+
+                        <ReviewView
+                            answerId={answer.id}
+                            localRole={course.localRole}
+                        />
 
                         <AnswerDeleteModal
                             active={deleteModalActive}
@@ -147,7 +157,19 @@ function AnswerViewPage() {
                         <AnswerEditModal
                             active={updateModalActive}
                             lessonId={lesson.id}
-                            onClose={() => setUpdateModalActive(false)}
+                            onClose={() => {
+                                setUpdateModalActive(false);
+                                fetchAnswer();
+                            }}
+                        />
+
+                        <CreateReviewModal
+                            active={createReviewModalActive}
+                            answerId={answer.id}
+                            onClose={() => {
+                                setCreateReviewModalActive(false);
+                                fetchAnswer();
+                            }}
                         />
                     </>
                 }

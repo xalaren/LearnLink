@@ -48,12 +48,22 @@ namespace LearnLink.Application.Interactors
                     .Reference(answer => answer.User)
                     .LoadAsync();
 
+                var answerReview = unitOfWork.AnswerReviews
+                    .FirstOrDefault(answerReview => answerReview.AnswerId == answer.Id);
+
+                if (answerReview != null)
+                {
+                    unitOfWork.AnswerReviews.Entry(answerReview)
+                        .Reference(answerReview => answerReview.Review)
+                        .Load();
+                }
+
                 return new Response<AnswerDto>()
                 {
                     Success = true,
                     StatusCode = 200,
                     Message = "Ответ к заданию получен успешно",
-                    Value = answer.ToDto(lessonId)
+                    Value = answer.ToDto(lessonId, answerReview?.Review.Grade)
                 };
             }
             catch (CustomException exception)
@@ -145,7 +155,7 @@ namespace LearnLink.Application.Interactors
                     var answerReview = unitOfWork.AnswerReviews
                         .FirstOrDefault(answerReview => answerReview.AnswerId == answer.Id);
 
-                    if(answerReview != null)
+                    if (answerReview != null)
                     {
                         unitOfWork.AnswerReviews.Entry(answerReview)
                             .Reference(answerReview => answerReview.Review)

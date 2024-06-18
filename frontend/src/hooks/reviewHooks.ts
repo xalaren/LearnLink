@@ -13,7 +13,7 @@ export function useReviewQueries() {
     const getReviewByAnswerQuery = async (answerId: number, accessToken: string) => {
         try {
             setLoading(true);
-            const response = await axiosInstance.get<ValueResponse<Review>>(`${REVIEW_ENDPOINTS_URL}get?answerId=${answerId}`, {
+            const response = await axiosInstance.get<ValueResponse<Review | null>>(`${REVIEW_ENDPOINTS_URL}get?answerId=${answerId}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -59,7 +59,7 @@ export function useReviewQueries() {
     const updateQuery = async (review: Review, accessToken: string) => {
         try {
             setLoading(true);
-            const response = await axiosInstance.post<VoidResponse>(`${ANSWER_ENDPOINTS_URL}update`, review, {
+            const response = await axiosInstance.post<VoidResponse>(`${REVIEW_ENDPOINTS_URL}update`, review, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
