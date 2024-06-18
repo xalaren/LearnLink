@@ -101,7 +101,7 @@ function BuildedLessonsList(props: {
                     )}
                 </>
                 :
-                <p>Нет доступных уроков</p>
+                <p className="optional-text">Нет доступных уроков</p>
             }
         </>
 

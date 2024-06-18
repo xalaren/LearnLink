@@ -106,7 +106,7 @@ function AnswersList({ course, moduleId, lessonId, objectiveId }: AnswersListPro
                                     }}
                                 />
                             ) :
-                            <p>Ответы пока не загружены...</p>
+                            <p className="optional-text">Ответы пока не загружены...</p>
                         }
                     </BuildedAnswersList>
 

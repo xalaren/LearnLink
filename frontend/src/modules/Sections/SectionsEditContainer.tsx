@@ -53,7 +53,7 @@ function SectionsEditContainer({ onChange }: ISectionEditContainerProps) {
             }
 
             {!error && !loading && (!sections || sections.length == 0) &&
-                <p>Содержимое урока отсутствует...</p>
+                <p className="optional-text">Содержимое урока отсутствует...</p>
             }
 
             {loading && !error &&

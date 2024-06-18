@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { MainContainer } from "../../components/MainContainer";
 import { CourseContext } from "../../contexts/CourseContext";
 import { ModuleContext } from "../../contexts/ModuleContext";

@@ -101,7 +101,7 @@ function BuildedObjectivesList(props: {
                         />)}
                 </>
                 :
-                <p>Нет доступных заданий</p>
+                <p className="optional-text">Нет доступных заданий</p>
             }
         </>
 

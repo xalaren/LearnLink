@@ -87,7 +87,7 @@ function BuildedModulesList(props: {
                         />)}
                 </>
                 :
-                <p>Нет доступных модулей</p>
+                <p className="optional-text">Нет доступных модулей</p>
             }
         </>
 
