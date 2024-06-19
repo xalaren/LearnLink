@@ -2,7 +2,7 @@ import { useState } from "react";
 import { OutlinedInput } from "../../components/Input/OutlinedInput";
 import { ContentTypes, NotificationType } from "../../models/enums";
 import ControlNav from "../../components/ControlNav";
-import Editor from "../../components/Editor";
+import TextEditor from "../../components/TextEditor";
 import CodeEditor from "../../components/CodeEditor/CodeEditor";
 import FileUploader from "../../components/FileUploader/FileUploader";
 import { useCreateSection } from "../../hooks/lessonSectionHook";
@@ -121,7 +121,7 @@ function SectionCreator({ lessonId, contentType, onClose }: ISectionCreatorProps
                             </div>
 
                             {contentType === ContentTypes.text &&
-                                <Editor
+                                <TextEditor
                                     data={text}
                                     setData={setText} />
                             }

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { OutlinedInput } from "../../components/Input/OutlinedInput";
 import { NotificationType } from "../../models/enums";
 import ControlNav from "../../components/ControlNav";
-import Editor from "../../components/Editor";
+import TextEditor from "../../components/TextEditor";
 import CodeEditor from "../../components/CodeEditor/CodeEditor";
 import FileUploader from "../../components/FileUploader/FileUploader";
 import { useUpdateSection } from "../../hooks/lessonSectionHook";
@@ -146,7 +146,7 @@ function SectionEditor({ lessonId, currentSection, onClose }: ISectionEditorProp
                     </div>
 
                     {currentSection.content.isText &&
-                        <Editor
+                        <TextEditor
                             data={text}
                             setData={setText} />
                     }

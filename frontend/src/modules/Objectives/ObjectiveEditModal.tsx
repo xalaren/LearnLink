@@ -14,7 +14,7 @@ import { useObjectiveQueries } from "../../hooks/objectiveHooks";
 import { FileInfo } from "../../models/fileInfo";
 import CollapseableBlock from "../../components/CollapseableBlock";
 import FileUploader from "../../components/FileUploader/FileUploader";
-import Editor from "../../components/Editor";
+import TextEditor from "../../components/TextEditor";
 import { Objective } from "../../models/objective";
 
 interface IObjectiveEditModalProps {
@@ -115,7 +115,7 @@ function ModuleEditModal({ active, onClose }: IObjectiveEditModalProps) {
                                     {textError &&
                                         <p className="form-input__error required">{textError}</p>
                                     }
-                                    <Editor
+                                    <TextEditor
                                         data={text}
                                         setData={setText}
                                     />

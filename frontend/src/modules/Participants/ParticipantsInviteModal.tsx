@@ -106,7 +106,7 @@ function ParticipantsInviteModal(
 
     return (
         <>
-            <Modal active={active} onClose={closeModal} title="Приглашение участников">
+            <Modal active={active} onClose={closeModal} title="Приглашение участников" contentClassName="modal__content-restricted">
                 <ModalContent className="indented">
                     {!getAtCourseHook.error && !getAtCourseHook.loading &&
                         <Select
@@ -117,7 +117,7 @@ function ParticipantsInviteModal(
                             selectedTitle={selectedLocalRole?.name}>
 
                             <SelectItem
-                                key={0}
+                                key={1}
                                 title="Добавить локальные роли..."
                                 onSelect={() => toNext(paths.course.roles.full(courseId))}
                             />

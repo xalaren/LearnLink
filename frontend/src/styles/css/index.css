@@ -476,14 +476,14 @@ i {
 }
 
 ul {
-  list-style-type: round; /* Замените на любой другой тип маркера */
-  padding-left: 20px; /* Добавьте отступ слева */
+  padding-left: 40px; /* Добавьте отступ слева */
+  list-style: disc;
 }
 
 /* Стили для нумерованных списков */
 ol {
-  list-style-type: upper-latin; /* Замените на любой другой тип нумерации */
-  padding-left: 20px; /* Добавьте отступ слева */
+  list-style-type: round; /* Замените на любой другой тип нумерации */
+  padding-left: 40px; /* Добавьте отступ слева */
 }
 
 a {
@@ -1029,6 +1029,8 @@ a * {
   height: 40px;
   border-radius: 20px;
   border: solid 3px rgba(255, 255, 255, 0.5);
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 .header .dropdown__head, .header .dropdown__head > * {
   color: #fff;
@@ -1914,6 +1916,8 @@ a * {
   width: 60px;
   height: 60px;
   border-radius: 30px;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 .user-item__properties {
   display: flex;
@@ -2527,6 +2531,8 @@ a * {
   width: 40px;
   height: 40px;
   border-radius: 20px;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 .user-mini__name {
   font-size: 20px;
@@ -2991,4 +2997,5 @@ a * {
   min-width: 60px;
   width: 60px;
   height: 60px;
+  border-radius: 30px;
 }/*# sourceMappingURL=index.css.map */

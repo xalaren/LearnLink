@@ -8,7 +8,7 @@ import PopupNotification from "../../components/PopupNotification";
 import { validate } from "../../helpers/validation";
 import { NotificationType } from "../../models/enums";
 import { useAppSelector } from "../../hooks/redux";
-import Editor from "../../components/Editor";
+import TextEditor from "../../components/TextEditor";
 import FileUploader from "../../components/FileUploader/FileUploader";
 import CollapseableBlock from "../../components/CollapseableBlock";
 import { FileInfo } from "../../models/fileInfo";
@@ -90,7 +90,7 @@ function AnswerEditModal({ lessonId, active, onClose }: IAnswerEditModalProps) {
                             <div className="form__inputs">
                                 <div className="form-input">
                                     <p className={`form-input__label`}>Текст ответа:</p>
-                                    <Editor
+                                    <TextEditor
                                         data={text}
                                         setData={setText}
                                     />

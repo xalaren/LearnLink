@@ -43,6 +43,7 @@
             @include static-size(40px);
             border-radius: 20px;
             border: solid 3px rgba($white, 0.5);
+            object-fit: cover;
         }
 
         &,
@@ -979,6 +980,7 @@
     &__image {
         @include static-size(60px);
         border-radius: 30px;
+        object-fit: cover;
     }
 
     &__properties {
@@ -1617,6 +1619,7 @@
     &__image {
         @include static-size(40px);
         border-radius: 20px;
+        object-fit: cover;
     }
 
     &__name {
@@ -2144,6 +2147,7 @@
     &__avatar {
         img {
             @include static-size(60px);
+            border-radius: 30px;
         }
     }
 }

@@ -6,7 +6,7 @@ interface IEditorProps {
     setData: (text: string) => void;
 }
 
-function Editor({ data, setData }: IEditorProps) {
+function TextEditor({ data, setData }: IEditorProps) {
     return (
         <div className="editor">
             <CKEditor
@@ -17,6 +17,7 @@ function Editor({ data, setData }: IEditorProps) {
                         items: ['heading', '|',
                             'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote',
                             'fontSize', 'subscript', 'superscript', '|',
+                            'outdent', 'indent', '|',
                             'insertTable', 'tableColumn', 'tableRow', 'mergeTableCells', '|',
                             'undo', 'redo'],
                         shouldNotGroupWhenFull: true,
@@ -44,4 +45,4 @@ function Editor({ data, setData }: IEditorProps) {
     );
 }
 
-export default Editor;
+export default TextEditor;

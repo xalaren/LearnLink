@@ -10,7 +10,7 @@ import { validate } from "../../helpers/validation";
 import { InputType, NotificationType } from "../../models/enums";
 import { useAppSelector } from "../../hooks/redux";
 import { useObjectiveQueries } from "../../hooks/objectiveHooks";
-import Editor from "../../components/Editor";
+import TextEditor from "../../components/TextEditor";
 import FileUploader from "../../components/FileUploader/FileUploader";
 import CollapseableBlock from "../../components/CollapseableBlock";
 import { Objective } from "../../models/objective";
@@ -111,7 +111,7 @@ function ObjectiveCreateModal({ lessonId, active, onClose }: IObjectiveCreateMod
                                     {textError &&
                                         <p className="form-input__error required">{textError}</p>
                                     }
-                                    <Editor
+                                    <TextEditor
                                         data={text}
                                         setData={setText}
                                     />

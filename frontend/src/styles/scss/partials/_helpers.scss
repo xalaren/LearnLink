@@ -78,14 +78,14 @@ i {
 }
 
 ul {
-    list-style-type: round; /* Замените на любой другой тип маркера */
-    padding-left: 20px; /* Добавьте отступ слева */
+    padding-left: 40px; /* Добавьте отступ слева */
+    list-style: disc;
 }
 
 /* Стили для нумерованных списков */
 ol {
-    list-style-type: upper-latin; /* Замените на любой другой тип нумерации */
-    padding-left: 20px; /* Добавьте отступ слева */
+    list-style-type: round; /* Замените на любой другой тип нумерации */
+    padding-left: 40px; /* Добавьте отступ слева */
 }
 
 a {
