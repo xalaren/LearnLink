@@ -10,6 +10,8 @@ import { useHistoryNavigation } from "../../hooks/historyNavigation";
 import CourseEditModal from "./CourseEditModal";
 import CourseDeleteModal from "./CourseDeleteModal";
 import { paths } from "../../models/paths";
+import { useAppSelector } from "../../hooks/redux";
+import { useEffect } from "react";
 
 interface ICourseViewProps {
     course: Course;
@@ -35,27 +37,28 @@ function CourseView({
     setDeleteModalActive
 }: ICourseViewProps) {
     const { toNext } = useHistoryNavigation();
+    const { user } = useAppSelector(state => state.userReducer);
 
     return (
         <>
             <section className="view-page__header">
                 <p className="view-page__title big-text">{course.title}</p>
-                {course.localRole?.viewAccess &&
+                {(user!.role!.id === 1 || course.localRole) &&
                     <DropdownState>
                         <EllipsisDropdown>
-                            {course.localRole.editAccess &&
+                            {(user!.role!.id === 1 || course.localRole?.editAccess) &&
                                 <DropdownItem title="Редактировать" className="icon icon-pen-circle" key={1} onClick={() => setUpdateModalActive(true)} />
                             }
 
-                            {course.localRole.viewAccess &&
+                            {(user!.role!.id === 1 || course.localRole?.viewAccess) &&
                                 <DropdownItem title="Участники" className="icon icon-user-group-circle" key={2} onClick={() => toNext(paths.course.participants.full(course.id), true)} />
                             }
 
-                            {course.localRole.editRolesAccess &&
+                            {(user!.role!.id === 1 || course.localRole?.editRolesAccess) &&
                                 <DropdownItem title="Роли" className="icon icon-star" key={2} onClick={() => toNext(paths.course.roles.full(course.id), true)} />
                             }
 
-                            {course.localRole.removeAccess &&
+                            {(user!.role!.id === 1 || course.localRole?.removeAccess) &&
                                 <DropdownItem title="Удалить" className="icon icon-cross-circle" key={3} onClick={() => setDeleteModalActive(true)} />
                             }
                         </EllipsisDropdown>
