@@ -68,7 +68,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddRazorPages();
 
 
-/* Setup authentication start */
+/* Setup authentication start ... */
 
 var authOptions = new AuthenticationConfig().GetAuthenticationOptions(configuration);
 
@@ -95,7 +95,7 @@ builder.Services
     }
 );
 
-/* Setup authentication end */
+/* Setup authentication end ... */
 
 builder.Services.AddSwaggerGen(options =>
 {
