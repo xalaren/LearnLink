@@ -2,7 +2,7 @@ import axios from 'axios';
 
 
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:5174', // Замените на ваш URL
+    baseURL: '/', // Замените на ваш URL
     timeout: 6000, // Настройка таймаута запроса
     headers: {
         'Content-Type': 'application/json',
