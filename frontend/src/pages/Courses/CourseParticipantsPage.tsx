@@ -115,7 +115,7 @@ function CourseParticipantsPage() {
                 {course ?
                     <>
                         <Breadcrumb>
-                            <BreadcrumbItem text="В начало" path={paths.home} />
+                            <BreadcrumbItem text="В начало" path={paths.public()} />
                             {!course.isPublic &&
                                 <BreadcrumbItem text="Мои курсы" path={paths.profile.courses(ViewTypes.created)} />
                             }
