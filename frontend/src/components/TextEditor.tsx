@@ -29,14 +29,9 @@ function TextEditor({ data, setData }: IEditorProps) {
                             { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' }
                         ]
                     },
-                    //fontSize: {
-                    //    options: [
-                    //        9, 11, 13, 'default', 17, 19, 21
-                    //    ]
-                    //},
                     placeholder: "Введите текст здесь..."
                 }}
-                onChange={(event, editor) => {
+                onChange={(_event, editor) => {
                     setData(editor.getData());
                 }}
             />

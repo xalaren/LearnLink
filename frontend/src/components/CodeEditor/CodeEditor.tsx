@@ -1,8 +1,8 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Select from "../Select/Select";
 import SelectItem from "../Select/SelectItem";
 import { codeLanguages } from "../../models/codeLangs";
-import { Editor, Monaco, loader } from "@monaco-editor/react";
+import { Editor, loader } from "@monaco-editor/react";
 
 interface ICodeEditorProps {
     language: string;
@@ -13,7 +13,7 @@ interface ICodeEditorProps {
 
 function CodeEditor({ language, setLanguage, setText, text }: ICodeEditorProps) {
     const [selectActive, setSelectActive] = useState(false);
-    const [theme, setTheme] = useState('atomOneLight');
+    const [theme] = useState('atomOneLight');
 
     useEffect(() => {
         loader.init().then(monaco => {

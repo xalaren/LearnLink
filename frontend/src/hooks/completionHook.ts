@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axiosInstance from "../axios_config/axiosConfig";
 import { COMPLETION_ENDPOINTS_URL } from "../models/constants";
-import { VoidResponse } from "../models/response";
+import { VoidResponse } from "../models/response"
 import { AxiosError } from "axios";
 
 export function useCompleteLesson() {

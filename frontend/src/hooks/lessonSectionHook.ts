@@ -2,7 +2,7 @@ import { useState } from "react";
 import axiosInstance from "../axios_config/axiosConfig";
 import { ValueResponse, VoidResponse } from "../models/response";
 import { Section, SectionCodeContent, SectionFileContent, SectionTextContent } from "../models/section";
-import { LESSON_SECTIONS_ENDPOINTS_URL, SECTIONS_ENDPOINTS_URL } from "../models/constants";
+import { LESSON_SECTIONS_ENDPOINTS_URL } from "../models/constants";
 import { AxiosError, AxiosResponse } from "axios";
 
 export function useGetLessonSections() {

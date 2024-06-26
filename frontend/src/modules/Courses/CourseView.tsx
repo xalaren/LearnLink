@@ -11,7 +11,6 @@ import CourseEditModal from "./CourseEditModal";
 import CourseDeleteModal from "./CourseDeleteModal";
 import { paths } from "../../models/paths";
 import { useAppSelector } from "../../hooks/redux";
-import { useEffect } from "react";
 
 interface ICourseViewProps {
     course: Course;

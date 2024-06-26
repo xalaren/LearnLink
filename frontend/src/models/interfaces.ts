@@ -1,5 +1,3 @@
-import { User } from "./user";
-
 export interface ILinkData {
     title: string;
     path: string;

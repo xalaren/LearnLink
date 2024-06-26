@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axiosInstance from "../axios_config/axiosConfig.ts";
-import { ValueResponse, VoidResponse } from "../models/response.ts";
+import { ValueResponse, VoidResponse } from "../models/response";
 import { LocalRole } from "../models/localRole.ts";
 import { USER_COURSE_LOCAL_ROLE_ENDPOINTS_URL } from "../models/constants.ts";
 import { AxiosError } from "axios";

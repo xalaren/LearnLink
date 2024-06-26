@@ -44,7 +44,3 @@ function Select({ defaultTitle, selectedTitle, children, active, toggle, onDesel
 }
 
 export default Select;
-
-function validata(selectedTitle: string | undefined) {
-    throw new Error("Function not implemented.");
-}

@@ -31,7 +31,6 @@ function ObjectiveView({
     deleteModalActive,
     setDeleteModalActive
 }: IObjectiveViewProps) {
-    const { toNext } = useHistoryNavigation();
 
     return (
         <>

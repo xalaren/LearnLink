@@ -1,9 +1,7 @@
 import { createContext, useEffect, useState } from "react";
-import { Module } from "../models/module";
 import React from "react";
 import { useAppSelector } from "../hooks/redux";
 import { useParams } from "react-router-dom";
-import { useGetModule } from "../hooks/moduleHooks";
 import { MainContainer } from "../components/MainContainer";
 import { ErrorModal } from "../components/Modal/ErrorModal";
 import { Loader } from "../components/Loader/Loader";

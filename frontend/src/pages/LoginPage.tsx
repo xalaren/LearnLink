@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../hooks/redux";
+import { useAppDispatch } from "../hooks/redux";
 import { useHistoryNavigation } from "../hooks/historyNavigation";
 import { MainContainer } from "../components/MainContainer";
 import { Input } from "../components/Input/Input";

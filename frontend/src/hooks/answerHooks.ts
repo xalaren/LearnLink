@@ -1,10 +1,10 @@
 import { useState } from "react";
 import axiosInstance from "../axios_config/axiosConfig";
-import { ValueResponse, VoidResponse } from "../models/response";
 import { ANSWER_ENDPOINTS_URL } from "../models/constants";
 import { AxiosError } from "axios";
 import { Answer } from "../models/answer";
 import { ValueDataPage } from "../models/dataPage";
+import { ValueResponse, VoidResponse } from "../models/response";
 
 export function useAnswerQueries() {
     const [error, setError] = useState('');
