@@ -4,7 +4,7 @@ import { User } from "../../models/user"
 import { ACCESS_KEY, USER_ENDPOINTS_URL } from "../../models/constants"
 import { AxiosError } from "axios"
 import axiosInstance from "../../axios_config/axiosConfig"
-import { ValueResponse } from "../../models/Response"
+import { ValueResponse } from "../../models/response"
 
 export const fetchUser = () => {
     return async (dispatch: AppDispatch) => {

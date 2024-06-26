@@ -2,7 +2,6 @@ import FileContent from "../../components/Content/FileContent";
 import DropdownItem from "../../components/Dropdown/DropdownItem";
 import EllipsisDropdown from "../../components/Dropdown/EllipsisDropdown";
 import { DropdownState } from "../../contexts/DropdownContext";
-import { useHistoryNavigation } from "../../hooks/historyNavigation";
 import { Course } from "../../models/course";
 import { FileInfo } from "../../models/fileInfo";
 import { Objective } from "../../models/objective";
