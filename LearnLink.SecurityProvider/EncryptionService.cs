@@ -1,39 +1,47 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+using Konscious.Security.Cryptography;
 using LearnLink.Application.Security;
+using LearnLink.Domain.Entities.Users.Primitives;
 
 namespace LearnLink.SecurityProvider
 {
     public class EncryptionService : IEncryptionService
     {
-        private string ComputeSha256Hash(string rawData)
-        {
-            using (SHA256 sha256Hash = SHA256.Create())
-            {
-                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
+        private const int SaltSize = 16; // 128 bits
+        private const int HashSize = 32; // 256 bits
+        private const int Iterations = 3;
+        private const int MemorySizeKb = 65536; // 64 MiB
+        private const int DegreeOfParallelism = 2;
 
-                StringBuilder builder = new StringBuilder();
-                for (int i = 0; i < bytes.Length; i++)
-                {
-                    builder.Append(bytes[i].ToString("x2"));
-                }
-                return builder.ToString();
-            }
+        public Password Encrypt(string plainPassword)
+        {
+            var salt = RandomNumberGenerator.GetBytes(SaltSize);
+            var hash = ComputeHash(plainPassword, salt);
+
+            return new Password(Convert.ToBase64String(hash), Convert.ToBase64String(salt));
         }
 
-        public string GetHash(string password, string salt) => ComputeSha256Hash(password + salt);
-
-        public string GetRandomString(int size)
+        public bool Verify(string plainPassword, Password password)
         {
-            byte[] stringBytes = new byte[size];
+            var salt = Convert.FromBase64String(password.Salt);
+            var expectedHash = Convert.FromBase64String(password.Hash);
+            var actualHash = ComputeHash(plainPassword, salt);
 
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(stringBytes);
-            }
-
-            return Convert.ToBase64String(stringBytes);
+            return CryptographicOperations.FixedTimeEquals(expectedHash, actualHash);
         }
 
+        private static byte[] ComputeHash(string plainPassword, byte[] salt)
+        {
+            using var argon2 = new Argon2id(Encoding.UTF8.GetBytes(plainPassword))
+            {
+                Salt = salt,
+                Iterations = Iterations,
+                MemorySize = MemorySizeKb,
+                DegreeOfParallelism = DegreeOfParallelism
+            };
+
+            return argon2.GetBytes(HashSize);
+        }
     }
 }

@@ -1,8 +1,10 @@
-﻿namespace LearnLink.Application.Security
+﻿using LearnLink.Domain.Entities.Users.Primitives;
+
+namespace LearnLink.Application.Security
 {
     public interface IEncryptionService
     {
-        string GetRandomString(int size);
-        string GetHash(string password, string salt);
+        Password Encrypt(string plainPassword);
+        bool Verify(string plainPassword, Password password);
     }
 }
