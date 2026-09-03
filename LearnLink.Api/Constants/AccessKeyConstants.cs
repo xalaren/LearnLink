@@ -1,4 +1,4 @@
-﻿namespace LearnLink.WebApi.Constants
+﻿namespace LearnLink.Api.Constants
 {
     public class AccessKeyConstants
     {

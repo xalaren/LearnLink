@@ -1,6 +1,7 @@
 ﻿using Ardalis.Result.AspNetCore;
 using LearnLink.Application.Services;
-using LearnLink.Shared.Users;
+using LearnLink.Shared.Model.Users;
+using LearnLink.Shared.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LearnLink.Api.Controllers;
@@ -14,7 +15,14 @@ public class UserController(UserService userService) : Controller
     [HttpPost("register")]
     public async Task<ActionResult> Register(RegisterRequest request, [FromQuery] string password)
     {
-        var result = await _userService.RegisterAsync(request, password);
-        return result.ToActionResult(this);
+       return (await _userService.RegisterAsync(request, password)).ToActionResult(this);
     }
+
+    [HttpGet("list")]
+    public async Task<ActionResult<PagedResponse<UserDto>>> List([FromBody] ListRequest request)
+    {
+        return (await _userService.ListAsync(request)).ToActionResult(this);
+    }
+
+
 }

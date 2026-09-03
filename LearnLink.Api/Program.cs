@@ -2,9 +2,9 @@ using LearnLink.Adapter.Contexts;
 using LearnLink.Adapter.DependencyInjection;
 using LearnLink.Application.DependencyInjection;
 using LearnLink.SecurityProvider.DependencyInjection;
-using LearnLink.WebApi;
-using LearnLink.WebApi.Configurations;
-using LearnLink.WebApi.Extensions;
+using LearnLink.Api;
+using LearnLink.Api.Configurations;
+using LearnLink.Api.Extensions;
 using Microsoft.OpenApi;
 using NLog.Web;
 
@@ -27,9 +27,9 @@ builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
     }
 ));
 
-builder.Services.AddDbContext<AppDbContext>(options => options.GetNpgSqlOptions(configuration));
 builder.Services.AddUnitOfWork();
-builder.Services.AddRepositories();
+builder.Services.AddDbContext<AppDbContext>(options => options.GetNpgSqlOptions(configuration));
+
 builder.Services.AddEncryption();
 builder.Services.AddApplicationServices();
 builder.Services.AddStorage(rootDirectory);

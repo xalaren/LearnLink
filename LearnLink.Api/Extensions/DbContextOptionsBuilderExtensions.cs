@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 
-namespace LearnLink.WebApi.Extensions
+namespace LearnLink.Api.Extensions
 {
     public static class DbContextOptionsBuilderExtensions
     {

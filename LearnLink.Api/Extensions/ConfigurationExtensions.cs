@@ -1,4 +1,4 @@
-﻿namespace LearnLink.WebApi.Extensions
+﻿namespace LearnLink.Api.Extensions
 {
     public static class ConfigurationExtensions
     {

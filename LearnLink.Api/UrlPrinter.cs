@@ -3,16 +3,12 @@ using System.Reflection;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 
-namespace LearnLink.WebApi;
+namespace LearnLink.Api;
 
-public class UrlPrinter
+public class UrlPrinter(IServer server)
 {
     private static readonly TimeSpan ServerTimeout = TimeSpan.FromMinutes(1);
-    private readonly IServer server;
-    public UrlPrinter(IServer server)
-    {
-        this.server = server;
-    }
+    private readonly IServer _server = server;
 
     public async Task Start(CancellationToken cancellationToken)
     {
@@ -26,7 +22,7 @@ public class UrlPrinter
         IServerAddressesFeature? addresses;
         do
         {
-            addresses = server.Features.Get<IServerAddressesFeature>();
+            addresses = _server.Features.Get<IServerAddressesFeature>();
 
             if (addresses!.Addresses.Count > 0)
                 break;
@@ -37,7 +33,7 @@ public class UrlPrinter
         return addresses.Addresses.Select(x => x.Replace("[::]", "localhost").Replace("+:", "localhost:")).Single();
     }
 
-    private void PrintUrl(string url)
+    private static void PrintUrl(string url)
     {
         Console.ForegroundColor = ConsoleColor.Blue;
         Console.Write($"{Assembly.GetExecutingAssembly().GetName().Name} is started on ");

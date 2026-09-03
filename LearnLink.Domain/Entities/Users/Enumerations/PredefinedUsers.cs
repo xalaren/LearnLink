@@ -1,4 +1,4 @@
-﻿using LearnLink.Domain.Entities.Abstractions;
+﻿using LearnLink.Domain.Abstractions;
 using LearnLink.Domain.Entities.Users.Identifiers;
 
 namespace LearnLink.Domain.Entities.Users.Enumerations

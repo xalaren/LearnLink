@@ -1,12 +1,11 @@
 ﻿using LearnLink.Adapter.Configurations;
-using LearnLink.Core.Entities.Abstractions;
+using LearnLink.Application.Repositories;
 using LearnLink.Domain.Entities.Users.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace LearnLink.Adapter.Contexts
 {
-    public class AppDbContext(DbContextOptions options) : DbContext(options)
+    public class AppDbContext(DbContextOptions options) : DbContext(options), IAppRepository
     {
         public DbSet<User> Users { get; init; }
         public DbSet<Credentials> Credentials { get; init; }

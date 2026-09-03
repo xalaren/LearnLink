@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace LearnLink.WebApi.Migrations
+namespace LearnLink.Api.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration

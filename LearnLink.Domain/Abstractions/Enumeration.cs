@@ -1,4 +1,4 @@
-﻿namespace LearnLink.Domain.Entities.Abstractions
+﻿namespace LearnLink.Domain.Abstractions
 {
     public abstract class Enumeration<TEnum, TIdentifier> : IEquatable<Enumeration<TEnum, TIdentifier>> 
         where TEnum : Enumeration<TEnum, TIdentifier>

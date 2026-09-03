@@ -1,6 +1,6 @@
 ﻿using LearnLink.SecurityProvider;
 
-namespace LearnLink.WebApi.Configurations
+namespace LearnLink.Api.Configurations
 {
     public class AuthenticationConfig
     {

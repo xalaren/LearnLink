@@ -1,4 +1,5 @@
 ﻿using LearnLink.Adapter.Contexts;
+using LearnLink.Application.Repositories;
 using LearnLink.Application.Transactions;
 using LearnLink.Core.Entities.Abstractions;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,9 @@ namespace LearnLink.Adapter.Transactions
     public class UnitOfWork(AppDbContext context) : IUnitOfWork
     {
         private readonly AppDbContext _context = context;
+
+        public IAppRepository Repository => _context;
+
         public Task CommitAsync(CancellationToken cancellationToken = default)
         {
             UpdateTimestamps();

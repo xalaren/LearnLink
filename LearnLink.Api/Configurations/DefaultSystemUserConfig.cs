@@ -1,6 +1,6 @@
-﻿using LearnLink.Shared.Users;
+﻿using LearnLink.Shared.Model.Users;
 
-namespace LearnLink.WebApi.Configurations
+namespace LearnLink.Api.Configurations
 {
     public class DefaultSystemUserConfig
     {

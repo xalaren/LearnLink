@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace LearnLink.WebApi.Migrations
+namespace LearnLink.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20260902112644_Initial")]

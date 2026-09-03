@@ -1,8 +1,8 @@
-﻿using LearnLink.Application.Services;
+﻿using LearnLink.Api.Configurations;
+using LearnLink.Application.Services;
 using LearnLink.Application.Storages;
-using LearnLink.WebApi.Configurations;
 
-namespace LearnLink.WebApi.Extensions
+namespace LearnLink.Api.Extensions
 {
     public static class WebApplicationExtensions
     {
