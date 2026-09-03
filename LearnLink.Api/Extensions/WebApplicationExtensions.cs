@@ -1,5 +1,5 @@
 ﻿using LearnLink.Application.Services;
-using LearnLink.Application.Storage;
+using LearnLink.Application.Storages;
 using LearnLink.WebApi.Configurations;
 
 namespace LearnLink.WebApi.Extensions

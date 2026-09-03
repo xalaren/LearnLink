@@ -1,12 +1,7 @@
 using LearnLink.Adapter.Contexts;
-using LearnLink.Adapter.Repositories;
-using LearnLink.Adapter.Transactions;
-using LearnLink.Application.Repositories;
-using LearnLink.Application.Security;
-using LearnLink.Application.Services;
-using LearnLink.Application.Storage;
-using LearnLink.Application.Transactions;
-using LearnLink.SecurityProvider;
+using LearnLink.Adapter.DependencyInjection;
+using LearnLink.Application.DependencyInjection;
+using LearnLink.SecurityProvider.DependencyInjection;
 using LearnLink.WebApi;
 using LearnLink.WebApi.Configurations;
 using LearnLink.WebApi.Extensions;
@@ -32,29 +27,21 @@ builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
     }
 ));
 
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<IRoleRepository, RoleRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<ICredentialsRepository, CredentialsRepository>();
-
-builder.Services.AddTransient<SeedingService>();
-
-builder.Services.AddSingleton<IEncryptionService, EncryptionService>();
-builder.Services.AddSingleton(provider => Storage.Instance(rootDirectory));
-builder.Services.AddSingleton<DefaultSystemUserConfig>();
-
 builder.Services.AddDbContext<AppDbContext>(options => options.GetNpgSqlOptions(configuration));
-
+builder.Services.AddUnitOfWork();
+builder.Services.AddRepositories();
+builder.Services.AddEncryption();
+builder.Services.AddApplicationServices();
+builder.Services.AddStorage(rootDirectory);
+builder.Services.AddSingleton<DefaultSystemUserConfig>();
+builder.Services.AddSingleton<UrlPrinter>();
 builder.Services.AddControllers();
-
 builder.Services.AddEndpointsApiExplorer();
-
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "LearnLink API", Version = "v1" });
 });
 
-builder.Services.AddSingleton<UrlPrinter>();
 
 var app = builder.Build();
 
@@ -72,15 +59,13 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-
+app.UseInternalStorage();
+app.UseSeedData();
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors("CorsPolicy");
 
 app.MapControllers();
-
-app.UseInternalStorage();
-app.UseSeedData();
 
 app.UseUrlPrinter();
 

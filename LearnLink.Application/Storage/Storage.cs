@@ -1,4 +1,4 @@
-﻿namespace LearnLink.Application.Storage;
+﻿namespace LearnLink.Application.Storages;
 
 public class Storage
 {
@@ -24,6 +24,8 @@ public class Storage
 
     public static Storage Instance(string rootDirectory)
     {
+        ArgumentNullException.ThrowIfNull(rootDirectory, nameof(rootDirectory));
+
         _instance ??= new Storage(rootDirectory);
         return _instance;
     }

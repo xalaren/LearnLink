@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.WebApi.Extensions
 {
@@ -8,7 +9,7 @@ namespace LearnLink.WebApi.Extensions
         {
             var connection = config.GetConnectionString("SqliteConnection");
             return builder
-                .UseSqlite(connection, b => b.MigrationsAssembly("LearnLink.WebApi"))
+                .UseSqlite(connection, b => b.MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name))
                 .Options;
         }
 
@@ -16,7 +17,7 @@ namespace LearnLink.WebApi.Extensions
         {
             var connection = config.GetConnectionString("PostgreSqlConnection");
             return builder
-                .UseNpgsql(connection, b => b.MigrationsAssembly("LearnLink.WebApi"))
+                .UseNpgsql(connection, b => b.MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name))
                 .Options;
         }
 
@@ -24,7 +25,7 @@ namespace LearnLink.WebApi.Extensions
         {
             var connection = config.GetConnectionString("SqlServerConnection");
             return builder
-                .UseSqlServer(connection, b => b.MigrationsAssembly("LearnLink.WebApi"))
+                .UseSqlServer(connection, b => b.MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name))
                 .Options;
         }
     }

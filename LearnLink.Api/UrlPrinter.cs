@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Reflection;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 
@@ -39,11 +40,9 @@ public class UrlPrinter
     private void PrintUrl(string url)
     {
         Console.ForegroundColor = ConsoleColor.Blue;
-
-        Console.Write($"Application server is started on ");
+        Console.Write($"{Assembly.GetExecutingAssembly().GetName().Name} is started on ");
 
         Console.ForegroundColor = ConsoleColor.White;
-
         Console.WriteLine(url);
 
         Console.ResetColor();

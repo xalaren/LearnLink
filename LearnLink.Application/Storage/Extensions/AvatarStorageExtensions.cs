@@ -1,5 +1,5 @@
 
-namespace LearnLink.Application.Storage.Extensions;
+namespace LearnLink.Application.Storages.Extensions;
 
 public static class AvatarsStorageExtensions
 {
