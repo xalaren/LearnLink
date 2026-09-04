@@ -1,5 +1,5 @@
-﻿using LearnLink.Core.Entities.Abstractions;
-using LearnLink.Domain.Constants;
+﻿using LearnLink.Domain.Constants;
+using LearnLink.Domain.Entities.Abstractions;
 using LearnLink.Domain.Entities.Users.Enumerations;
 using LearnLink.Domain.Entities.Users.Identifiers;
 using LearnLink.Domain.Guards;
@@ -25,6 +25,9 @@ public class User : Entity<UserId>
 
     public AvatarId? AvatarId { get; private set; }
     public Avatar? Avatar { get; private set; }
+
+    private readonly List<RefreshToken> _refreshTokens = [];
+    public IReadOnlyCollection<RefreshToken> RefreshTokens => _refreshTokens.AsReadOnly();
 
     private User(UserId id, string nickname, string name, string lastname, bool isSystem, RoleId roleId)
     {

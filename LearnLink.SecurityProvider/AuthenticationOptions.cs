@@ -1,17 +1,26 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 namespace LearnLink.SecurityProvider;
 
-public class AuthenticationOptions
+public record AuthenticationOptions
 {
-    public string Issuer { get; set; } = null!;
-    public string Audience { get; set; } = null!;
-    public TimeSpan LifeTime { get; set; }
-    public string SecretKey { get; set; } = null!;
+    public required string Issuer { get; init; }
+    public required string Audience { get; init; }
+    public required TimeSpan LifeTime { get; init; }
+    public required string SecretKey { get; init; }
+    public SymmetricSecurityKey SecurityKey => new(Encoding.UTF8.GetBytes(SecretKey));
 
-    public SymmetricSecurityKey GetSymmetricSecurityKey()
+    internal SecurityTokenDescriptor ToTokenDescriptor(SigningCredentials credentials, params Claim[] claims)
     {
-        return new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey));
+        return new()
+        {
+            Subject = new ClaimsIdentity(claims),
+            Expires = DateTime.UtcNow.Add(LifeTime),
+            SigningCredentials = credentials,
+            Issuer = Issuer,
+            Audience = Audience,
+        };
     }
 }

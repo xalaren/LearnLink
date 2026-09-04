@@ -1,7 +1,7 @@
-namespace LearnLink.Core.Entities.Abstractions;
+﻿namespace LearnLink.Domain.Entities.Abstractions;
 
 public interface IExpireable
 {
-    DateTime? ExpiresAtUtc { get; }
+    DateTime ExpiresAtUtc { get; }
     bool NeededRefresh { get; }
 }

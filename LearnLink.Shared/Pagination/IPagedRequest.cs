@@ -3,5 +3,5 @@
 public interface IPagedRequest
 {
     int Page { get; }
-    int PageSize { get; }
+    int PerPage { get; }
 }

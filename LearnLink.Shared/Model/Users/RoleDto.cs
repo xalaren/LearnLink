@@ -4,5 +4,6 @@ public record RoleDto
 (
     Guid Id,
     string Name,
-    bool IsAdmin
+    bool IsAdmin,
+    bool IsSuper
 );

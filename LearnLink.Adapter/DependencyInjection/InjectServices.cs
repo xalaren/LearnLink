@@ -1,15 +1,13 @@
 ﻿using LearnLink.Adapter.Contexts;
-using LearnLink.Adapter.Transactions;
-using LearnLink.Application.Repositories;
-using LearnLink.Application.Transactions;
+using LearnLink.Application.Data;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LearnLink.Adapter.DependencyInjection;
 
 public static class InjectServices 
 {
-    public static IServiceCollection AddUnitOfWork(this IServiceCollection services)
+    public static IServiceCollection AddApplicationDataContext(this IServiceCollection services)
     {
-        return services.AddScoped<IUnitOfWork, UnitOfWork>();
+        return services.AddScoped<IApplicationDataContext, AppDbContext>();
     }
 }

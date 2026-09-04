@@ -1,6 +1,4 @@
-using LearnLink.Domain.Entities.Abstractions;
-
-namespace LearnLink.Core.Entities.Abstractions;
+namespace LearnLink.Domain.Entities.Abstractions;
 
 public abstract class Entity<TContainer> : IAuditable, IEquatable<Entity<TContainer>>
     where TContainer : struct, ITypedKey<TContainer, Guid>

@@ -1,27 +1,27 @@
 ﻿namespace LearnLink.Shared.Pagination;
 
-public record PagedRequest() : IPagedRequest
+public abstract record PagedRequest() : IPagedRequest
 {
-    private int _page;
-    private int _pageSize = DefaultPageSize;
+    private readonly int page;
+    private readonly int perPage = DefaultPageSize;
 
     public const int MinPage = 1;
 
     public const int MinPageSize = 1;
     public const int MaxPageSize = 100;
-    public const int DefaultPageSize = 20;
+    private const int DefaultPageSize = 20;
 
     public int Page
     {
-        get => _page;
-        init => _page = Math.Max(value, MinPage);
+        get => page;
+        init => page = Math.Max(value, MinPage);
     }
 
-    public int PageSize
+    public int PerPage
     {
-        get => _pageSize;
-        init => _pageSize = Math.Clamp(value, MinPageSize, MaxPageSize);
+        get => perPage;
+        init => perPage = Math.Clamp(value, MinPageSize, MaxPageSize);
     }
-    public int Skip => (Page - 1) * PageSize;
-    public int Take => PageSize;
+    public int Skip => (Page - 1) * PerPage;
+    public int Take => PerPage;
 }

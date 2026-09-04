@@ -1,10 +1,9 @@
 ﻿using Ardalis.Result;
 using Ardalis.Result.FluentValidation;
+using LearnLink.Application.Data;
 using LearnLink.Application.Extensions;
 using LearnLink.Application.Mappers.Users;
-using LearnLink.Application.Repositories;
 using LearnLink.Application.Security;
-using LearnLink.Application.Transactions;
 using LearnLink.Application.Validators.Users;
 using LearnLink.Domain.Entities.Users.Models;
 using LearnLink.Shared.Model.Users;
@@ -14,10 +13,10 @@ using Microsoft.Extensions.Logging;
 
 namespace LearnLink.Application.Services;
 
-public class UserService(IUnitOfWork unitOfWork, IEncryptionService encryptionService, ILogger<UserService> logger)
+public class UserService(IApplicationDataContext context, IEncryptionProvider encryptionProvider, ILogger<UserService> logger)
 {
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
-    private readonly IEncryptionService _encryptionService = encryptionService;
+    private readonly IApplicationDataContext _context = context;
+    private readonly IEncryptionProvider _encryptionProvider = encryptionProvider;
     private readonly ILogger<UserService> _logger = logger;
 
     public async Task<Result> RegisterAsync(RegisterRequest request, string password)
@@ -41,8 +40,7 @@ public class UserService(IUnitOfWork unitOfWork, IEncryptionService encryptionSe
                 return Result.Invalid(validationResult.AsErrors());
             }
 
-            var exists = await _unitOfWork
-                    .Repository
+            var exists = await _context
                     .Users
                     .AsNoTracking()
                     .AnyAsync(user => user.Nickname == request.Nickname);
@@ -51,13 +49,13 @@ public class UserService(IUnitOfWork unitOfWork, IEncryptionService encryptionSe
 
             var user = User.Create(request.Nickname, request.Name, request.Lastname);
 
-            var encryptedPassword = _encryptionService.Encrypt(password);
+            var encryptedPassword = _encryptionProvider.Encrypt(password);
             var credentials = Credentials.Create(encryptedPassword, user.Id, false, request.PasswordExpiration);
 
-            _unitOfWork.Repository.Users.Add(user);
-            _unitOfWork.Repository.Credentials.Add(credentials);
+            _context.Users.Add(user);
+            _context.Credentials.Add(credentials);
 
-            await _unitOfWork.CommitAsync();
+            await _context.CommitAsync();
 
             return Result.Success();
         }
@@ -77,8 +75,7 @@ public class UserService(IUnitOfWork unitOfWork, IEncryptionService encryptionSe
 
             if(!validationResult.IsValid) return Result.Invalid(validationResult.AsErrors());
 
-            var baseQuery = _unitOfWork
-                    .Repository
+            var baseQuery = _context
                     .Users
                     .AsNoTracking()
                     .Include(user => user.Role)
@@ -105,8 +102,8 @@ public class UserService(IUnitOfWork unitOfWork, IEncryptionService encryptionSe
             var pagedResponse = new PagedResponse<UserDto>
             (
                 Page: request.Page, 
-                PageSize: request.PageSize,
-                TotalCount: count,
+                PerPage: request.PerPage,
+                Count: count,
                 Items: users.AsReadOnly()
             );
 
@@ -117,17 +114,6 @@ public class UserService(IUnitOfWork unitOfWork, IEncryptionService encryptionSe
             _logger.LogError(ex, "Unhandled exception in UsersService.ListAsync");
             return Result.Error(ex.Message);
         }
-    }
-
-    public static IOrderedQueryable<User> Sort(IQueryable<User> query, bool descending, string? sortBy = null)
-    {
-        var sortExpression = UsersSortingMapper.Resolve(sortBy);
-        if (descending)
-        {
-            return query.OrderByDescending(sortExpression);
-        }
-
-        return query.OrderBy(sortExpression);
     }
 }
 

@@ -5,9 +5,13 @@ namespace LearnLink.SecurityProvider.DependencyInjection;
 
 public static class InjectServices
 {
-    public static IServiceCollection AddEncryption(this IServiceCollection services)
+    public static void AddEncryption(this IServiceCollection services)
     {
-        services.AddSingleton<IEncryptionService, EncryptionService>();
-        return services;
+        services.AddSingleton<IEncryptionProvider, EncryptionProvider>();
+    }
+
+    public static void AddTokenProvider(this IServiceCollection services)
+    {
+        services.AddSingleton<ITokenProvider, TokenProvider>();
     }
 }

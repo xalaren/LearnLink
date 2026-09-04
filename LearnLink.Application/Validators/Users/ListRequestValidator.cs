@@ -12,7 +12,7 @@ internal class ListRequestValidator : AbstractValidator<ListRequest>
             .GreaterThanOrEqualTo(PagedRequest.MinPage)
             .WithMessage($"Page number must start from {PagedRequest.MinPage}");
 
-        RuleFor(request => request.PageSize)
+        RuleFor(request => request.PerPage)
             .InclusiveBetween(PagedRequest.MinPageSize, PagedRequest.MaxPageSize)
             .WithMessage($"Page size must be between {PagedRequest.MinPageSize} - {PagedRequest.MaxPageSize}");
     }

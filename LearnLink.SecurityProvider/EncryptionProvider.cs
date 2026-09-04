@@ -6,7 +6,7 @@ using LearnLink.Domain.Entities.Users.Primitives;
 
 namespace LearnLink.SecurityProvider
 {
-    public class EncryptionService : IEncryptionService
+    public class EncryptionProvider : IEncryptionProvider
     {
         private const int SaltSize = 16; // 128 bits
         private const int HashSize = 32; // 256 bits
@@ -19,7 +19,7 @@ namespace LearnLink.SecurityProvider
             var salt = RandomNumberGenerator.GetBytes(SaltSize);
             var hash = ComputeHash(plainPassword, salt);
 
-            return new Password(Convert.ToBase64String(hash), Convert.ToBase64String(salt));
+            return new Password(Convert.ToBase64String(salt), Convert.ToBase64String(hash));
         }
 
         public bool Verify(string plainPassword, Password password)

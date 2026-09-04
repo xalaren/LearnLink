@@ -1,10 +1,8 @@
 ﻿using LearnLink.SecurityProvider;
 
-namespace LearnLink.Api.Configurations
+namespace LearnLink.Api.Configurations;
+
+public static class AuthenticationConfig
 {
-    public class AuthenticationConfig
-    {
-        public AuthenticationOptions GetAuthenticationOptions(IConfiguration config) =>
-            config.GetSection("AuthenticationOptions").Get<AuthenticationOptions>()!;
-    }
+
 }

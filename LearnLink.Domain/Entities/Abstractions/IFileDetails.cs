@@ -1,10 +1,9 @@
-﻿namespace LearnLink.Domain.Entities.Abstractions
+﻿namespace LearnLink.Domain.Entities.Abstractions;
+
+public interface IFileDetails
 {
-    public interface IFileDetails
-    {
-        string Name { get; }
-        string Extension { get; }
-        long Size { get; }
-        string? ContentType { get; }
-    }
+    string Name { get; }
+    string Extension { get; }
+    long Size { get; }
+    string? ContentType { get; }
 }

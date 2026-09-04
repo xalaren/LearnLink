@@ -5,8 +5,11 @@ using LearnLink.SecurityProvider.DependencyInjection;
 using LearnLink.Api;
 using LearnLink.Api.Configurations;
 using LearnLink.Api.Extensions;
-using Microsoft.OpenApi;
+using LearnLink.Api.HostedServices;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using NLog.Web;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,45 +30,67 @@ builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
     }
 ));
 
-builder.Services.AddUnitOfWork();
 builder.Services.AddDbContext<AppDbContext>(options => options.GetNpgSqlOptions(configuration));
+builder.Services.AddApplicationDataContext();
 
 builder.Services.AddEncryption();
+
+builder.Services.AddAuthenticationOptions(configuration);
+builder.Services.AddTokenProvider();
+
 builder.Services.AddApplicationServices();
 builder.Services.AddStorage(rootDirectory);
-builder.Services.AddSingleton<DefaultSystemUserConfig>();
-builder.Services.AddSingleton<UrlPrinter>();
+
+builder.Services.AddTransient<DefaultSystemUserConfig>();
+builder.Services.AddTransient<UrlPrinter>();
+builder.Services.AddHostedService<DatabaseSeedingHostedService>();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new OpenApiInfo { Title = "LearnLink API", Version = "v1" });
-});
+
+builder.Services.AddOpenApiWithAuth();
+
+
+builder.Services.AddAuthorization();
+builder
+    .Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        var authOptions = configuration.GetAuthenticationOptions();
+        options.RequireHttpsMetadata = false;
+        options.TokenValidationParameters = new TokenValidationParameters()
+        {
+            IssuerSigningKey = authOptions.SecurityKey,
+            ValidIssuer = authOptions.Issuer,
+            ValidAudience = authOptions.Audience,
+            ClockSkew = TimeSpan.Zero,
+        };
+    });
 
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    app.MapOpenApi();
+    app.MapScalarApiReference(options =>
+    {
+        options
+            .WithTitle("LearnLink API")
+            .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+    });
 }
 
 app.UseInternalStorage();
-app.UseSeedData();
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors("CorsPolicy");
 
 app.MapControllers();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseUrlPrinter();
 

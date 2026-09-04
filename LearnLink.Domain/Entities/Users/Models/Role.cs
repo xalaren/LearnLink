@@ -1,5 +1,5 @@
-﻿using LearnLink.Core.Entities.Abstractions;
-using LearnLink.Domain.Constants;
+﻿using LearnLink.Domain.Constants;
+using LearnLink.Domain.Entities.Abstractions;
 using LearnLink.Domain.Entities.Users.Enumerations;
 using LearnLink.Domain.Entities.Users.Identifiers;
 using LearnLink.Domain.Guards;

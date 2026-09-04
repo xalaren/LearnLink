@@ -1,14 +1,13 @@
 ﻿namespace LearnLink.Shared.Pagination;
 
-public readonly record struct PagedResponse<T>
-(
+public readonly record struct PagedResponse<T>(
     int Page,
-    int PageSize,
-    int TotalCount,
+    int PerPage,
+    int Count,
     IReadOnlyCollection<T> Items
-)
+): IPagedResponse<T>
 {
-    public int TotalPages => (int)Math.Ceiling(TotalCount / (double)PageSize);
-    public bool HasNextPage => Page < TotalPages;
+    public int Pages => (int)Math.Ceiling(Count / (double)PerPage);
+    public bool HasNextPage => Page < Pages;
     public bool HasPreviousPage => Page > 1;
 }

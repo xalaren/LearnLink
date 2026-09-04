@@ -2,7 +2,7 @@
 
 namespace LearnLink.Application.Security
 {
-    public interface IEncryptionService
+    public interface IEncryptionProvider
     {
         Password Encrypt(string plainPassword);
         bool Verify(string plainPassword, Password password);

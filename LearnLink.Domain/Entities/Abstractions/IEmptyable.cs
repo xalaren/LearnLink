@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace LearnLink.Domain.Entities.Abstractions;
 
-namespace LearnLink.Domain.Entities.Abstractions
+public interface IEmptyable<T>
 {
-    public interface IEmptyable<T>
-    {
-        static abstract bool IsEmpty(T value);
-    }
+    static abstract bool IsEmpty(T value);
 }

@@ -11,7 +11,8 @@ public static class RoleMapper
         (
             Id: role.Id.Value,
             Name: role.Name,
-            IsAdmin: role.IsAdmin
+            IsAdmin: role.IsAdmin,
+            IsSuper: role is { IsAdmin: true, IsSystem: true }
         );
     }
 }

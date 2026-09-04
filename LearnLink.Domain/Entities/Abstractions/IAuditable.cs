@@ -1,4 +1,4 @@
-namespace LearnLink.Core.Entities.Abstractions;
+namespace LearnLink.Domain.Entities.Abstractions;
 
 public interface IAuditable
 {

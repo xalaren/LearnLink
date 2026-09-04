@@ -1,5 +1,4 @@
-﻿using LearnLink.Application.Repositories;
-using LearnLink.Application.Services;
+﻿using LearnLink.Application.Services;
 using LearnLink.Application.Storages;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,6 +10,7 @@ public static class InjectServices
     {
         services.AddTransient<SeedingService>();
         services.AddScoped<UserService>();
+        services.AddScoped<AuthenticationService>();
 
         return services;
     }

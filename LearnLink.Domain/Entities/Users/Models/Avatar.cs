@@ -1,9 +1,7 @@
-using LearnLink.Core.Entities.Abstractions;
 using LearnLink.Domain.Constants;
 using LearnLink.Domain.Entities.Abstractions;
 using LearnLink.Domain.Entities.Users.Identifiers;
 using LearnLink.Domain.Entities.Users.Models;
-using LearnLink.Domain.Exceptions;
 using LearnLink.Domain.Guards;
 using LearnLink.Domain.Guards.Clauses;
 

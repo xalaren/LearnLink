@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LearnLink.Adapter.Configurations;
 
-internal class UsersEntityTypeConfiguration : IEntityTypeConfiguration<User>
+internal sealed class UsersEntityTypeConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
