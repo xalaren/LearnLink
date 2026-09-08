@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearnLink.Domain", "LearnLi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearnLink.Api", "LearnLink.Api\LearnLink.Api.csproj", "{72165AE7-DE17-5B2C-F58A-F76DB4AEF964}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearnLink.Storaging", "LearnLink.Storaging\LearnLink.Storaging.csproj", "{7A10D0D6-3AD4-D5FB-1460-10E440CD44CB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,10 @@ Global
 		{72165AE7-DE17-5B2C-F58A-F76DB4AEF964}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72165AE7-DE17-5B2C-F58A-F76DB4AEF964}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72165AE7-DE17-5B2C-F58A-F76DB4AEF964}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A10D0D6-3AD4-D5FB-1460-10E440CD44CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A10D0D6-3AD4-D5FB-1460-10E440CD44CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A10D0D6-3AD4-D5FB-1460-10E440CD44CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A10D0D6-3AD4-D5FB-1460-10E440CD44CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

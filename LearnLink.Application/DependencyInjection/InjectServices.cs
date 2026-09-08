@@ -14,11 +14,4 @@ public static class InjectServices
 
         return services;
     }
-
-    public static IServiceCollection AddStorage(this IServiceCollection services, string rootDirectory)
-    {
-        services.AddSingleton(provider => Storage.Instance(rootDirectory));
-
-        return services;
-    }
 }

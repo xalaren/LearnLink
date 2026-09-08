@@ -2,6 +2,7 @@ using LearnLink.Adapter.Contexts;
 using LearnLink.Adapter.DependencyInjection;
 using LearnLink.Application.DependencyInjection;
 using LearnLink.SecurityProvider.DependencyInjection;
+using LearnLink.Storaging.DependencyInjection;
 using LearnLink.Api;
 using LearnLink.Api.Configurations;
 using LearnLink.Api.Extensions;
