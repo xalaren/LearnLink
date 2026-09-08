@@ -8,7 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ardalis.Result.AspNetCore" Version="10.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.11">
@@ -20,7 +19,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="6.2.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
-    <PackageReference Include="Scalar.AspNetCore" Version="2.17.2" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.17.3" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.22.0" />
   </ItemGroup>
 
@@ -28,7 +27,6 @@
     <ProjectReference Include="..\LearnLink.Adapter\LearnLink.Adapter.csproj" />
     <ProjectReference Include="..\LearnLink.Application\LearnLink.Application.csproj" />
     <ProjectReference Include="..\LearnLink.SecurityProvider\LearnLink.SecurityProvider.csproj" />
-    <ProjectReference Include="..\LearnLink.Shared\LearnLink.Shared.csproj" />
     <ProjectReference Include="..\LearnLink.Storaging\LearnLink.Storaging.csproj" />
   </ItemGroup>
 

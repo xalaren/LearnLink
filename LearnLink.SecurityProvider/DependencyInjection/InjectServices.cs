@@ -1,4 +1,4 @@
-﻿using LearnLink.Application.Security;
+﻿using LearnLink.Application.Security.Providers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LearnLink.SecurityProvider.DependencyInjection;

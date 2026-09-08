@@ -1,5 +1,5 @@
-﻿using LearnLink.Application.Services;
-using LearnLink.Application.Storages;
+﻿using LearnLink.Application.Security.Services;
+using LearnLink.Application.Users.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LearnLink.Application.DependencyInjection;

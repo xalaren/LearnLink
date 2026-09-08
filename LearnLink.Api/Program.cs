@@ -88,6 +88,8 @@ app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors("CorsPolicy");
 
+app.UseExceptionHandling();
+
 app.MapControllers();
 
 app.UseAuthentication();

@@ -1,10 +1,9 @@
-﻿using LearnLink.Shared.Model.Users;
+﻿using LearnLink.Application.Users.Models;
 
-namespace LearnLink.Api.Configurations
+namespace LearnLink.Api.Configurations;
+
+public class DefaultSystemUserConfig
 {
-    public class DefaultSystemUserConfig
-    {
-        public DefaultSystemUser GetDefaultSystemUser(IConfiguration config) =>
-             config.GetSection("DefaultSystemUser").Get<DefaultSystemUser>()!;
-    }
+    public DefaultSystemUser GetDefaultSystemUser(IConfiguration config) =>
+         config.GetSection("DefaultSystemUser").Get<DefaultSystemUser>()!;
 }

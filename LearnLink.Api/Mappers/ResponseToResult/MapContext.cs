@@ -1,0 +1,28 @@
+﻿using LearnLink.Api.Mappers.ResponseToResult.Strategies;
+using LearnLink.Api.Mappers.ResponseToResult.Abstractions;
+using LearnLink.Application.Shared.Responses;
+using LearnLink.Application.Shared.Responses.Enums;
+
+namespace LearnLink.Api.Mappers.ResponseToResult;
+
+public class MapContext
+{
+    private readonly Dictionary<ResponseTypes, IResponseMapper> _responseMapperMatching = new()
+    {
+        { ResponseTypes.Invalid,  new ToBadRequestMapper() },
+        { ResponseTypes.Forbidden,  new ToForbiddenMapper() },
+        { ResponseTypes.Conflict,  new ToConfilctMapper() },
+        { ResponseTypes.NotFound,  new ToNotFoundMapper() },
+        { ResponseTypes.Failed,  new ToInternalServerErrorMapper() },
+    };
+
+    public IResult Execute(Response response)
+    {
+        if(_responseMapperMatching.TryGetValue(response.Type, out var mapper))
+        {
+            return mapper.Map(response);
+        }
+
+        throw new InvalidOperationException("No mapper for this response type defined");
+    }
+}

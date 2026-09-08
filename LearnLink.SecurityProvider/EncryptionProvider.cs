@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 using Konscious.Security.Cryptography;
-using LearnLink.Application.Security;
+using LearnLink.Application.Security.Providers;
 using LearnLink.Domain.Entities.Users.Primitives;
 
 namespace LearnLink.SecurityProvider

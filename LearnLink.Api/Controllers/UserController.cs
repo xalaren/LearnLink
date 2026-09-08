@@ -1,9 +1,9 @@
-﻿using Ardalis.Result.AspNetCore;
-using LearnLink.Application.Services;
-using LearnLink.Shared.Model.Users;
-using LearnLink.Shared.Pagination;
+﻿using LearnLink.Application.Users.Models;
+using LearnLink.Application.Users.Services;
+using LearnLink.Application.Shared.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using LearnLink.Api.Mappers.ResponseToActionResult;
 
 namespace LearnLink.Api.Controllers;
 
@@ -13,7 +13,7 @@ public class UserController(UserService userService) : ApiControllerBase
 {
     private readonly UserService _userService = userService;
     
-    [HttpPost("register")]
+    [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [AllowAnonymous]
     public async Task<ActionResult> Register(RegisterRequest request, [FromQuery] string password)
@@ -21,10 +21,10 @@ public class UserController(UserService userService) : ApiControllerBase
        return (await _userService.RegisterAsync(request, password)).ToActionResult(this);
     }
 
-    [HttpGet("list")]
-    [ProducesResponseType(typeof(PagedResponse<UserDto>), StatusCodes.Status200OK)]
+    [HttpGet]
+    [ProducesResponseType(typeof(PagedContent<UserDto>), StatusCodes.Status200OK)]
     [Authorize]
-    public async Task<ActionResult<PagedResponse<UserDto>>> List([FromBody] ListRequest request)
+    public async Task<ActionResult<PagedContent<UserDto>>> List([FromBody] ListRequest request)
     {
         return (await _userService.ListAsync(request)).ToActionResult(this);
     }

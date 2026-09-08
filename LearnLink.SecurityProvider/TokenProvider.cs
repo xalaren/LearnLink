@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 using System.Security.Cryptography;
-using LearnLink.Application.Security;
+using LearnLink.Application.Security.Providers;
 using LearnLink.Domain.Entities.Users.Models;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;

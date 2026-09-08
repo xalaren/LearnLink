@@ -1,6 +1,6 @@
-﻿using Ardalis.Result.AspNetCore;
-using LearnLink.Application.Services;
-using LearnLink.Shared.Model.Authentication;
+﻿using LearnLink.Api.Mappers.ResponseToActionResult;
+using LearnLink.Application.Security.Models;
+using LearnLink.Application.Security.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

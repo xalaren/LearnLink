@@ -1,4 +1,5 @@
-﻿using LearnLink.Application.Storages;
+﻿using LearnLink.Api.Middleware;
+using LearnLink.Storaging;
 
 namespace LearnLink.Api.Extensions;
 
@@ -16,5 +17,10 @@ public static class WebApplicationExtensions
         {
             var _ = app.Services.GetRequiredService<UrlPrinter>().Start(app.Lifetime.ApplicationStopped);
         });
+    }
+
+    public static void UseExceptionHandling(this WebApplication app)
+    {
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
     }
 }

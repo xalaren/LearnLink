@@ -1,5 +1,5 @@
 ﻿using LearnLink.Api.Configurations;
-using LearnLink.Application.Services;
+using LearnLink.Application.Users.Services;
 
 namespace LearnLink.Api.HostedServices;
 

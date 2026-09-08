@@ -16,8 +16,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LearnLink.Adapter", "LearnL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LearnLink.SecurityProvider", "LearnLink.SecurityProvider\LearnLink.SecurityProvider.csproj", "{7E991164-73B9-4CA1-861F-7C1CFC4A518D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LearnLink.Shared", "LearnLink.Shared\LearnLink.Shared.csproj", "{7A50906E-B059-47A8-83B4-23A468561336}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearnLink.Domain", "LearnLink.Domain\LearnLink.Domain.csproj", "{C3A2CB4E-47FC-BC0A-1AF9-6E55F0A41E64}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearnLink.Api", "LearnLink.Api\LearnLink.Api.csproj", "{72165AE7-DE17-5B2C-F58A-F76DB4AEF964}"
@@ -48,10 +46,6 @@ Global
 		{7E991164-73B9-4CA1-861F-7C1CFC4A518D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E991164-73B9-4CA1-861F-7C1CFC4A518D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E991164-73B9-4CA1-861F-7C1CFC4A518D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7A50906E-B059-47A8-83B4-23A468561336}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7A50906E-B059-47A8-83B4-23A468561336}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7A50906E-B059-47A8-83B4-23A468561336}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7A50906E-B059-47A8-83B4-23A468561336}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C3A2CB4E-47FC-BC0A-1AF9-6E55F0A41E64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C3A2CB4E-47FC-BC0A-1AF9-6E55F0A41E64}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3A2CB4E-47FC-BC0A-1AF9-6E55F0A41E64}.Release|Any CPU.ActiveCfg = Release|Any CPU
