@@ -15,9 +15,9 @@ namespace LearnLink.Api.Controllers
         [HttpPost("login")]
         [ProducesResponseType(typeof(TokenPair), StatusCodes.Status200OK)]
         [AllowAnonymous]
-        public async Task<ActionResult<TokenPair>> Login(string nickname, string password)
+        public async Task<ActionResult<TokenPair>> Login([FromQuery] LoginRequest loginRequest)
         {
-            return (await _authenticationService.LoginAsync(nickname, password)).ToActionResult(this);
+            return (await _authenticationService.LoginAsync(loginRequest)).ToActionResult(this);
         }
     }
 }

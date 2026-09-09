@@ -4,7 +4,7 @@ using LearnLink.Shared.Pagination;
 
 namespace LearnLink.Application.Users.Validators;
 
-internal class ListRequestValidator : AbstractValidator<ListRequest>
+internal sealed class ListRequestValidator : AbstractValidator<ListRequest>
 {
     public ListRequestValidator()
     {

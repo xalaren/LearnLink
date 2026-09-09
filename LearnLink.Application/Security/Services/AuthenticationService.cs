@@ -1,7 +1,9 @@
 ﻿using LearnLink.Application.Data;
 using LearnLink.Application.Security.Models;
 using LearnLink.Application.Security.Providers;
+using LearnLink.Application.Security.Validators;
 using LearnLink.Application.Shared.Responses;
+using LearnLink.Application.Shared.Responses.Extensions;
 using LearnLink.Domain.Entities.Users.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -14,24 +16,27 @@ public class AuthenticationService(IApplicationDataContext context, IEncryptionP
     private readonly IEncryptionProvider _encryptionProvider = encryptionProvider;
     private readonly ITokenProvider _tokenProvider = tokenProvider;
     private readonly ILogger<AuthenticationService> _logger = logger;
-    public async Task<Response<TokenPair>> LoginAsync(string nickname, string password)
+    public async Task<Response<TokenPair>> LoginAsync(LoginRequest loginRequest)
     {
         var responseBuilder = new ResponseBuilder<TokenPair>();
         try
         {
-            if (string.IsNullOrWhiteSpace(password))
+            if(loginRequest == null)
             {
                 return responseBuilder
                     .Invalid()
-                    .WithMessage("Nickname is required")
+                    .WithMessage("Request is not provided")
                     .Build();
             }
 
-            if (string.IsNullOrWhiteSpace(nickname))
+            var validation = new LoginRequestValidator().Validate(loginRequest);
+
+            if(!validation.IsValid)
             {
                 return responseBuilder
                     .Invalid()
-                    .WithMessage("Password is required")
+                    .WithMessage("One or more validation errors occured")
+                    .WithDetails(validation.AsErrors())
                     .Build();
             }
 
@@ -39,7 +44,7 @@ public class AuthenticationService(IApplicationDataContext context, IEncryptionP
                 .Credentials
                 .Include(creds => creds.User)
                 .ThenInclude(user => user.Role)
-                .FirstOrDefaultAsync(creds => creds.User.Nickname == nickname);
+                .FirstOrDefaultAsync(creds => creds.User.Nickname == loginRequest.Nickname);
 
             if(credentials == null)
             {
@@ -50,7 +55,7 @@ public class AuthenticationService(IApplicationDataContext context, IEncryptionP
 
             }
 
-            var verified = _encryptionProvider.Verify(password, credentials.Password);
+            var verified = _encryptionProvider.Verify(loginRequest.Password, credentials.Password);
 
             if(!verified)
             {
@@ -81,11 +86,11 @@ public class AuthenticationService(IApplicationDataContext context, IEncryptionP
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Unhandled exception in AuthenticationService.LoginAsync for Nickname '{Nickname}'", nickname);
+            _logger.LogError(ex, "Unhandled exception in AuthenticationService.LoginAsync for Nickname '{Nickname}'", loginRequest.Nickname);
 
             return responseBuilder
                 .Fail()
-                .WithMessage("Unknown error occured during login")
+                .WithMessage("Unknown error occured during login process")
                 .Build();
         }
     }
