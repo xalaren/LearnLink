@@ -3,5 +3,5 @@
 public interface IExpireable
 {
     DateTime ExpiresAtUtc { get; }
-    bool NeededRefresh { get; }
+    bool IsExpired { get; }
 }

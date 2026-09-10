@@ -68,15 +68,6 @@ public class UserService(IApplicationDataContext context, IEncryptionProvider en
                 .WithMessage("User registered successfully")
                 .Build();
         }
-        catch (OperationCanceledException ex)
-        {
-            _logger.LogWarning(ex, "UserService.RegisterAsync was cancelled by {Source}", ex.Source);
-
-            return responseBuilder
-                .Fail()
-                .WithMessage("Request was cancelled")
-                .Build();
-        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Unhandled exception in UsersService.RegisterAsync for Nickname '{Nickname}'", request?.Nickname);
@@ -140,15 +131,6 @@ public class UserService(IApplicationDataContext context, IEncryptionProvider en
                 .Succeed()
                 .WithMessage("Users listed successfully")
                 .WithContent(pagedResponse)
-                .Build();
-        }
-        catch(OperationCanceledException ex)
-        {
-            _logger.LogWarning(ex, "UserService.ListAsync was cancelled by {Source}", ex.Source);
-
-            return responseBuilder
-                .Fail()
-                .WithMessage("Request was cancelled")
                 .Build();
         }
         catch (Exception ex)

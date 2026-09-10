@@ -16,7 +16,7 @@ public class RefreshToken : Entity<RefreshTokenId>, IExpireable
     public UserId UserId { get; private set; }
     public User User { get; private set; } = null!;
     public DateTime ExpiresAtUtc { get; private set; }
-    public bool NeededRefresh => DateTime.UtcNow > ExpiresAtUtc;
+    public bool IsExpired => DateTime.UtcNow >= ExpiresAtUtc;
 
     protected RefreshToken() { }
     private RefreshToken(RefreshTokenId id, UserId userId, string token)
