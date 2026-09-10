@@ -1,16 +1,9 @@
 ﻿using LearnLink.Api.Middleware;
-using LearnLink.Storaging;
 
 namespace LearnLink.Api.Extensions;
 
 public static class WebApplicationExtensions
 {
-    public static void UseInternalStorage(this WebApplication app) 
-    {
-        var internalDirectory = Storage.Instance(app.Environment.ContentRootPath).InternalDirectory;
-        Directory.CreateDirectory(internalDirectory);
-    }
-
     public static void UseUrlPrinter(this WebApplication app)
     {
         app.Lifetime.ApplicationStarted.Register(() =>

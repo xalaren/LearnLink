@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LearnLink.Domain\LearnLink.Domain.csproj" />
-    <ProjectReference Include="..\LearnLink.Storaging\LearnLink.Storaging.csproj" />
   </ItemGroup>
 
 </Project>

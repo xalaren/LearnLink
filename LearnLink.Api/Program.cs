@@ -2,7 +2,6 @@ using LearnLink.Adapter.Contexts;
 using LearnLink.Adapter.DependencyInjection;
 using LearnLink.Application.DependencyInjection;
 using LearnLink.SecurityProvider.DependencyInjection;
-using LearnLink.Storaging.DependencyInjection;
 using LearnLink.Api;
 using LearnLink.Api.Configurations;
 using LearnLink.Api.Extensions;
@@ -40,7 +39,6 @@ builder.Services.AddAuthenticationOptions(configuration);
 builder.Services.AddTokenProvider();
 
 builder.Services.AddApplicationServices();
-builder.Services.AddStorage(rootDirectory);
 
 builder.Services.AddTransient<DefaultSystemUserConfig>();
 builder.Services.AddTransient<UrlPrinter>();
@@ -83,7 +81,6 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseInternalStorage();
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors("CorsPolicy");
