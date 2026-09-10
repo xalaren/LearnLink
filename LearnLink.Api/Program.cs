@@ -1,7 +1,4 @@
 using LearnLink.Adapter.Contexts;
-using LearnLink.Adapter.DependencyInjection;
-using LearnLink.Application.DependencyInjection;
-using LearnLink.SecurityProvider.DependencyInjection;
 using LearnLink.Api;
 using LearnLink.Api.Configurations;
 using LearnLink.Api.Extensions;
@@ -10,6 +7,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using NLog.Web;
 using Scalar.AspNetCore;
+using LearnLink.Application;
+using LearnLink.Adapter;
+using LearnLink.SecurityProvider;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,14 +31,12 @@ builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
 ));
 
 builder.Services.AddDbContext<AppDbContext>(options => options.GetNpgSqlOptions(configuration));
-builder.Services.AddApplicationDataContext();
-
-builder.Services.AddEncryption();
+builder.Services.AddAdapter();
 
 builder.Services.AddAuthenticationOptions(configuration);
-builder.Services.AddTokenProvider();
+builder.Services.AddSecurityProvider();
 
-builder.Services.AddApplicationServices();
+builder.Services.AddApplication();
 
 builder.Services.AddTransient<DefaultSystemUserConfig>();
 builder.Services.AddTransient<UrlPrinter>();

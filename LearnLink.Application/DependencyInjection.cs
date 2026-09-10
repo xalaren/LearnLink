@@ -2,11 +2,11 @@
 using LearnLink.Application.Users.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LearnLink.Application.DependencyInjection;
+namespace LearnLink.Application;
 
-public static class InjectServices
+public static class DependencyInjection
 {
-    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+    public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddTransient<SeedingService>();
         services.AddScoped<UserService>();

@@ -1,17 +1,13 @@
 ﻿using LearnLink.Application.Security.Providers;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LearnLink.SecurityProvider.DependencyInjection;
+namespace LearnLink.SecurityProvider;
 
-public static class InjectServices
+public static class DependencyInjection
 {
-    public static void AddEncryption(this IServiceCollection services)
+    public static void AddSecurityProvider(this IServiceCollection services)
     {
         services.AddSingleton<IEncryptionProvider, EncryptionProvider>();
-    }
-
-    public static void AddTokenProvider(this IServiceCollection services)
-    {
         services.AddSingleton<ITokenProvider, TokenProvider>();
     }
 }

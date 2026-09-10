@@ -2,11 +2,11 @@
 using LearnLink.Application.Data;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LearnLink.Adapter.DependencyInjection;
+namespace LearnLink.Adapter;
 
-public static class InjectServices 
+public static class DependencyInjection 
 {
-    public static IServiceCollection AddApplicationDataContext(this IServiceCollection services)
+    public static IServiceCollection AddAdapter(this IServiceCollection services)
     {
         return services.AddScoped<IApplicationDataContext, AppDbContext>();
     }
