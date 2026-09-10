@@ -16,7 +16,7 @@ public class AuthenticationService(IApplicationDataContext context, IEncryptionP
     private readonly IEncryptionProvider _encryptionProvider = encryptionProvider;
     private readonly ITokenProvider _tokenProvider = tokenProvider;
     private readonly ILogger<AuthenticationService> _logger = logger;
-    public async Task<Response<TokenPair>> LoginAsync(LoginRequest loginRequest)
+    public async Task<Response<TokenPair>> LoginAsync(LoginRequest loginRequest, CancellationToken cancellationToken = default)
     {
         var responseBuilder = new ResponseBuilder<TokenPair>();
         try
@@ -44,7 +44,7 @@ public class AuthenticationService(IApplicationDataContext context, IEncryptionP
                 .Credentials
                 .Include(creds => creds.User)
                 .ThenInclude(user => user.Role)
-                .FirstOrDefaultAsync(creds => creds.User.Nickname == loginRequest.Nickname);
+                .FirstOrDefaultAsync(creds => creds.User.Nickname == loginRequest.Nickname, cancellationToken);
 
             if(credentials == null)
             {
@@ -76,7 +76,7 @@ public class AuthenticationService(IApplicationDataContext context, IEncryptionP
                 .RefreshTokens
                 .Add(RefreshToken.Create(user.Id, tokenPair.RefreshToken));
 
-            await _context.CommitAsync();
+            await _context.CommitAsync(cancellationToken);
 
             return responseBuilder
                 .Succeed()

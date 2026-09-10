@@ -18,7 +18,7 @@ public class UserService(IApplicationDataContext context, IEncryptionProvider en
     private readonly IEncryptionProvider _encryptionProvider = encryptionProvider;
     private readonly ILogger<UserService> _logger = logger;
 
-    public async Task<Response> RegisterAsync(RegisterRequest request)
+    public async Task<Response> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken)
     {
         var responseBuilder = new ResponseBuilder();
 
@@ -46,7 +46,7 @@ public class UserService(IApplicationDataContext context, IEncryptionProvider en
             var exists = await _context
                     .Users
                     .AsNoTracking()
-                    .AnyAsync(user => user.Nickname == request.Nickname);
+                    .AnyAsync(user => user.Nickname == request.Nickname, cancellationToken);
 
             if (exists) return responseBuilder
                     .Conflict()
@@ -61,11 +61,20 @@ public class UserService(IApplicationDataContext context, IEncryptionProvider en
             _context.Users.Add(user);
             _context.Credentials.Add(credentials);
 
-            await _context.CommitAsync();
+            await _context.CommitAsync(cancellationToken);
 
             return responseBuilder
                 .Succeed()
                 .WithMessage("User registered successfully")
+                .Build();
+        }
+        catch (OperationCanceledException ex)
+        {
+            _logger.LogWarning(ex, "UserService.RegisterAsync was cancelled by {Source}", ex.Source);
+
+            return responseBuilder
+                .Fail()
+                .WithMessage("Request was cancelled")
                 .Build();
         }
         catch (Exception ex)
@@ -79,12 +88,20 @@ public class UserService(IApplicationDataContext context, IEncryptionProvider en
         }
     }
 
-    public async Task<Response<PagedContent<UserDto>>> ListAsync(ListRequest request)
+    public async Task<Response<PagedContent<UserDto>>> ListAsync(ListRequest request, CancellationToken cancellationToken = default)
     {
         var responseBuilder = new ResponseBuilder<PagedContent<UserDto>>();
 
         try
         {
+            if(request == null)
+            {
+                return responseBuilder
+                    .Invalid()
+                    .WithMessage("Request is not provided")
+                    .Build();
+            }
+
             var validation = new ListRequestValidator().Validate(request);
 
             if(!validation.IsValid)
@@ -96,28 +113,20 @@ public class UserService(IApplicationDataContext context, IEncryptionProvider en
                     .Build();
             }
 
-            var baseQuery = _context
+            var query = _context
                     .Users
                     .AsNoTracking()
                     .Include(user => user.Role)
-                    .Include(user => user.Avatar);
+                    .Include(user => user.Avatar)
+                    .SortBy(request);
 
-            var sortExpression = UsersSortingMapper.Resolve(request.SortBy);
+            var count = await query.CountAsync(cancellationToken);
 
-            var sorted = request.Descending ?
-                baseQuery.OrderByDescending(sortExpression) :
-                baseQuery.OrderBy(sortExpression);
-
-
-            var count = await sorted.CountAsync();
-
-            var paged = sorted
-                    .Skip(request.Skip)
-                    .Take(request.Take);
-
-            var users = await paged
+            var users = await query
+                .Skip(request.Skip)
+                .Take(request.Take)
                 .Select(user => user.ToDto())
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             var pagedResponse = new PagedContent<UserDto>
             (
@@ -133,9 +142,18 @@ public class UserService(IApplicationDataContext context, IEncryptionProvider en
                 .WithContent(pagedResponse)
                 .Build();
         }
+        catch(OperationCanceledException ex)
+        {
+            _logger.LogWarning(ex, "UserService.ListAsync was cancelled by {Source}", ex.Source);
+
+            return responseBuilder
+                .Fail()
+                .WithMessage("Request was cancelled")
+                .Build();
+        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Unhandled exception in UsersService.ListAsync");
+            _logger.LogError(ex, "Unhandled exception in UserService.ListAsync");
 
             return responseBuilder
                 .Fail()

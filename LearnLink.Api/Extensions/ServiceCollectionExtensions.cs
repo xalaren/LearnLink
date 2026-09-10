@@ -1,7 +1,4 @@
-﻿using LearnLink.Api.Configurations;
-using LearnLink.Storaging;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Identity.Client;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi;
 
 namespace LearnLink.Api.Extensions;
@@ -29,7 +26,7 @@ internal static class ServiceCollectionExtensions
                 document.Security ??= [];
                 document.Security.Add(new OpenApiSecurityRequirement
                 {
-                    [new OpenApiSecuritySchemeReference("Bearer", document)] = new List<string>()
+                    [new OpenApiSecuritySchemeReference("Bearer", document)] = []
                 });
 
                 return Task.CompletedTask;

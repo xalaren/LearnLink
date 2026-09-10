@@ -1,29 +1,19 @@
-﻿using System.Linq.Expressions;
+﻿using LearnLink.Application.Shared.Sorting;
 using LearnLink.Domain.Entities.Users.Models;
 
 namespace LearnLink.Application.Users.Mappers;
 
 internal static class UsersSortingMapper
 {
-    private static readonly Dictionary<string, Expression<Func<User, object>>> Map = new(StringComparer.OrdinalIgnoreCase)
+    public static IOrderedQueryable<User> SortBy(this IQueryable<User> baseQuery, ISortedRequest request)
     {
-        ["nickname"] = user => user.Nickname,
-        ["name"] = user => user.Name,
-        ["lastname"] = user => user.Lastname,
-        ["createdOn"] = user => user.CreatedOnUtc,
-        ["modifiedOn"] = user => user.ModifiedOnUtc,
-        ["roleId"] = user => user.Role.Id,
-        ["roleName"] = user => user.Role.Name
-    };
-
-
-    public static Expression<Func<User, object>> Resolve(string? sortBy)
-    {
-        if (sortBy != null && Map.TryGetValue(sortBy, out var expression))
+        return request.SortBy?.ToLowerInvariant() switch
         {
-            return expression;
-        }
-
-        return user => user.CreatedOnUtc;
+            "nickname" => request.Descending ? baseQuery.OrderByDescending(u => u.Nickname) : baseQuery.OrderBy(u => u.Nickname),
+            "name" => request.Descending ? baseQuery.OrderByDescending(u => u.Name) : baseQuery.OrderBy(u => u.Name),
+            "createdon" => request.Descending ? baseQuery.OrderByDescending(u => u.CreatedOnUtc) : baseQuery.OrderBy(u => u.CreatedOnUtc),
+            "roleName" => request.Descending ? baseQuery.OrderByDescending(u => u.Role!.Name) : baseQuery.OrderBy(u => u.Role!.Name),
+            _ => request.Descending ? baseQuery.OrderByDescending(u => u.CreatedOnUtc) : baseQuery.OrderBy(u => u.CreatedOnUtc)
+        };
     }
 }

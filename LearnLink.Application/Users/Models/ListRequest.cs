@@ -1,5 +1,5 @@
-﻿using LearnLink.Shared.Pagination;
-using LearnLink.Shared.Sorting;
+﻿using LearnLink.Application.Shared.Sorting;
+using LearnLink.Shared.Pagination;
 
 namespace LearnLink.Application.Users.Models;
 

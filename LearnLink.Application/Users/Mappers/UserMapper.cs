@@ -5,7 +5,7 @@ namespace LearnLink.Application.Users.Mappers;
 
 public static class UserMapper
 {
-    public static UserDto ToDto(User user)
+    public static UserDto ToDto(this User user)
     {
         return new UserDto
         (

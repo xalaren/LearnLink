@@ -15,9 +15,9 @@ namespace LearnLink.Api.Controllers
         [HttpPost("login")]
         [ProducesResponseType(typeof(TokenPair), StatusCodes.Status200OK)]
         [AllowAnonymous]
-        public async Task<ActionResult<TokenPair>> Login(LoginRequest loginRequest)
+        public async Task<ActionResult<TokenPair>> Login(LoginRequest loginRequest, CancellationToken cancellationToken = default)
         {
-            return (await _authenticationService.LoginAsync(loginRequest)).ToActionResult(this);
+            return (await _authenticationService.LoginAsync(loginRequest, cancellationToken)).ToActionResult(this);
         }
     }
 }

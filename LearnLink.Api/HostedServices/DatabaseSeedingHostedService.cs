@@ -15,9 +15,9 @@ public class DatabaseSeedingHostedService(
 
         var defaultSystemUser = registerConfig.GetDefaultSystemUser(configuration);
 
-        await service.InitializeUserRole();
-        await service.InitializeAdministratorRole();
-        await service.InitializeSystemUser(defaultSystemUser);
+        await service.InitializeUserRole(cancellationToken);
+        await service.InitializeAdministratorRole(cancellationToken);
+        await service.InitializeSystemUser(defaultSystemUser, cancellationToken);
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;

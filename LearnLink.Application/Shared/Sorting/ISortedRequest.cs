@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace LearnLink.Shared.Sorting;
+namespace LearnLink.Application.Shared.Sorting;
 
 public interface ISortedRequest
 {

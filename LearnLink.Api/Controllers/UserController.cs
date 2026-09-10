@@ -16,18 +16,16 @@ public class UserController(UserService userService) : ApiControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [AllowAnonymous]
-    public async Task<ActionResult> Register(RegisterRequest request)
+    public async Task<ActionResult> Register(RegisterRequest request, CancellationToken cancellationToken = default)
     {
-       return (await _userService.RegisterAsync(request)).ToActionResult(this);
+       return (await _userService.RegisterAsync(request, cancellationToken)).ToActionResult(this);
     }
 
     [HttpGet]
     [ProducesResponseType(typeof(PagedContent<UserDto>), StatusCodes.Status200OK)]
     [Authorize]
-    public async Task<ActionResult<PagedContent<UserDto>>> List([FromBody] ListRequest request)
+    public async Task<ActionResult<PagedContent<UserDto>>> List(ListRequest request, CancellationToken cancellationToken = default)
     {
-        return (await _userService.ListAsync(request)).ToActionResult(this);
+        return (await _userService.ListAsync(request, cancellationToken)).ToActionResult(this);
     }
-
-
 }

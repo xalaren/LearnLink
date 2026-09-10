@@ -12,7 +12,7 @@ public class SeedingService(IApplicationDataContext context, IEncryptionProvider
     private readonly IApplicationDataContext _context = context;
     private readonly IEncryptionProvider encryptionProvider = encryptionProvider;
 
-    public async Task InitializeSystemUser(InitializeSystemUserRequest request)
+    public async Task InitializeSystemUser(InitializeSystemUserRequest request, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request, nameof(request));
 
@@ -33,10 +33,10 @@ public class SeedingService(IApplicationDataContext context, IEncryptionProvider
         _context.Users.Add(user);
         _context.Credentials.Add(credentials);
 
-        await _context.CommitAsync();
+        await _context.CommitAsync(cancellationToken);
     }
 
-    public async Task InitializeAdministratorRole()
+    public async Task InitializeAdministratorRole(CancellationToken cancellationToken = default)
     {
         var predefinedAdmin = PredefinedRoles.Administrator;
         var roleId = predefinedAdmin.Value;
@@ -44,7 +44,7 @@ public class SeedingService(IApplicationDataContext context, IEncryptionProvider
         var exists = await _context
             .Roles
             .AsNoTracking()
-            .AnyAsync(role => role.Id == roleId);
+            .AnyAsync(role => role.Id == roleId, cancellationToken);
 
         if (exists) return;
 
@@ -52,10 +52,10 @@ public class SeedingService(IApplicationDataContext context, IEncryptionProvider
 
         _context.Roles.Add(adminRole);
 
-        await _context.CommitAsync();
+        await _context.CommitAsync(cancellationToken);
     }
 
-    public async Task InitializeUserRole()
+    public async Task InitializeUserRole(CancellationToken cancellationToken = default)
     {
         var predefinedUser = PredefinedRoles.User;
         var roleId = predefinedUser.Value;
@@ -63,7 +63,7 @@ public class SeedingService(IApplicationDataContext context, IEncryptionProvider
         var exists = await _context
              .Roles
              .AsNoTracking()
-             .AnyAsync(role => role.Id == roleId);
+             .AnyAsync(role => role.Id == roleId, cancellationToken);
 
         if (exists) return;
 
@@ -71,6 +71,6 @@ public class SeedingService(IApplicationDataContext context, IEncryptionProvider
 
         _context.Roles.Add(userRole);
 
-        await _context.CommitAsync();
+        await _context.CommitAsync(cancellationToken);
     }
 }
