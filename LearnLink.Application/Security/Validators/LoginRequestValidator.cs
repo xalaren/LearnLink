@@ -12,7 +12,7 @@ internal sealed class LoginRequestValidator : AbstractValidator<LoginRequest>
             .WithName("nickname")
             .WithMessage("Nickname is required");
 
-        RuleFor(loginRequest => loginRequest.Nickname)
+        RuleFor(loginRequest => loginRequest.Password)
             .NotEmpty()
             .WithName("passsword")
             .WithMessage("Password is required");

@@ -4,6 +4,6 @@ namespace LearnLink.Api.Configurations;
 
 public class DefaultSystemUserConfig
 {
-    public DefaultSystemUser GetDefaultSystemUser(IConfiguration config) =>
-         config.GetSection("DefaultSystemUser").Get<DefaultSystemUser>()!;
+    public InitializeSystemUserRequest GetDefaultSystemUser(IConfiguration config) =>
+         config.GetSection("DefaultSystemUser").Get<InitializeSystemUserRequest>()!;
 }

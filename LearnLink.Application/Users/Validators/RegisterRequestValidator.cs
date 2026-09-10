@@ -25,5 +25,11 @@ internal sealed class RegisterRequestValidator : AbstractValidator<RegisterReque
             .WithMessage("Lastname is required")
             .MaximumLength(User.LastnameMaxLength)
             .WithMessage($"Lastname cannot exceed {User.LastnameMaxLength} characters");
+
+        RuleFor(request => request.Password)
+            .NotEmpty()
+            .WithMessage("Password is required")
+            .MinimumLength(Credentials.PasswordMinLength)
+            .WithMessage($"Password must have at least {Credentials.PasswordMinLength} characters");
     }
 }

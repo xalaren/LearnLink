@@ -24,16 +24,11 @@ public abstract class Entity<TContainer> : IAuditable, IEquatable<Entity<TContai
 
     public override bool Equals(object? obj)
     {
-        return base.Equals(obj);
+        return Equals(obj);
     }
 
     public override int GetHashCode()
     {
         return Id.GetHashCode();
-    }
-
-    public bool Equals(TContainer other)
-    {
-        throw new NotImplementedException();
     }
 }

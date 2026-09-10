@@ -18,26 +18,17 @@ public class UserService(IApplicationDataContext context, IEncryptionProvider en
     private readonly IEncryptionProvider _encryptionProvider = encryptionProvider;
     private readonly ILogger<UserService> _logger = logger;
 
-    public async Task<Response> RegisterAsync(RegisterRequest request, string password)
+    public async Task<Response> RegisterAsync(RegisterRequest request)
     {
         var responseBuilder = new ResponseBuilder();
 
         try
         {
-
             if (request == null)
             {
                 return responseBuilder
                     .Invalid()
                     .WithMessage("Request is not provided")
-                    .Build();
-            }
-
-            if (string.IsNullOrWhiteSpace(password))
-            {
-                return responseBuilder
-                    .Invalid()
-                    .WithMessage("Password is required")
                     .Build();
             }
 
@@ -64,7 +55,7 @@ public class UserService(IApplicationDataContext context, IEncryptionProvider en
 
             var user = User.Create(request.Nickname, request.Name, request.Lastname);
 
-            var encryptedPassword = _encryptionProvider.Encrypt(password);
+            var encryptedPassword = _encryptionProvider.Encrypt(request.Password);
             var credentials = Credentials.Create(encryptedPassword, user.Id, false, request.PasswordExpiration);
 
             _context.Users.Add(user);

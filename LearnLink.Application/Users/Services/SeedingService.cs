@@ -12,7 +12,7 @@ public class SeedingService(IApplicationDataContext context, IEncryptionProvider
     private readonly IApplicationDataContext _context = context;
     private readonly IEncryptionProvider encryptionProvider = encryptionProvider;
 
-    public async Task InitializeSystemUser(DefaultSystemUser request)
+    public async Task InitializeSystemUser(InitializeSystemUserRequest request)
     {
         ArgumentNullException.ThrowIfNull(request, nameof(request));
 

@@ -16,9 +16,9 @@ public class UserController(UserService userService) : ApiControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [AllowAnonymous]
-    public async Task<ActionResult> Register(RegisterRequest request, [FromQuery] string password)
+    public async Task<ActionResult> Register(RegisterRequest request)
     {
-       return (await _userService.RegisterAsync(request, password)).ToActionResult(this);
+       return (await _userService.RegisterAsync(request)).ToActionResult(this);
     }
 
     [HttpGet]
