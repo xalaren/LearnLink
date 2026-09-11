@@ -1,12 +1,12 @@
 ﻿using FluentValidation;
-using LearnLink.Application.Users.Models;
+using LearnLink.Application.Users.Commands;
 using LearnLink.Domain.Entities.Users.Models;
 
 namespace LearnLink.Application.Users.Validators;
 
-internal sealed class RegisterRequestValidator : AbstractValidator<RegisterRequest>
+internal sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand>
 {
-    internal RegisterRequestValidator()
+    internal RegisterCommandValidator()
     {
         RuleFor(request => request.Nickname)
             .NotEmpty()

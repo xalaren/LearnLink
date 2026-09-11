@@ -18,66 +18,66 @@ public class UserService(IApplicationDataContext context, IEncryptionProvider en
     private readonly IEncryptionProvider _encryptionProvider = encryptionProvider;
     private readonly ILogger<UserService> _logger = logger;
 
-    public async Task<Response> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken)
-    {
-        var responseBuilder = new ResponseBuilder();
+    //public async Task<Response> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken)
+    //{
+    //    var responseBuilder = new ResponseBuilder();
 
-        try
-        {
-            if (request == null)
-            {
-                return responseBuilder
-                    .Invalid()
-                    .WithMessage("Request is not provided")
-                    .Build();
-            }
+    //    try
+    //    {
+    //        if (request == null)
+    //        {
+    //            return responseBuilder
+    //                .Invalid()
+    //                .WithMessage("Request is not provided")
+    //                .Build();
+    //        }
 
-            var validation = new RegisterRequestValidator().Validate(request);
+    //        var validation = new RegisterCommandValidator().Validate(request);
 
-            if (!validation.IsValid)
-            {
-                return responseBuilder
-                    .Invalid()
-                    .WithMessage("One or more validation errors occured")
-                    .WithDetails(validation.AsErrors())
-                    .Build();
-            }
+    //        if (!validation.IsValid)
+    //        {
+    //            return responseBuilder
+    //                .Invalid()
+    //                .WithMessage("One or more validation errors occured")
+    //                .WithDetails(validation.AsErrors())
+    //                .Build();
+    //        }
 
-            var exists = await _context
-                    .Users
-                    .AsNoTracking()
-                    .AnyAsync(user => user.Nickname == request.Nickname, cancellationToken);
+    //        var exists = await _context
+    //                .Users
+    //                .AsNoTracking()
+    //                .AnyAsync(user => user.Nickname == request.Nickname, cancellationToken);
 
-            if (exists) return responseBuilder
-                    .Conflict()
-                    .WithMessage($"User with nickname \"{request.Nickname}\" is already exists")
-                    .Build();
+    //        if (exists) return responseBuilder
+    //                .Conflict()
+    //                .WithMessage($"User with nickname \"{request.Nickname}\" is already exists")
+    //                .Build();
 
-            var user = User.Create(request.Nickname, request.Name, request.Lastname);
+    //        var user = User.Create(request.Nickname, request.Name, request.Lastname);
 
-            var encryptedPassword = _encryptionProvider.Encrypt(request.Password);
-            var credentials = Credentials.Create(encryptedPassword, user.Id, false, request.PasswordExpiration);
+    //        var encryptedPassword = _encryptionProvider.Encrypt(request.Password);
+    //        var credentials = Credentials.Create(encryptedPassword, user.Id, false, request.PasswordExpiration);
 
-            _context.Users.Add(user);
-            _context.Credentials.Add(credentials);
+    //        _context.Users.Add(user);
+    //        _context.Credentials.Add(credentials);
 
-            await _context.CommitAsync(cancellationToken);
+    //        await _context.CommitAsync(cancellationToken);
 
-            return responseBuilder
-                .Succeed()
-                .WithMessage("User registered successfully")
-                .Build();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Unhandled exception in UsersService.RegisterAsync for Nickname '{Nickname}'", request?.Nickname);
+    //        return responseBuilder
+    //            .Succeed()
+    //            .WithMessage("User registered successfully")
+    //            .Build();
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        _logger.LogError(ex, "Unhandled exception in UsersService.RegisterAsync for Nickname '{Nickname}'", request?.Nickname);
 
-            return responseBuilder
-                .Fail()
-                .WithMessage("Unknown errors occured during user register")
-                .Build();
-        }
-    }
+    //        return responseBuilder
+    //            .Fail()
+    //            .WithMessage("Unknown errors occured during user register")
+    //            .Build();
+    //    }
+    //}
 
     public async Task<Response<PagedContent<UserDto>>> ListAsync(ListRequest request, CancellationToken cancellationToken = default)
     {

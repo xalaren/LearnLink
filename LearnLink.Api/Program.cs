@@ -41,8 +41,6 @@ builder.Services.AddApplication();
 builder.Services.AddTransient<DefaultSystemUserConfig>();
 builder.Services.AddTransient<UrlPrinter>();
 builder.Services.AddHostedService<DatabaseSeedingHostedService>();
-
-builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddOpenApiWithAuth();
@@ -79,13 +77,13 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors("CorsPolicy");
 
-app.UseExceptionHandling();
+app.UseEndpoints();
 
-app.MapControllers();
+app.UseHttpsRedirection();
+app.UseExceptionHandling();
 
 app.UseAuthentication();
 app.UseAuthorization();

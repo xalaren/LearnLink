@@ -8,13 +8,14 @@ public record Response(ResponseTypes Type, bool IsSuccess, string? Message, Erro
 {
     public override string ToString()
     {
-        var options = new JsonSerializerOptions
-        {
-            Converters = { new JsonStringEnumConverter() },
-            WriteIndented = true
-        };
-        return JsonSerializer.Serialize(this, options);
+        return JsonSerializer.Serialize(this, WriteOptions);
     }
+
+    protected static readonly JsonSerializerOptions WriteOptions = new()
+    {
+        Converters = { new JsonStringEnumConverter() },
+        WriteIndented = true
+    };
 }
 
 public record Response<TContent>(ResponseTypes Type, bool IsSuccess, TContent? Content, string? Message, Error[]? Details)
@@ -22,11 +23,6 @@ public record Response<TContent>(ResponseTypes Type, bool IsSuccess, TContent? C
 {
     public override string ToString()
     {
-        var options = new JsonSerializerOptions
-        {
-            Converters = { new JsonStringEnumConverter() },
-            WriteIndented = true
-        };
-        return JsonSerializer.Serialize(this, options);
+        return JsonSerializer.Serialize(this, WriteOptions);
     }
 }

@@ -6,10 +6,11 @@ public record Error(string Code, string Message)
 {
     public override string ToString()
     {
-        var options = new JsonSerializerOptions
-        {
-            WriteIndented = true
-        };
-        return JsonSerializer.Serialize(this, options);
+        return JsonSerializer.Serialize(this, WriteOptions);
     }
+
+    private static readonly JsonSerializerOptions WriteOptions = new()
+    {
+        WriteIndented = true
+    };
 }

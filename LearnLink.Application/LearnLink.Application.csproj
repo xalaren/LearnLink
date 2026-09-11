@@ -17,4 +17,9 @@
     <ProjectReference Include="..\LearnLink.Domain\LearnLink.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Users\Queries\" />
+    <Folder Include="Users\QueryHandlers\" />
+  </ItemGroup>
+
 </Project>

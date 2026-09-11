@@ -13,13 +13,13 @@ public class UserController(UserService userService) : ApiControllerBase
 {
     private readonly UserService _userService = userService;
     
-    [HttpPost]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [AllowAnonymous]
-    public async Task<ActionResult> Register(RegisterRequest request, CancellationToken cancellationToken = default)
-    {
-       return (await _userService.RegisterAsync(request, cancellationToken)).ToActionResult(this);
-    }
+    //[HttpPost]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[AllowAnonymous]
+    //public async Task<ActionResult> Register(RegisterRequest request, CancellationToken cancellationToken = default)
+    //{
+    //   return (await _userService.RegisterAsync(request, cancellationToken)).ToActionResult(this);
+    //}
 
     [HttpGet]
     [ProducesResponseType(typeof(PagedContent<UserDto>), StatusCodes.Status200OK)]
