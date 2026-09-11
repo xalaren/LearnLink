@@ -9,6 +9,7 @@ public class MapContext
 {
     private readonly Dictionary<ResponseTypes, IResponseMapper> _responseMapperMatching = new()
     {
+        { ResponseTypes.Succeeded, new ToSuccessMapper() },
         { ResponseTypes.Invalid,  new ToBadRequestMapper() },
         { ResponseTypes.Forbidden,  new ToForbiddenMapper() },
         { ResponseTypes.Conflict,  new ToConfilctMapper() },
