@@ -1,3 +1,15 @@
-﻿namespace LearnLink.Application.Shared.Responses;
+﻿using System.Text.Json;
 
-public record Error(string Code, string Message);
+namespace LearnLink.Application.Shared.Responses;
+
+public record Error(string Code, string Message)
+{
+    public override string ToString()
+    {
+        var options = new JsonSerializerOptions
+        {
+            WriteIndented = true
+        };
+        return JsonSerializer.Serialize(this, options);
+    }
+}
