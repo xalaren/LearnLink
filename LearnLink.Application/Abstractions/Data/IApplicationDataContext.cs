@@ -1,7 +1,7 @@
 ﻿using LearnLink.Domain.Entities.Users.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace LearnLink.Application.Data;
+namespace LearnLink.Application.Abstractions.Data;
 
 public interface IApplicationDataContext
 {

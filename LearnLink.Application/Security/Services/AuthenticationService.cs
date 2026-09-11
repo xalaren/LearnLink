@@ -1,4 +1,4 @@
-﻿using LearnLink.Application.Data;
+﻿using LearnLink.Application.Abstractions.Data;
 using LearnLink.Application.Security.Models;
 using LearnLink.Application.Security.Providers;
 using LearnLink.Application.Security.Validators;

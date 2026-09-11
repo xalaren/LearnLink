@@ -18,6 +18,6 @@ public static class Extensions
             return controller.Ok(response.Content);
         }
 
-        return ToActionResult(response, controller);
+        return ToActionResult(response as Response, controller);
     }
 }

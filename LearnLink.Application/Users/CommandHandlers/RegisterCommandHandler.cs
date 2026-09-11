@@ -1,5 +1,5 @@
-﻿using LearnLink.Application.Data;
-using LearnLink.Application.Messaging.Abstractions;
+﻿using LearnLink.Application.Abstractions.Data;
+using LearnLink.Application.Abstractions.Messaging;
 using LearnLink.Application.Security.Providers;
 using LearnLink.Application.Shared.Responses;
 using LearnLink.Application.Users.Commands;

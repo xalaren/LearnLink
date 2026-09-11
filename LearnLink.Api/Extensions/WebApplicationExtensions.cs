@@ -1,5 +1,4 @@
-﻿using LearnLink.Api.Endpoints;
-using LearnLink.Api.Middleware;
+﻿using LearnLink.Api.Middleware;
 
 namespace LearnLink.Api.Extensions;
 
@@ -16,10 +15,5 @@ public static class WebApplicationExtensions
     public static void UseExceptionHandling(this WebApplication app)
     {
         app.UseMiddleware<ExceptionHandlingMiddleware>();
-    }
-
-    public static void UseEndpoints(this WebApplication app)
-    {
-        app.MapUserEndpoints();
     }
 }

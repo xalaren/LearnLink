@@ -1,12 +1,15 @@
 ﻿using FluentValidation;
-using LearnLink.Application.Users.Models;
+using LearnLink.Application.Abstractions.Messaging;
+using LearnLink.Application.Shared.Sorting;
 using LearnLink.Shared.Pagination;
 
-namespace LearnLink.Application.Users.Validators;
+namespace LearnLink.Application.Users.Queries;
 
-internal sealed class ListRequestValidator : AbstractValidator<ListRequest>
+public record ListQuery(bool Descending, string? SortBy) : PagedRequest, ISortedRequest, IQuery;
+
+public sealed class ListQueryValidator : AbstractValidator<ListQuery>
 {
-    public ListRequestValidator()
+    public ListQueryValidator()
     {
         RuleFor(request => request.Page)
             .GreaterThanOrEqualTo(PagedRequest.MinPage)

@@ -1,9 +1,8 @@
-﻿using LearnLink.Application.Messaging.Abstractions;
+﻿using LearnLink.Application.Abstractions.Messaging;
 using LearnLink.Application.Shared.Responses;
 using Microsoft.Extensions.Logging;
 
-namespace LearnLink.Application.Messaging.QueryHandlersBehaviours;
-
+namespace LearnLink.Application.Behaviours.QueryHandlerBehaviours;
 
 public class LoggingQueryHandler<TQuery, TResult>
     (ILogger<TQuery> logger, IQueryHandler<TQuery, TResult> inner) : IQueryHandler<TQuery, TResult>
@@ -14,29 +13,32 @@ public class LoggingQueryHandler<TQuery, TResult>
         var queryType = query.GetType().Name;
         try
         {
-            if(logger.IsEnabled(LogLevel.Information))
-            {
+            if (logger.IsEnabled(LogLevel.Information))
                 logger.LogInformation("Query {Query} processing...", queryType);
-            }
 
             var response = await inner.Handle(query, cancellationToken);
 
             if (!response.IsSuccess)
             {
-                logger.LogInformation("Query {Query} process ended with errors", queryType);
-                logger.LogError("Query {Query} process ended with errors. Details:\n{Response}", queryType, response);
+                if (logger.IsEnabled(LogLevel.Information))
+                    logger.LogInformation("Query {Query} process ended with errors", queryType);
+                if (logger.IsEnabled(LogLevel.Error))
+                    logger.LogError("Query {Query} process ended with errors. Details:\n{Response}", queryType, response);
             }
             else
             {
-                logger.LogInformation("Query {Query} process ended with success", queryType);
+                if (logger.IsEnabled(LogLevel.Information))
+                    logger.LogInformation("Query {Query} process ended with success", queryType);
             }
 
             return response;
         }
         catch (Exception ex)
         {
-            logger.LogInformation("Query {Query} process ended with errors", queryType);
-            logger.LogError(ex, "Unhandled exception handling {Query}", queryType);
+            if (logger.IsEnabled(LogLevel.Information))
+                logger.LogInformation("Query {Query} process ended with errors", queryType);
+            if (logger.IsEnabled(LogLevel.Error))
+                logger.LogError(ex, "Unhandled exception handling {Query}", queryType);
 
             return new ResponseBuilder<TResult>()
                 .Fail()

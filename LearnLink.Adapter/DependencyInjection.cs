@@ -1,5 +1,5 @@
 ﻿using LearnLink.Adapter.Contexts;
-using LearnLink.Application.Data;
+using LearnLink.Application.Abstractions.Data;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LearnLink.Adapter;

@@ -1,4 +1,4 @@
-﻿using LearnLink.Application.Data;
+﻿using LearnLink.Application.Abstractions.Data;
 using LearnLink.Application.Security.Providers;
 using LearnLink.Application.Users.Models;
 using LearnLink.Domain.Entities.Users.Enumerations;

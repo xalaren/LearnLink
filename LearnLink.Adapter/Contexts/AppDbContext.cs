@@ -1,5 +1,5 @@
 ﻿using LearnLink.Adapter.Configurations;
-using LearnLink.Application.Data;
+using LearnLink.Application.Abstractions.Data;
 using LearnLink.Domain.Entities.Abstractions;
 using LearnLink.Domain.Entities.Users.Models;
 using Microsoft.EntityFrameworkCore;

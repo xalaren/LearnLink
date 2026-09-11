@@ -1,6 +1,6 @@
 ﻿using LearnLink.Application.Shared.Responses;
 
-namespace LearnLink.Application.Messaging.Abstractions;
+namespace LearnLink.Application.Abstractions.Messaging;
 
 public interface ICommandHandler<in TCommand> where TCommand : ICommand
 {

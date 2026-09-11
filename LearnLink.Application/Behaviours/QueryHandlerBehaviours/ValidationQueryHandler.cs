@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
-using LearnLink.Application.Messaging.Abstractions;
+using LearnLink.Application.Abstractions.Messaging;
 using LearnLink.Application.Shared.Responses;
 using LearnLink.Application.Shared.Responses.Extensions;
 
-namespace LearnLink.Application.Messaging.QueryHandlersBehaviours;
+namespace LearnLink.Application.Behaviours.QueryHandlerBehaviours;
 
 public class ValidationQueryHandler<TQuery, TResult>
     (AbstractValidator<TQuery> validator, IQueryHandler<TQuery, TResult> inner) : IQueryHandler<TQuery, TResult>

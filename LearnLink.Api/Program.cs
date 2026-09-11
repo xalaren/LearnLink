@@ -41,6 +41,8 @@ builder.Services.AddApplication();
 builder.Services.AddTransient<DefaultSystemUserConfig>();
 builder.Services.AddTransient<UrlPrinter>();
 builder.Services.AddHostedService<DatabaseSeedingHostedService>();
+
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddOpenApiWithAuth();
@@ -80,7 +82,7 @@ if (app.Environment.IsDevelopment())
 app.UseRouting();
 app.UseCors("CorsPolicy");
 
-app.UseEndpoints();
+app.MapControllers();
 
 app.UseHttpsRedirection();
 app.UseExceptionHandling();

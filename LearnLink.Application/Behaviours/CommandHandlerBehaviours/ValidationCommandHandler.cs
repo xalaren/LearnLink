@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
-using LearnLink.Application.Messaging.Abstractions;
+using LearnLink.Application.Abstractions.Messaging;
 using LearnLink.Application.Shared.Responses;
 using LearnLink.Application.Shared.Responses.Extensions;
 
-namespace LearnLink.Application.Messaging.CommandHandlersBehaviours;
+namespace LearnLink.Application.Behaviours.CommandHandlerBehaviours;
 
 public class ValidationCommandHandler<TCommand>
     (AbstractValidator<TCommand> validator, ICommandHandler<TCommand> inner) : ICommandHandler<TCommand>
