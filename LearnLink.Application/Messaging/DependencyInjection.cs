@@ -1,33 +1,14 @@
 ﻿using FluentValidation;
 using LearnLink.Application.Abstractions.Messaging;
-using LearnLink.Application.Behaviours.CommandHandlerBehaviours;
-using LearnLink.Application.Behaviours.QueryHandlerBehaviours;
-using LearnLink.Application.Users.CommandHandlers;
-using LearnLink.Application.Users.Commands;
-using LearnLink.Application.Users.Queries;
-using LearnLink.Application.Users.QueryHandlers;
-using LearnLink.Application.Users.Services;
+using LearnLink.Application.Messaging.Behaviours;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace LearnLink.Application.Users;
+namespace LearnLink.Application.Messaging;
 
-internal static class UsersInjection
+internal static class DependencyInjection
 {
-    internal static IServiceCollection AddUserServices(this IServiceCollection services)
-    {
-        return services
-            .AddSeedingService()
-            .AddCommandHandler<RegisterCommandHandler, RegisterCommand, RegisterCommandValidator>()
-            .AddQueryHandler<ListQueryHandler, ListQuery, ListQueryResult, ListQueryValidator>();
-    }
-
-    private static IServiceCollection AddSeedingService(this IServiceCollection services)
-    {
-        return services.AddTransient<SeedingService>();
-    }
-
-    private static IServiceCollection AddCommandHandler<TCommandHandler, TCommand, TValidator>(this IServiceCollection services)
+    internal static IServiceCollection AddCommandHandler<TCommandHandler, TCommand, TValidator>(this IServiceCollection services)
         where TCommandHandler : class, ICommandHandler<TCommand>
         where TCommand : ICommand
         where TValidator : AbstractValidator<TCommand>
@@ -49,15 +30,15 @@ internal static class UsersInjection
             );
     }
 
-    private static IServiceCollection AddCommandHandler<TCommandHandler, TCommand, TResult, TValidator>(this IServiceCollection services)
-            where TCommandHandler : class, ICommandHandler<TCommand, TResult>
-            where TCommand : ICommand
-            where TValidator : AbstractValidator<TCommand>
+    internal static IServiceCollection AddCommandHandler<TCommandHandler, TCommand, TResult, TValidator>(this IServiceCollection services)
+        where TCommandHandler : class, ICommandHandler<TCommand, TResult>
+        where TCommand : ICommand
+        where TValidator : AbstractValidator<TCommand>
 
     {
         return services
             .AddScoped<TCommandHandler>()
-            .AddScoped<AbstractValidator<TCommand>, TValidator>()
+            .AddScoped<TValidator>()
             .AddScoped<ICommandHandler<TCommand, TResult>>
             (
                 provider => new LoggingCommandHandler<TCommand, TResult>
@@ -72,7 +53,7 @@ internal static class UsersInjection
             );
     }
 
-    private static IServiceCollection AddQueryHandler<TQueryHandler, TQuery, TResult, TValidator>(this IServiceCollection services)
+    internal static IServiceCollection AddQueryHandler<TQueryHandler, TQuery, TResult, TValidator>(this IServiceCollection services)
         where TQueryHandler : class, IQueryHandler<TQuery, TResult>
         where TQuery : IQuery
         where TValidator : AbstractValidator<TQuery>

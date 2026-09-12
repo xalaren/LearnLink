@@ -1,4 +1,4 @@
-﻿using LearnLink.Application.Security.Services;
+﻿using LearnLink.Application.Security;
 using LearnLink.Application.Users;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,9 +8,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AddUserServices();
-        services.AddScoped<AuthenticationService>();
-
-        return services;
+        return services
+            .AddUserServices()
+            .AddAuthenticationServices();
     }
 }

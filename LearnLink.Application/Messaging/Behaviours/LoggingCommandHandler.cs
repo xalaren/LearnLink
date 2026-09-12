@@ -2,7 +2,7 @@
 using LearnLink.Application.Shared.Responses;
 using Microsoft.Extensions.Logging;
 
-namespace LearnLink.Application.Behaviours.CommandHandlerBehaviours;
+namespace LearnLink.Application.Messaging.Behaviours;
 
 public class LoggingCommandHandler<TCommand>
     (ILogger<TCommand> logger, ICommandHandler<TCommand> inner) : ICommandHandler<TCommand>

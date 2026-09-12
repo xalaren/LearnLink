@@ -3,7 +3,7 @@ using LearnLink.Application.Abstractions.Messaging;
 using LearnLink.Application.Shared.Responses;
 using LearnLink.Application.Shared.Responses.Extensions;
 
-namespace LearnLink.Application.Behaviours.QueryHandlerBehaviours;
+namespace LearnLink.Application.Messaging.Behaviours;
 
 public class ValidationQueryHandler<TQuery, TResult>
     (AbstractValidator<TQuery> validator, IQueryHandler<TQuery, TResult> inner) : IQueryHandler<TQuery, TResult>

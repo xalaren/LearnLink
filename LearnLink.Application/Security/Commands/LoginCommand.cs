@@ -1,11 +1,13 @@
 ﻿using FluentValidation;
-using LearnLink.Application.Security.Models;
+using LearnLink.Application.Abstractions.Messaging;
 
-namespace LearnLink.Application.Security.Validators;
+namespace LearnLink.Application.Security.Commands;
 
-internal sealed class LoginRequestValidator : AbstractValidator<LoginRequest>
+public sealed record LoginCommand(string Nickname, string Password) : ICommand;
+
+public sealed class LoginCommandValidator : AbstractValidator<LoginCommand>
 {
-    internal LoginRequestValidator()
+    public LoginCommandValidator()
     {
         RuleFor(loginRequest => loginRequest.Nickname)
             .NotEmpty()

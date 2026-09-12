@@ -2,7 +2,7 @@
 using LearnLink.Application.Shared.Responses;
 using Microsoft.Extensions.Logging;
 
-namespace LearnLink.Application.Behaviours.QueryHandlerBehaviours;
+namespace LearnLink.Application.Messaging.Behaviours;
 
 public class LoggingQueryHandler<TQuery, TResult>
     (ILogger<TQuery> logger, IQueryHandler<TQuery, TResult> inner) : IQueryHandler<TQuery, TResult>

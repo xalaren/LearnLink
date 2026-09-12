@@ -11,7 +11,6 @@ namespace LearnLink.Api.Controllers;
 [Route("api/users")]
 public class UserController : ApiControllerBase
 {
-
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [AllowAnonymous]
