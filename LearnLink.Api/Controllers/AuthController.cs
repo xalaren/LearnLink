@@ -23,4 +23,16 @@ public class AuthController : ApiControllerBase
         var response = await handler.Handle(command, cancellationToken);
         return response.ToActionResult(this);
     }
+
+    [HttpPost("refresh")]
+    [ProducesResponseType(typeof(TokenPair), StatusCodes.Status200OK)]
+    [AllowAnonymous]
+    public async Task<ActionResult<TokenPair>> Refresh(
+        [FromBody] RefreshCommand command,
+        [FromServices] ICommandHandler<RefreshCommand, TokenPair> handler,
+        CancellationToken cancellationToken = default)
+    {
+        var response = await handler.Handle(command, cancellationToken);
+        return response.ToActionResult(this);
+    }
 }

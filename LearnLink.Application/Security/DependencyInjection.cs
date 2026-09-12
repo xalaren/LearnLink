@@ -11,6 +11,7 @@ internal static class DependencyInjection
     internal static IServiceCollection AddAuthenticationServices(this IServiceCollection services)
     {
         return services
-            .AddCommandHandler<LoginCommandHandler, LoginCommand, TokenPair, LoginCommandValidator>();
+            .AddCommandHandlerWithResult<LoginCommandHandler, LoginCommand, TokenPair, LoginCommandValidator>()
+            .AddCommandHandlerWithResult<RefreshCommandHandler, RefreshCommand, TokenPair, RefreshCommandValidator>();
     }
 }

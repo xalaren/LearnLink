@@ -25,7 +25,7 @@ public class UserController : ApiControllerBase
 
     [HttpGet]
     [ProducesResponseType(typeof(ListQueryResult), StatusCodes.Status200OK)]
-    [AllowAnonymous]
+    [Authorize]
     public async Task<ActionResult<ListQueryResult>> List(
         [FromQuery] ListQuery query,
         [FromServices] IQueryHandler<ListQuery, ListQueryResult> handler,

@@ -24,7 +24,7 @@ public class RefreshToken : Entity<RefreshTokenId>, IExpireable
         Id = id;
         UserId = userId;
         Token = token;
-        ExpiresAtUtc = DateTime.UtcNow.AddDays(ExpirationDays);
+        ExpiresAtUtc = NewExpireDate();
     }
 
     public static RefreshToken Create(UserId userId, string token)
@@ -34,4 +34,14 @@ public class RefreshToken : Entity<RefreshTokenId>, IExpireable
 
         return new(RefreshTokenId.New(), userId, token);
     }
+
+    public void Refresh(string token)
+    {
+        Guard.For(token).AgainstWhiteSpace();
+
+        Token = token;
+        ExpiresAtUtc = NewExpireDate();
+    }
+
+    private static DateTime NewExpireDate() => DateTime.UtcNow.AddDays(ExpirationDays);
 }

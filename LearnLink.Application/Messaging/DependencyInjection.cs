@@ -30,7 +30,7 @@ internal static class DependencyInjection
             );
     }
 
-    internal static IServiceCollection AddCommandHandler<TCommandHandler, TCommand, TResult, TValidator>(this IServiceCollection services)
+    internal static IServiceCollection AddCommandHandlerWithResult<TCommandHandler, TCommand, TResult, TValidator>(this IServiceCollection services)
         where TCommandHandler : class, ICommandHandler<TCommand, TResult>
         where TCommand : ICommand
         where TValidator : AbstractValidator<TCommand>
