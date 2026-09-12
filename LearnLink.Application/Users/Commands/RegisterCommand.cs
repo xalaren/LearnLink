@@ -11,8 +11,7 @@ namespace LearnLink.Application.Users.Commands;
 /// <param name="Name">First name.</param>
 /// <param name="Lastname">Last name.</param>
 /// <param name="Password">Plain-text password to be encrypted and stored.</param>
-/// <param name="PasswordExpiration">Optional password expiration date.</param>
-public record RegisterCommand(string Nickname, string Name, string Lastname, string Password, DateTime? PasswordExpiration) : ICommand;
+public record RegisterCommand(string Nickname, string Name, string Lastname, string Password) : ICommand;
 
 /// <summary>
 /// Validator for <see cref="RegisterCommand"/> ensuring required fields and length constraints.

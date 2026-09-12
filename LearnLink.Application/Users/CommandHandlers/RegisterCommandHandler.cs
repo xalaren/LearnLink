@@ -37,7 +37,7 @@ public class RegisterCommandHandler(IApplicationDataContext repository, IEncrypt
         var user = User.Create(command.Nickname, command.Name, command.Lastname);
 
         var encryptedPassword = encryptionProvider.Encrypt(command.Password);
-        var credentials = Credentials.Create(encryptedPassword, user.Id, false, command.PasswordExpiration);
+        var credentials = Credentials.Create(encryptedPassword, user.Id, false);
 
         repository.Users.Add(user);
         repository.Credentials.Add(credentials);

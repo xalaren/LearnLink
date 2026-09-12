@@ -1,4 +1,5 @@
 ﻿using LearnLink.Domain.Entities.Users.Identifiers;
+using LearnLink.Domain.Entities.Users.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
