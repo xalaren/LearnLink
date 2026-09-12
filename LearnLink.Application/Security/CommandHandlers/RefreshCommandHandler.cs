@@ -9,11 +9,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Security.CommandHandlers;
 
+/// <summary>
+/// Handles <see cref="RefreshCommand"/> to exchange a valid refresh token
+/// for a new access and refresh token pair.
+/// </summary>
 public sealed class RefreshCommandHandler(
     IApplicationDataContext repository,
     ITokenProvider tokenProvider
 ) : ICommandHandler<RefreshCommand, TokenPair>
 {
+    /// <summary>
+    /// Processes the refresh command and returns a new <see cref="TokenPair"/> on success.
+    /// </summary>
+    /// <param name="command">The refresh command containing the refresh token.</param>
+    /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
+    /// <returns>A <see cref="Response{TokenPair}"/> describing the outcome.</returns>
     public async Task<Response<TokenPair>> Handle(RefreshCommand command, CancellationToken cancellationToken = default)
     {
         var responseBuilder = new ResponseBuilder<TokenPair>();

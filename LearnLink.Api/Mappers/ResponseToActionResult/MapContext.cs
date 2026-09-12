@@ -18,6 +18,9 @@ public class MapContext
         { ResponseTypes.Failed,  new ToInternalServerErrorMapper() },
     };
 
+    /// <summary>
+    /// Executes mapping from an application <see cref="Response"/> to an <see cref="ActionResult"/>.
+    /// </summary>
     public ActionResult Execute(Response response, ControllerBase controller)
     {
         if(_responseMapperMatching.TryGetValue(response.Type, out var mapper))

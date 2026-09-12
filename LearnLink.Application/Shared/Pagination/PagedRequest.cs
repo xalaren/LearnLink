@@ -1,5 +1,9 @@
 ﻿namespace LearnLink.Shared.Pagination;
 
+/// <summary>
+/// Base record for paged requests providing safe defaults and validation
+/// for page and page size values.
+/// </summary>
 public abstract record PagedRequest() : IPagedRequest
 {
     private readonly int page;

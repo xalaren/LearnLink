@@ -8,8 +8,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Users.CommandHandlers;
 
+/// <summary>
+/// Handles <see cref="RegisterCommand"/> by creating a new user and credentials
+/// after validating uniqueness and encrypting the password.
+/// </summary>
 public class RegisterCommandHandler(IApplicationDataContext repository, IEncryptionProvider encryptionProvider) : ICommandHandler<RegisterCommand>
 {
+    /// <summary>
+    /// Processes the register command and returns a response indicating the result.
+    /// </summary>
+    /// <param name="command">The register command with user details.</param>
+    /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
+    /// <returns>A <see cref="Response"/> describing the outcome.</returns>
     public async Task<Response> Handle(RegisterCommand command, CancellationToken cancellationToken = default)
     {
         var responseBuilder = new ResponseBuilder();

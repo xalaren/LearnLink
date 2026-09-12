@@ -2,6 +2,10 @@
 
 namespace LearnLink.Domain.Entities.Users.Identifiers;
 
+/// <summary>
+/// Strongly typed primary key of <see cref="Avatar"/> entity
+/// </summary>
+/// <param name="Value">Guid representation</param>
 public readonly record struct AvatarId(Guid Value) : ITypedKey<AvatarId, Guid>
 {
     public static AvatarId Empty() => new AvatarId(Guid.Empty);

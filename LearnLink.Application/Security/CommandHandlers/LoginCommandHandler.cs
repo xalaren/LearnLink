@@ -9,12 +9,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Security.CommandHandlers;
 
+/// <summary>
+/// Handles <see cref="LoginCommand"/>, validating credentials and
+/// issuing a <see cref="TokenPair"/> when authentication succeeds.
+/// </summary>
+/// <remarks>
+/// This handler verifies the provided password using <see cref="IEncryptionProvider"/>
+/// and generates tokens via <see cref="ITokenProvider"/>. A new refresh token
+/// entity is persisted to the data context upon successful login.
+/// </remarks>
 public sealed class LoginCommandHandler(
     IApplicationDataContext repository,
     IEncryptionProvider encryptionProvider,
     ITokenProvider tokenProvider
 ) : ICommandHandler<LoginCommand, TokenPair>
 {
+    /// <summary>
+    /// Processes the login command and returns a token pair on success.
+    /// </summary>
+    /// <param name="command">The login command containing user credentials.</param>
+    /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
+    /// <returns>A <see cref="Response{TokenPair}"/> describing the outcome.</returns>
     public async Task<Response<TokenPair>> Handle(LoginCommand command, CancellationToken cancellationToken = default)
     {
         var responseBuilder = new ResponseBuilder<TokenPair>();

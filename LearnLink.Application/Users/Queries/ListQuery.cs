@@ -5,8 +5,16 @@ using LearnLink.Shared.Pagination;
 
 namespace LearnLink.Application.Users.Queries;
 
+/// <summary>
+/// Query used to request a paged list of users with optional sorting.
+/// </summary>
+/// <param name="Descending">Whether results should be sorted in descending order.</param>
+/// <param name="SortBy">Optional field name to sort by.</param>
 public record ListQuery(bool Descending, string? SortBy) : PagedRequest, ISortedRequest, IQuery;
 
+/// <summary>
+/// Validator for <see cref="ListQuery"/> that ensures paging parameters are within allowed ranges.
+/// </summary>
 public sealed class ListQueryValidator : AbstractValidator<ListQuery>
 {
     public ListQueryValidator()

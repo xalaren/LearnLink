@@ -6,12 +6,24 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LearnLink.Application.Security;
 
+/// <summary>
+/// Registers security-related application services such as command
+/// handlers for authentication into the dependency injection container.
+/// </summary>
 internal static class DependencyInjection
 {
-    internal static IServiceCollection AddAuthenticationServices(this IServiceCollection services)
+    extension(IServiceCollection services)
     {
-        return services
-            .AddCommandHandlerWithResult<LoginCommandHandler, LoginCommand, TokenPair, LoginCommandValidator>()
-            .AddCommandHandlerWithResult<RefreshCommandHandler, RefreshCommand, TokenPair, RefreshCommandValidator>();
+        /// <summary>
+        /// Adds authentication services (login and refresh handlers) to the
+        /// provided <see cref="IServiceCollection"/>.
+        /// </summary>
+        /// <returns>The original <see cref="IServiceCollection"/> for chaining.</returns>
+        internal IServiceCollection AddAuthenticationServices()
+        {
+            return services
+                .AddCommandHandlerWithResult<LoginCommandHandler, LoginCommand, TokenPair, LoginCommandValidator>()
+                .AddCommandHandlerWithResult<RefreshCommandHandler, RefreshCommand, TokenPair, RefreshCommandValidator>();
+        }
     }
 }

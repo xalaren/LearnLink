@@ -1,7 +1,12 @@
 ﻿using LearnLink.Domain.Entities.Abstractions;
+using LearnLink.Domain.Entities.Users.Models;
 
 namespace LearnLink.Domain.Entities.Users.Identifiers;
 
+/// <summary>
+/// Strongly typed primary key of <see cref="Role"/> entity
+/// </summary>
+/// <param name="Value">Guid representation</param>
 public record struct RoleId(Guid Value) : ITypedKey<RoleId, Guid>
 {
     public static RoleId Empty() => new(Guid.Empty);

@@ -3,8 +3,14 @@ using LearnLink.Domain.Entities.Users.Models;
 
 namespace LearnLink.Application.Users.Mappers;
 
+/// <summary>
+/// Helpers to apply sorting to user queries based on <see cref="ISortedRequest"/>.
+/// </summary>
 internal static class UsersSortingMapper
 {
+    /// <summary>
+    /// Applies sorting to the provided user query according to the request.
+    /// </summary>
     public static IOrderedQueryable<User> SortBy(this IQueryable<User> baseQuery, ISortedRequest request)
     {
         return request.SortBy?.ToLowerInvariant() switch

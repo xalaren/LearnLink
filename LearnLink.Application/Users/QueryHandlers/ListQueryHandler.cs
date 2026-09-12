@@ -7,8 +7,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Users.QueryHandlers;
 
+/// <summary>
+/// Handles <see cref="ListQuery"/> requests by querying the repository,
+/// applying sorting, paging and mapping users to DTOs.
+/// </summary>
 public class ListQueryHandler(IApplicationDataContext repository) : IQueryHandler<ListQuery, ListQueryResult>
 {
+    /// <summary>
+    /// Processes the list query and returns a paged result of users.
+    /// </summary>
+    /// <param name="query">The list query containing paging and sorting options.</param>
+    /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
+    /// <returns>A <see cref="Response{ListQueryResult}"/> containing paged users.</returns>
     public async Task<Response<ListQueryResult>> Handle(ListQuery query, CancellationToken cancellationToken = default)
     {
         var responseBuilder = new ResponseBuilder();

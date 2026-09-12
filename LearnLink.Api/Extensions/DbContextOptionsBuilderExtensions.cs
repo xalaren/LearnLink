@@ -5,6 +5,9 @@ namespace LearnLink.Api.Extensions
 {
     public static class DbContextOptionsBuilderExtensions
     {
+        /// <summary>
+        /// Builds <see cref="DbContextOptions"/> for SQLite using connection string from configuration.
+        /// </summary>
         public static DbContextOptions GetSqliteOptions(this DbContextOptionsBuilder builder, IConfiguration config)
         {
             var connection = config.GetConnectionString("SqliteConnection");
@@ -13,6 +16,9 @@ namespace LearnLink.Api.Extensions
                 .Options;
         }
 
+        /// <summary>
+        /// Builds <see cref="DbContextOptions"/> for PostgreSQL using connection string from configuration.
+        /// </summary>
         public static DbContextOptions GetNpgSqlOptions(this DbContextOptionsBuilder builder, IConfiguration config)
         {
             var connection = config.GetConnectionString("PostgreSqlConnection");
@@ -21,6 +27,9 @@ namespace LearnLink.Api.Extensions
                 .Options;
         }
 
+        /// <summary>
+        /// Builds <see cref="DbContextOptions"/> for SQL Server using connection string from configuration.
+        /// </summary>
         public static DbContextOptions GetMsSqlOptions(this DbContextOptionsBuilder builder, IConfiguration config)
         {
             var connection = config.GetConnectionString("SqlServerConnection");

@@ -8,18 +8,29 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LearnLink.Application.Users;
 
+/// <summary>
+/// Registers users-related application services
+/// </summary>
 internal static class DependencyInjection
 {
-    internal static IServiceCollection AddUserServices(this IServiceCollection services)
+    extension(IServiceCollection services)
     {
-        return services
-            .AddSeedingService()
-            .AddCommandHandler<RegisterCommandHandler, RegisterCommand, RegisterCommandValidator>()
-            .AddQueryHandler<ListQueryHandler, ListQuery, ListQueryResult, ListQueryValidator>();
-    }
+        /// <summary>
+        /// Adds users services (register, list handlers, seeding, etc.) to the
+        /// provided <see cref="IServiceCollection"/>.
+        /// </summary>
+        /// <returns>The original <see cref="IServiceCollection"/> for chaining.</returns>
+        internal IServiceCollection AddUserServices()
+        {
+            return services
+                .AddSeedingService()
+                .AddCommandHandler<RegisterCommandHandler, RegisterCommand, RegisterCommandValidator>()
+                .AddQueryHandler<ListQueryHandler, ListQuery, ListQueryResult, ListQueryValidator>();
+        }
 
-    private static IServiceCollection AddSeedingService(this IServiceCollection services)
-    {
-        return services.AddTransient<SeedingService>();
+        private IServiceCollection AddSeedingService()
+        {
+            return services.AddTransient<SeedingService>();
+        }
     }
 }

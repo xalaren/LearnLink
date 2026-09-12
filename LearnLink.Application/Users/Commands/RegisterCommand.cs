@@ -4,8 +4,19 @@ using LearnLink.Domain.Entities.Users.Models;
 
 namespace LearnLink.Application.Users.Commands;
 
+/// <summary>
+/// Command used to register a new user in the system.
+/// </summary>
+/// <param name="Nickname">User's nickname (unique).</param>
+/// <param name="Name">First name.</param>
+/// <param name="Lastname">Last name.</param>
+/// <param name="Password">Plain-text password to be encrypted and stored.</param>
+/// <param name="PasswordExpiration">Optional password expiration date.</param>
 public record RegisterCommand(string Nickname, string Name, string Lastname, string Password, DateTime? PasswordExpiration) : ICommand;
 
+/// <summary>
+/// Validator for <see cref="RegisterCommand"/> ensuring required fields and length constraints.
+/// </summary>
 public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand>
 {
     public RegisterCommandValidator()

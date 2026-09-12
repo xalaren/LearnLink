@@ -1,12 +1,19 @@
 using LearnLink.Domain.Constants;
 using LearnLink.Domain.Entities.Abstractions;
 using LearnLink.Domain.Entities.Users.Identifiers;
-using LearnLink.Domain.Entities.Users.Models;
 using LearnLink.Domain.Guards;
 using LearnLink.Domain.Guards.Clauses;
 
+namespace LearnLink.Domain.Entities.Users.Models;
+
+/// <summary>
+/// <see cref="Avatar"/> entity representation
+/// </summary>
 public class Avatar : Entity<AvatarId>, IFileDetails
 {
+    /// <summary>
+    /// Extension max length
+    /// </summary>
     public const int ExtensionMaxLength = TextLengthConstants.Short;
     public override AvatarId Id { get; protected init; }
     public UserId UserId { get; private set; }
@@ -27,6 +34,13 @@ public class Avatar : Entity<AvatarId>, IFileDetails
 
     protected Avatar() { }
 
+    /// <summary>
+    /// Creates new <see cref="Avatar"/> entity
+    /// </summary>
+    /// <param name="extension"><see cref="Avatar"/> extension</param>
+    /// <param name="size"><see cref="Avatar"/> file size in bytes</param>
+    /// <param name="userId"><see cref="Models.User"/> foreign key</param>
+    /// <returns>New <see cref="Avatar"/> entity</returns>
     public static Avatar Create(string extension, long size, UserId userId)
     {
         Guard.For(userId).AgainstEmpty();

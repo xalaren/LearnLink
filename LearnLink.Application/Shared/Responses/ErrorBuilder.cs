@@ -1,9 +1,18 @@
 ﻿namespace LearnLink.Application.Shared.Responses;
 
+/// <summary>
+/// Builder used to accumulate a collection of <see cref="Error"/> instances.
+/// Provides a fluent API to add errors by code and message.
+/// </summary>
 public class ErrorsBuilder
 {
     private readonly List<Error> _errors = [];
 
+    /// <summary>
+    /// Begins building an error identified by the provided code.
+    /// </summary>
+    /// <param name="code">The error code.</param>
+    /// <returns>An <see cref="ErrorBuilder{TNext}"/> to set details for the error.</returns>
     public ErrorBuilder<ErrorsBuilder> For(string code)
     {
         ArgumentNullException.ThrowIfNull(code, nameof(code));
@@ -11,6 +20,9 @@ public class ErrorsBuilder
         return new(this, Add, code);
     }
 
+    /// <summary>
+    /// Builds and returns the accumulated errors.
+    /// </summary>
     public Error[] Build()
     {
         return _errors.ToArray();
@@ -23,6 +35,11 @@ public class ErrorsBuilder
     }
 }
 
+/// <summary>
+/// Helper used by <see cref="ErrorsBuilder"/> to provide a fluent API for
+/// setting an error message and completing the addition.
+/// </summary>
+/// <typeparam name="TNext">The next builder type returned after finalizing the error.</typeparam>
 public class ErrorBuilder<TNext> where TNext : class
 {
     private readonly string _code;
@@ -41,6 +58,11 @@ public class ErrorBuilder<TNext> where TNext : class
         _code = code;
     }
 
+    /// <summary>
+    /// Sets the human-readable message for the error being built.
+    /// </summary>
+    /// <param name="message">Error message.</param>
+    /// <returns>The current builder for chaining.</returns>
     public ErrorBuilder<TNext> WithMessage(string message)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(message);
@@ -49,6 +71,9 @@ public class ErrorBuilder<TNext> where TNext : class
         return this;
     }
 
+    /// <summary>
+    /// Finalizes the error and returns the next builder in the chain.
+    /// </summary>
     public TNext Then()
     {
         var error = new Error(_code, _message);

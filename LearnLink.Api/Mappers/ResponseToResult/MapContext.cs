@@ -17,6 +17,9 @@ public class MapContext
         { ResponseTypes.Failed,  new ToInternalServerErrorMapper() },
     };
 
+    /// <summary>
+    /// Executes mapping from an application <see cref="Response"/> to a minimal API <see cref="IResult"/>.
+    /// </summary>
     public IResult Execute(Response response)
     {
         if(_responseMapperMatching.TryGetValue(response.Type, out var mapper))

@@ -1,7 +1,9 @@
-﻿namespace LearnLink.Api.Constants
+﻿namespace LearnLink.Api.Constants;
+
+/// <summary>
+/// Constants for access key
+/// </summary>
+public class AccessKeyConstants
 {
-    public class AccessKeyConstants
-    {
-        public const string AccessKey = "accessToken";
-    }
+    public const string AccessKey = "accessToken";
 }

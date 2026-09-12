@@ -1,31 +1,42 @@
-﻿namespace LearnLink.Domain.Abstractions
+﻿namespace LearnLink.Domain.Abstractions;
+
+/// <summary>
+/// Custom enumeration
+/// </summary>
+/// <typeparam name="TEnum">Type of implementation of this abstract class</typeparam>
+/// <typeparam name="TIdentifier">Identifier of each enumeration option</typeparam>
+public abstract class Enumeration<TEnum, TIdentifier> : IEquatable<Enumeration<TEnum, TIdentifier>> 
+    where TEnum : Enumeration<TEnum, TIdentifier>
+    where TIdentifier : struct
 {
-    public abstract class Enumeration<TEnum, TIdentifier> : IEquatable<Enumeration<TEnum, TIdentifier>> 
-        where TEnum : Enumeration<TEnum, TIdentifier>
-        where TIdentifier : struct
+    protected Enumeration(TIdentifier value, string name)
     {
-        protected Enumeration(TIdentifier value, string name)
-        {
-            Value = value;
-            Name = name;
-        }
+        Value = value;
+        Name = name;
+    }
 
-        public TIdentifier Value { get; protected init; }
-        public string Name { get; protected init; } = string.Empty;
+    /// <summary>
+    /// Identifier of each enumeration option
+    /// </summary>
+    public TIdentifier Value { get; protected init; }
 
-        public bool Equals(Enumeration<TEnum, TIdentifier>? other)
-        {
-            return other is not null && GetType() == other.GetType() && Value.Equals(other.Value);
-        }
+    /// <summary>
+    /// Name of each enumeration option
+    /// </summary>
+    public string Name { get; protected init; } = string.Empty;
 
-        public override bool Equals(object? obj)
-        {
-            return obj is Enumeration<TEnum, TIdentifier> other && Equals(other);
-        }
+    public bool Equals(Enumeration<TEnum, TIdentifier>? other)
+    {
+        return other is not null && GetType() == other.GetType() && Value.Equals(other.Value);
+    }
 
-        public override int GetHashCode()
-        {
-            return Value.GetHashCode();
-        }
+    public override bool Equals(object? obj)
+    {
+        return obj is Enumeration<TEnum, TIdentifier> other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return Value.GetHashCode();
     }
 }

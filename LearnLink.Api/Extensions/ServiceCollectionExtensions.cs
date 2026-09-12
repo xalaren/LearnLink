@@ -3,8 +3,14 @@ using Microsoft.OpenApi;
 
 namespace LearnLink.Api.Extensions;
 
+/// <summary>
+/// Service collection helper extensions used to configure OpenAPI and authentication options.
+/// </summary>
 internal static class ServiceCollectionExtensions
 {
+    /// <summary>
+    /// Adds OpenAPI (Swagger) configuration and configures a Bearer security scheme for JWT authentication.
+    /// </summary>
     internal static IServiceCollection AddOpenApiWithAuth(this IServiceCollection services)
     {
         services.AddOpenApi(options =>
@@ -22,7 +28,7 @@ internal static class ServiceCollectionExtensions
                     Description = "Enter JWT Token",
                     Name = "Authorization",
                 };
-                
+
                 document.Security ??= [];
                 document.Security.Add(new OpenApiSecurityRequirement
                 {
@@ -36,6 +42,9 @@ internal static class ServiceCollectionExtensions
         return services;
     }
 
+    /// <summary>
+    /// Registers <see cref="AuthenticationOptions"/> bound from configuration as a singleton.
+    /// </summary>
     internal static IServiceCollection AddAuthenticationOptions(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton(provider => configuration.GetAuthenticationOptions());

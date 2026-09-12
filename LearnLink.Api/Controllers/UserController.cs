@@ -7,10 +7,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LearnLink.Api.Controllers;
 
+/// <summary>
+/// Controller that exposes user-related endpoints such as registration and listing users.
+/// </summary>
 [ApiController]
 [Route("api/users")]
 public class UserController : ApiControllerBase
 {
+    /// <summary>
+    /// Registers a new user.
+    /// </summary>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [AllowAnonymous]
@@ -23,6 +29,9 @@ public class UserController : ApiControllerBase
         return response.ToActionResult(this);
     }
 
+    /// <summary>
+    /// Returns a paged list of users. Requires authorization.
+    /// </summary>
     [HttpGet]
     [ProducesResponseType(typeof(ListQueryResult), StatusCodes.Status200OK)]
     [Authorize]

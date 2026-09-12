@@ -1,5 +1,8 @@
 ﻿namespace LearnLink.Domain.Exceptions;
 
+/// <summary>
+/// Domain exceptions
+/// </summary>
 public class DomainException : Exception
 {
     public DomainException() : base() { }

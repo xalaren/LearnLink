@@ -2,8 +2,14 @@
 
 namespace LearnLink.Api.Extensions;
 
+/// <summary>
+/// WebApplication extension helpers for registering hosted services and middleware.
+/// </summary>
 public static class WebApplicationExtensions
 {
+    /// <summary>
+    /// Starts the <see cref="UrlPrinter"/> service when the application starts.
+    /// </summary>
     public static void UseUrlPrinter(this WebApplication app)
     {
         app.Lifetime.ApplicationStarted.Register(() =>
@@ -12,6 +18,9 @@ public static class WebApplicationExtensions
         });
     }
 
+    /// <summary>
+    /// Adds exception handling middleware to the pipeline.
+    /// </summary>
     public static void UseExceptionHandling(this WebApplication app)
     {
         app.UseMiddleware<ExceptionHandlingMiddleware>();

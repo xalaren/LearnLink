@@ -7,11 +7,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearnLink.Application.Users.Services;
 
+/// <summary>
+/// Service responsible for seeding required users and roles into the data store.
+/// Provides methods to initialize the system user and default roles.
+/// </summary>
 public class SeedingService(IApplicationDataContext context, IEncryptionProvider encryptionProvider)
 {
     private readonly IApplicationDataContext _context = context;
     private readonly IEncryptionProvider encryptionProvider = encryptionProvider;
 
+    /// <summary>
+    /// Ensures the system user exists; if not, creates the system user with the provided request.
+    /// </summary>
     public async Task InitializeSystemUser(InitializeSystemUserRequest request, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request, nameof(request));
@@ -36,6 +43,9 @@ public class SeedingService(IApplicationDataContext context, IEncryptionProvider
         await _context.CommitAsync(cancellationToken);
     }
 
+    /// <summary>
+    /// Ensures the administrator role exists; if not, creates it.
+    /// </summary>
     public async Task InitializeAdministratorRole(CancellationToken cancellationToken = default)
     {
         var predefinedAdmin = PredefinedRoles.Administrator;
@@ -55,6 +65,9 @@ public class SeedingService(IApplicationDataContext context, IEncryptionProvider
         await _context.CommitAsync(cancellationToken);
     }
 
+    /// <summary>
+    /// Ensures the regular user role exists; if not, creates it.
+    /// </summary>
     public async Task InitializeUserRole(CancellationToken cancellationToken = default)
     {
         var predefinedUser = PredefinedRoles.User;

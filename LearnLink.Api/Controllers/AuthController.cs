@@ -7,11 +7,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LearnLink.Api.Controllers;
 
+/// <summary>
+/// Controller responsible for authentication endpoints such as login and token refresh.
+/// </summary>
 [ApiController]
 [Route("api/auth")]
 public class AuthController : ApiControllerBase 
 {
-
+    /// <summary>
+    /// Authenticates a user by nickname and password and returns a token pair on success.
+    /// </summary>
     [HttpPost("login")]
     [ProducesResponseType(typeof(TokenPair), StatusCodes.Status200OK)]
     [AllowAnonymous]
@@ -24,6 +29,9 @@ public class AuthController : ApiControllerBase
         return response.ToActionResult(this);
     }
 
+    /// <summary>
+    /// Exchanges a refresh token for a new access/refresh token pair.
+    /// </summary>
     [HttpPost("refresh")]
     [ProducesResponseType(typeof(TokenPair), StatusCodes.Status200OK)]
     [AllowAnonymous]
