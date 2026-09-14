@@ -1,3 +1,3 @@
-# LearnLink
+# PandaRedu
 
-Образовательная платформа для разработки и публикации курсов
+Education platform (in active development yet)

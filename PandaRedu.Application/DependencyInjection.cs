@@ -1,0 +1,26 @@
+﻿using PandaRedu.Application.Security;
+using PandaRedu.Application.Users;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace PandaRedu.Application;
+
+/// <summary>
+/// Registers application services
+/// </summary>
+public static class DependencyInjection
+{
+    extension(IServiceCollection services)
+    {
+        /// <summary>
+        /// Adds application services to the
+        /// provided <see cref="IServiceCollection"/>.
+        /// </summary>
+        /// <returns>The original <see cref="IServiceCollection"/> for chaining.</returns>
+        public IServiceCollection AddApplication()
+        {
+            return services
+                .AddUserServices()
+                .AddAuthenticationServices();
+        }
+    }
+}
