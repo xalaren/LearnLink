@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
 VisualStudioVersion = 18.9.12112.369
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "frontend", "frontend\frontend.esproj", "{FC9CA2F8-157D-461C-8C88-F0E1FAE56BA8}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4F0FE98D-1EAD-4FEC-8152-DA40A0E6785E}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -20,18 +18,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PandaRedu.Domain", "PandaRe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PandaRedu.Api", "PandaRedu.Api\PandaRedu.Api.csproj", "{72165AE7-DE17-5B2C-F58A-F76DB4AEF964}"
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "PandaRedu.Client", "PandaRedu.Client\PandaRedu.Client.esproj", "{F0C7B027-C5FF-42BE-A6D4-58F2F25865EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FC9CA2F8-157D-461C-8C88-F0E1FAE56BA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FC9CA2F8-157D-461C-8C88-F0E1FAE56BA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FC9CA2F8-157D-461C-8C88-F0E1FAE56BA8}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{FC9CA2F8-157D-461C-8C88-F0E1FAE56BA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FC9CA2F8-157D-461C-8C88-F0E1FAE56BA8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FC9CA2F8-157D-461C-8C88-F0E1FAE56BA8}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{56DBD814-29F2-49F9-832F-B5475C8C9E62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{56DBD814-29F2-49F9-832F-B5475C8C9E62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56DBD814-29F2-49F9-832F-B5475C8C9E62}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -52,6 +46,12 @@ Global
 		{72165AE7-DE17-5B2C-F58A-F76DB4AEF964}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72165AE7-DE17-5B2C-F58A-F76DB4AEF964}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72165AE7-DE17-5B2C-F58A-F76DB4AEF964}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0C7B027-C5FF-42BE-A6D4-58F2F25865EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0C7B027-C5FF-42BE-A6D4-58F2F25865EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0C7B027-C5FF-42BE-A6D4-58F2F25865EF}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{F0C7B027-C5FF-42BE-A6D4-58F2F25865EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0C7B027-C5FF-42BE-A6D4-58F2F25865EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0C7B027-C5FF-42BE-A6D4-58F2F25865EF}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
