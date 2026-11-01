@@ -369,3 +369,6 @@ MigrationBackup/
 FodyWeavers.xsd
 
 LearnLink.WebApi/Storage/
+
+.idea/
+.vscode/
