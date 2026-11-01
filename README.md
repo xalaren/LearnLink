@@ -4,7 +4,7 @@
   <img src="docs-sources\LearnLinkLogo.svg" alt="Logo">
 
   <p style="text-align: center">
-    Full-stack educational platform for creating, publishing, and managing online courses.
+    LearnLink is full-stack educational platform for creating, publishing, and managing online courses.
   </p>
 </p>
 
